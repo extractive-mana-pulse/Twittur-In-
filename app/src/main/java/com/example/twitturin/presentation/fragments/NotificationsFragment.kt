@@ -6,19 +6,26 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.twitturin.R
+import com.example.twitturin.databinding.FragmentHomeBinding
+import com.example.twitturin.databinding.FragmentNotificationsBinding
 
 class NotificationsFragment : Fragment() {
 
+    private lateinit var binding : FragmentNotificationsBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_notifications, container, false)
+        binding = FragmentNotificationsBinding.inflate(layoutInflater)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.notificationsFragment = this
+
+
     }
 
     companion object {

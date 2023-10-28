@@ -32,32 +32,6 @@ class HomeFragment : Fragment() {
 
     }
 
-    fun bottomNavigationViewSetup(){
-        binding.bottomNavView.setOnItemSelectedListener {
-            when(it.itemId){
-                R.id.home -> {
-                    Toast.makeText(
-                        requireContext(),
-                        "hello world, this is home page",
-                        Toast.LENGTH_SHORT
-                    ).show() }
-                R.id.search -> {
-                    Toast.makeText(
-                        requireContext(),
-                        "hello world, this is search screen",
-                        Toast.LENGTH_SHORT
-                    ).show() }
-                R.id.messages -> {
-                    Toast.makeText(
-                        requireContext(),
-                        "hello world, this is message section",
-                        Toast.LENGTH_SHORT
-                    ).show() }
-            }
-            true
-        }
-    }
-
     fun add(){
         findNavController().navigate(R.id.publicPostFragment)
     }
