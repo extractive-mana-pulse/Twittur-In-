@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.home -> { navController.navigate(R.id.homeFragment) }
                 R.id.search -> { navController.navigate(R.id.searchFragment) }
                 R.id.notification -> { navController.navigate(R.id.notificationsFragment) }
-                R.id.messages -> { /* chat Fragment will be added later. this fragment like a private message fragment */ }
+                R.id.messages -> { navController.navigate(R.id.privateMessagesFragment) }
             }
             true
         }

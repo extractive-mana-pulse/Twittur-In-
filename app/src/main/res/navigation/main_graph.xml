@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.twitturin.presentation.HomeFragment"
+        android:name="com.example.twitturin.presentation.fragments.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
         <action
@@ -22,6 +22,9 @@
         <action
             android:id="@+id/action_homeFragment_to_chatFragment"
             app:destination="@id/chatFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_privateMessagesFragment"
+            app:destination="@id/privateMessagesFragment" />
     </fragment>
     <fragment
         android:id="@+id/publicPostFragment"
@@ -57,6 +60,15 @@
         tools:layout="@layout/fragment_notifications" >
         <action
             android:id="@+id/action_notificationsFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/privateMessagesFragment"
+        android:name="com.example.twitturin.presentation.fragments.PrivateMessagesFragment"
+        android:label="fragment_private_messages"
+        tools:layout="@layout/fragment_private_messages" >
+        <action
+            android:id="@+id/action_privateMessagesFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
     </fragment>
 </navigation>
