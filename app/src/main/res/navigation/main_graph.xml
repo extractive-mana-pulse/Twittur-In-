@@ -25,6 +25,9 @@
         <action
             android:id="@+id/action_homeFragment_to_privateMessagesFragment"
             app:destination="@id/privateMessagesFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_webViewFragment"
+            app:destination="@id/webViewFragment" />
     </fragment>
     <fragment
         android:id="@+id/publicPostFragment"
@@ -69,6 +72,15 @@
         tools:layout="@layout/fragment_private_messages" >
         <action
             android:id="@+id/action_privateMessagesFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/webViewFragment"
+        android:name="com.example.twitturin.presentation.fragments.WebViewFragment"
+        android:label="fragment_web_view"
+        tools:layout="@layout/fragment_web_view" >
+        <action
+            android:id="@+id/action_webViewFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
     </fragment>
 </navigation>

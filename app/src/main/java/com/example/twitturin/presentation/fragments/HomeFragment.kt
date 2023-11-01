@@ -12,11 +12,9 @@ import com.example.twitturin.R
 import com.example.twitturin.databinding.FragmentHomeBinding
 import com.example.twitturin.presentation.PostAdapter
 
-
 class HomeFragment : Fragment() {
 
     private lateinit var binding : FragmentHomeBinding
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,6 +45,10 @@ class HomeFragment : Fragment() {
         val adapter = PostAdapter(postLists)
         binding.rcView.adapter = adapter
 
+    }
+
+    fun goToWebView(){
+        findNavController().navigate(R.id.webViewFragment)
     }
 
     fun add(){
