@@ -7,10 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.twitturin.PostItem
+import com.example.twitturin.presentation.PostItem
 import com.example.twitturin.R
 import com.example.twitturin.databinding.FragmentHomeBinding
-import com.example.twitturin.presentation.PostAdapter
+import com.example.twitturin.presentation.adapters.PostAdapter
 
 class HomeFragment : Fragment() {
 
@@ -55,6 +55,9 @@ class HomeFragment : Fragment() {
         findNavController().navigate(R.id.publicPostFragment)
     }
 
+    fun testImage(){
+        findNavController().navigate(R.id.signInFragment)
+    }
     companion object {
         @JvmStatic
         fun newInstance() = HomeFragment()

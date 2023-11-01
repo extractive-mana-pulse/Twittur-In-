@@ -1,12 +1,12 @@
-package com.example.twitturin.presentation
+package com.example.twitturin.presentation.adapters
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.twitturin.PostItem
 import com.example.twitturin.R
 import com.example.twitturin.databinding.RcViewBinding
+import com.example.twitturin.presentation.PostItem
 
 class PostAdapter(private val postList: List<PostItem>) : RecyclerView.Adapter<PostAdapter.ViewHolder>() {
 
