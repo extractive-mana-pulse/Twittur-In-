@@ -27,8 +27,9 @@
                 android:id="@+id/accountImage"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
-                android:src="@drawable/ic_account"
+                android:onClick="@{ () -> homeFragment.goToProfile() }"
                 android:layout_marginStart="16dp"
+                android:src="@drawable/ic_account"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"/>

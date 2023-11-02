@@ -51,6 +51,10 @@ class HomeFragment : Fragment() {
         findNavController().navigate(R.id.webViewFragment)
     }
 
+    fun goToProfile(){
+        findNavController().navigate(R.id.profileFragment)
+    }
+
     fun add(){
         findNavController().navigate(R.id.publicPostFragment)
     }
