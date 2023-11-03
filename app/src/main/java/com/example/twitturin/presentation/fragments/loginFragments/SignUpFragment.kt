@@ -1,11 +1,10 @@
-package com.example.twitturin.presentation.fragments
+package com.example.twitturin.presentation.fragments.loginFragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.twitturin.R
 import com.example.twitturin.databinding.FragmentSignUpBinding
 
 class SignUpFragment : Fragment() {

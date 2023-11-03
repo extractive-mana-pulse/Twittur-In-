@@ -1,15 +1,15 @@
 package com.example.twitturin.presentation.fragments
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.twitturin.presentation.PostItem
 import com.example.twitturin.R
 import com.example.twitturin.databinding.FragmentHomeBinding
+import com.example.twitturin.presentation.PostItem
 import com.example.twitturin.presentation.adapters.PostAdapter
 
 class HomeFragment : Fragment() {
@@ -45,23 +45,27 @@ class HomeFragment : Fragment() {
         val adapter = PostAdapter(postLists)
         binding.rcView.adapter = adapter
 
+        binding.testImg.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_signInFragment)
+        }
+
     }
 
     fun goToWebView(){
-        findNavController().navigate(R.id.webViewFragment)
+        findNavController().navigate(R.id.action_homeFragment_to_webViewFragment)
     }
 
     fun goToProfile(){
-        findNavController().navigate(R.id.profileFragment)
+        findNavController().navigate(R.id.action_homeFragment_to_profileFragment)
     }
 
     fun add(){
-        findNavController().navigate(R.id.publicPostFragment)
+        findNavController().navigate(R.id.action_homeFragment_to_publicPostFragment)
     }
 
-    fun testImage(){
-        findNavController().navigate(R.id.signInFragment)
-    }
+//    fun testImage(){
+//        findNavController().navigate(R.id.action_homeFragment_to_signInFragment)
+//    }
     companion object {
         @JvmStatic
         fun newInstance() = HomeFragment()

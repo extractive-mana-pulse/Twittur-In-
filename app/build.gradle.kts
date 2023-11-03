@@ -55,24 +55,28 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 
-
-    // injection
-    implementation ("javax.inject:javax.inject:1")
-
     //  Dagger hilt
-    kapt ("androidx.hilt:hilt-compiler:1.0.0")
     implementation ("com.google.dagger:hilt-android:2.42")
     kapt ("com.google.dagger:hilt-android-compiler:2.28.3-alpha")
     implementation ("androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03")
+    kapt ("androidx.hilt:hilt-compiler:1.1.0")
 
-    // Room
-    kapt ("androidx.room:room-compiler:2.5.2")
-    implementation ("androidx.room:room-ktx:2.5.2")
-    implementation ("androidx.room:room-runtime:2.5.2")
+    // Retrofit
+    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation ("com.squareup.okhttp3:logging-interceptor:4.9.2")
+
+    //    Coroutines
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
+
+    // liveData
+    implementation ("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
 
     // Navigation
-    implementation ("androidx.navigation:navigation-fragment-ktx:2.7.4")
-    implementation ("androidx.navigation:navigation-ui-ktx:2.7.4")
+    implementation ("androidx.navigation:navigation-fragment-ktx:2.7.5")
+    implementation ("androidx.navigation:navigation-ui-ktx:2.7.5")
 
     // Data Binding
     implementation ("androidx.databinding:databinding-runtime:8.1.2")

@@ -14,10 +14,6 @@ class ProfileFragment : Fragment() {
 
     private lateinit var binding: FragmentProfileBinding
 
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentProfileBinding.inflate(layoutInflater)
         return binding.root
@@ -25,9 +21,9 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.profileFragment = this
 
         val adapter = ViewPagedAdapter(childFragmentManager, lifecycle)
-
         binding.vp2.adapter = adapter
         TabLayoutMediator(binding.tb, binding.vp2) { tab, pos ->
             when (pos) {
@@ -40,7 +36,11 @@ class ProfileFragment : Fragment() {
             }
         }.attach()
     }
-
+    fun goBack(){
+        binding.back.setOnClickListener {
+            requireActivity().onBackPressed()
+        }
+    }
     companion object {
         @JvmStatic
         fun newInstance() = ProfileFragment()

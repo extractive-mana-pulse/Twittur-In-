@@ -27,8 +27,12 @@ class PublicPostFragment : Fragment() {
         binding.publicPostFragment  = this
     }
 
-    fun back(){
+    fun cancelBtn(){
         requireActivity().onBackPressed()
+    }
+
+    fun tweetBtn(){
+        // get logic from api to post a tweet
     }
 
     companion object {
