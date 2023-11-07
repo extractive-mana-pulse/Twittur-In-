@@ -1,20 +1,32 @@
 package com.example.twitturin.presentation.fragments
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.twitturin.R
 import com.example.twitturin.databinding.FragmentHomeBinding
-import com.example.twitturin.presentation.PostItem
 import com.example.twitturin.presentation.adapters.PostAdapter
+import com.example.twitturin.presentation.data.tweets.ApiTweetsItem
+import com.example.twitturin.presentation.mvvm.MainViewModel
+import com.example.twitturin.presentation.mvvm.Repository
+import com.example.twitturin.presentation.mvvm.ViewModelFactory
+import java.util.Random
 
 class HomeFragment : Fragment() {
 
     private lateinit var binding : FragmentHomeBinding
+
+    private lateinit var viewModel: MainViewModel
+
+    private val postAdapter by lazy { PostAdapter() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,25 +42,34 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.homeFragment = this
 
-        val postLists = listOf(
-            PostItem("Apple", R.drawable.apple, "New Iphone 15 Pro Max realized"),
-            PostItem("Amazon", R.drawable.amazon, "New GPU from NVIDIA now available to purchase in our stock"),
-            PostItem("ASUS", R.drawable.asus, "New Rtx 4090 with water cooling system design will be realized at 12.01.2024"),
-            PostItem("NVIDIA", R.drawable.nvidia, "DLSS 3.0 now available on RTX-30 series GPU's"),
-            PostItem("Tesla", R.drawable.tesla, "New Tesla model now in stock."),
-            PostItem("Google", R.drawable.google, "New Android 14 & UI 6.1 are available to download on this list of phones "),
-            PostItem("MI", R.drawable.xiaomi, "Our New HyperOS will be realised next year"),
-            PostItem("X", R.drawable.cross, "Now we will not ban you for N word if you purchase premium version of our app. It's cost only 11.99 $"),
-        )
+        recyclerViewSetup()
 
-        binding.rcView.layoutManager = LinearLayoutManager(requireContext())
-        val adapter = PostAdapter(postLists)
-        binding.rcView.adapter = adapter
+
+        val repository = Repository()
+        val viewModelFactory = ViewModelFactory(repository)
+        viewModel = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
+
+        updateRecyclerView()
+//        viewModel.getTweet()
+//        viewModel.responseTweets.observe(requireActivity(), Observer {response ->
+//            if (response.isSuccessful){
+//                response.body()?.let { tweets ->
+//                    val tweetList: MutableList<ApiTweetsItem> = tweets.toMutableList()
+//                    tweetList.shuffle(Random(System.currentTimeMillis()))
+//                    postAdapter.setData(tweetList) }
+//            }else{
+//                Toast.makeText(requireContext(),response.code(), Toast.LENGTH_SHORT).show()
+//            }
+//        })
 
         binding.testImg.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_signInFragment)
         }
+    }
 
+    private fun recyclerViewSetup(){
+        binding.rcView.adapter = postAdapter
+        binding.rcView.layoutManager = LinearLayoutManager(requireContext())
     }
 
     fun goToWebView(){
@@ -59,13 +80,35 @@ class HomeFragment : Fragment() {
         findNavController().navigate(R.id.action_homeFragment_to_profileFragment)
     }
 
-    fun add(){
+    fun goToPublicPost(){
         findNavController().navigate(R.id.action_homeFragment_to_publicPostFragment)
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun updateRecyclerView() {
+        viewModel.getTweet()
+        viewModel.responseTweets.observe(requireActivity()) { response ->
+            if (response.isSuccessful) {
+                response.body()?.let { tweets ->
+                    val tweetList: MutableList<ApiTweetsItem> = tweets.toMutableList()
+                    postAdapter.setData(tweetList)
+                    binding.swipeToRefreshLayout.setOnRefreshListener {
+                        binding.swipeToRefreshLayout.isRefreshing = false
+                        tweetList.shuffle(Random(System.currentTimeMillis()))
+                        postAdapter.notifyDataSetChanged()
+                    }
+                }
+            } else {
+                Toast.makeText(requireContext(), response.code(), Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
 //    fun testImage(){
 //        findNavController().navigate(R.id.action_homeFragment_to_signInFragment)
 //    }
+
+
     companion object {
         @JvmStatic
         fun newInstance() = HomeFragment()

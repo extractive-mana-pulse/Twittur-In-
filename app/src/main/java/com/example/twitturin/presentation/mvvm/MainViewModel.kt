@@ -4,9 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.twitturin.SignInResult
+import com.example.twitturin.presentation.sealeds.SignInResult
+import com.example.twitturin.presentation.sealeds.SignUpResult
 import com.example.twitturin.presentation.api.Api
 import com.example.twitturin.presentation.data.SignIn
+import com.example.twitturin.presentation.data.SignUp
+import com.example.twitturin.presentation.data.tweets.ApiTweetsItem
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
@@ -21,14 +24,14 @@ class MainViewModel(private val repository: Repository): ViewModel() {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
-    private val authApi: Api = retrofit.create(Api::class.java)
+    private val signInApi: Api = retrofit.create(Api::class.java)
 
     private val _signInResult = MutableLiveData<SignInResult>()
     val signInResult: LiveData<SignInResult> = _signInResult
 
     fun signIn(studentId: String, password: String) {
         val request = SignIn(studentId, password)
-        authApi.authUser(request).enqueue(object : Callback<SignIn> {
+        signInApi.signInUser(request).enqueue(object : Callback<SignIn> {
             override fun onResponse(call: Call<SignIn>, response: Response<SignIn>) {
                 if (response.isSuccessful) {
                     val signInResponse = response.body()
@@ -44,20 +47,41 @@ class MainViewModel(private val repository: Repository): ViewModel() {
         })
     }
 
+    private val signUpApi: Api = retrofit.create(Api::class.java)
 
+    private val _signUpResult = MutableLiveData<SignUpResult>()
+    val signUpResult: LiveData<SignUpResult> = _signUpResult
 
+    fun signUp(
+        username: String,
+        studentId: String,
+        major: String,
+        email: String,
+        password: String
+    ) {
+        val request = SignUp(username, studentId, major, email, password)
+        signUpApi.signUpUser(request).enqueue(object : Callback<SignUp> {
+            override fun onResponse(call: Call<SignUp>, response: Response<SignUp>) {
+                if (response.isSuccessful) {
+                    val signUpResponse = response.body()
+                    _signUpResult.value = signUpResponse?.let { SignUpResult.Success(it) }
+                } else {
+                    _signUpResult.value = SignUpResult.Error(response.body().toString())
+                }
+            }
 
+            override fun onFailure(call: Call<SignUp>, t: Throwable) {
+                _signUpResult.value = SignUpResult.Error("Network error")
+            }
+        })
+    }
 
+    var responseTweets: MutableLiveData<Response<List<ApiTweetsItem>>> = MutableLiveData()
+    fun getTweet() {
+        viewModelScope.launch {
+            val response = repository.getTweets()
+            responseTweets.value = response
+        }
+    }
 
-
-
-
-
-//    var authResponse: MutableLiveData<Response<SignIn>> = MutableLiveData()
-//    fun authUser(user:SignIn){
-//        viewModelScope.launch {
-//            val response = repository.authUser(user)
-//            authResponse.value = response
-//        }
-//    }
 }

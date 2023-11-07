@@ -1,4 +1,4 @@
-package com.example.twitturin
+package com.example.twitturin.presentation.sealeds
 
 import com.example.twitturin.presentation.data.SignIn
 

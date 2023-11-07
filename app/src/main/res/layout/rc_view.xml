@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:paddingBottom="15dp">
 
-<!--        Round this image-->
+<!--    Round this image    -->
         <ImageView
             android:id="@+id/user_avatar"
             android:layout_width="55dp"

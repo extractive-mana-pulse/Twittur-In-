@@ -1,6 +1,6 @@
 package com.example.twitturin.presentation.data
 
-data class AuthData(
+data class SignUp(
 
     var username: String,
     var studentId: String,

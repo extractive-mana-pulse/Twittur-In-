@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
-import com.example.twitturin.SignInResult
+import com.example.twitturin.presentation.sealeds.SignInResult
 import com.example.twitturin.databinding.FragmentSignInBinding
 import com.example.twitturin.presentation.mvvm.MainViewModel
 import com.example.twitturin.presentation.mvvm.Repository
