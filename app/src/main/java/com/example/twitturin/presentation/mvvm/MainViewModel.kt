@@ -9,7 +9,9 @@ import com.example.twitturin.presentation.sealeds.SignUpResult
 import com.example.twitturin.presentation.api.Api
 import com.example.twitturin.presentation.data.SignIn
 import com.example.twitturin.presentation.data.SignUp
+import com.example.twitturin.presentation.data.TheTweet
 import com.example.twitturin.presentation.data.tweets.ApiTweetsItem
+import com.example.twitturin.presentation.sealeds.PostTweet
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
@@ -76,6 +78,29 @@ class MainViewModel(private val repository: Repository): ViewModel() {
         })
     }
 
+    private val tweetApi: Api = retrofit.create(Api::class.java)
+
+    private val _postTweet = MutableLiveData<PostTweet>()
+    val postTweetResult: LiveData<PostTweet> = _postTweet
+
+    fun postTheTweet(content: String) {
+        val request = TheTweet(content)
+        tweetApi.postTweet(request).enqueue(object : Callback<TheTweet> {
+            override fun onResponse(call: Call<TheTweet>, response: Response<TheTweet>) {
+                if (response.isSuccessful) {
+                    val postTweet = response.body()
+                    _postTweet.value = postTweet?.let { PostTweet.Success(it) }
+                } else {
+                    _postTweet.value = PostTweet.Error("Some error occur while posting the sheet")
+                }
+            }
+
+            override fun onFailure(call: Call<TheTweet>, t: Throwable) {
+                _postTweet.value = PostTweet.Error("Network error")
+            }
+        })
+    }
+
     var responseTweets: MutableLiveData<Response<List<ApiTweetsItem>>> = MutableLiveData()
     fun getTweet() {
         viewModelScope.launch {
@@ -83,5 +108,4 @@ class MainViewModel(private val repository: Repository): ViewModel() {
             responseTweets.value = response
         }
     }
-
 }

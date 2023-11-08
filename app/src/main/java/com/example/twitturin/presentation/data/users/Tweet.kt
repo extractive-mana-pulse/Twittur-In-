@@ -5,6 +5,7 @@ data class Tweet(
     val content: String,
     val createdAt: String,
     val id: String,
-    val likes: List<String>,
+    val likedBy: List<String>,
+    val likes: Int,
     val updatedAt: String
 )

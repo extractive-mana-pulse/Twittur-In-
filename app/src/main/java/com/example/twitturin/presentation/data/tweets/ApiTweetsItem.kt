@@ -5,6 +5,7 @@ data class ApiTweetsItem(
     val content: String,
     val createdAt: String,
     val id: String,
-    val likes: List<Like>,
+    val likedBy: List<Any>,
+    val likes: Int,
     val updatedAt: String
 )

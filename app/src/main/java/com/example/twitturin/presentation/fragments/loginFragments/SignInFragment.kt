@@ -11,11 +11,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
-import com.example.twitturin.presentation.sealeds.SignInResult
 import com.example.twitturin.databinding.FragmentSignInBinding
 import com.example.twitturin.presentation.mvvm.MainViewModel
 import com.example.twitturin.presentation.mvvm.Repository
 import com.example.twitturin.presentation.mvvm.ViewModelFactory
+import com.example.twitturin.presentation.sealeds.SignInResult
 
 
 class SignInFragment : Fragment() {
@@ -23,10 +23,11 @@ class SignInFragment : Fragment() {
     private lateinit var binding : FragmentSignInBinding
 
     private lateinit var mainViewModel: MainViewModel
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        // todo { use this build-in method for toolbar }
-    }
+
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        // todo { use this build-in method for toolbar }
+//    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentSignInBinding.inflate(layoutInflater)

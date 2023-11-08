@@ -1,10 +1,11 @@
 package com.example.twitturin.presentation.fragments
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
 import com.example.twitturin.databinding.FragmentPrivateMessagesBinding
 
@@ -29,6 +30,10 @@ class PrivateMessagesFragment : Fragment() {
 
     fun back(){
         requireActivity().onBackPressed()
+    }
+
+    fun goToProfile(){
+        findNavController().navigate(R.id.profileFragment)
     }
 
     companion object {

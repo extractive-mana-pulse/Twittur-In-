@@ -38,23 +38,33 @@
                 android:id="@+id/btn_tweet"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Tweet"
-
+                android:text="publish"
                 android:onClick="@{ () -> publicPostFragment.tweetBtn() }"
                 android:layout_marginStart="199dp"/>
 
         </LinearLayout>
 
-        <EditText
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:hint="What's Happening?"
-            android:gravity="start"
-            android:backgroundTint="@android:color/transparent"
-            app:layout_constraintTop_toBottomOf="@id/btn_layout"
-            app:layout_constraintStart_toStartOf="parent"
+            android:hint="What's going on ?"
+            android:backgroundTint="?attr/colorPrimary"
+            app:hintTextColor="?attr/colorOnPrimaryContainer"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_layout">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/content_et"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="start"
+                android:background="@android:color/transparent"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

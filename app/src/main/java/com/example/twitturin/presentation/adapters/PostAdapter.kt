@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.twitturin.R
 import com.example.twitturin.databinding.RcViewBinding
-import com.example.twitturin.presentation.PostItem
 import com.example.twitturin.presentation.data.tweets.ApiTweetsItem
 
 class PostAdapter : RecyclerView.Adapter<PostAdapter.ViewHolder>() {
@@ -28,6 +27,7 @@ class PostAdapter : RecyclerView.Adapter<PostAdapter.ViewHolder>() {
         holder.binding.apply {
             userNickname.text = item.author.username
             postDescription.text = item.content
+            postHeartCounter.text = item.likes.toString()
         }
     }
 
