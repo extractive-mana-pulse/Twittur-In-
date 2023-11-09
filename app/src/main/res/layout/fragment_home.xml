@@ -12,13 +12,15 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="?attr/colorSurface">
 
         <!--        Toolbar         -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorSurfaceContainer"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
@@ -38,7 +40,7 @@
                 android:id="@+id/logo"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
-                android:src="@drawable/cross"
+                android:src="@drawable/logo"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -81,12 +83,12 @@
             android:layout_marginEnd="25dp"
             android:layout_marginBottom="25dp"
             android:contentDescription="@string/app_name"
-            android:background="?attr/colorSecondaryContainer"
+            android:backgroundTint="?attr/colorSecondaryContainer"
             android:padding="5dp"
             android:onClick="@{() -> homeFragment.goToPublicPost()}"
             android:src="@drawable/baseline_add_24"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

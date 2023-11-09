@@ -3,6 +3,7 @@ package com.example.twitturin.presentation.fragments.loginFragments
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,11 +24,6 @@ class SignInFragment : Fragment() {
     private lateinit var binding : FragmentSignInBinding
 
     private lateinit var mainViewModel: MainViewModel
-
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        // todo { use this build-in method for toolbar }
-//    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentSignInBinding.inflate(layoutInflater)
@@ -70,7 +66,7 @@ class SignInFragment : Fragment() {
         if (checkbox.equals("true")){
             findNavController().navigate(R.id.action_signInFragment_to_homeFragment)
         }else if (checkbox.equals("false")){
-            Toast.makeText(requireContext(), "checkbox equals to false", Toast.LENGTH_SHORT).show()
+            Log.d("Tag","hello world")
         }
 
         binding.rememberMeCheckBox.setOnCheckedChangeListener { compoundButton, b ->

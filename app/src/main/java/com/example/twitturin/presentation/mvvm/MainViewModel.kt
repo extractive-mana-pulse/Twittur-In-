@@ -11,7 +11,10 @@ import com.example.twitturin.presentation.data.SignIn
 import com.example.twitturin.presentation.data.SignUp
 import com.example.twitturin.presentation.data.TheTweet
 import com.example.twitturin.presentation.data.tweets.ApiTweetsItem
+import com.example.twitturin.presentation.data.users.ApiUsersItem
 import com.example.twitturin.presentation.sealeds.PostTweet
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
@@ -81,6 +84,7 @@ class MainViewModel(private val repository: Repository): ViewModel() {
     private val tweetApi: Api = retrofit.create(Api::class.java)
 
     private val _postTweet = MutableLiveData<PostTweet>()
+
     val postTweetResult: LiveData<PostTweet> = _postTweet
 
     fun postTheTweet(content: String) {
@@ -108,4 +112,15 @@ class MainViewModel(private val repository: Repository): ViewModel() {
             responseTweets.value = response
         }
     }
+
+//    fun getTweetForAuthUser(username: String, password: String){
+//        var user : ApiUsersItem? = null
+//
+//        val mainApi = retrofit.create(Api::class.java)
+//
+//        CoroutineScope(Dispatchers.IO).launch {
+//            mainApi.signInUser(SignIn(username, password))
+//            mainApi.getTweets(user?.token ?: "")
+//        }
+//    }
 }

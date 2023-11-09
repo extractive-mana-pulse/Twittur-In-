@@ -38,17 +38,13 @@ class ProfileFragment : Fragment() {
 
         setDataToTextView()
 
-//        binding.logout.setOnClickListener {
-//
-//        }
-
         binding.threeDotMenu.setOnClickListener {
             val popupMenu = PopupMenu(requireContext(), it)
 
             popupMenu.setOnMenuItemClickListener { item ->
                 when (item.itemId){
                     R.id.edit_profile -> {
-                        Toast.makeText(requireContext(), "navigate to edit profile page", Toast.LENGTH_SHORT).show()
+                        findNavController().navigate(R.id.action_profileFragment_to_editProfileFragment)
 //                        val intent = Intent(Intent.ACTION_SEND)
 //                        intent.putExtra(Intent.EXTRA_TEXT, data.web_url)
 //                        intent.type = "text/plain"

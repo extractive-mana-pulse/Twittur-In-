@@ -9,6 +9,8 @@ import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.Header
+import retrofit2.http.Headers
 import retrofit2.http.POST
 
 interface Api  {
@@ -27,4 +29,9 @@ interface Api  {
 
     @GET("tweets")
     suspend fun getTweet(): Response<List<ApiTweetsItem>>
+
+
+    @Headers("Content-Type: application/json")
+    @GET("tweets")
+    suspend fun getTweets(@Header("Authorization") token: String): Response<List<ApiTweetsItem>>
 }

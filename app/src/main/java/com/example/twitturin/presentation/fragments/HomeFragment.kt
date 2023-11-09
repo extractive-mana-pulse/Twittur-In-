@@ -6,9 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.twitturin.R
 import com.example.twitturin.databinding.FragmentHomeBinding
@@ -18,6 +20,7 @@ import com.example.twitturin.presentation.mvvm.MainViewModel
 import com.example.twitturin.presentation.mvvm.Repository
 import com.example.twitturin.presentation.mvvm.ViewModelFactory
 import java.util.Random
+
 
 class HomeFragment : Fragment() {
 
@@ -48,12 +51,12 @@ class HomeFragment : Fragment() {
         viewModel = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
 
         updateRecyclerView()
-//        binding.testImg.setOnClickListener {
-//            findNavController().navigate(R.id.action_homeFragment_to_signInFragment)
-//        }
     }
 
     private fun recyclerViewSetup(){
+//        this code is about divider in recyclerView programmatically
+//        val dividerItemDecoration = DividerItemDecoration(requireContext(), LinearLayoutManager.VERTICAL)
+//        binding.rcView.addItemDecoration(dividerItemDecoration)
         binding.rcView.adapter = postAdapter
         binding.rcView.layoutManager = LinearLayoutManager(requireContext())
     }

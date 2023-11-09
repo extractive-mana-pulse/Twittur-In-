@@ -33,7 +33,6 @@ class SignUpFragment : Fragment() {
         val viewModelFactory = ViewModelFactory(repository)
         viewModel = ViewModelProvider(requireActivity(), viewModelFactory)[MainViewModel::class.java]
 
-
         binding.signUp.setOnClickListener {
             val username = binding.userNameEt.text.toString()
             val studentId = binding.studentIdEt.text.toString()
@@ -51,37 +50,13 @@ class SignUpFragment : Fragment() {
 
                 is SignUpResult.Error -> {
                     val errorMessage = result.message
-                    binding.testTV.text = errorMessage
                     Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
                 }
             }
         }
-
-
-//        val signUpUser = SignUp("ViewModel","se12496","SE","ovni@gmail.com","123321")
-
-//        binding.userNameEt.text.toString(),
-//        binding.studentIdEt.text.toString(),
-//        binding.majorEt.text.toString(),
-//        binding.emailEt.text.toString(),
-//        binding.passwordEt.text.toString()
-
-//        binding.signUp.setOnClickListener {
-//            viewModel.signUp(signUpUser)
-//            viewModel.signUpResponse.observe(requireActivity()){ response ->
-//                if (response.isSuccessful){
-//                    Log.d("tag",response.body().toString())
-//                    findNavController().navigate(R.id.action_signUpFragment_to_signInFragment)
-//                } else {
-//                    Log.d("tag",response.body().toString())
-//                    Toast.makeText(
-//                        requireContext(),
-//                        "something went wrong. Please try again!",
-//                        Toast.LENGTH_SHORT
-//                    ).show()
-//                }
-//            }
-//        }
+        binding.backBtn.setOnClickListener {
+            findNavController().navigate(R.id.action_signUpFragment_to_signInFragment)
+        }
     }
 
     companion object {
