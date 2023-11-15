@@ -6,7 +6,7 @@
     app:startDestination="@id/signInFragment">
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.twitturin.presentation.fragments.HomeFragment"
+        android:name="com.example.twitturin.presentation.fragments.bottomNavigationView.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
         <action
@@ -30,7 +30,7 @@
     </fragment>
     <fragment
         android:id="@+id/privateMessagesFragment"
-        android:name="com.example.twitturin.presentation.fragments.PrivateMessagesFragment"
+        android:name="com.example.twitturin.presentation.fragments.bottomNavigationView.PrivateMessagesFragment"
         android:label="fragment_private_messages"
         tools:layout="@layout/fragment_private_messages" >
         <action
@@ -51,7 +51,7 @@
     </fragment>
     <fragment
         android:id="@+id/notificationsFragment"
-        android:name="com.example.twitturin.presentation.fragments.NotificationsFragment"
+        android:name="com.example.twitturin.presentation.fragments.bottomNavigationView.NotificationsFragment"
         android:label="fragment_notifications"
         tools:layout="@layout/fragment_notifications" >
         <action
@@ -60,7 +60,7 @@
     </fragment>
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.example.twitturin.presentation.fragments.ProfileFragment"
+        android:name="com.example.twitturin.presentation.fragments.topBarFragments.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" >
         <action
@@ -87,7 +87,7 @@
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
-        android:name="com.example.twitturin.presentation.fragments.SearchFragment"
+        android:name="com.example.twitturin.presentation.fragments.bottomNavigationView.SearchFragment"
         android:label="fragment_search"
         tools:layout="@layout/fragment_search" >
         <action
@@ -96,7 +96,7 @@
     </fragment>
     <fragment
         android:id="@+id/webViewFragment"
-        android:name="com.example.twitturin.presentation.fragments.WebViewFragment"
+        android:name="com.example.twitturin.presentation.fragments.topBarFragments.WebViewFragment"
         android:label="fragment_web_view"
         tools:layout="@layout/fragment_web_view" >
         <action

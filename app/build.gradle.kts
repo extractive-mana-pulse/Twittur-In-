@@ -35,10 +35,14 @@ android {
         viewBinding = true
         //noinspection DataBindingWithoutKapt
         dataBinding = true
+        compose = true
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.2"
     }
     kotlinOptions {
         jvmTarget = "1.8"
@@ -47,10 +51,25 @@ android {
 
 dependencies {
 
+    implementation ("androidx.activity:activity-compose:$version")
+    implementation ("androidx.compose.runtime:runtime-livedata:$version")
+    implementation ("androidx.compose.ui:ui:$version")
+    implementation ("androidx.compose.ui:ui-tooling-preview:$version")
+    implementation ("androidx.compose.material:material:$version")
+    implementation ("androidx.compose.ui:ui-viewbinding:$version")
+    implementation ("androidx.navigation:navigation-compose:$version")
+
+    // rich edit text library
+    implementation("com.mohamedrejeb.richeditor:richeditor-compose:1.0.0-beta03")
+
+    // icons jetpack compose
+    implementation("androidx.compose.material:material-icons-extended:1.5.4")
+
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.10.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation("androidx.compose.material3:material3:1.1.2")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -78,8 +97,10 @@ dependencies {
     implementation ("androidx.navigation:navigation-fragment-ktx:2.7.5")
     implementation ("androidx.navigation:navigation-ui-ktx:2.7.5")
 
+    implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
+
     // Data Binding
-    implementation ("androidx.databinding:databinding-runtime:8.1.2")
+    implementation ("androidx.databinding:databinding-runtime:8.1.3")
 
     // Scroll to Refresh Layout
     implementation ("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")

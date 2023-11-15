@@ -12,12 +12,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
+import com.example.twitturin.SessionManager
 import com.example.twitturin.databinding.FragmentSignInBinding
 import com.example.twitturin.presentation.mvvm.MainViewModel
 import com.example.twitturin.presentation.mvvm.Repository
 import com.example.twitturin.presentation.mvvm.ViewModelFactory
 import com.example.twitturin.presentation.sealeds.SignInResult
-
 
 class SignInFragment : Fragment() {
 
@@ -34,6 +34,8 @@ class SignInFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.signInFragment = this
 
+        val sessionManager = SessionManager(requireContext())
+
         val repository = Repository()
         val viewModelFactory = ViewModelFactory(repository)
         mainViewModel = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
@@ -49,6 +51,9 @@ class SignInFragment : Fragment() {
             when (result) {
                 is SignInResult.Success -> {
                     findNavController().navigate(R.id.action_signInFragment_to_homeFragment)
+                    val token = mainViewModel.token.value
+                    sessionManager.saveToken(token.toString())
+                    Toast.makeText(requireContext(), mainViewModel.token.value, Toast.LENGTH_SHORT).show()
                 }
 
                 is SignInResult.Error -> {
@@ -58,9 +63,7 @@ class SignInFragment : Fragment() {
             }
         }
 
-
         val pref = requireActivity().getSharedPreferences("checkbox", MODE_PRIVATE)
-
         val checkbox = pref.getString("remember","")
 
         if (checkbox.equals("true")){

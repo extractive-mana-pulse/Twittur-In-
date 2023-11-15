@@ -9,6 +9,7 @@ import com.example.twitturin.R
 import com.example.twitturin.databinding.RcViewBinding
 import com.example.twitturin.presentation.data.tweets.ApiTweetsItem
 
+
 class PostAdapter : RecyclerView.Adapter<PostAdapter.ViewHolder>() {
 
     private var list = emptyList<ApiTweetsItem>()
@@ -24,10 +25,27 @@ class PostAdapter : RecyclerView.Adapter<PostAdapter.ViewHolder>() {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = list[position]
+        var likeCount: Int = item.likes
+        var isLiked: Boolean = false
+
         holder.binding.apply {
             userNickname.text = item.author.username
             postDescription.text = item.content
             postHeartCounter.text = item.likes.toString()
+            postIconHeart.isSelected = isLiked
+        }
+
+        holder.binding.postIconHeart.setOnClickListener {
+            if (isLiked) {
+                likeCount--
+                holder.binding.postHeartCounter.text = likeCount.toString()
+                holder.binding.postIconHeart.isSelected = false
+            } else {
+                likeCount++
+                holder.binding.postHeartCounter.text = likeCount.toString()
+                holder.binding.postIconHeart.isSelected = true
+            }
+            isLiked = !isLiked
         }
     }
 

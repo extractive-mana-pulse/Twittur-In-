@@ -10,7 +10,6 @@
             type="com.example.twitturin.presentation.fragments.loginFragments.SignInFragment"/>
     </data>
 
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -49,7 +48,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="34dp"
                 android:text="Login"
-                android:textColor="@color/black"
+                android:textColor="?attr/colorPrimary"
                 android:textSize="28sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -64,6 +63,8 @@
                 android:layout_marginTop="25dp"
                 android:background="@drawable/edit_text_bg_ui"
                 app:hintTextColor="?attr/colorOnPrimaryContainer"
+                app:startIconCheckable="true"
+                app:startIconDrawable="@drawable/id_icon"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/login_tv">
@@ -86,6 +87,10 @@
                 android:layout_marginTop="25dp"
                 android:background="@drawable/edit_text_bg_ui"
                 app:hintTextColor="?attr/colorOnPrimaryContainer"
+                app:startIconCheckable="true"
+                app:endIconCheckable="true"
+                app:endIconMode="password_toggle"
+                app:startIconDrawable="@drawable/lock"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/textInputLayout">
@@ -95,6 +100,7 @@
                     android:hint="Password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:inputType="textPassword"
                     android:background="@android:color/transparent"/>
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -107,6 +113,7 @@
                 android:layout_marginEnd="15dp"
                 android:onClick="@{()-> signInFragment.goToSignUp()}"
                 android:text="Don't have any account?"
+                android:textColor="?attr/colorPrimary"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/textInputLayout1" />
 
@@ -117,6 +124,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="5dp"
                 android:text="Remember me"
+                android:textColor="?attr/colorPrimary"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/textInputLayout1" />
 

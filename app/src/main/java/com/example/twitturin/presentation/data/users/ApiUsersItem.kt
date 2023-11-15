@@ -9,5 +9,6 @@ data class ApiUsersItem(
     val major: String,
     val studentId: String,
     val tweets: List<Tweet>,
-    val username: String
+    val username: String,
+    val token: String?
 )

@@ -136,7 +136,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/share"
             android:layout_marginTop="20dp"
-            android:layout_marginStart="45dp"
+            android:layout_marginStart="30dp"
             android:background="@android:color/transparent"
             app:layout_constraintTop_toBottomOf="@id/post_description"
             app:layout_constraintStart_toEndOf="@id/post_heart_counter"/>

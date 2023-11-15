@@ -4,17 +4,17 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.twitturin.presentation.sealeds.SignInResult
 import com.example.twitturin.presentation.sealeds.SignUpResult
 import com.example.twitturin.presentation.api.Api
-import com.example.twitturin.presentation.data.SignIn
-import com.example.twitturin.presentation.data.SignUp
+import com.example.twitturin.presentation.data.registration.SignIn
+import com.example.twitturin.presentation.data.registration.SignUp
 import com.example.twitturin.presentation.data.TheTweet
 import com.example.twitturin.presentation.data.tweets.ApiTweetsItem
 import com.example.twitturin.presentation.data.users.ApiUsersItem
 import com.example.twitturin.presentation.sealeds.PostTweet
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import com.example.twitturin.presentation.viewModels.LoginViewModel
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
@@ -34,19 +34,24 @@ class MainViewModel(private val repository: Repository): ViewModel() {
     private val _signInResult = MutableLiveData<SignInResult>()
     val signInResult: LiveData<SignInResult> = _signInResult
 
+    private val _token = MutableLiveData<String>()
+    val token: LiveData<String> = _token
+
     fun signIn(studentId: String, password: String) {
         val request = SignIn(studentId, password)
-        signInApi.signInUser(request).enqueue(object : Callback<SignIn> {
-            override fun onResponse(call: Call<SignIn>, response: Response<SignIn>) {
+        signInApi.signInUser(request).enqueue(object : Callback<ApiUsersItem> {
+            override fun onResponse(call: Call<ApiUsersItem>, response: Response<ApiUsersItem>) {
                 if (response.isSuccessful) {
                     val signInResponse = response.body()
-                    _signInResult.value = signInResponse?.let { SignInResult.Success(it) }
+                    val token = signInResponse?.token
+                    _token.value = token!!
+                    _signInResult.value = signInResponse.let { SignInResult.Success(it) }
                 } else {
                     _signInResult.value = SignInResult.Error("Sign-in failed")
                 }
             }
 
-            override fun onFailure(call: Call<SignIn>, t: Throwable) {
+            override fun onFailure(call: Call<ApiUsersItem>, t: Throwable) {
                 _signInResult.value = SignInResult.Error("Network error")
             }
         })

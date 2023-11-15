@@ -1,7 +1,7 @@
 package com.example.twitturin.presentation.api
 
-import com.example.twitturin.presentation.data.SignIn
-import com.example.twitturin.presentation.data.SignUp
+import com.example.twitturin.presentation.data.registration.SignIn
+import com.example.twitturin.presentation.data.registration.SignUp
 import com.example.twitturin.presentation.data.TheTweet
 import com.example.twitturin.presentation.data.tweets.ApiTweetsItem
 import com.example.twitturin.presentation.data.users.ApiUsersItem
@@ -19,7 +19,7 @@ interface Api  {
     fun getUserData(): Call<List<ApiUsersItem>>
 
     @POST("auth")
-    fun signInUser(@Body authUSer: SignIn): Call<SignIn>
+    fun signInUser(@Body authUSer: SignIn): Call<ApiUsersItem>
 
     @POST("users")
     fun signUpUser(@Body user: SignUp): Call<SignUp>

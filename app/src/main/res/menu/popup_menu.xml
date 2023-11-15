@@ -4,11 +4,11 @@
     <item
         android:id="@+id/edit_profile"
         android:icon="@drawable/edit_profile"
-        android:title="Edit Profile"/>
+        android:title="@string/edit_profile"/>
 
     <item
         android:id="@+id/logout"
         android:icon="@drawable/baseline_logout_24"
-        android:title="Logout"/>
+        android:title="@string/logout"/>
 
 </menu>

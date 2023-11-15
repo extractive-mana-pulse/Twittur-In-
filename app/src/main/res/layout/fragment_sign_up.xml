@@ -68,6 +68,7 @@
                 app:endIconCheckable="true"
                 app:endIconMode="clear_text"
                 app:startIconCheckable="true"
+                app:startIconDrawable="@drawable/username_person"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
@@ -91,7 +92,9 @@
                 android:background="@drawable/edit_text_bg_ui"
                 app:hintTextColor="?attr/colorOnPrimaryContainer"
                 app:endIconCheckable="true"
+                app:startIconCheckable="true"
                 app:endIconMode="clear_text"
+                app:startIconDrawable="@drawable/id_icon"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/textInputLayout"
                 app:layout_constraintStart_toStartOf="parent">
@@ -141,7 +144,7 @@
                 app:endIconCheckable="true"
                 app:endIconMode="clear_text"
                 app:startIconCheckable="true"
-                app:startIconDrawable="@drawable/ic_messages"
+                app:startIconDrawable="@drawable/mail"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/textInputLayout2"
                 app:layout_constraintStart_toStartOf="parent">
@@ -168,7 +171,7 @@
                 app:endIconCheckable="true"
                 app:endIconMode="password_toggle"
                 app:startIconCheckable="true"
-                app:startIconDrawable="@drawable/baseline_key_24"
+                app:startIconDrawable="@drawable/lock"
                 app:layout_constraintTop_toBottomOf="@id/textInputLayout3"
                 app:layout_constraintStart_toStartOf="parent">
 
