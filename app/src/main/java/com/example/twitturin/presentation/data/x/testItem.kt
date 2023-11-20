@@ -1,6 +1,6 @@
-package com.example.twitturin.presentation.data.tweets
+package com.example.twitturin.presentation.data.x
 
-data class ApiTweetsItem(
+data class testItem(
     val author: Author,
     val content: String,
     val createdAt: String,

@@ -42,9 +42,9 @@ class SignInFragment : Fragment() {
 
 
         binding.signIn.setOnClickListener {
-            val studentId = binding.studentIdEt.text.toString()
+            val username = binding.studentIdEt.text.toString()
             val password = binding.passwordEt.text.toString()
-            mainViewModel.signIn(studentId, password)
+            mainViewModel.signIn(username, password)
         }
 
         mainViewModel.signInResult.observe(viewLifecycleOwner) { result ->
@@ -91,7 +91,7 @@ class SignInFragment : Fragment() {
     }
 
     fun goToSignUp(){
-        findNavController().navigate(R.id.signUpFragment)
+        findNavController().navigate(R.id.action_signInFragment_to_signUpFragment)
     }
 
     companion object {

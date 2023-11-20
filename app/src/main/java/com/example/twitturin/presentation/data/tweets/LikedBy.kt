@@ -1,6 +1,6 @@
 package com.example.twitturin.presentation.data.tweets
 
-data class Author(
+data class LikedBy(
     val age: Int,
     val country: String,
     val email: String,

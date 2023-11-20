@@ -1,20 +1,21 @@
 package com.example.twitturin.presentation.mvvm
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.twitturin.SessionManager
 import com.example.twitturin.presentation.sealeds.SignInResult
 import com.example.twitturin.presentation.sealeds.SignUpResult
 import com.example.twitturin.presentation.api.Api
+import com.example.twitturin.presentation.api.RetrofitInstance
 import com.example.twitturin.presentation.data.registration.SignIn
 import com.example.twitturin.presentation.data.registration.SignUp
-import com.example.twitturin.presentation.data.TheTweet
+import com.example.twitturin.presentation.data.publicTweet.TheTweet
 import com.example.twitturin.presentation.data.tweets.ApiTweetsItem
-import com.example.twitturin.presentation.data.users.ApiUsersItem
+import com.example.twitturin.presentation.data.users.UsersItem
 import com.example.twitturin.presentation.sealeds.PostTweet
-import com.example.twitturin.presentation.viewModels.LoginViewModel
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
@@ -37,21 +38,21 @@ class MainViewModel(private val repository: Repository): ViewModel() {
     private val _token = MutableLiveData<String>()
     val token: LiveData<String> = _token
 
-    fun signIn(studentId: String, password: String) {
-        val request = SignIn(studentId, password)
-        signInApi.signInUser(request).enqueue(object : Callback<ApiUsersItem> {
-            override fun onResponse(call: Call<ApiUsersItem>, response: Response<ApiUsersItem>) {
+    fun signIn(username: String, password: String) {
+        val request = SignIn(username, password)
+        signInApi.signInUser(request).enqueue(object : Callback<UsersItem> {
+            override fun onResponse(call: Call<UsersItem>, response: Response<UsersItem>) {
                 if (response.isSuccessful) {
                     val signInResponse = response.body()
                     val token = signInResponse?.token
                     _token.value = token!!
                     _signInResult.value = signInResponse.let { SignInResult.Success(it) }
                 } else {
-                    _signInResult.value = SignInResult.Error("Sign-in failed")
+                    _signInResult.value = SignInResult.Error(response.code().toString())
                 }
             }
 
-            override fun onFailure(call: Call<ApiUsersItem>, t: Throwable) {
+            override fun onFailure(call: Call<UsersItem>, t: Throwable) {
                 _signInResult.value = SignInResult.Error("Network error")
             }
         })
@@ -67,9 +68,10 @@ class MainViewModel(private val repository: Repository): ViewModel() {
         studentId: String,
         major: String,
         email: String,
-        password: String
+        password: String,
+        kind: String
     ) {
-        val request = SignUp(username, studentId, major, email, password)
+        val request = SignUp(username, studentId, major, email, password, kind)
         signUpApi.signUpUser(request).enqueue(object : Callback<SignUp> {
             override fun onResponse(call: Call<SignUp>, response: Response<SignUp>) {
                 if (response.isSuccessful) {
@@ -92,15 +94,38 @@ class MainViewModel(private val repository: Repository): ViewModel() {
 
     val postTweetResult: LiveData<PostTweet> = _postTweet
 
-    fun postTheTweet(content: String) {
+//    fun postTheTweet(content: String) {
+//        val request = TheTweet(content)
+//        tweetApi.postTweet(request).enqueue(object : Callback<TheTweet> {
+//            override fun onResponse(call: Call<TheTweet>, response: Response<TheTweet>) {
+//                if (response.isSuccessful) {
+//                    val postTweet = response.body()
+//                    _token.value = token.toString()
+//                    _postTweet.value = postTweet?.let { PostTweet.Success(it) }
+//                } else {
+//                    _postTweet.value = PostTweet.Error(response.code().toString())
+//                }
+//            }
+//
+//            override fun onFailure(call: Call<TheTweet>, t: Throwable) {
+//                _postTweet.value = PostTweet.Error("Network error")
+//            }
+//        })
+//    }
+
+    fun postTheTweet(content: String, authToken: String) {
         val request = TheTweet(content)
-        tweetApi.postTweet(request).enqueue(object : Callback<TheTweet> {
+
+        // Add the authorization header to the API request
+        val authRequest = tweetApi.postTweet(request,"Bearer $authToken")
+
+        authRequest.enqueue(object : Callback<TheTweet> {
             override fun onResponse(call: Call<TheTweet>, response: Response<TheTweet>) {
                 if (response.isSuccessful) {
                     val postTweet = response.body()
                     _postTweet.value = postTweet?.let { PostTweet.Success(it) }
                 } else {
-                    _postTweet.value = PostTweet.Error("Some error occur while posting the sheet")
+                    _postTweet.value = PostTweet.Error(response.code().toString())
                 }
             }
 
@@ -117,6 +142,44 @@ class MainViewModel(private val repository: Repository): ViewModel() {
             responseTweets.value = response
         }
     }
+
+    private val apiService: Api = retrofit.create(Api::class.java)
+
+    private val _data = MutableLiveData<Call<List<UsersItem>>>()
+    val data: LiveData<Call<List<UsersItem>>> get() = _data
+
+    fun fetchData(token: String) {
+        viewModelScope.launch {
+            try {
+                val response = apiService.getAuthUserData("Bearer $token")
+                _data.value = response
+
+            } catch (e: Exception) {
+                Log.d("TAG", e.message.toString())
+            }
+        }
+    }
+
+    val usersItemLiveData = MutableLiveData<UsersItem?>()
+    fun setDataToTextView(token: String) {
+
+            val retrofitData = RetrofitInstance.api.getAuthUserData(token)
+            retrofitData.enqueue(object : Callback<List<UsersItem>?> {
+
+                override fun onResponse(call: Call<List<UsersItem>?>, response: Response<List<UsersItem>?>) {
+                    val responseBody = response.body()
+                    if (responseBody.isNullOrEmpty()) {
+                        val usersItem = responseBody?.get(0) // Assuming only one UsersItem is returned
+                        usersItemLiveData.value = usersItem
+                    }
+                }
+
+                override fun onFailure(call: Call<List<UsersItem>?>, t: Throwable) {
+                    // Handle failure
+                }
+            })
+        }
+
 
 //    fun getTweetForAuthUser(username: String, password: String){
 //        var user : ApiUsersItem? = null

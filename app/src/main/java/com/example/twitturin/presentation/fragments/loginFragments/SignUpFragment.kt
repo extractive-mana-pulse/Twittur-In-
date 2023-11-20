@@ -39,7 +39,8 @@ class SignUpFragment : Fragment() {
             val major = binding.majorEt.text.toString()
             val email = binding.emailEt.text.toString()
             val password = binding.passwordEt.text.toString()
-            viewModel.signUp(username, studentId, major, email, password)
+            val kind = binding.kind.text.toString()
+            viewModel.signUp(username, studentId, major, email, password, kind)
         }
 
         viewModel.signUpResult.observe(viewLifecycleOwner) { result ->
@@ -54,8 +55,9 @@ class SignUpFragment : Fragment() {
                 }
             }
         }
+
         binding.backBtn.setOnClickListener {
-            findNavController().navigate(R.id.action_signUpFragment_to_signInFragment)
+            requireActivity().onBackPressed()
         }
     }
 

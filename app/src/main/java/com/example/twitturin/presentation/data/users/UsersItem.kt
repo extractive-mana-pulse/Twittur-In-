@@ -1,6 +1,6 @@
-package com.example.twitturin.presentation.data.tweets
+package com.example.twitturin.presentation.data.users
 
-data class Author(
+data class UsersItem(
     val age: Int,
     val country: String,
     val email: String,
@@ -8,7 +8,10 @@ data class Author(
     val id: String,
     val kind: String,
     val major: String,
+    val replies: List<Reply>,
     val studentId: String,
     val subject: String,
-    val username: String
+    val tweets: List<Tweet>,
+    val username: String,
+    val token: String?
 )

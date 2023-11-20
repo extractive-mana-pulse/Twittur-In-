@@ -71,7 +71,7 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/student_id_et"
-                    android:hint="Student ID"
+                    android:hint="username"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent" />

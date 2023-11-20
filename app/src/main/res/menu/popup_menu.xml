@@ -11,4 +11,10 @@
         android:icon="@drawable/baseline_logout_24"
         android:title="@string/logout"/>
 
+    <item
+        android:id="@+id/delete_account"
+        android:icon="@drawable/user"
+        android:title="@string/delete_account"
+        android:textColor="?attr/errorTextColor"/>
+
 </menu>

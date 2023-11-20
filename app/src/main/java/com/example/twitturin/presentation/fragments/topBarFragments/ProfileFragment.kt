@@ -11,21 +11,25 @@ import android.view.ViewGroup
 import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
 import com.example.twitturin.SessionManager
 import com.example.twitturin.databinding.FragmentProfileBinding
 import com.example.twitturin.presentation.adapters.ProfileViewPagerAdapter
 import com.example.twitturin.presentation.api.RetrofitInstance
-import com.example.twitturin.presentation.data.users.ApiUsersItem
+import com.example.twitturin.presentation.data.tweets.ApiTweetsItem
+import com.example.twitturin.presentation.data.users.UsersItem
+import com.example.twitturin.presentation.mvvm.MainViewModel
+import com.example.twitturin.presentation.mvvm.Repository
+import com.example.twitturin.presentation.mvvm.ViewModelFactory
 import com.google.android.material.tabs.TabLayoutMediator
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class ProfileFragment : Fragment() {
 
     private lateinit var binding: FragmentProfileBinding
+
+    private lateinit var viewModel: MainViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentProfileBinding.inflate(layoutInflater)
@@ -37,8 +41,27 @@ class ProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.profileFragment = this
 
+        val repository = Repository()
+        val viewModelFactory = ViewModelFactory(repository)
+        viewModel = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
+
         val sessionManager = SessionManager(requireContext())
-        setDataToTextView()
+        val token = sessionManager.getToken()
+
+        viewModel.usersItemLiveData.observe(viewLifecycleOwner) { usersItem ->
+            binding.idUser.text = usersItem?.id
+            binding.profileName.text = usersItem?.fullName
+            binding.customName.text = usersItem?.username
+            binding.profileDescription.text = usersItem?.token
+        }
+
+        if (token != null) {
+            viewModel.setDataToTextView(token)
+        } else {
+            Toast.makeText(requireContext(), "token error", Toast.LENGTH_SHORT).show()
+        }
+
+//        setDataToTextView()
 
         binding.threeDotMenu.setOnClickListener {
             val popupMenu = PopupMenu(requireContext(), it)
@@ -61,12 +84,18 @@ class ProfileFragment : Fragment() {
                             sessionManager.clearToken()
                             findNavController().navigate(R.id.signInFragment)
                         }
-                        alertDialogBuilder.setNegativeButton("No") { _, _ ->
-                            requireActivity().finish()
+                        alertDialogBuilder.setNegativeButton("No") { dialog, _ ->
+                            dialog.dismiss()
                         }
                         alertDialogBuilder.setCancelable(false)
                         val alertDialog = alertDialogBuilder.create()
                         alertDialog.show()
+                        true
+                    }
+                    R.id.delete_account -> {
+                        val user = binding.idUser
+                        RetrofitInstance.api.deleteUser(user.id, token.toString())
+                        Toast.makeText(requireContext(), "???", Toast.LENGTH_SHORT).show()
                         true
                     }
                     else -> false
@@ -89,7 +118,6 @@ class ProfileFragment : Fragment() {
             }
         }
 
-
         val adapter = ProfileViewPagerAdapter(childFragmentManager, lifecycle)
         binding.vp2.adapter = adapter
         TabLayoutMediator(binding.tb, binding.vp2) { tab, pos ->
@@ -104,6 +132,38 @@ class ProfileFragment : Fragment() {
         }.attach()
     }
 
+//    private fun setDataToTextView(){
+//        // TODO { rebuild it. use @header to get correct user name and full name! }
+//        val sessionManager = SessionManager(requireContext())
+//        val token = sessionManager.getToken()
+//        if (token != null) {
+//            Toast.makeText(requireContext(), token.toString(), Toast.LENGTH_SHORT).show()
+//            val retrofitData = RetrofitInstance.api.getAuthUserData(token)
+//            retrofitData.enqueue(object : Callback<List<UsersItem>?> {
+//
+//                override fun onResponse(call: Call<List<UsersItem>?>, response: Response<List<UsersItem>?>) {
+//                    val responseBody = response.body()
+//                    for(myData in responseBody) {
+//                        binding.idUser.text = myData.id
+//                        binding.profileName.text = myData.fullName
+//                        binding.customName.text = myData.username
+//                        binding.profileDescription.text = myData.token
+//                    }
+//                }
+//
+//                override fun onFailure(call: Call<List<UsersItem>?>, t: Throwable) {
+//                    Toast.makeText(requireContext(), t.message, Toast.LENGTH_SHORT).show()
+//                }
+//            })
+//        }
+//    }
+
+    fun goBack(){
+        binding.back.setOnClickListener {
+            requireActivity().onBackPressed()
+        }
+    }
+
     private fun share(){
 //         val intent = Intent(Intent.ACTION_SEND)
 //         intent.putExtra(Intent.EXTRA_TEXT, data.web_url)
@@ -111,31 +171,6 @@ class ProfileFragment : Fragment() {
 //         requireContext().startActivity(Intent.createChooser(intent,"Choose app:"))
     }
 
-    private fun setDataToTextView(){
-        // TODO { rebuild it. use @header to get correct user name and full name! }
-        val retrofitData = RetrofitInstance.api.getUserData()
-
-        retrofitData.enqueue(object : Callback<List<ApiUsersItem>?> {
-            override fun onResponse(call: Call<List<ApiUsersItem>?>, response: Response<List<ApiUsersItem>?>) {
-                val responseBody = response.body()!!
-
-                for(myData in responseBody) {
-                    binding.profileName.text = myData.fullName
-                    Log.d("tag", binding.profileName.text.toString())
-                    binding.customName.text = myData.username
-                }
-            }
-
-            override fun onFailure(call: Call<List<ApiUsersItem>?>, t: Throwable) {
-                Toast.makeText(requireContext(), t.message, Toast.LENGTH_SHORT).show()
-            }
-        })
-    }
-    fun goBack(){
-        binding.back.setOnClickListener {
-            requireActivity().onBackPressed()
-        }
-    }
     companion object {
         @JvmStatic
         fun newInstance() = ProfileFragment()

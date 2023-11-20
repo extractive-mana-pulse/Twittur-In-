@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="48dp"
             android:text="Sign Up"
-            android:textColor="@color/black"
+            android:textColor="?attr/colorPrimary"
             android:textSize="34sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -181,6 +181,29 @@
                     android:layout_height="wrap_content"
                     android:hint="Password"
                     android:inputType="textPassword"
+                    android:background="@android:color/transparent"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayout5"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/edit_text_bg_ui"
+                app:hintTextColor="?attr/colorOnPrimaryContainer"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textInputLayout4"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/kind"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="kind"
+                    android:inputType="text"
                     android:background="@android:color/transparent"/>
 
             </com.google.android.material.textfield.TextInputLayout>
