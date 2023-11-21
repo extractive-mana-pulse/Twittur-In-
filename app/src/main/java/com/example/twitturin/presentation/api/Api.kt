@@ -37,9 +37,4 @@ interface Api  {
 
     @GET("users")
     fun getAuthUserData(@Header("Authorization") token: String) : Call<List<UsersItem>>
-
-
-    @Headers("Content-Type: application/json")
-    @GET("tweets")
-    fun getTweets(@Header("Authorization") token: String): Response<List<ApiTweetsItem>>
 }

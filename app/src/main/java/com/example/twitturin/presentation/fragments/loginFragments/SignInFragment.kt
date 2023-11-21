@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.app.ActivityCompat.finishAffinity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -19,13 +20,18 @@ import com.example.twitturin.presentation.mvvm.Repository
 import com.example.twitturin.presentation.mvvm.ViewModelFactory
 import com.example.twitturin.presentation.sealeds.SignInResult
 
+
 class SignInFragment : Fragment() {
 
-    private lateinit var binding : FragmentSignInBinding
+    private lateinit var binding: FragmentSignInBinding
 
     private lateinit var mainViewModel: MainViewModel
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         binding = FragmentSignInBinding.inflate(layoutInflater)
         return binding.root
     }
@@ -40,7 +46,6 @@ class SignInFragment : Fragment() {
         val viewModelFactory = ViewModelFactory(repository)
         mainViewModel = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
 
-
         binding.signIn.setOnClickListener {
             val username = binding.studentIdEt.text.toString()
             val password = binding.passwordEt.text.toString()
@@ -50,10 +55,11 @@ class SignInFragment : Fragment() {
         mainViewModel.signInResult.observe(viewLifecycleOwner) { result ->
             when (result) {
                 is SignInResult.Success -> {
-                    findNavController().navigate(R.id.action_signInFragment_to_homeFragment)
                     val token = mainViewModel.token.value
                     sessionManager.saveToken(token.toString())
-                    Toast.makeText(requireContext(), mainViewModel.token.value, Toast.LENGTH_SHORT).show()
+                    findNavController().navigate(R.id.action_signInFragment_to_homeFragment)
+                    Toast.makeText(requireContext(), "successfully logging in", Toast.LENGTH_SHORT)
+                        .show()
                 }
 
                 is SignInResult.Error -> {
@@ -64,33 +70,41 @@ class SignInFragment : Fragment() {
         }
 
         val pref = requireActivity().getSharedPreferences("checkbox", MODE_PRIVATE)
-        val checkbox = pref.getString("remember","")
+        val checkbox = pref.getString("remember", "")
 
-        if (checkbox.equals("true")){
+        if (checkbox.equals("true")) {
             findNavController().navigate(R.id.action_signInFragment_to_homeFragment)
-        }else if (checkbox.equals("false")){
-            Log.d("Tag","hello world")
+        } else if (checkbox.equals("false")) {
+            Log.d("Tag", "hello world")
         }
 
-        binding.rememberMeCheckBox.setOnCheckedChangeListener { compoundButton, b ->
+        binding.rememberMeCheckBox.setOnCheckedChangeListener { compoundButton, _ ->
 
-            if (compoundButton.isChecked){
+            if (compoundButton.isChecked) {
                 val preferences = requireActivity().getSharedPreferences("checkbox", MODE_PRIVATE)
                 val editor: SharedPreferences.Editor = preferences.edit()
-                editor.putString("remember","true")
+                editor.putString("remember", "true")
                 editor.apply()
 
-            }else if(!compoundButton.isChecked){
+            } else if (!compoundButton.isChecked) {
                 val preferences = requireActivity().getSharedPreferences("checkbox", MODE_PRIVATE)
                 val editor: SharedPreferences.Editor = preferences.edit()
-                editor.putString("remember","false")
+                editor.putString("remember", "false")
                 editor.apply()
-
             }
         }
     }
 
-    fun goToSignUp(){
+//    fun onBackPressed() {
+//        super.requireActivity().onBackPressed()
+//        requireActivity().finish()
+//    }
+
+    fun onBackPressed() {
+        finishAffinity(requireActivity())
+    }
+
+    fun goToSignUp() {
         findNavController().navigate(R.id.action_signInFragment_to_signUpFragment)
     }
 

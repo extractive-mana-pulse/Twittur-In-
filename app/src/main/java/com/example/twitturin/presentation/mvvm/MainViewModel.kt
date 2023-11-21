@@ -32,8 +32,8 @@ class MainViewModel(private val repository: Repository): ViewModel() {
 
     private val signInApi: Api = retrofit.create(Api::class.java)
 
-    private val _signInResult = MutableLiveData<SignInResult>()
-    val signInResult: LiveData<SignInResult> = _signInResult
+    private val _signInResult = SingleLiveEvent<SignInResult>()
+    val signInResult: SingleLiveEvent<SignInResult> = _signInResult
 
     private val _token = MutableLiveData<String>()
     val token: LiveData<String> = _token
@@ -90,7 +90,7 @@ class MainViewModel(private val repository: Repository): ViewModel() {
 
     private val tweetApi: Api = retrofit.create(Api::class.java)
 
-    private val _postTweet = MutableLiveData<PostTweet>()
+    private val _postTweet = SingleLiveEvent<PostTweet>()
 
     val postTweetResult: LiveData<PostTweet> = _postTweet
 
@@ -123,6 +123,7 @@ class MainViewModel(private val repository: Repository): ViewModel() {
             override fun onResponse(call: Call<TheTweet>, response: Response<TheTweet>) {
                 if (response.isSuccessful) {
                     val postTweet = response.body()
+
                     _postTweet.value = postTweet?.let { PostTweet.Success(it) }
                 } else {
                     _postTweet.value = PostTweet.Error(response.code().toString())
@@ -163,12 +164,12 @@ class MainViewModel(private val repository: Repository): ViewModel() {
     val usersItemLiveData = MutableLiveData<UsersItem?>()
     fun setDataToTextView(token: String) {
 
-            val retrofitData = RetrofitInstance.api.getAuthUserData(token)
+            val retrofitData = RetrofitInstance.api.getAuthUserData("Bearer $token")
             retrofitData.enqueue(object : Callback<List<UsersItem>?> {
 
                 override fun onResponse(call: Call<List<UsersItem>?>, response: Response<List<UsersItem>?>) {
                     val responseBody = response.body()
-                    if (responseBody.isNullOrEmpty()) {
+                    if (responseBody != null) {
                         val usersItem = responseBody?.get(0) // Assuming only one UsersItem is returned
                         usersItemLiveData.value = usersItem
                     }

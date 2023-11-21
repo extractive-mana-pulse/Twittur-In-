@@ -80,9 +80,11 @@ class ProfileFragment : Fragment() {
                             val pref = requireActivity().getSharedPreferences("checkbox", Context.MODE_PRIVATE)
                             val editor = pref.edit()
                             editor.remove("remember")
+                            editor.clear()
                             editor.apply()
                             sessionManager.clearToken()
-                            findNavController().navigate(R.id.signInFragment)
+                            findNavController().navigate(R.id.action_profileFragment_to_signInFragment)
+                            requireActivity().finish()
                         }
                         alertDialogBuilder.setNegativeButton("No") { dialog, _ ->
                             dialog.dismiss()

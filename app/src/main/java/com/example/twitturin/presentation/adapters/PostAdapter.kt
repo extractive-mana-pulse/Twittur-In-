@@ -29,8 +29,8 @@ class PostAdapter : RecyclerView.Adapter<PostAdapter.ViewHolder>() {
         var isLiked: Boolean = false
 
         holder.binding.apply {
-            userNickname.text = item.author.fullName
-            studentIdTv.text = item.author.username
+            fullNameTv.text = item.author.fullName
+            usernameTv.text = item.author.username
             postDescription.text = item.content
             postCommentsCounter.text = item.replyCount.toString()
             postHeartCounter.text = item.likes.toString()
