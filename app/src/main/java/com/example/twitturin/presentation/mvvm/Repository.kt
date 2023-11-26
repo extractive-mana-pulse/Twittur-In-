@@ -11,8 +11,4 @@ class Repository {
     suspend fun getTweets() : Response<List<ApiTweetsItem>> {
         return RetrofitInstance.api.getTweet()
     }
-
-    suspend fun getAuthUser(token: String): Call<List<UsersItem>>{
-        return RetrofitInstance.api.getAuthUserData(token)
-    }
 }

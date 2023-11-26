@@ -26,10 +26,6 @@ class NotificationsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.notificationsFragment = this
-
-        val sessionManager = SessionManager(requireContext())
-
-        binding.tokenTv.text = sessionManager.getToken()
     }
 
     fun goToProfile(){

@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_graph"
     app:startDestination="@id/signInFragment">
+
+<!--  home Fragment  -->
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.example.twitturin.presentation.fragments.bottomNavigationView.HomeFragment"
@@ -20,7 +22,9 @@
             app:destination="@id/profileFragment" />
         <action
             android:id="@+id/action_homeFragment_to_publicPostFragment"
-            app:destination="@id/publicPostFragment" />
+            app:destination="@id/publicPostFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="true"/>
         <action
             android:id="@+id/action_homeFragment_to_searchFragment"
             app:destination="@id/searchFragment" />
@@ -28,6 +32,8 @@
             android:id="@+id/action_homeFragment_to_webViewFragment"
             app:destination="@id/webViewFragment" />
     </fragment>
+
+<!--  privateMessagesFragment  -->
     <fragment
         android:id="@+id/privateMessagesFragment"
         android:name="com.example.twitturin.presentation.fragments.bottomNavigationView.PrivateMessagesFragment"
@@ -40,6 +46,8 @@
             android:id="@+id/action_privateMessagesFragment_to_chatFragment"
             app:destination="@id/chatFragment" />
     </fragment>
+
+<!--  chatFragment  -->
     <fragment
         android:id="@+id/chatFragment"
         android:name="com.example.twitturin.presentation.fragments.ChatFragment"
@@ -49,6 +57,8 @@
             android:id="@+id/action_chatFragment_to_privateMessagesFragment"
             app:destination="@id/privateMessagesFragment" />
     </fragment>
+
+<!--  notificationsFragment  -->
     <fragment
         android:id="@+id/notificationsFragment"
         android:name="com.example.twitturin.presentation.fragments.bottomNavigationView.NotificationsFragment"
@@ -58,6 +68,8 @@
             android:id="@+id/action_notificationsFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
     </fragment>
+
+<!--  profileFragment  -->
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.example.twitturin.presentation.fragments.topBarFragments.ProfileFragment"
@@ -65,7 +77,9 @@
         tools:layout="@layout/fragment_profile" >
         <action
             android:id="@+id/action_profileFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/profileFragment"
+            app:popUpToInclusive="true"/>
         <action
             android:id="@+id/action_profileFragment_to_likesFragment"
             app:destination="@id/likesFragment" />
@@ -77,8 +91,12 @@
             app:destination="@id/editProfileFragment" />
         <action
             android:id="@+id/action_profileFragment_to_signInFragment"
-            app:destination="@id/signInFragment" />
+            app:destination="@id/signInFragment"
+            app:popUpTo="@id/profileFragment"
+            app:popUpToInclusive="true"/>
     </fragment>
+
+<!--  publicPostFragment  -->
     <fragment
         android:id="@+id/publicPostFragment"
         android:name="com.example.twitturin.presentation.fragments.PublicPostFragment"
@@ -86,17 +104,23 @@
         tools:layout="@layout/fragment_public_post" >
         <action
             android:id="@+id/action_publicPostFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/publicPostFragment"
+            app:popUpToInclusive="true"/>
     </fragment>
+
+<!--  searchFragment  -->
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.example.twitturin.presentation.fragments.bottomNavigationView.SearchFragment"
         android:label="fragment_search"
-        tools:layout="@layout/fragment_search" >
+        tools:layout="@layout/fragment_search">
         <action
             android:id="@+id/action_searchFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
+            app:destination="@id/homeFragment"/>
     </fragment>
+
+<!--  webViewFragment  -->
     <fragment
         android:id="@+id/webViewFragment"
         android:name="com.example.twitturin.presentation.fragments.topBarFragments.WebViewFragment"
@@ -106,6 +130,8 @@
             android:id="@+id/action_webViewFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
     </fragment>
+
+<!--  tweetsFragment  -->
     <fragment
         android:id="@+id/tweetsFragment"
         android:name="com.example.twitturin.presentation.fragments.viewPagerFragments.TweetsFragment"
@@ -115,6 +141,8 @@
             android:id="@+id/action_tweetsFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
     </fragment>
+
+<!--  likesFragment  -->
     <fragment
         android:id="@+id/likesFragment"
         android:name="com.example.twitturin.presentation.fragments.viewPagerFragments.LikesFragment"
@@ -124,6 +152,8 @@
             android:id="@+id/action_likesFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
     </fragment>
+
+<!--  signInFragment  -->
     <fragment
         android:id="@+id/signInFragment"
         android:name="com.example.twitturin.presentation.fragments.loginFragments.SignInFragment"
@@ -140,24 +170,29 @@
             app:enterAnim="@anim/from_right"
             app:exitAnim="@anim/to_left"
             app:popEnterAnim="@anim/from_left"
-            app:popExitAnim="@anim/to_right" />
+            app:popExitAnim="@anim/to_right"/>
     </fragment>
+
+<!--  signUpFragment  -->
     <fragment
         android:id="@+id/signUpFragment"
         android:name="com.example.twitturin.presentation.fragments.loginFragments.SignUpFragment"
         android:label="fragment_sign_up"
-        tools:layout="@layout/fragment_sign_up" >
+        tools:layout="@layout/fragment_sign_up">
         <action
             android:id="@+id/action_signUpFragment_to_signInFragment"
-            app:destination="@id/signInFragment" />
+            app:destination="@id/signInFragment"/>
     </fragment>
+
+<!--  editProfileFragment  -->
     <fragment
         android:id="@+id/editProfileFragment"
         android:name="com.example.twitturin.presentation.fragments.EditProfileFragment"
         android:label="fragment_edit_profile"
-        tools:layout="@layout/fragment_edit_profile" >
+        tools:layout="@layout/fragment_edit_profile">
         <action
             android:id="@+id/action_editProfileFragment_to_profileFragment"
-            app:destination="@id/profileFragment" />
+            app:destination="@id/profileFragment"/>
     </fragment>
+
 </navigation>

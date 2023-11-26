@@ -17,9 +17,6 @@ import retrofit2.http.Path
 
 interface Api  {
 
-    @GET("users")
-    fun getUserData(): Call<List<UsersItem>>
-
     @DELETE("users/{id}")
     fun deleteUser(@Path("id") id: Int,@Header("Authorization") token: String): Response<Unit>
 

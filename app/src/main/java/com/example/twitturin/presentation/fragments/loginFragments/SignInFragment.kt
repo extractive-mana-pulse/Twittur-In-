@@ -58,8 +58,6 @@ class SignInFragment : Fragment() {
                     val token = mainViewModel.token.value
                     sessionManager.saveToken(token.toString())
                     findNavController().navigate(R.id.action_signInFragment_to_homeFragment)
-                    Toast.makeText(requireContext(), "successfully logging in", Toast.LENGTH_SHORT)
-                        .show()
                 }
 
                 is SignInResult.Error -> {

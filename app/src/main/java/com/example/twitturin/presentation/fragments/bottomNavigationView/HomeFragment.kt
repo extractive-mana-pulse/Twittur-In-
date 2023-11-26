@@ -47,18 +47,15 @@ class HomeFragment : Fragment() {
         viewModel = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
 
 
-        binding.add.setOnClickListener {
-            findNavController().navigate(R.id.action_homeFragment_to_publicPostFragment)
-        }
-
+//        binding.add.setOnClickListener {
+//            findNavController().navigate(R.id.action_homeFragment_to_publicPostFragment)
+//        }
         recyclerViewSetup()
+
         updateRecyclerView()
     }
 
     private fun recyclerViewSetup(){
-//        this code is about divider in recyclerView programmatically
-//        val dividerItemDecoration = DividerItemDecoration(requireContext(), LinearLayoutManager.VERTICAL)
-//        binding.rcView.addItemDecoration(dividerItemDecoration)
         binding.rcView.adapter = postAdapter
         binding.rcView.layoutManager = LinearLayoutManager(requireContext())
     }
@@ -71,9 +68,9 @@ class HomeFragment : Fragment() {
         findNavController().navigate(R.id.action_homeFragment_to_profileFragment)
     }
 
-//    fun goToPublicPost(){
-//        findNavController().navigate(R.id.action_homeFragment_to_publicPostFragment)
-//    }
+    fun goToPublicPost(){
+        findNavController().navigate(R.id.action_homeFragment_to_publicPostFragment)
+    }
 
     @SuppressLint("NotifyDataSetChanged")
     private fun updateRecyclerView() {
@@ -94,12 +91,6 @@ class HomeFragment : Fragment() {
             }
         }
     }
-
-//    fun testImage(){
-//        findNavController().navigate(R.id.action_homeFragment_to_signInFragment)
-//    }
-
-
     companion object {
         @JvmStatic
         fun newInstance() = HomeFragment()

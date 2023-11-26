@@ -24,6 +24,9 @@ import com.example.twitturin.presentation.mvvm.MainViewModel
 import com.example.twitturin.presentation.mvvm.Repository
 import com.example.twitturin.presentation.mvvm.ViewModelFactory
 import com.google.android.material.tabs.TabLayoutMediator
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class ProfileFragment : Fragment() {
 
@@ -48,20 +51,7 @@ class ProfileFragment : Fragment() {
         val sessionManager = SessionManager(requireContext())
         val token = sessionManager.getToken()
 
-        viewModel.usersItemLiveData.observe(viewLifecycleOwner) { usersItem ->
-            binding.idUser.text = usersItem?.id
-            binding.profileName.text = usersItem?.fullName
-            binding.customName.text = usersItem?.username
-            binding.profileDescription.text = usersItem?.token
-        }
-
-        if (token != null) {
-            viewModel.setDataToTextView(token)
-        } else {
-            Toast.makeText(requireContext(), "token error", Toast.LENGTH_SHORT).show()
-        }
-
-//        setDataToTextView()
+        setDataToTextView()
 
         binding.threeDotMenu.setOnClickListener {
             val popupMenu = PopupMenu(requireContext(), it)
@@ -84,7 +74,6 @@ class ProfileFragment : Fragment() {
                             editor.apply()
                             sessionManager.clearToken()
                             findNavController().navigate(R.id.action_profileFragment_to_signInFragment)
-                            requireActivity().finish()
                         }
                         alertDialogBuilder.setNegativeButton("No") { dialog, _ ->
                             dialog.dismiss()
@@ -134,31 +123,31 @@ class ProfileFragment : Fragment() {
         }.attach()
     }
 
-//    private fun setDataToTextView(){
-//        // TODO { rebuild it. use @header to get correct user name and full name! }
-//        val sessionManager = SessionManager(requireContext())
-//        val token = sessionManager.getToken()
-//        if (token != null) {
-//            Toast.makeText(requireContext(), token.toString(), Toast.LENGTH_SHORT).show()
-//            val retrofitData = RetrofitInstance.api.getAuthUserData(token)
-//            retrofitData.enqueue(object : Callback<List<UsersItem>?> {
-//
-//                override fun onResponse(call: Call<List<UsersItem>?>, response: Response<List<UsersItem>?>) {
-//                    val responseBody = response.body()
-//                    for(myData in responseBody) {
-//                        binding.idUser.text = myData.id
-//                        binding.profileName.text = myData.fullName
-//                        binding.customName.text = myData.username
-//                        binding.profileDescription.text = myData.token
-//                    }
-//                }
-//
-//                override fun onFailure(call: Call<List<UsersItem>?>, t: Throwable) {
-//                    Toast.makeText(requireContext(), t.message, Toast.LENGTH_SHORT).show()
-//                }
-//            })
-//        }
-//    }
+    private fun setDataToTextView(){
+        val sessionManager = SessionManager(requireContext())
+        val token = sessionManager.getToken()
+
+        val call = RetrofitInstance.api.getAuthUserData("Bearer $token")
+
+        call.enqueue(object : Callback<List<UsersItem>> {
+            override fun onResponse(call: Call<List<UsersItem>>, response: Response<List<UsersItem>>) {
+                if (response.isSuccessful) {
+                    val users = response.body()
+                    if (users != null) {
+                        for (user in users){
+                            binding.profileName.text = user.fullName
+                            binding.customName.text = user.username
+                        }
+                    }
+                } else {
+                    Toast.makeText(requireContext(), response.code(), Toast.LENGTH_SHORT).show()
+                }
+            }
+            override fun onFailure(call: Call<List<UsersItem>>, t: Throwable) {
+                Toast.makeText(requireContext(), t.message, Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
 
     fun goBack(){
         binding.back.setOnClickListener {
@@ -166,12 +155,14 @@ class ProfileFragment : Fragment() {
         }
     }
 
-    private fun share(){
+//    private fun share(){
 //         val intent = Intent(Intent.ACTION_SEND)
 //         intent.putExtra(Intent.EXTRA_TEXT, data.web_url)
 //         intent.type = "text/plain"
 //         requireContext().startActivity(Intent.createChooser(intent,"Choose app:"))
-    }
+//    }
+
+
 
     companion object {
         @JvmStatic
