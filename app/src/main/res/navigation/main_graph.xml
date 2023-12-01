@@ -8,7 +8,7 @@
 <!--  home Fragment  -->
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.twitturin.presentation.fragments.bottomNavigationView.HomeFragment"
+        android:name="com.example.twitturin.ui.fragments.bottomNavigationView.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
         <action
@@ -36,7 +36,7 @@
 <!--  privateMessagesFragment  -->
     <fragment
         android:id="@+id/privateMessagesFragment"
-        android:name="com.example.twitturin.presentation.fragments.bottomNavigationView.PrivateMessagesFragment"
+        android:name="com.example.twitturin.ui.fragments.bottomNavigationView.PrivateMessagesFragment"
         android:label="fragment_private_messages"
         tools:layout="@layout/fragment_private_messages" >
         <action
@@ -50,7 +50,7 @@
 <!--  chatFragment  -->
     <fragment
         android:id="@+id/chatFragment"
-        android:name="com.example.twitturin.presentation.fragments.ChatFragment"
+        android:name="com.example.twitturin.ui.fragments.ChatFragment"
         android:label="fragment_chat"
         tools:layout="@layout/fragment_chat" >
         <action
@@ -61,7 +61,7 @@
 <!--  notificationsFragment  -->
     <fragment
         android:id="@+id/notificationsFragment"
-        android:name="com.example.twitturin.presentation.fragments.bottomNavigationView.NotificationsFragment"
+        android:name="com.example.twitturin.ui.fragments.bottomNavigationView.NotificationsFragment"
         android:label="fragment_notifications"
         tools:layout="@layout/fragment_notifications" >
         <action
@@ -72,7 +72,7 @@
 <!--  profileFragment  -->
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.example.twitturin.presentation.fragments.topBarFragments.ProfileFragment"
+        android:name="com.example.twitturin.ui.fragments.topBarFragments.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" >
         <action
@@ -99,7 +99,7 @@
 <!--  publicPostFragment  -->
     <fragment
         android:id="@+id/publicPostFragment"
-        android:name="com.example.twitturin.presentation.fragments.PublicPostFragment"
+        android:name="com.example.twitturin.ui.fragments.PublicPostFragment"
         android:label="fragment_public_post"
         tools:layout="@layout/fragment_public_post" >
         <action
@@ -112,7 +112,7 @@
 <!--  searchFragment  -->
     <fragment
         android:id="@+id/searchFragment"
-        android:name="com.example.twitturin.presentation.fragments.bottomNavigationView.SearchFragment"
+        android:name="com.example.twitturin.ui.fragments.bottomNavigationView.SearchFragment"
         android:label="fragment_search"
         tools:layout="@layout/fragment_search">
         <action
@@ -123,7 +123,7 @@
 <!--  webViewFragment  -->
     <fragment
         android:id="@+id/webViewFragment"
-        android:name="com.example.twitturin.presentation.fragments.topBarFragments.WebViewFragment"
+        android:name="com.example.twitturin.ui.fragments.topBarFragments.WebViewFragment"
         android:label="fragment_web_view"
         tools:layout="@layout/fragment_web_view" >
         <action
@@ -134,7 +134,7 @@
 <!--  tweetsFragment  -->
     <fragment
         android:id="@+id/tweetsFragment"
-        android:name="com.example.twitturin.presentation.fragments.viewPagerFragments.TweetsFragment"
+        android:name="com.example.twitturin.ui.fragments.viewPagerFragments.TweetsFragment"
         android:label="fragment_tweets"
         tools:layout="@layout/fragment_tweets" >
         <action
@@ -145,7 +145,7 @@
 <!--  likesFragment  -->
     <fragment
         android:id="@+id/likesFragment"
-        android:name="com.example.twitturin.presentation.fragments.viewPagerFragments.LikesFragment"
+        android:name="com.example.twitturin.ui.fragments.viewPagerFragments.LikesFragment"
         android:label="fragment_likes"
         tools:layout="@layout/fragment_likes" >
         <action
@@ -156,7 +156,7 @@
 <!--  signInFragment  -->
     <fragment
         android:id="@+id/signInFragment"
-        android:name="com.example.twitturin.presentation.fragments.loginFragments.SignInFragment"
+        android:name="com.example.twitturin.ui.fragments.loginFragments.SignInFragment"
         android:label="fragment_sign_in"
         tools:layout="@layout/fragment_sign_in" >
         <action
@@ -176,7 +176,7 @@
 <!--  signUpFragment  -->
     <fragment
         android:id="@+id/signUpFragment"
-        android:name="com.example.twitturin.presentation.fragments.loginFragments.SignUpFragment"
+        android:name="com.example.twitturin.ui.fragments.loginFragments.SignUpFragment"
         android:label="fragment_sign_up"
         tools:layout="@layout/fragment_sign_up">
         <action
@@ -187,7 +187,7 @@
 <!--  editProfileFragment  -->
     <fragment
         android:id="@+id/editProfileFragment"
-        android:name="com.example.twitturin.presentation.fragments.EditProfileFragment"
+        android:name="com.example.twitturin.ui.fragments.EditProfileFragment"
         android:label="fragment_edit_profile"
         tools:layout="@layout/fragment_edit_profile">
         <action
