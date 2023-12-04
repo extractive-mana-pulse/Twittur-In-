@@ -8,62 +8,65 @@
         android:id="@+id/drag_handler"
         android:layout_width="40dp"
         android:layout_height="4dp"
-        android:layout_margin="3dp"
+        android:layout_margin="8dp"
         android:background="@drawable/bottom_sheet_drag_handler"
         android:layout_gravity="center_horizontal" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginHorizontal="16dp">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:layout_gravity="center"
-            android:src="@drawable/username_person"/>
+            android:src="@drawable/person_add"/>
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="read username"
-            android:layout_gravity="center"/>
+            android:text="read \@username"
+            android:textAlignment="textStart"/>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginHorizontal="16dp">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:layout_gravity="center"
-            android:src="@drawable/username_person"/>
+            android:src="@drawable/report"/>
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="read username"
-            android:layout_gravity="center"/>
+            android:text="repost tweet"
+            android:textAlignment="textStart"/>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginHorizontal="16dp">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:layout_gravity="center"
-            android:src="@drawable/username_person"/>
+            android:src="@drawable/delete"/>
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="read username"
-            android:layout_gravity="center"/>
+            android:text="delete tweet"
+            android:textAlignment="textStart"/>
     </LinearLayout>
 
 </LinearLayout>

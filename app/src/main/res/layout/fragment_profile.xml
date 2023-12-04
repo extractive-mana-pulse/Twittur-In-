@@ -168,6 +168,8 @@
                 android:layout_height="wrap_content"
                 android:text="user id"
                 android:textStyle="italic"
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:textSize="18sp"
                 android:layout_marginTop="5dp"
                 android:layout_marginStart="13dp"/>

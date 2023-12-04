@@ -16,34 +16,13 @@ import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
 import com.example.twitturin.SessionManager
 import com.example.twitturin.databinding.FragmentProfileBinding
-import com.example.twitturin.model.api.Api
-import com.example.twitturin.model.api.RetrofitInstance
-import com.example.twitturin.model.data.tweets.ApiTweetsItem
-import com.example.twitturin.model.data.users.UsersItem
-import com.example.twitturin.model.repo.Repository
 import com.example.twitturin.ui.adapters.ProfileViewPagerAdapter
-import com.example.twitturin.ui.sealeds.DeleteResult
 import com.example.twitturin.ui.viewModels.ProfileViewModel
-import com.example.twitturin.viewmodel.MainViewModel
-import com.example.twitturin.viewmodel.ViewModelFactory
 import com.google.android.material.tabs.TabLayoutMediator
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 class ProfileFragment : Fragment() {
 
     private lateinit var binding: FragmentProfileBinding
-
-    private val strBuilder = StringBuilder()
-
-//    private val sessionManager = SessionManager(requireContext())
-
     private lateinit var viewModel: ProfileViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -56,11 +35,11 @@ class ProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.profileFragment = this
 
-        val sessionManager = SessionManager(requireContext())
-        setDataToTextView()
+        viewModel = ViewModelProvider(this)[ProfileViewModel::class.java]
 
         binding.threeDotMenu.setOnClickListener {
-            val popupMenu = PopupMenu(requireContext(), it)
+            val sessionManager = SessionManager(requireContext())
+            val popupMenu = PopupMenu(requireContext(), view)
 
             popupMenu.setOnMenuItemClickListener { item ->
                 when (item.itemId){
@@ -90,7 +69,7 @@ class ProfileFragment : Fragment() {
                         true
                     }
                     R.id.delete_account -> {
-                        deleteUser()
+                        Toast.makeText(requireContext(), "in progress", Toast.LENGTH_SHORT).show()
                         true
                     }
                     else -> false
@@ -127,70 +106,11 @@ class ProfileFragment : Fragment() {
         }.attach()
     }
 
-    private fun setDataToTextView() {
-        val sessionManager = SessionManager(requireContext())
-        val token = sessionManager.getToken()
-
-        val call = RetrofitInstance.api.getAuthUserData("Bearer $token")
-
-        call.enqueue(object : Callback<List<UsersItem>> {
-            override fun onResponse(call: Call<List<UsersItem>>, response: Response<List<UsersItem>>) {
-                if (response.isSuccessful) {
-
-                    val users = response.body()
-                    if (users != null) {
-                        for (user in users){
-                            binding.profileName.text = user.fullName
-                            binding.customName.text = user.username
-                            strBuilder.append(user.id)
-                        }
-                        binding.userIdTv.text  = strBuilder
-                    }
-                } else {
-                    Toast.makeText(requireContext(), response.code(), Toast.LENGTH_SHORT).show()
-                }
-            }
-            override fun onFailure(call: Call<List<UsersItem>>, t: Throwable) {
-                Toast.makeText(requireContext(), t.message, Toast.LENGTH_SHORT).show()
-            }
-        })
-    }
-
-    private fun deleteUser() {
-        val sessionManager = SessionManager(requireContext())
-        val token = sessionManager.getToken()
-        viewModel = ViewModelProvider(this)[ProfileViewModel::class.java]
-
-        binding.userIdTv.text = strBuilder
-
-        viewModel.deleteUser(strBuilder.toString(),"Bearer $token")
-
-        viewModel.deleteResult.observe(viewLifecycleOwner) { result ->
-            when (result) {
-
-                is DeleteResult.Success -> {
-                    findNavController().navigate(R.id.action_profileFragment_to_signInFragment)
-                    Toast.makeText(requireContext(), "deleted ?", Toast.LENGTH_SHORT).show()
-                }
-                is DeleteResult.Error -> {
-                    Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
-    }
-
     fun goBack(){
         binding.back.setOnClickListener {
             requireActivity().onBackPressed()
         }
     }
-
-//    private fun share(){
-//         val intent = Intent(Intent.ACTION_SEND)
-//         intent.putExtra(Intent.EXTRA_TEXT, data.web_url)
-//         intent.type = "text/plain"
-//         requireContext().startActivity(Intent.createChooser(intent,"Choose app:"))
-//    }
 
     companion object {
         @JvmStatic

@@ -14,6 +14,7 @@ import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface Api  {
 
@@ -26,6 +27,9 @@ interface Api  {
     @POST("auth")
     fun signInUser(@Body authUSer: SignIn): Call<UsersItem>
 
+    @GET("users/{id}")
+    suspend fun getPostsByUser(@Query("userId") userId: String, @Header("Authorization") authToken: String): UsersItem
+
     @POST("users")
     fun signUpUser(@Body user: SignUp): Call<SignUp>
 
@@ -35,6 +39,6 @@ interface Api  {
     @GET("tweets")
     suspend fun getTweet(): Response<List<ApiTweetsItem>>
 
-    @GET("users")
-    fun getAuthUserData(@Header("Authorization") token: String) : Call<List<UsersItem>>
+    @GET("users/{id}")
+    suspend fun getLoggedInUserData(@Query("userId") userId : String) : Response<List<UsersItem>>
 }
