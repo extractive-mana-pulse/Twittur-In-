@@ -5,9 +5,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.twitturin.model.api.Api
-import com.example.twitturin.model.data.users.UsersItem
+import com.example.twitturin.model.data.users.User
 import com.example.twitturin.ui.sealeds.DeleteResult
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import retrofit2.Response
 import retrofit2.Retrofit
@@ -48,17 +50,19 @@ class ProfileViewModel: ViewModel() {
         }
     }
 
-    private val _userData = MutableLiveData<Response<List<UsersItem>>>()
-    val userData: LiveData<Response<List<UsersItem>>> = _userData
+//    private val _userData = MutableLiveData<Response<List<User>>>()
+//    val userData: LiveData<Response<List<User>>> = _userData
+//
+//    fun fetchUserData(userId: String) {
+//        viewModelScope.launch {
+//            try {
+//                val userData = apiService.getLoggedInUserData(userId)
+//                _userData.value = userData
+//            } catch (e: Exception) {
+//                e.message
+//            }
+//        }
+//    }
 
-    fun fetchUserData(userId: String) {
-        viewModelScope.launch {
-            try {
-                val userData = apiService.getLoggedInUserData(userId)
-                _userData.value = userData
-            } catch (e: Exception) {
-                e.message
-            }
-        }
-    }
+
 }

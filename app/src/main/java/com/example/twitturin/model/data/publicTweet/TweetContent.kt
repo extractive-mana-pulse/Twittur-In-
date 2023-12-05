@@ -1,5 +1,5 @@
 package com.example.twitturin.model.data.publicTweet
 
-data class TheTweet(
+data class TweetContent(
     val content : String
 )

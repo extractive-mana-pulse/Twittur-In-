@@ -18,8 +18,6 @@ import com.example.twitturin.databinding.FragmentSignInBinding
 import com.example.twitturin.model.repo.Repository
 import com.example.twitturin.ui.sealeds.SignInResult
 import com.example.twitturin.viewmodel.SignInViewModel
-import com.example.twitturin.viewmodel.ViewModelFactory
-import com.example.twitturin.viewmodel.ViewModelFactory2
 
 
 class SignInFragment : Fragment() {
@@ -39,9 +37,7 @@ class SignInFragment : Fragment() {
 
         val sessionManager = SessionManager(requireContext())
 
-        val repository = Repository()
-        val viewModelFactory = ViewModelFactory2(repository)
-        viewModel = ViewModelProvider(this, viewModelFactory)[SignInViewModel::class.java]
+        viewModel = ViewModelProvider(this)[SignInViewModel::class.java]
 
         binding.signIn.setOnClickListener {
             val username = binding.studentIdEt.text.toString()

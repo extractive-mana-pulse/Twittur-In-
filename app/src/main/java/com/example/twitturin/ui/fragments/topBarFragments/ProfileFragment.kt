@@ -16,26 +16,58 @@ import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
 import com.example.twitturin.SessionManager
 import com.example.twitturin.databinding.FragmentProfileBinding
+import com.example.twitturin.model.api.RetrofitInstance
+import com.example.twitturin.model.data.users.User
+import com.example.twitturin.model.repo.Repository
 import com.example.twitturin.ui.adapters.ProfileViewPagerAdapter
 import com.example.twitturin.ui.viewModels.ProfileViewModel
+import com.example.twitturin.viewmodel.MainViewModel
+import com.example.twitturin.viewmodel.ViewModelFactory
 import com.google.android.material.tabs.TabLayoutMediator
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class ProfileFragment : Fragment() {
 
     private lateinit var binding: FragmentProfileBinding
-    private lateinit var viewModel: ProfileViewModel
+    private lateinit var viewModel: MainViewModel
+    private val x = StringBuilder()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentProfileBinding.inflate(layoutInflater)
         return binding.root
     }
 
+    private fun setupViewModel() {
+
+        val userRepository = Repository()
+        viewModel = ViewModelProvider(this, ViewModelFactory(userRepository))[MainViewModel::class.java]
+        viewModel.userData.observe(viewLifecycleOwner) { user ->
+            binding.profileName.text = user.fullName
+            x.append(user.id)
+        }
+    }
+
+    private fun fetchUserData(userId: String) {
+        GlobalScope.launch(Dispatchers.Main) {
+            viewModel.fetchUserData(userId)
+        }
+    }
+
     @SuppressLint("DiscouragedPrivateApi")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.profileFragment = this
+        setupViewModel()
+        fetchUserData(x.toString())
+        Log.d("userId",x.toString())
 
-        viewModel = ViewModelProvider(this)[ProfileViewModel::class.java]
+
+
+//        ViewModelProvider(this)[ProfileViewModel::class.java]
 
         binding.threeDotMenu.setOnClickListener {
             val sessionManager = SessionManager(requireContext())

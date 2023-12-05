@@ -6,14 +6,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.twitturin.SingleLiveEvent
 import com.example.twitturin.model.api.Api
-import com.example.twitturin.model.data.publicTweet.TheTweet
+import com.example.twitturin.model.data.publicTweet.TweetContent
 import com.example.twitturin.model.data.registration.SignUp
-import com.example.twitturin.model.data.tweets.ApiTweetsItem
-import com.example.twitturin.model.data.users.UsersItem
+import com.example.twitturin.model.data.tweets.Tweet
+import com.example.twitturin.model.data.users.User
 import com.example.twitturin.model.repo.Repository
 import com.example.twitturin.ui.sealeds.PostTweet
 import com.example.twitturin.ui.sealeds.SignUpResult
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Callback
@@ -29,6 +31,23 @@ class MainViewModel(private val repository: Repository): ViewModel() {
         .writeTimeout(90, TimeUnit.SECONDS)
         .readTimeout(90, TimeUnit.SECONDS)
         .build()
+
+    val userData = MutableLiveData<User>()
+
+    suspend fun fetchUserData(userId: String) {
+        withContext(Dispatchers.IO) {
+            val response = repository.getLoggedInUserData(userId)
+            if (response.isSuccessful) {
+                val userList = response.body()
+                if (!userList.isNullOrEmpty()) {
+                    val user = userList[0]
+                    userData.postValue(user)
+                }
+            } else {
+                // Handle error
+            }
+        }
+    }
 
     private val retrofit = Retrofit.Builder()
         .baseUrl("https://twitturin.onrender.com/api/")
@@ -66,11 +85,11 @@ class MainViewModel(private val repository: Repository): ViewModel() {
     val postTweetResult: LiveData<PostTweet> = _postTweet
 
     fun postTheTweet(content: String, authToken: String) {
-        val request = TheTweet(content)
+        val request = TweetContent(content)
 
         val authRequest = tweetApi.postTweet(request, "Bearer $authToken")
-        authRequest.enqueue(object : Callback<TheTweet> {
-            override fun onResponse(call: Call<TheTweet>, response: Response<TheTweet>) {
+        authRequest.enqueue(object : Callback<TweetContent> {
+            override fun onResponse(call: Call<TweetContent>, response: Response<TweetContent>) {
                 if (response.isSuccessful) {
                     val postTweet = response.body()
                     _postTweet.value = postTweet?.let { PostTweet.Success(it) }
@@ -79,13 +98,13 @@ class MainViewModel(private val repository: Repository): ViewModel() {
                 }
             }
 
-            override fun onFailure(call: Call<TheTweet>, t: Throwable) {
+            override fun onFailure(call: Call<TweetContent>, t: Throwable) {
                 _postTweet.value = PostTweet.Error("Network error")
             }
         })
     }
 
-    var responseTweets: MutableLiveData<Response<List<ApiTweetsItem>>> = MutableLiveData()
+    var responseTweets: MutableLiveData<Response<List<Tweet>>> = MutableLiveData()
     fun getTweet() {
         viewModelScope.launch {
             val response = repository.getTweets()

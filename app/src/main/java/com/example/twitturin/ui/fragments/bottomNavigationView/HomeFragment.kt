@@ -7,18 +7,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.twitturin.R
 import com.example.twitturin.databinding.FragmentHomeBinding
-import com.example.twitturin.model.data.tweets.ApiTweetsItem
+import com.example.twitturin.model.data.tweets.Tweet
 import com.example.twitturin.ui.adapters.PostAdapter
 import com.example.twitturin.viewmodel.MainViewModel
 import com.example.twitturin.model.repo.Repository
 import com.example.twitturin.viewmodel.ViewModelFactory
-import retrofit2.Response
 import java.util.Random
 
 class HomeFragment : Fragment() {
@@ -79,7 +77,7 @@ class HomeFragment : Fragment() {
         viewModel.responseTweets.observe(requireActivity()) { response ->
             if (response.isSuccessful) {
                 response.body()?.let { tweets ->
-                    val tweetList: MutableList<ApiTweetsItem> = tweets.toMutableList()
+                    val tweetList: MutableList<Tweet> = tweets.toMutableList()
                     postAdapter.setData(tweetList)
                     binding.swipeToRefreshLayout.setOnRefreshListener {
                         tweetList.shuffle(Random(System.currentTimeMillis()))

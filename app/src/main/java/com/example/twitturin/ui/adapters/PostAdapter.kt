@@ -10,26 +10,22 @@ import android.widget.Toast
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.twitturin.R
 import com.example.twitturin.SessionManager
 import com.example.twitturin.databinding.RcViewBinding
-import com.example.twitturin.model.data.tweets.ApiTweetsItem
-import com.example.twitturin.model.repo.Repository
+import com.example.twitturin.model.data.tweets.Tweet
 import com.example.twitturin.ui.activities.DetailActivity
 import com.example.twitturin.ui.sealeds.PostLikeResult
-import com.example.twitturin.ui.sealeds.PostTweet
 import com.example.twitturin.viewmodel.LikeViewModel
-import com.example.twitturin.viewmodel.ViewModelFactory
-import com.example.twitturin.viewmodel.ViewModelFactory3
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
-
+import java.util.concurrent.TimeUnit
 
 class PostAdapter(private val parentLifecycleOwner: LifecycleOwner) : RecyclerView.Adapter<PostAdapter.ViewHolder>() {
 
-    private var list = emptyList<ApiTweetsItem>()
+    private var list = emptyList<Tweet>()
 
     private lateinit var viewModel: LikeViewModel
 
@@ -42,53 +38,78 @@ class PostAdapter(private val parentLifecycleOwner: LifecycleOwner) : RecyclerVi
         return ViewHolder(view)
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = list[position]
-        var likeCount: Int = item.likes
+        var likeCount: Int? = item.likes
         var isLiked: Boolean = false
 
         holder.binding.apply {
-            fullNameTv.text = item.author.fullName
-            usernameTv.text = item.author.username
+            fullNameTv.text = item.author?.fullName
+            usernameTv.text = "@" + item.author?.username
             postDescription.text = item.content
             postCommentsCounter.text = item.replyCount.toString()
             postHeartCounter.text = item.likes.toString()
-            createdAtTv.text = item.createdAt
-//            val time = item.createdAt
-//            calculateTimeAgo(time)
-//            createdAtTv.text = time
 
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.getDefault())
+            dateFormat.timeZone = TimeZone.getTimeZone("UTC")
+
+            try {
+                val date = dateFormat.parse(item.createdAt)
+                val currentTime = System.currentTimeMillis()
+
+                val durationMillis = currentTime - date.time
+
+                val seconds = TimeUnit.MILLISECONDS.toSeconds(durationMillis)
+                val minutes = TimeUnit.MILLISECONDS.toMinutes(durationMillis)
+                val hours = TimeUnit.MILLISECONDS.toHours(durationMillis)
+                val days = TimeUnit.MILLISECONDS.toDays(durationMillis)
+                val weeks = days / 7
+
+                val durationString = when {
+                    weeks > 0 -> "$weeks w. ago"
+                    days > 0 -> "$days d. ago"
+                    hours > 0 -> "$hours h. ago"
+                    minutes > 0 -> "$minutes min. ago"
+                    else -> "$seconds sec. ago"
+                }
+
+                println("Post created $durationString")
+                 createdAtTv.text = durationString
+            } catch (e: Exception) {
+                println("Invalid date")
+                 createdAtTv.text = "Invalid date"
+            }
         }
 
         holder.itemView.setOnClickListener {
             val intent = Intent(holder.itemView.context, DetailActivity::class.java)
-            intent.putExtra("fullname", item.author.fullName)
-            intent.putExtra("username", item.author.username)
+            intent.putExtra("fullname", item.author?.fullName)
+            intent.putExtra("username", item.author?.username)
             intent.putExtra("post_description", item.content)
             intent.putExtra("link", item.likedBy.firstOrNull()?.fullName)
             intent.putExtra("createdAt", item.createdAt)
+            intent.putExtra("userId", item.id)
             holder.itemView.context.startActivity(intent)
         }
 
         val sessionManager = SessionManager(holder.itemView.context)
-
         val token = sessionManager.getToken()
-        val repository = Repository()
-        val viewModelFactory = ViewModelFactory3(repository)
-        val viewModelProvider = ViewModelProvider(holder.itemView.context as ViewModelStoreOwner, viewModelFactory)
-        val viewModel = viewModelProvider[LikeViewModel::class.java]
+
+        viewModel =
+            ViewModelProvider(holder.itemView.context as ViewModelStoreOwner)[LikeViewModel::class.java]
 
         holder.binding.postIconHeart.setOnClickListener {
             if (!token.isNullOrEmpty()) {
                 if (isLiked) {
-                    likeCount--
+                    likeCount = likeCount!! - 1
                     isLiked = !isLiked
                     viewModel.likePost(likeCount.toString(), token)
                     holder.binding.postIconHeart.isSelected = isLiked
                     holder.binding.postHeartCounter.text = likeCount.toString()
                     holder.binding.postIconHeart.setBackgroundResource(R.drawable.heart)
                 } else {
-                    likeCount++
+                    likeCount = likeCount!! + 1
                     isLiked = !isLiked
                     viewModel.likePost(likeCount.toString(), token)
                     holder.binding.postIconHeart.isSelected = isLiked
@@ -96,7 +117,11 @@ class PostAdapter(private val parentLifecycleOwner: LifecycleOwner) : RecyclerVi
                     holder.binding.postIconHeart.setBackgroundResource(R.drawable.heart_solid_icon)
                 }
             } else {
-                Toast.makeText(holder.itemView.context, "something went wrong my G", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    holder.itemView.context,
+                    "something went wrong my G",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
 
@@ -118,17 +143,8 @@ class PostAdapter(private val parentLifecycleOwner: LifecycleOwner) : RecyclerVi
         return list.size
     }
 
-    private fun calculateTimeAgo(postCreationTime: String): String {
-        val serverTimeFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-        val postDate = serverTimeFormat.parse(postCreationTime)
-
-        val currentDate = Date()
-
-        return DateUtils.getRelativeTimeSpanString(postDate!!.time, currentDate.time, DateUtils.MINUTE_IN_MILLIS).toString()
-    }
-
     @SuppressLint("NotifyDataSetChanged")
-    fun setData(newList: List<ApiTweetsItem>){
+    fun setData(newList: List<Tweet>){
         list = newList
         notifyDataSetChanged()
     }

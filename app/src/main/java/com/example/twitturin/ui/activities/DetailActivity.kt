@@ -1,24 +1,21 @@
 package com.example.twitturin.ui.activities
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.os.Bundle
-import android.text.format.DateUtils
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.twitturin.databinding.ActivityDetailBinding
 import com.example.twitturin.ui.fragments.bottomsheets.MyBottomSheetDialogFragment
 import java.text.SimpleDateFormat
-import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
-
+import java.util.concurrent.TimeUnit
 
 class DetailActivity : AppCompatActivity() {
 
     private val binding by lazy { ActivityDetailBinding.inflate(layoutInflater) }
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -28,15 +25,42 @@ class DetailActivity : AppCompatActivity() {
         val description = intent.getStringExtra("post_description")
         val link = intent.getStringExtra("link")
         val createdTime = intent.getStringExtra("createdAt")
+        val userId = intent.getStringExtra("userId")
 
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.getDefault())
+        dateFormat.timeZone = TimeZone.getTimeZone("UTC")
 
-//        val formattedText = createdTime?.let { formatCreatedAt(it) }
+        try {
+            val date = dateFormat.parse(createdTime.toString())
+            val currentTime = System.currentTimeMillis()
+
+            val durationMillis = currentTime - date.time
+
+            val seconds = TimeUnit.MILLISECONDS.toSeconds(durationMillis)
+            val minutes = TimeUnit.MILLISECONDS.toMinutes(durationMillis)
+            val hours = TimeUnit.MILLISECONDS.toHours(durationMillis)
+            val days = TimeUnit.MILLISECONDS.toDays(durationMillis)
+            val weeks = days / 7
+
+            val durationString = when {
+                weeks > 0 -> "$weeks weeks ago"
+                days > 0 -> "$days days ago"
+                hours > 0 -> "$hours hours ago"
+                minutes > 0 -> "$minutes minutes ago"
+                else -> "$seconds seconds ago"
+            }
+
+            println("Post created $durationString")
+            binding.whenCreated.text = durationString
+        } catch (e: Exception) {
+            println("Invalid date")
+            binding.whenCreated.text = "Invalid date"
+        }
 
         binding.apply {
             authorFullname.text = fullname
             authorUsername.text = "@$username"
             postDescription.text = description
-            whenCreated.text = createdTime?.let { setTweetCreatedAt(it) }
 
             followBtn.setOnClickListener {
                 Toast.makeText(
@@ -75,10 +99,10 @@ class DetailActivity : AppCompatActivity() {
             val createdDate = inputFormat.parse(createdAt)
             val currentDateObj = inputFormat.parse(currentDate)
 
-            val elapsedTime = currentDateObj.time - createdDate.time
+            val elapsedTime = currentDateObj!!.time - createdDate!!.time
             val elapsedMinutes = elapsedTime / (60 * 1000)
 
-            val formattedDate = outputFormat.format(createdDate)
+            val formattedDate = createdDate.let { outputFormat.format(it) }
 
             val timeAgo = when {
                 elapsedMinutes < 1 -> "just now"

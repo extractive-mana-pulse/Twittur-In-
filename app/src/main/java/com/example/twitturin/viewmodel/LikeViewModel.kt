@@ -5,16 +5,14 @@ import androidx.lifecycle.ViewModel
 import com.example.twitturin.SingleLiveEvent
 import com.example.twitturin.model.api.Api
 import com.example.twitturin.model.data.likeTweet.LikeTweet
-import com.example.twitturin.model.repo.Repository
 import com.example.twitturin.ui.sealeds.PostLikeResult
-import com.example.twitturin.ui.sealeds.SignUpResult
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class LikeViewModel(private val repository: Repository): ViewModel() {
+class LikeViewModel: ViewModel() {
 
     private val retrofit = Retrofit.Builder()
         .baseUrl("https://twitturin.onrender.com/api/")

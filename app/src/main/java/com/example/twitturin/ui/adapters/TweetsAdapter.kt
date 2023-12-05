@@ -6,9 +6,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.twitturin.R
 import com.example.twitturin.databinding.RcViewBinding
-import com.example.twitturin.model.data.users.UsersItem
+import com.example.twitturin.model.data.users.User
 
-class TweetsAdapter(var posts: List<UsersItem>) : RecyclerView.Adapter<TweetsAdapter.ViewHolder>() {
+class TweetsAdapter(var posts: List<User>) : RecyclerView.Adapter<TweetsAdapter.ViewHolder>() {
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val binding = RcViewBinding.bind(itemView)
@@ -26,7 +26,7 @@ class TweetsAdapter(var posts: List<UsersItem>) : RecyclerView.Adapter<TweetsAda
         holder.binding.apply {
             fullNameTv.text = post.fullName
             usernameTv.text = post.username
-            postDescription.text = post.subject
+            postDescription.text = post.tweets[0].content
         }
     }
 

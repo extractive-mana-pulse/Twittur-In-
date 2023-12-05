@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.twitturin.SingleLiveEvent
 import com.example.twitturin.model.api.Api
-import com.example.twitturin.model.data.registration.SignIn
-import com.example.twitturin.model.data.users.UsersItem
+import com.example.twitturin.model.data.users.User
+import com.example.twitturin.model.data.registration.Login
 import com.example.twitturin.model.repo.Repository
 import com.example.twitturin.ui.sealeds.SignInResult
 import retrofit2.Call
@@ -15,7 +15,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class SignInViewModel(private val repository: Repository) : ViewModel() {
+class SignInViewModel() : ViewModel() {
 
     private val retrofit = Retrofit.Builder()
         .baseUrl("https://twitturin.onrender.com/api/")
@@ -32,11 +32,11 @@ class SignInViewModel(private val repository: Repository) : ViewModel() {
 
     fun signIn(username: String, password: String) {
 
-        val request = SignIn(username, password)
+        val request = Login(username, password)
 
-        signInApi.signInUser(request).enqueue(object : Callback<UsersItem> {
+        signInApi.signInUser(request).enqueue(object : Callback<User> {
 
-            override fun onResponse(call: Call<UsersItem>, response: Response<UsersItem>) {
+            override fun onResponse(call: Call<User>, response: Response<User>) {
 
                 if (response.isSuccessful) {
                     val signInResponse = response.body()
@@ -50,7 +50,7 @@ class SignInViewModel(private val repository: Repository) : ViewModel() {
                 }
             }
 
-            override fun onFailure(call: Call<UsersItem>, t: Throwable) {
+            override fun onFailure(call: Call<User>, t: Throwable) {
                 _signInResult.value = SignInResult.Error("Network error")
             }
         })
