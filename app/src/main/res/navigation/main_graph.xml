@@ -94,6 +94,9 @@
             app:destination="@id/signInFragment"
             app:popUpTo="@id/profileFragment"
             app:popUpToInclusive="true"/>
+        <action
+            android:id="@+id/action_profileFragment_to_publicPostFragment"
+            app:destination="@id/publicPostFragment" />
     </fragment>
 
 <!--  publicPostFragment  -->

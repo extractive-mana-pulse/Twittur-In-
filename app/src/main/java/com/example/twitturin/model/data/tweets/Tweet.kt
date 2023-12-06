@@ -4,14 +4,13 @@ import com.google.gson.annotations.SerializedName
 
 data class Tweet (
 
-    @SerializedName("content"    ) var content    : String?            = null,
-    @SerializedName("author"     ) var author     : Author?            = Author(),
-    @SerializedName("likedBy"    ) var likedBy    : ArrayList<LikedBy> = arrayListOf(),
+    @SerializedName("content"    ) val content    : String,
+    @SerializedName("author"     ) val author     : Author? = Author(),
     @SerializedName("createdAt"  ) val createdAt  : String,
-    @SerializedName("updatedAt"  ) var updatedAt  : String?            = null,
-    @SerializedName("likes"      ) var likes      : Int?               = null,
-    @SerializedName("replies"    ) var replies    : ArrayList<Replies> = arrayListOf(),
-    @SerializedName("replyCount" ) var replyCount : Int?               = null,
-    @SerializedName("id"         ) var id         : String?            = null
+    @SerializedName("updatedAt"  ) val updatedAt  : String,
+    @SerializedName("likes"      ) var likes      : Int,
+    @SerializedName("likesBy"    ) val likedBy    : List<String>,
+    @SerializedName("replyCount" ) val replyCount : Int,
+    @SerializedName("id"         ) val id         : String
 
 )

@@ -87,7 +87,6 @@ class PostAdapter(private val parentLifecycleOwner: LifecycleOwner) : RecyclerVi
             intent.putExtra("fullname", item.author?.fullName)
             intent.putExtra("username", item.author?.username)
             intent.putExtra("post_description", item.content)
-            intent.putExtra("link", item.likedBy.firstOrNull()?.fullName)
             intent.putExtra("createdAt", item.createdAt)
             intent.putExtra("userId", item.id)
             holder.itemView.context.startActivity(intent)

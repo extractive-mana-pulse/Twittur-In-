@@ -100,8 +100,11 @@ dependencies {
     implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
 
     // Data Binding
-    implementation ("androidx.databinding:databinding-runtime:8.1.3")
+    implementation ("androidx.databinding:databinding-runtime:8.2.0")
 
     // Scroll to Refresh Layout
     implementation ("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+
+    // LottieFiles
+    implementation ("com.airbnb.android:lottie:3.5.0")
 }

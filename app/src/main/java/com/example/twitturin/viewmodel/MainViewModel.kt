@@ -26,12 +26,6 @@ import java.util.concurrent.TimeUnit
 
 class MainViewModel(private val repository: Repository): ViewModel() {
 
-    private val client = OkHttpClient.Builder()
-        .connectTimeout(90, TimeUnit.SECONDS)
-        .writeTimeout(90, TimeUnit.SECONDS)
-        .readTimeout(90, TimeUnit.SECONDS)
-        .build()
-
     val userData = MutableLiveData<User>()
 
     suspend fun fetchUserData(userId: String) {
@@ -48,6 +42,12 @@ class MainViewModel(private val repository: Repository): ViewModel() {
             }
         }
     }
+
+    private val client = OkHttpClient.Builder()
+        .connectTimeout(90, TimeUnit.SECONDS)
+        .writeTimeout(90, TimeUnit.SECONDS)
+        .readTimeout(90, TimeUnit.SECONDS)
+        .build()
 
     private val retrofit = Retrofit.Builder()
         .baseUrl("https://twitturin.onrender.com/api/")

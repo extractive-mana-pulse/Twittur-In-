@@ -23,7 +23,6 @@ class DetailActivity : AppCompatActivity() {
         val fullname = intent.getStringExtra("fullname")
         val username = intent.getStringExtra("username")
         val description = intent.getStringExtra("post_description")
-        val link = intent.getStringExtra("link")
         val createdTime = intent.getStringExtra("createdAt")
         val userId = intent.getStringExtra("userId")
 

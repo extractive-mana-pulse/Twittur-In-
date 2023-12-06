@@ -5,6 +5,7 @@ import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,63 +16,33 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
 import com.example.twitturin.SessionManager
+import com.example.twitturin.SessionManagerUserId
 import com.example.twitturin.databinding.FragmentProfileBinding
-import com.example.twitturin.model.api.RetrofitInstance
-import com.example.twitturin.model.data.users.User
-import com.example.twitturin.model.repo.Repository
 import com.example.twitturin.ui.adapters.ProfileViewPagerAdapter
+import com.example.twitturin.ui.sealeds.DeleteResult
 import com.example.twitturin.ui.viewModels.ProfileViewModel
-import com.example.twitturin.viewmodel.MainViewModel
-import com.example.twitturin.viewmodel.ViewModelFactory
 import com.google.android.material.tabs.TabLayoutMediator
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 class ProfileFragment : Fragment() {
 
     private lateinit var binding: FragmentProfileBinding
-    private lateinit var viewModel: MainViewModel
-    private val x = StringBuilder()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentProfileBinding.inflate(layoutInflater)
         return binding.root
     }
 
-    private fun setupViewModel() {
-
-        val userRepository = Repository()
-        viewModel = ViewModelProvider(this, ViewModelFactory(userRepository))[MainViewModel::class.java]
-        viewModel.userData.observe(viewLifecycleOwner) { user ->
-            binding.profileName.text = user.fullName
-            x.append(user.id)
-        }
-    }
-
-    private fun fetchUserData(userId: String) {
-        GlobalScope.launch(Dispatchers.Main) {
-            viewModel.fetchUserData(userId)
-        }
-    }
-
     @SuppressLint("DiscouragedPrivateApi")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.profileFragment = this
-        setupViewModel()
-        fetchUserData(x.toString())
-        Log.d("userId",x.toString())
-
-
-
-//        ViewModelProvider(this)[ProfileViewModel::class.java]
+        val userSessionManager = SessionManagerUserId(requireContext())
+        val userId = userSessionManager.userId
+        Log.d("userId", userId.toString())
 
         binding.threeDotMenu.setOnClickListener {
             val sessionManager = SessionManager(requireContext())
-            val popupMenu = PopupMenu(requireContext(), view)
+            val popupMenu = PopupMenu(requireContext(), binding.threeDotMenu)
 
             popupMenu.setOnMenuItemClickListener { item ->
                 when (item.itemId){
@@ -101,6 +72,25 @@ class ProfileFragment : Fragment() {
                         true
                     }
                     R.id.delete_account -> {
+                        val profileViewModel = ViewModelProvider(this)[ProfileViewModel::class.java]
+                        val userSessionManager = SessionManagerUserId(requireContext())
+                        val userId = userSessionManager.userId
+                        val token = sessionManager.getToken()
+                        profileViewModel.deleteUser(userId!!, "Bearer $token")
+
+                        profileViewModel.deleteResult.observe(viewLifecycleOwner) { result ->
+                            when (result) {
+                                is DeleteResult.Success -> {
+                                    findNavController().navigate(R.id.action_profileFragment_to_signInFragment)
+                                    Toast.makeText(requireContext(), "deleted", Toast.LENGTH_SHORT).show()
+                                }
+
+                                is DeleteResult.Error -> {
+                                    Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        }
+
                         Toast.makeText(requireContext(), "in progress", Toast.LENGTH_SHORT).show()
                         true
                     }

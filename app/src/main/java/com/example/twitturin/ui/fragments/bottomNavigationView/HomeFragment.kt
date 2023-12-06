@@ -45,12 +45,7 @@ class HomeFragment : Fragment() {
         val viewModelFactory = ViewModelFactory(repository)
         viewModel = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
 
-
-//        binding.add.setOnClickListener {
-//            findNavController().navigate(R.id.action_homeFragment_to_publicPostFragment)
-//        }
         recyclerViewSetup()
-
         updateRecyclerView()
     }
 

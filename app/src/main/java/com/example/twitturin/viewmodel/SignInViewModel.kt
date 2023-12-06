@@ -5,9 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.twitturin.SingleLiveEvent
 import com.example.twitturin.model.api.Api
-import com.example.twitturin.model.data.users.User
 import com.example.twitturin.model.data.registration.Login
-import com.example.twitturin.model.repo.Repository
+import com.example.twitturin.model.data.users.User
 import com.example.twitturin.ui.sealeds.SignInResult
 import retrofit2.Call
 import retrofit2.Callback
@@ -15,7 +14,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class SignInViewModel() : ViewModel() {
+class SignInViewModel : ViewModel() {
 
     private val retrofit = Retrofit.Builder()
         .baseUrl("https://twitturin.onrender.com/api/")
@@ -30,6 +29,9 @@ class SignInViewModel() : ViewModel() {
     private val _token = MutableLiveData<String>()
     val token: LiveData<String> = _token
 
+    private val _userId = MutableLiveData<String>()
+    val userId: LiveData<String> = _userId
+
     fun signIn(username: String, password: String) {
 
         val request = Login(username, password)
@@ -41,7 +43,9 @@ class SignInViewModel() : ViewModel() {
                 if (response.isSuccessful) {
                     val signInResponse = response.body()
                     val token = signInResponse?.token
+                    val userId = signInResponse?.id
                     _token.value = token!!
+                    _userId.value = userId!!
                     _signInResult.value = signInResponse.let { SignInResult.Success(it) }
 
                 } else {

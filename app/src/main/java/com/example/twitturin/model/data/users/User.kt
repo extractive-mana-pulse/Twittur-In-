@@ -13,9 +13,7 @@ data class User (
   @SerializedName("age"       ) var age       : Int?               = null,
   @SerializedName("country"   ) var country   : String?            = null,
   @SerializedName("kind"      ) var kind      : String?            = null,
-  @SerializedName("tweets"    ) var tweets    : ArrayList<Tweets>  = arrayListOf(),
-  @SerializedName("replies"   ) var replies   : ArrayList<Replies> = arrayListOf(),
-  @SerializedName("id"        ) var id        : String?            = null,
+  @SerializedName("id"        ) val id        : String,
   @SerializedName("token"     ) var token     : String?            = null
 
 )

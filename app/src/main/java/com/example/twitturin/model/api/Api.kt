@@ -1,11 +1,11 @@
 package com.example.twitturin.model.api
 
 import com.example.twitturin.model.data.likeTweet.LikeTweet
-import com.example.twitturin.model.data.users.User
 import com.example.twitturin.model.data.publicTweet.TweetContent
 import com.example.twitturin.model.data.registration.Login
 import com.example.twitturin.model.data.registration.SignUp
 import com.example.twitturin.model.data.tweets.Tweet
+import com.example.twitturin.model.data.users.User
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
@@ -19,7 +19,7 @@ import retrofit2.http.Query
 interface Api  {
 
     @DELETE("users/{id}")
-    suspend fun deleteUser(@Path("id") id: String, @Header("Authorization") token: String): Response<Unit>
+    suspend fun deleteUser(@Path("id") userId: String, @Header("Authorization") token: String): Response<Unit>
 
     @POST("tweets")
     fun postLike(@Body tweet: LikeTweet, @Header("Authorization") token: String): Call<LikeTweet>
