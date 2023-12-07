@@ -13,7 +13,7 @@ data class User (
   @SerializedName("age"       ) var age       : Int?               = null,
   @SerializedName("country"   ) var country   : String?            = null,
   @SerializedName("kind"      ) var kind      : String?            = null,
-  @SerializedName("id"        ) val id        : String,
+  @SerializedName("id"        ) var id        : String?            = null,
   @SerializedName("token"     ) var token     : String?            = null
 
 )

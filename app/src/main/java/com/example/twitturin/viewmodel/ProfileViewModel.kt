@@ -1,4 +1,4 @@
-package com.example.twitturin.ui.viewModels
+package com.example.twitturin.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

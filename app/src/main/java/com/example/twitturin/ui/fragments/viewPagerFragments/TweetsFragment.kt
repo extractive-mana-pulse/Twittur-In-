@@ -12,7 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
 import com.example.twitturin.databinding.FragmentTweetsBinding
-import com.example.twitturin.ui.viewModels.ProfileViewModel
+import com.example.twitturin.viewmodel.ProfileViewModel
 
 class TweetsFragment : Fragment() {
 

@@ -5,7 +5,6 @@ import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,7 +19,7 @@ import com.example.twitturin.SessionManagerUserId
 import com.example.twitturin.databinding.FragmentProfileBinding
 import com.example.twitturin.ui.adapters.ProfileViewPagerAdapter
 import com.example.twitturin.ui.sealeds.DeleteResult
-import com.example.twitturin.ui.viewModels.ProfileViewModel
+import com.example.twitturin.viewmodel.ProfileViewModel
 import com.google.android.material.tabs.TabLayoutMediator
 
 class ProfileFragment : Fragment() {
@@ -36,12 +35,15 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.profileFragment = this
-        val userSessionManager = SessionManagerUserId(requireContext())
-        val userId = userSessionManager.userId
-        Log.d("userId", userId.toString())
+
+        val sessionManager = SessionManager(requireContext())
+
+        binding.userIdTv.text = sessionManager.getUserId()
+
+        Log.d("rrr", sessionManager.getUserId().toString())
+
 
         binding.threeDotMenu.setOnClickListener {
-            val sessionManager = SessionManager(requireContext())
             val popupMenu = PopupMenu(requireContext(), binding.threeDotMenu)
 
             popupMenu.setOnMenuItemClickListener { item ->

@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
 import com.example.twitturin.SessionManager
+import com.example.twitturin.SessionManagerUserId
 import com.example.twitturin.databinding.FragmentSignInBinding
 import com.example.twitturin.model.repo.Repository
 import com.example.twitturin.ui.sealeds.SignInResult
@@ -49,7 +50,9 @@ class SignInFragment : Fragment() {
             when (result) {
                 is SignInResult.Success -> {
                     val token = viewModel.token.value
+                    val userId = viewModel.userId.value
                     sessionManager.saveToken(token.toString())
+                    sessionManager.saveUserID(userId.toString())
                     findNavController().navigate(R.id.action_signInFragment_to_homeFragment)
                 }
 
