@@ -15,7 +15,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
 import com.example.twitturin.SessionManager
-import com.example.twitturin.SessionManagerUserId
 import com.example.twitturin.databinding.FragmentProfileBinding
 import com.example.twitturin.ui.adapters.ProfileViewPagerAdapter
 import com.example.twitturin.ui.sealeds.DeleteResult
@@ -40,9 +39,6 @@ class ProfileFragment : Fragment() {
 
         binding.userIdTv.text = sessionManager.getUserId()
 
-        Log.d("rrr", sessionManager.getUserId().toString())
-
-
         binding.threeDotMenu.setOnClickListener {
             val popupMenu = PopupMenu(requireContext(), binding.threeDotMenu)
 
@@ -53,6 +49,7 @@ class ProfileFragment : Fragment() {
                         true
                     }
                     R.id.logout -> {
+
                         val alertDialogBuilder = AlertDialog.Builder(requireActivity())
                         alertDialogBuilder.setTitle("Logout")
                         alertDialogBuilder.setMessage("Are you sure you want to log out?")
@@ -65,18 +62,20 @@ class ProfileFragment : Fragment() {
                             sessionManager.clearToken()
                             findNavController().navigate(R.id.action_profileFragment_to_signInFragment)
                         }
+
                         alertDialogBuilder.setNegativeButton("No") { dialog, _ ->
                             dialog.dismiss()
                         }
+
                         alertDialogBuilder.setCancelable(false)
                         val alertDialog = alertDialogBuilder.create()
                         alertDialog.show()
                         true
                     }
                     R.id.delete_account -> {
+
                         val profileViewModel = ViewModelProvider(this)[ProfileViewModel::class.java]
-                        val userSessionManager = SessionManagerUserId(requireContext())
-                        val userId = userSessionManager.userId
+                        val userId = sessionManager.getUserId()
                         val token = sessionManager.getToken()
                         profileViewModel.deleteUser(userId!!, "Bearer $token")
 
@@ -86,13 +85,11 @@ class ProfileFragment : Fragment() {
                                     findNavController().navigate(R.id.action_profileFragment_to_signInFragment)
                                     Toast.makeText(requireContext(), "deleted", Toast.LENGTH_SHORT).show()
                                 }
-
                                 is DeleteResult.Error -> {
                                     Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
                                 }
                             }
                         }
-
                         Toast.makeText(requireContext(), "in progress", Toast.LENGTH_SHORT).show()
                         true
                     }

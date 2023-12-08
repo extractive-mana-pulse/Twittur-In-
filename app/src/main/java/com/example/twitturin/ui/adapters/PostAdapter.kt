@@ -3,6 +3,7 @@ package com.example.twitturin.ui.adapters
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.text.format.DateUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -46,6 +47,7 @@ class PostAdapter(private val parentLifecycleOwner: LifecycleOwner) : RecyclerVi
 
         holder.binding.apply {
             fullNameTv.text = item.author?.fullName
+            Log.d("fullname", item.author?.fullName.toString())
             usernameTv.text = "@" + item.author?.username
             postDescription.text = item.content
             postCommentsCounter.text = item.replyCount.toString()
@@ -95,8 +97,7 @@ class PostAdapter(private val parentLifecycleOwner: LifecycleOwner) : RecyclerVi
         val sessionManager = SessionManager(holder.itemView.context)
         val token = sessionManager.getToken()
 
-        viewModel =
-            ViewModelProvider(holder.itemView.context as ViewModelStoreOwner)[LikeViewModel::class.java]
+        viewModel = ViewModelProvider(holder.itemView.context as ViewModelStoreOwner)[LikeViewModel::class.java]
 
         holder.binding.postIconHeart.setOnClickListener {
             if (!token.isNullOrEmpty()) {

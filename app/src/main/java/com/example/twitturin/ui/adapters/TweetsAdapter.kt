@@ -26,7 +26,7 @@ class TweetsAdapter(var posts: List<Tweet>) : RecyclerView.Adapter<TweetsAdapter
 
         holder.binding.apply {
             fullNameTv.text = post.author!!.fullName
-            usernameTv.text = post.author!!.username
+            usernameTv.text = post.author.username
             postDescription.text = post.content
         }
     }

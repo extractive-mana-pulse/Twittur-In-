@@ -31,10 +31,10 @@ class ProfileViewModel: ViewModel() {
     private val _deleteResult = MutableLiveData<DeleteResult>()
     val deleteResult: LiveData<DeleteResult> = _deleteResult
 
-    fun deleteUser(userId: String, token: String) {
+    fun deleteUser(userId: String, token : String) {
         viewModelScope.launch {
             try {
-                val response = apiService.deleteUser(userId, "Bearer $token")
+                val response = apiService.deleteUser(userId, token)
                 if (response.isSuccessful) {
                     _deleteResult.value = DeleteResult.Success
                 } else {

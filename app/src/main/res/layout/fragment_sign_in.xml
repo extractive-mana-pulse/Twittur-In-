@@ -111,8 +111,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="18dp"
                 android:layout_marginEnd="15dp"
-                android:onClick="@{()-> signInFragment.goToSignUp()}"
-                android:text="Don't have any account?"
+                android:onClick="@{()-> signInFragment.chooseKindPage()}"
+                android:text="Want to register?"
                 android:textColor="?attr/colorPrimary"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/textInputLayout1" />

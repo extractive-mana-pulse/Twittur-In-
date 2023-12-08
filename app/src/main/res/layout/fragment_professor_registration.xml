@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.fragments.loginFragments.SignUpFragment">
-
-    <data>
-        <variable
-            name="signUpFragment"
-            type="com.example.twitturin.ui.fragments.loginFragments.SignUpFragment"/>
-    </data>
+    tools:context=".ui.fragments.loginFragments.ProfessorRegistrationFragment">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -20,8 +16,7 @@
             android:layout_height="wrap_content"
             android:background="?attr/colorSurface">
 
-
-<!--            Header  Layout          -->
+            <!--            Header  Layout          -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/header_layout"
                 android:layout_width="match_parent"
@@ -39,14 +34,15 @@
                     android:layout_marginStart="16dp"
                     android:background="@android:color/transparent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"/>
+                    app:layout_constraintStart_toStartOf="parent"
+                    tools:ignore="ContentDescription"/>
 
                 <TextView
                     android:id="@+id/login_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="48dp"
-                    android:text="Sign Up"
+                    android:text="@string/registration"
                     android:textColor="?attr/colorPrimary"
                     android:textSize="34sp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -55,7 +51,7 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-<!--            Edit Text Layout            -->
+            <!--            Edit Text Layout            -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/some_layout_signUp"
                 android:layout_width="match_parent"
@@ -84,12 +80,11 @@
                     app:layout_constraintStart_toStartOf="parent">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/user_name_et"
+                        android:id="@+id/prof_fullname_et"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Username"
-                        android:background="@android:color/transparent"/>
-
+                        android:background="@android:color/transparent"
+                        android:hint="@string/full_name" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -102,20 +97,19 @@
                     android:background="@drawable/edit_text_bg_ui"
                     app:hintTextColor="?attr/colorOnPrimaryContainer"
                     app:endIconCheckable="true"
-                    app:startIconCheckable="true"
                     app:endIconMode="clear_text"
-                    app:startIconDrawable="@drawable/id_icon"
+                    app:startIconCheckable="true"
+                    app:startIconDrawable="@drawable/username_person"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/textInputLayout"
                     app:layout_constraintStart_toStartOf="parent">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/student_id_et"
+                        android:id="@+id/prof_username_et"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Student ID"
-                        android:background="@android:color/transparent"/>
-
+                        android:background="@android:color/transparent"
+                        android:hint="@string/username"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -128,18 +122,19 @@
                     android:background="@drawable/edit_text_bg_ui"
                     app:hintTextColor="?attr/colorOnPrimaryContainer"
                     app:endIconCheckable="true"
+                    app:startIconCheckable="true"
                     app:endIconMode="clear_text"
+                    app:startIconDrawable="@drawable/subject"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/textInputLayout1"
                     app:layout_constraintStart_toStartOf="parent">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/major_et"
+                        android:id="@+id/prof_subject_et"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Major"
+                        android:hint="@string/subject"
                         android:background="@android:color/transparent"/>
-
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -160,12 +155,11 @@
                     app:layout_constraintStart_toStartOf="parent">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/email_et"
+                        android:id="@+id/prof_email_et"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="email"
+                        android:hint="@string/email"
                         android:background="@android:color/transparent"/>
-
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -186,43 +180,19 @@
                     app:layout_constraintStart_toStartOf="parent">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/password_et"
+                        android:id="@+id/prof_password_et"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Password"
+                        android:hint="@string/password"
                         android:inputType="textPassword"
                         android:background="@android:color/transparent"/>
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/textInputLayout5"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="16dp"
-                    android:layout_marginTop="15dp"
-                    android:background="@drawable/edit_text_bg_ui"
-                    app:hintTextColor="?attr/colorOnPrimaryContainer"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/textInputLayout4"
-                    app:layout_constraintStart_toStartOf="parent">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/kind"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="kind"
-                        android:inputType="text"
-                        android:background="@android:color/transparent"/>
-
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <Button
                     android:id="@+id/sign_up"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="sign up"
+                    android:text="@string/sign_up"
                     android:layout_marginHorizontal="16dp"
                     android:layout_marginBottom="24dp"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -235,4 +205,4 @@
 
     </ScrollView>
 
-</layout>
+</androidx.constraintlayout.widget.ConstraintLayout>

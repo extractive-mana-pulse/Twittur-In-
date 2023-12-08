@@ -9,20 +9,20 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
-import com.example.twitturin.databinding.FragmentSignUpBinding
-import com.example.twitturin.viewmodel.MainViewModel
+import com.example.twitturin.databinding.FragmentStudentRegistrationBinding
 import com.example.twitturin.model.repo.Repository
+import com.example.twitturin.ui.sealeds.SignUpStudentResult
+import com.example.twitturin.viewmodel.MainViewModel
 import com.example.twitturin.viewmodel.ViewModelFactory
-import com.example.twitturin.ui.sealeds.SignUpResult
 
-class SignUpFragment : Fragment() {
+class StudentRegistrationFragment : Fragment() {
 
-    private lateinit var binding : FragmentSignUpBinding
+    private lateinit var binding : FragmentStudentRegistrationBinding
 
     private lateinit var viewModel : MainViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = FragmentSignUpBinding.inflate(layoutInflater)
+        binding = FragmentStudentRegistrationBinding.inflate(layoutInflater)
         return binding.root
     }
 
@@ -39,17 +39,16 @@ class SignUpFragment : Fragment() {
             val major = binding.majorEt.text.toString()
             val email = binding.emailEt.text.toString()
             val password = binding.passwordEt.text.toString()
-            val kind = binding.kind.text.toString()
-            viewModel.signUp(username, studentId, major, email, password, kind)
+            viewModel.signUp(username, studentId, major, email, password, "student")
         }
 
-        viewModel.signUpResult.observe(viewLifecycleOwner) { result ->
+        viewModel.signUpStudentResult.observe(viewLifecycleOwner) { result ->
             when (result) {
-                is SignUpResult.Success -> {
-                    findNavController().navigate(R.id.action_signUpFragment_to_signInFragment)
+                is SignUpStudentResult.Success -> {
+                    findNavController().navigate(R.id.action_studentRegistrationFragment_to_signInFragment)
                 }
 
-                is SignUpResult.Error -> {
+                is SignUpStudentResult.Error -> {
                     val errorMessage = result.message
                     Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
                 }
@@ -63,6 +62,6 @@ class SignUpFragment : Fragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance() = SignUpFragment()
+        fun newInstance() = StudentRegistrationFragment()
     }
 }

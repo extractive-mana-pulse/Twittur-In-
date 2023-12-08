@@ -75,25 +75,30 @@
         android:name="com.example.twitturin.ui.fragments.topBarFragments.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" >
+
         <action
             android:id="@+id/action_profileFragment_to_homeFragment"
             app:destination="@id/homeFragment"
             app:popUpTo="@id/profileFragment"
             app:popUpToInclusive="true"/>
+
         <action
             android:id="@+id/action_profileFragment_to_likesFragment"
             app:destination="@id/likesFragment" />
+
         <action
             android:id="@+id/action_profileFragment_to_tweetsFragment"
             app:destination="@id/tweetsFragment" />
+
         <action
             android:id="@+id/action_profileFragment_to_editProfileFragment"
-            app:destination="@id/editProfileFragment" />
+            app:destination="@id/editProfileFragment"/>
+
         <action
             android:id="@+id/action_profileFragment_to_signInFragment"
             app:destination="@id/signInFragment"
-            app:popUpTo="@id/profileFragment"
-            app:popUpToInclusive="true"/>
+            app:popUpTo="@id/signInFragment"
+            app:popUpToInclusive="false"/>
         <action
             android:id="@+id/action_profileFragment_to_publicPostFragment"
             app:destination="@id/publicPostFragment" />
@@ -161,33 +166,25 @@
         android:id="@+id/signInFragment"
         android:name="com.example.twitturin.ui.fragments.loginFragments.SignInFragment"
         android:label="fragment_sign_in"
-        tools:layout="@layout/fragment_sign_in" >
+        tools:layout="@layout/fragment_sign_in">
+
         <action
             android:id="@+id/action_signInFragment_to_homeFragment"
             app:destination="@id/homeFragment"
             app:popUpTo="@id/signInFragment"
-            app:popUpToInclusive="true"/>
+            app:popUpToInclusive="false"/>
+
         <action
-            android:id="@+id/action_signInFragment_to_signUpFragment"
-            app:destination="@id/signUpFragment"
-            app:enterAnim="@anim/from_right"
-            app:exitAnim="@anim/to_left"
-            app:popEnterAnim="@anim/from_left"
-            app:popExitAnim="@anim/to_right"/>
+            android:id="@+id/action_signInFragment_to_kindFragment"
+            app:destination="@id/kindFragment"
+            app:popUpTo="@id/signInFragment"
+            app:popUpToInclusive="false"/>
+
     </fragment>
 
 <!--  signUpFragment  -->
-    <fragment
-        android:id="@+id/signUpFragment"
-        android:name="com.example.twitturin.ui.fragments.loginFragments.SignUpFragment"
-        android:label="fragment_sign_up"
-        tools:layout="@layout/fragment_sign_up">
-        <action
-            android:id="@+id/action_signUpFragment_to_signInFragment"
-            app:destination="@id/signInFragment"/>
-    </fragment>
 
-<!--  editProfileFragment  -->
+    <!--  editProfileFragment  -->
     <fragment
         android:id="@+id/editProfileFragment"
         android:name="com.example.twitturin.ui.fragments.EditProfileFragment"
@@ -196,6 +193,51 @@
         <action
             android:id="@+id/action_editProfileFragment_to_profileFragment"
             app:destination="@id/profileFragment"/>
+    </fragment>
+    <fragment
+        android:id="@+id/kindFragment"
+        android:name="com.example.twitturin.ui.fragments.loginFragments.KindFragment"
+        android:label="fragment_kind"
+        tools:layout="@layout/fragment_kind" >
+        <action
+            android:id="@+id/action_kindFragment_to_signInFragment"
+            app:destination="@id/signInFragment" />
+        <action
+            android:id="@+id/action_kindFragment_to_studentRegistrationFragment"
+            app:destination="@id/studentRegistrationFragment" />
+        <action
+            android:id="@+id/action_kindFragment_to_professorRegistrationFragment"
+            app:destination="@id/professorRegistrationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/professorRegistrationFragment"
+        android:name="com.example.twitturin.ui.fragments.loginFragments.ProfessorRegistrationFragment"
+        android:label="fragment_professor_registration"
+        tools:layout="@layout/fragment_professor_registration" >
+        <action
+            android:id="@+id/action_professorRegistrationFragment_to_kindFragment"
+            app:destination="@id/kindFragment" />
+        <action
+            android:id="@+id/action_professorRegistrationFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_professorRegistrationFragment_to_signInFragment"
+            app:destination="@id/signInFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/studentRegistrationFragment"
+        android:name="com.example.twitturin.ui.fragments.loginFragments.StudentRegistrationFragment"
+        android:label="fragment_student_registration"
+        tools:layout="@layout/fragment_student_registration" >
+        <action
+            android:id="@+id/action_studentRegistrationFragment_to_kindFragment"
+            app:destination="@id/kindFragment" />
+        <action
+            android:id="@+id/action_studentRegistrationFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_studentRegistrationFragment_to_signInFragment"
+            app:destination="@id/signInFragment" />
     </fragment>
 
 </navigation>

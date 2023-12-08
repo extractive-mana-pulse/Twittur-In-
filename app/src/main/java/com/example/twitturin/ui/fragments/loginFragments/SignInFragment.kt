@@ -8,15 +8,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.app.ActivityCompat.finishAffinity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
 import com.example.twitturin.SessionManager
-import com.example.twitturin.SessionManagerUserId
 import com.example.twitturin.databinding.FragmentSignInBinding
-import com.example.twitturin.model.repo.Repository
 import com.example.twitturin.ui.sealeds.SignInResult
 import com.example.twitturin.viewmodel.SignInViewModel
 
@@ -89,12 +86,8 @@ class SignInFragment : Fragment() {
         }
     }
 
-    fun onBackPressed() {
-        finishAffinity(requireActivity())
-    }
-
-    fun goToSignUp() {
-        findNavController().navigate(R.id.action_signInFragment_to_signUpFragment)
+    fun chooseKindPage() {
+        findNavController().navigate(R.id.action_signInFragment_to_kindFragment)
     }
 
     companion object {

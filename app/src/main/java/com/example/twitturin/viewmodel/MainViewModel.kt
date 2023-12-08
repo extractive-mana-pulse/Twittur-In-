@@ -7,12 +7,12 @@ import androidx.lifecycle.viewModelScope
 import com.example.twitturin.SingleLiveEvent
 import com.example.twitturin.model.api.Api
 import com.example.twitturin.model.data.publicTweet.TweetContent
-import com.example.twitturin.model.data.registration.SignUp
+import com.example.twitturin.model.data.registration.SignUpStudent
 import com.example.twitturin.model.data.tweets.Tweet
 import com.example.twitturin.model.data.users.User
 import com.example.twitturin.model.repo.Repository
 import com.example.twitturin.ui.sealeds.PostTweet
-import com.example.twitturin.ui.sealeds.SignUpResult
+import com.example.twitturin.ui.sealeds.SignUpStudentResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -57,23 +57,23 @@ class MainViewModel(private val repository: Repository): ViewModel() {
 
     private val signUpApi: Api = retrofit.create(Api::class.java)
 
-    private val _signUpResult = MutableLiveData<SignUpResult>()
-    val signUpResult: LiveData<SignUpResult> = _signUpResult
+    private val _signUpStudentResult = MutableLiveData<SignUpStudentResult>()
+    val signUpStudentResult: LiveData<SignUpStudentResult> = _signUpStudentResult
 
     fun signUp(username: String, studentId: String, major: String, email: String, password: String, kind: String) {
-        val request = SignUp(username, studentId, major, email, password, kind)
-        signUpApi.signUpUser(request).enqueue(object : Callback<SignUp> {
-            override fun onResponse(call: Call<SignUp>, response: Response<SignUp>) {
+        val request = SignUpStudent(username, studentId, major, email, password, kind)
+        signUpApi.signUpStudent(request).enqueue(object : Callback<SignUpStudent> {
+            override fun onResponse(call: Call<SignUpStudent>, response: Response<SignUpStudent>) {
                 if (response.isSuccessful) {
                     val signUpResponse = response.body()
-                    _signUpResult.value = signUpResponse?.let { SignUpResult.Success(it) }
+                    _signUpStudentResult.value = signUpResponse?.let { SignUpStudentResult.Success(it) }
                 } else {
-                    _signUpResult.value = SignUpResult.Error(response.body().toString())
+                    _signUpStudentResult.value = SignUpStudentResult.Error(response.body().toString())
                 }
             }
 
-            override fun onFailure(call: Call<SignUp>, t: Throwable) {
-                _signUpResult.value = SignUpResult.Error("Network error")
+            override fun onFailure(call: Call<SignUpStudent>, t: Throwable) {
+                _signUpStudentResult.value = SignUpStudentResult.Error("Network error")
             }
         })
     }

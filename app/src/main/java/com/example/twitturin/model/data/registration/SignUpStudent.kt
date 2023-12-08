@@ -1,6 +1,6 @@
 package com.example.twitturin.model.data.registration
 
-data class SignUp(
+data class SignUpStudent(
     var username: String,
     var studentId: String,
     var major: String,

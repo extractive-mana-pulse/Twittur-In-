@@ -7,4 +7,13 @@
     <string name="edit_profile">Edit Profile</string>
     <string name="logout">Logout</string>
     <string name="delete_account">Delete Account</string>
+    <string name="full_name">Full name</string>
+    <string name="registration">Registration</string>
+    <string name="subject">Subject</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="sign_up">Sign up</string>
+    <string name="major">Major</string>
+    <string name="student_id">Student ID</string>
+    <string name="username">Username</string>
 </resources>
