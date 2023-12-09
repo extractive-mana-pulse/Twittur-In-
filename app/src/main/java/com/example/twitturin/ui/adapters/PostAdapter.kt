@@ -46,6 +46,7 @@ class PostAdapter(private val parentLifecycleOwner: LifecycleOwner) : RecyclerVi
         var isLiked: Boolean = false
 
         holder.binding.apply {
+
             fullNameTv.text = item.author?.fullName
             Log.d("fullname", item.author?.fullName.toString())
             usernameTv.text = "@" + item.author?.username
@@ -54,10 +55,13 @@ class PostAdapter(private val parentLifecycleOwner: LifecycleOwner) : RecyclerVi
             postHeartCounter.text = item.likes.toString()
 
             val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.getDefault())
+
             dateFormat.timeZone = TimeZone.getTimeZone("UTC")
 
             try {
+
                 val date = dateFormat.parse(item.createdAt)
+
                 val currentTime = System.currentTimeMillis()
 
                 val durationMillis = currentTime - date.time
@@ -69,18 +73,18 @@ class PostAdapter(private val parentLifecycleOwner: LifecycleOwner) : RecyclerVi
                 val weeks = days / 7
 
                 val durationString = when {
-                    weeks > 0 -> "$weeks w. ago"
-                    days > 0 -> "$days d. ago"
-                    hours > 0 -> "$hours h. ago"
-                    minutes > 0 -> "$minutes min. ago"
-                    else -> "$seconds sec. ago"
+                    weeks > 0 -> "$weeks w."
+                    days > 0 -> "$days d."
+                    hours > 0 -> "$hours h."
+                    minutes > 0 -> "$minutes m."
+                    else -> "$seconds s."
                 }
-
                 println("Post created $durationString")
-                 createdAtTv.text = durationString
+                createdAtTv.text = durationString
+
             } catch (e: Exception) {
                 println("Invalid date")
-                 createdAtTv.text = "Invalid date"
+                createdAtTv.text = "Invalid date"
             }
         }
 

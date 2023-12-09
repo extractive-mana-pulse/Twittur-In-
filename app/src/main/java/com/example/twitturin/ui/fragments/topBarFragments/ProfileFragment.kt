@@ -43,11 +43,13 @@ class ProfileFragment : Fragment() {
 
         profileViewModel.getUserCredentials.observe(viewLifecycleOwner) { result ->
             when (result) {
+
                 is UserCredentialsResult.Success -> {
                     binding.profileName.text = result.user.fullName
                     binding.customName.text = "@" + result.user.username
                     binding.profileKindTv.text = result.user.kind
                 }
+
                 is UserCredentialsResult.Error -> {
                     Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
                 }

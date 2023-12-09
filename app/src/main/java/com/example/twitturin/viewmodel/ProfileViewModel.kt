@@ -4,12 +4,17 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.twitturin.SingleLiveEvent
 import com.example.twitturin.model.api.Api
+import com.example.twitturin.model.data.editUser.EditProfile
 import com.example.twitturin.ui.sealeds.DeleteResult
-import com.example.twitturin.ui.sealeds.PostTweet
+import com.example.twitturin.ui.sealeds.EditUserResult
 import com.example.twitturin.ui.sealeds.UserCredentialsResult
 import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
@@ -69,4 +74,37 @@ class ProfileViewModel: ViewModel() {
         }
     }
 
+    private val _editUserResult = SingleLiveEvent<EditUserResult>()
+    val editUserResult: LiveData<EditUserResult> = _editUserResult
+
+    fun editUser(
+        fullName: String,
+        username: String,
+        bio: String,
+        country: String,
+        birthday: String,
+        userId: String,
+        token: String
+    ) {
+
+        val request = EditProfile(fullName, username, bio, country, birthday)
+
+        val authRequest = apiService.editUser(request, userId, "Bearer $token")
+        authRequest.enqueue(object : Callback<EditProfile> {
+
+            override fun onResponse(call: Call<EditProfile>, response: Response<EditProfile>) {
+
+                if (response.isSuccessful) {
+                    val postTweet = response.body()
+                    _editUserResult.value = postTweet?.let { EditUserResult.Success(it) }
+                } else {
+                    _editUserResult.value = EditUserResult.Error(response.code().toString())
+                }
+            }
+
+            override fun onFailure(call: Call<EditProfile>, t: Throwable) {
+                _editUserResult.value = EditUserResult.Error("Network error")
+            }
+        })
+    }
 }

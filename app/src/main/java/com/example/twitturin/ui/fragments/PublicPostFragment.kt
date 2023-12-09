@@ -37,7 +37,6 @@ class PublicPostFragment : Fragment() {
         binding.publicPostFragment  = this
 
         val sessionManager = SessionManager(requireContext())
-
         val token = sessionManager.getToken()
         val repository = Repository()
         val viewModelFactory = ViewModelFactory(repository)
@@ -70,10 +69,6 @@ class PublicPostFragment : Fragment() {
     fun cancelBtn(){
         requireActivity().onBackPressed()
     }
-
-//    fun tweetBtn(){
-        // get logic from api to post a tweet
-//    }
 
     companion object {
         @JvmStatic

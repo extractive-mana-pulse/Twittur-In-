@@ -93,13 +93,43 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Name"
+            android:text="@string/full_name"
             android:textAlignment="textStart"
             android:layout_gravity="start"
             android:layout_marginTop="15dp"
             android:layout_marginStart="16dp"/>
 
         <EditText
+            android:id="@+id/fullname_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="3dp"
+            android:inputType="text"
+            tools:ignore="Autofill,LabelFor"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/username_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@id/fullname_layout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/username"
+            android:textAlignment="textStart"
+            android:layout_gravity="start"
+            android:layout_marginTop="15dp"
+            android:layout_marginStart="16dp"/>
+
+        <EditText
+            android:id="@+id/username_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
@@ -112,7 +142,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@id/fullname_layout"
+        app:layout_constraintTop_toBottomOf="@id/username_layout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -126,6 +156,7 @@
             android:layout_marginStart="16dp"/>
 
         <EditText
+            android:id="@+id/bio_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
@@ -152,6 +183,7 @@
             android:layout_marginStart="16dp"/>
 
         <EditText
+            android:id="@+id/country_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
@@ -172,12 +204,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Birthday"
+            android:inputType="date"
             android:textAlignment="textStart"
             android:layout_gravity="start"
             android:layout_marginTop="15dp"
             android:layout_marginStart="16dp"/>
 
         <EditText
+            android:id="@+id/birthday_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
