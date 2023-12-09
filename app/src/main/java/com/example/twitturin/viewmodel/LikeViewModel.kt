@@ -20,19 +20,14 @@ class LikeViewModel: ViewModel() {
         .build()
 
     private val likePostApi: Api = retrofit.create(Api::class.java)
-
     private val _likePostResult = SingleLiveEvent<PostLikeResult>()
-
     val likePostResult: LiveData<PostLikeResult> = _likePostResult
 
     fun likePost(count: String, token: String) {
-
         val request = LikeTweet(count)
-
         likePostApi.postLike(request,"Bearer $token").enqueue(object : Callback<LikeTweet> {
 
             override fun onResponse(call: Call<LikeTweet>, response: Response<LikeTweet>) {
-
                 if (response.isSuccessful) {
                     val likePostResponse= response.body()
                     _likePostResult.value = likePostResponse?.let { PostLikeResult.Success(it) }

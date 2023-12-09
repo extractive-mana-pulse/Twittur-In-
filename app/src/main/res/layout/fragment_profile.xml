@@ -33,12 +33,13 @@
                 android:background="@drawable/back_btn_bg"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                android:src="@drawable/baseline_keyboard_backspace_24"/>
+                android:src="@drawable/baseline_keyboard_backspace_24"
+                tools:ignore="ContentDescription" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Profile Page"
+                android:text="@string/profile_page"
                 android:textStyle="bold"
                 android:textSize="24sp"
                 android:textColor="?attr/colorOnSurface"
@@ -56,7 +57,8 @@
                 android:layout_marginTop="24dp"
                 android:layout_marginEnd="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="ContentDescription" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -69,13 +71,25 @@
             android:layout_marginStart="16dp"
             android:background="@drawable/back_bg"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/profile_kind_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/kind"
+            app:layout_constraintTop_toBottomOf="@id/header_layout"
+            app:layout_constraintStart_toEndOf="@id/profile_image"
+            android:layout_marginStart="3dp"
+            android:layout_marginTop="9dp"/>
+
 
         <TextView
             android:id="@+id/profile_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Fullname"
+            android:text="@string/full_name"
             android:textStyle="bold"
             android:textColor="?attr/colorOnSurface"
             android:textSize="18sp"
@@ -88,7 +102,7 @@
             android:id="@+id/custom_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="username"
+            android:text="@string/username"
             android:textColor="?attr/colorOnSurfaceVariant"
             android:layout_marginTop="8dp"
             android:layout_marginStart="16dp"
@@ -122,7 +136,7 @@
                 android:id="@+id/following_counter_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="123"
+                android:text="@string/following_counter_tv"
                 android:textStyle="bold"
                 android:textColor="@color/black"
                 android:layout_marginTop="5dp"
@@ -134,7 +148,7 @@
                 android:id="@+id/following_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Following"
+                android:text="@string/following"
                 android:layout_marginTop="5dp"
                 android:layout_marginStart="3dp"
                 app:layout_constraintStart_toEndOf="@id/following_counter_tv"
@@ -144,7 +158,7 @@
                 android:id="@+id/followers_counter_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="88"
+                android:text="@string/followers_counter_tv"
                 android:textStyle="bold"
                 android:textColor="@color/black"
                 android:layout_marginTop="5dp"
@@ -156,23 +170,11 @@
                 android:id="@+id/followers_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Followers"
+                android:text="@string/followers"
                 android:layout_marginTop="5dp"
                 android:layout_marginStart="3dp"
                 app:layout_constraintStart_toEndOf="@id/followers_counter_tv"
                 app:layout_constraintTop_toBottomOf="@id/profile_description"/>
-
-            <TextView
-                android:id="@+id/user_id_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="user id"
-                android:textStyle="italic"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:textSize="18sp"
-                android:layout_marginTop="5dp"
-                android:layout_marginStart="13dp"/>
 
         </LinearLayout>
 

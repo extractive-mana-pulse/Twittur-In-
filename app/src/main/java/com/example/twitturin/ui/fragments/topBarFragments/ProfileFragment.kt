@@ -18,6 +18,7 @@ import com.example.twitturin.SessionManager
 import com.example.twitturin.databinding.FragmentProfileBinding
 import com.example.twitturin.ui.adapters.ProfileViewPagerAdapter
 import com.example.twitturin.ui.sealeds.DeleteResult
+import com.example.twitturin.ui.sealeds.UserCredentialsResult
 import com.example.twitturin.viewmodel.ProfileViewModel
 import com.google.android.material.tabs.TabLayoutMediator
 
@@ -30,14 +31,28 @@ class ProfileFragment : Fragment() {
         return binding.root
     }
 
-    @SuppressLint("DiscouragedPrivateApi")
+    @SuppressLint("DiscouragedPrivateApi", "SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.profileFragment = this
 
         val sessionManager = SessionManager(requireContext())
+        val profileViewModel = ViewModelProvider(this)[ProfileViewModel::class.java]
+        val userId = sessionManager.getUserId()
+        profileViewModel.getUserCredentials(userId!!)
 
-        binding.userIdTv.text = sessionManager.getUserId()
+        profileViewModel.getUserCredentials.observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is UserCredentialsResult.Success -> {
+                    binding.profileName.text = result.user.fullName
+                    binding.customName.text = "@" + result.user.username
+                    binding.profileKindTv.text = result.user.kind
+                }
+                is UserCredentialsResult.Error -> {
+                    Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
 
         binding.threeDotMenu.setOnClickListener {
             val popupMenu = PopupMenu(requireContext(), binding.threeDotMenu)

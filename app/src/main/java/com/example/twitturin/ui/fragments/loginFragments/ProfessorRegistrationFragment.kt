@@ -42,6 +42,7 @@ class ProfessorRegistrationFragment : Fragment() {
             val password = binding.profPasswordEt.text.toString()
 
             viewModel.signUpProf(fullName, username, subject, email, password, "teacher")
+
         }
 
         viewModel.profRegResult.observe(viewLifecycleOwner) { result ->
@@ -56,6 +57,11 @@ class ProfessorRegistrationFragment : Fragment() {
                 }
             }
         }
+
+        binding.backBtn.setOnClickListener {
+            requireActivity().onBackPressed()
+        }
+
     }
 
     companion object {

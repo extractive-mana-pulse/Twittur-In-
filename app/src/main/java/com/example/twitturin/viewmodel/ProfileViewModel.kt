@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.twitturin.model.api.Api
 import com.example.twitturin.ui.sealeds.DeleteResult
+import com.example.twitturin.ui.sealeds.PostTweet
+import com.example.twitturin.ui.sealeds.UserCredentialsResult
 import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -37,6 +39,7 @@ class ProfileViewModel: ViewModel() {
                 val response = apiService.deleteUser(userId, token)
                 if (response.isSuccessful) {
                     _deleteResult.value = DeleteResult.Success
+                    val user = response.body()
                 } else {
                     _deleteResult.value = DeleteResult.Error(response.code().toString())
                 }
@@ -45,4 +48,25 @@ class ProfileViewModel: ViewModel() {
             }
         }
     }
+
+
+    private val _getUserCredentials = MutableLiveData<UserCredentialsResult>()
+    val getUserCredentials: LiveData<UserCredentialsResult> = _getUserCredentials
+
+    fun getUserCredentials(userId: String) {
+        viewModelScope.launch {
+            try {
+                val response = apiService.getLoggedInUserData(userId)
+                if (response.isSuccessful) {
+                    val user = response.body()
+                    _getUserCredentials.value = user?.let { UserCredentialsResult.Success(it) }
+                } else {
+                    _getUserCredentials.value = UserCredentialsResult.Error(response.code().toString())
+                }
+            } catch (e: Exception) {
+                _getUserCredentials.value = UserCredentialsResult.Error("An error occurred: ${e.message}")
+            }
+        }
+    }
+
 }

@@ -16,4 +16,10 @@
     <string name="major">Major</string>
     <string name="student_id">Student ID</string>
     <string name="username">Username</string>
+    <string name="kind">kind</string>
+    <string name="following_counter_tv">123</string>
+    <string name="following">Following</string>
+    <string name="followers_counter_tv">88</string>
+    <string name="followers">Followers</string>
+    <string name="profile_page">Profile Page</string>
 </resources>

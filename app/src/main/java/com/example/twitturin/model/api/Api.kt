@@ -52,5 +52,5 @@ interface Api  {
     suspend fun getTweet(): Response<List<Tweet>>
 
     @GET("users/{id}")
-    suspend fun getLoggedInUserData(@Query("userId") userId : String) : Response<List<User>>
+    suspend fun getLoggedInUserData(@Path("id") userId : String) : Response<User>
 }

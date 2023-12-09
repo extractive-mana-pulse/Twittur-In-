@@ -26,23 +26,6 @@ import java.util.concurrent.TimeUnit
 
 class MainViewModel(private val repository: Repository): ViewModel() {
 
-    val userData = MutableLiveData<User>()
-
-    suspend fun fetchUserData(userId: String) {
-        withContext(Dispatchers.IO) {
-            val response = repository.getLoggedInUserData(userId)
-            if (response.isSuccessful) {
-                val userList = response.body()
-                if (!userList.isNullOrEmpty()) {
-                    val user = userList[0]
-                    userData.postValue(user)
-                }
-            } else {
-                // Handle error
-            }
-        }
-    }
-
     private val client = OkHttpClient.Builder()
         .connectTimeout(90, TimeUnit.SECONDS)
         .writeTimeout(90, TimeUnit.SECONDS)
@@ -79,17 +62,18 @@ class MainViewModel(private val repository: Repository): ViewModel() {
     }
 
     private val tweetApi: Api = retrofit.create(Api::class.java)
-
     private val _postTweet = SingleLiveEvent<PostTweet>()
-
     val postTweetResult: LiveData<PostTweet> = _postTweet
 
     fun postTheTweet(content: String, authToken: String) {
-        val request = TweetContent(content)
 
+        val request = TweetContent(content)
         val authRequest = tweetApi.postTweet(request, "Bearer $authToken")
+
         authRequest.enqueue(object : Callback<TweetContent> {
+
             override fun onResponse(call: Call<TweetContent>, response: Response<TweetContent>) {
+
                 if (response.isSuccessful) {
                     val postTweet = response.body()
                     _postTweet.value = postTweet?.let { PostTweet.Success(it) }
