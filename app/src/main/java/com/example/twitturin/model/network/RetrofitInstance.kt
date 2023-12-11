@@ -1,4 +1,4 @@
-package com.example.twitturin.model.api
+package com.example.twitturin.model.network
 
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit

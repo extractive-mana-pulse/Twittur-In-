@@ -18,7 +18,7 @@
             android:id="@+id/header_layout"
             android:layout_width="match_parent"
             android:layout_height="152dp"
-            android:background="?attr/colorSurface"
+            android:background="@drawable/header_layout_bg"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
@@ -46,7 +46,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/back"/>\
+                app:layout_constraintStart_toEndOf="@+id/back"/>
 
 
             <com.airbnb.lottie.LottieAnimationView
@@ -63,13 +63,12 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/three_dot_menu" />
 
-
             <ImageButton
                 android:id="@+id/three_dot_menu"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:src="@drawable/baseline_more_vert_24"
-                android:background="@android:color/transparent"
+                android:background="@drawable/back_btn_bg"
                 android:layout_marginTop="24dp"
                 android:layout_marginEnd="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -95,6 +94,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/kind"
+            android:textStyle="italic"
             app:layout_constraintTop_toBottomOf="@id/header_layout"
             app:layout_constraintStart_toEndOf="@id/profile_image"
             android:layout_marginStart="3dp"
@@ -131,21 +131,41 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:layout_marginHorizontal="16dp"
-            android:paddingBottom="8dp"
             android:ellipsize="end"
-            android:maxLines="3"
+            android:maxLines="4"
             android:text="@string/test_description"
             android:textColor="?attr/colorOnSurfaceVariant"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/custom_name" />
 
+        <ImageView
+            android:id="@+id/location_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/location"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/profile_description"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/location_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="location"
+            android:layout_marginStart="3dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toEndOf="@id/location_img"
+            app:layout_constraintTop_toBottomOf="@id/profile_description"/>
+
         <LinearLayout
             android:id="@+id/foll_info_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@id/profile_description"
+            app:layout_constraintTop_toBottomOf="@id/location_tv"
             app:layout_constraintStart_toStartOf="parent">
 
             <TextView
@@ -201,12 +221,13 @@
             android:layout_height="45dp"
             android:layout_marginTop="3dp"
             app:tabMode="fixed"
-            app:tabTextColor="?attr/colorOnSurfaceVariant"
-            app:tabIndicatorGravity="stretch"
+            app:tabTextColor="?attr/colorOnSurface"
             app:tabIndicatorAnimationMode="linear"
             app:tabSelectedTextColor="?attr/colorPrimary"
             app:tabBackground="@drawable/tab_bg"
-            app:tabIndicatorColor="#00FFFFFF"
+            app:tabIndicatorHeight="6dp"
+            app:tabMaxWidth="0dp"
+            app:tabIndicatorColor="?attr/colorPrimary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/foll_info_layout"/>

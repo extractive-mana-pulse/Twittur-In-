@@ -3,7 +3,7 @@ package com.example.twitturin.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.twitturin.model.api.Api
+import com.example.twitturin.model.network.Api
 import com.example.twitturin.model.data.registration.SignUpProf
 import com.example.twitturin.ui.sealeds.SignUpProfResult
 import okhttp3.OkHttpClient

@@ -3,7 +3,7 @@ package com.example.twitturin.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.example.twitturin.SingleLiveEvent
-import com.example.twitturin.model.api.Api
+import com.example.twitturin.model.network.Api
 import com.example.twitturin.model.data.likeTweet.LikeTweet
 import com.example.twitturin.ui.sealeds.PostLikeResult
 import retrofit2.Call

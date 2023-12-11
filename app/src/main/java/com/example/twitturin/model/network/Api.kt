@@ -1,4 +1,4 @@
-package com.example.twitturin.model.api
+package com.example.twitturin.model.network
 
 import com.example.twitturin.model.data.editUser.EditProfile
 import com.example.twitturin.model.data.likeTweet.LikeTweet
@@ -12,7 +12,6 @@ import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
-import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -24,59 +23,49 @@ import retrofit2.http.Query
 
 interface Api  {
 
-    // delete account both users.
+    /** delete account **/
     @DELETE("users/{id}")
     suspend fun deleteUser(@Path("id") userId: String, @Header("Authorization") token: String): Response<Unit>
 
-    // post tweet for both users.
+    /** publish user like too  **/
     @POST("tweets")
     fun postLike(@Body tweet: LikeTweet, @Header("Authorization") token: String): Call<LikeTweet>
 
-    // sign in.
+    /** login **/
     @POST("auth")
     fun signInUser(@Body authUSer: Login): Call<User>
 
-    // get user tweets in tweets fragment.
+    /** here we have posts of user in profile page **/
     @GET("users/{id}")
     suspend fun getPostsByUser(@Query("userId") userId: String, @Header("Authorization") authToken: String): User
 
-    // professor registration.
+    /** professor registration **/
     @POST("users")
     fun signUpProf(@Body user: SignUpProf): Call<SignUpProf>
 
-    // student registration.
+    /** student registration **/
     @POST("users")
     fun signUpStudent(@Body user: SignUpStudent): Call<SignUpStudent>
 
-    // publish tweet both users.
+    /** In this API call we are publishing post for user! **/
     @POST("tweets")
     fun postTweet(@Body tweet: TweetContent, @Header("Authorization") token: String): Call<TweetContent>
 
-    // get all tweets.
+    /** In this API call we getting all posts available from all users **/
     @GET("tweets")
     suspend fun getTweet(): Response<List<Tweet>>
 
+    /** In this API call we are getting the user credentials! **/
     @GET("users/{id}")
     suspend fun getLoggedInUserData(@Path("id") userId : String) : Response<User>
 
-    /** In this API call we are update the post details **/
+    /** In this API call we are update the user credentials! **/
     @PUT("users/{id}")
-    fun editUser(
-        @Body editProfile : EditProfile,
-        @Path("id") userId: String,
-        @Header("Authorization") token: String,
-//        @Field("username") username: String,
-//        @Field("email") email: String,
-//        @Field("birthday") birthday: String,
-//        @Field("bio") bio: String,
-//        @Field("country") country: String,
-//        @Field("fullName") fullName: String,
-    ): Call<EditProfile>
+    fun editUser(@Body editProfile : EditProfile, @Path("id") userId: String, @Header("Authorization") token: String, ): Call<EditProfile>
 
 
     @FormUrlEncoded
     @PATCH("users/{id}")
     fun updateUserUsername(
-        @Path("id") userId: String, @Field("username") username: String,@Header("Authorization") token: String
-    ): Call<EditProfile>
+        @Path("id") userId: String, @Header("Authorization") token: String): Call<EditProfile>
 }

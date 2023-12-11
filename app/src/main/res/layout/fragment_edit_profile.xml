@@ -29,7 +29,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Edit Profile"
+            android:text="@string/edit_profile"
             android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -233,12 +233,13 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Birthday"
+            android:text="@string/birthday"
             android:inputType="date"
             android:textAlignment="textStart"
             android:layout_gravity="start"
             android:layout_marginTop="15dp"
-            android:layout_marginStart="16dp"/>
+            android:layout_marginStart="16dp"
+            tools:ignore="TextViewEdits" />
 
         <EditText
             android:id="@+id/birthday_et"
@@ -246,7 +247,8 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
             android:layout_marginTop="3dp"
-            android:inputType="date"/>
+            android:inputType="date"
+            tools:ignore="Autofill,LabelFor" />
 
     </LinearLayout>
 

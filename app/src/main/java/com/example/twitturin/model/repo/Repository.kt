@@ -1,7 +1,6 @@
 package com.example.twitturin.model.repo
 
-import com.example.twitturin.model.api.RetrofitInstance
-import com.example.twitturin.model.data.users.User
+import com.example.twitturin.model.network.RetrofitInstance
 import com.example.twitturin.model.data.tweets.Tweet
 import retrofit2.Response
 

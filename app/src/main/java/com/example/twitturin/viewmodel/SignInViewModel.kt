@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.twitturin.SingleLiveEvent
-import com.example.twitturin.model.api.Api
+import com.example.twitturin.model.network.Api
 import com.example.twitturin.model.data.registration.Login
 import com.example.twitturin.model.data.users.User
 import com.example.twitturin.ui.sealeds.SignInResult

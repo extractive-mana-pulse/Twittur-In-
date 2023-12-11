@@ -39,6 +39,7 @@ class ProfileFragment : Fragment() {
         val sessionManager = SessionManager(requireContext())
         val profileViewModel = ViewModelProvider(this)[ProfileViewModel::class.java]
         val userId = sessionManager.getUserId()
+        val token = sessionManager.getToken()
 
         profileViewModel.getUserCredentials(userId!!)
 
@@ -50,6 +51,7 @@ class ProfileFragment : Fragment() {
                     binding.customName.text = "@" + result.user.username
                     binding.profileKindTv.text = result.user.kind
                     binding.profileDescription.text = result.user.bio
+                    binding.locationTv.text = result.user.country
                 }
 
                 is UserCredentialsResult.Error -> {
@@ -68,7 +70,6 @@ class ProfileFragment : Fragment() {
                         true
                     }
                     R.id.logout -> {
-
                         val alertDialogBuilder = AlertDialog.Builder(requireActivity())
                         alertDialogBuilder.setTitle("Logout")
                         alertDialogBuilder.setMessage("Are you sure you want to log out?")
@@ -93,23 +94,17 @@ class ProfileFragment : Fragment() {
                     }
                     R.id.delete_account -> {
 
-                        val profileViewModel = ViewModelProvider(this)[ProfileViewModel::class.java]
-                        val userId = sessionManager.getUserId()
-                        val token = sessionManager.getToken()
-                        profileViewModel.deleteUser(userId!!, "Bearer $token")
-
+                        profileViewModel.deleteUser(userId, "Bearer $token")
                         profileViewModel.deleteResult.observe(viewLifecycleOwner) { result ->
                             when (result) {
                                 is DeleteResult.Success -> {
                                     findNavController().navigate(R.id.action_profileFragment_to_signInFragment)
-                                    Toast.makeText(requireContext(), "deleted", Toast.LENGTH_SHORT).show()
                                 }
                                 is DeleteResult.Error -> {
                                     Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
                                 }
                             }
                         }
-                        Toast.makeText(requireContext(), "in progress", Toast.LENGTH_SHORT).show()
                         true
                     }
                     else -> false
