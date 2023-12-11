@@ -39,6 +39,7 @@ class ProfileFragment : Fragment() {
         val sessionManager = SessionManager(requireContext())
         val profileViewModel = ViewModelProvider(this)[ProfileViewModel::class.java]
         val userId = sessionManager.getUserId()
+
         profileViewModel.getUserCredentials(userId!!)
 
         profileViewModel.getUserCredentials.observe(viewLifecycleOwner) { result ->
@@ -48,6 +49,7 @@ class ProfileFragment : Fragment() {
                     binding.profileName.text = result.user.fullName
                     binding.customName.text = "@" + result.user.username
                     binding.profileKindTv.text = result.user.kind
+                    binding.profileDescription.text = result.user.bio
                 }
 
                 is UserCredentialsResult.Error -> {

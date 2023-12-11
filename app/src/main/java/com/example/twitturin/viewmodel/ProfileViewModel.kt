@@ -1,10 +1,10 @@
 package com.example.twitturin.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.twitturin.SingleLiveEvent
 import com.example.twitturin.model.api.Api
 import com.example.twitturin.model.data.editUser.EditProfile
 import com.example.twitturin.ui.sealeds.DeleteResult
@@ -74,36 +74,41 @@ class ProfileViewModel: ViewModel() {
         }
     }
 
-    private val _editUserResult = SingleLiveEvent<EditUserResult>()
+    private val _editUserResult = MutableLiveData<EditUserResult>()
     val editUserResult: LiveData<EditUserResult> = _editUserResult
 
     fun editUser(
         fullName: String,
         username: String,
+        email: String,
         bio: String,
         country: String,
         birthday: String,
         userId: String,
         token: String
     ) {
-
-        val request = EditProfile(fullName, username, bio, country, birthday)
-
+        val request =  EditProfile(fullName, username, email, bio, country, birthday)
+        /*username, email, birthday, bio, country, fullName*/
         val authRequest = apiService.editUser(request, userId, "Bearer $token")
         authRequest.enqueue(object : Callback<EditProfile> {
-
             override fun onResponse(call: Call<EditProfile>, response: Response<EditProfile>) {
-
                 if (response.isSuccessful) {
-                    val postTweet = response.body()
-                    _editUserResult.value = postTweet?.let { EditUserResult.Success(it) }
+                    val editProfile = response.body()
+                    if (editProfile != null) {
+                        _editUserResult.value = EditUserResult.Success(editProfile)
+                        Log.d("response body", response.body().toString())
+                        Log.d("response code", response.code().toString())
+                        Log.d("response message", response.message().toString())
+                    } else {
+                        _editUserResult.value = EditUserResult.Error("Empty response body")
+                    }
                 } else {
-                    _editUserResult.value = EditUserResult.Error(response.code().toString())
+                    _editUserResult.value = EditUserResult.Error("API request failed")
                 }
             }
 
             override fun onFailure(call: Call<EditProfile>, t: Throwable) {
-                _editUserResult.value = EditUserResult.Error("Network error")
+                _editUserResult.value = EditUserResult.Error(t.message ?: "Unknown error")
             }
         })
     }

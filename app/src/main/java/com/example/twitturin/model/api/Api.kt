@@ -12,6 +12,8 @@ import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
+import retrofit2.http.Field
+import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.PATCH
@@ -57,9 +59,24 @@ interface Api  {
     @GET("users/{id}")
     suspend fun getLoggedInUserData(@Path("id") userId : String) : Response<User>
 
+    /** In this API call we are update the post details **/
     @PUT("users/{id}")
-    fun editUser(@Body edit : EditProfile, @Path("id") userId: String, @Header("Authorization") token: String): Call<EditProfile>
+    fun editUser(
+        @Body editProfile : EditProfile,
+        @Path("id") userId: String,
+        @Header("Authorization") token: String,
+//        @Field("username") username: String,
+//        @Field("email") email: String,
+//        @Field("birthday") birthday: String,
+//        @Field("bio") bio: String,
+//        @Field("country") country: String,
+//        @Field("fullName") fullName: String,
+    ): Call<EditProfile>
 
+
+    @FormUrlEncoded
     @PATCH("users/{id}")
-    suspend fun editUser2(@Path("id") userId: String, @Header("Authorization") token: String): Response<Unit>
+    fun updateUserUsername(
+        @Path("id") userId: String, @Field("username") username: String,@Header("Authorization") token: String
+    ): Call<EditProfile>
 }

@@ -23,7 +23,8 @@
             android:background="@drawable/back_btn_bg"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:src="@drawable/baseline_keyboard_backspace_24"/>
+            android:src="@drawable/baseline_keyboard_backspace_24"
+            tools:ignore="ContentDescription"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -43,6 +44,7 @@
             android:layout_gravity="end"
             android:text="Save"
             android:textSize="18sp"
+            android:textAlignment="textEnd"
             android:textColor="@color/black"
             android:background="@android:color/transparent"
             android:layout_marginEnd="16dp"
@@ -164,12 +166,40 @@
 
     </LinearLayout>
 
+
+    <LinearLayout
+        android:id="@+id/email_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@id/bio_layout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/email"
+            android:textAlignment="textStart"
+            android:layout_gravity="start"
+            android:layout_marginTop="15dp"
+            android:layout_marginStart="16dp"/>
+
+        <EditText
+            android:id="@+id/email_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="3dp"/>
+
+    </LinearLayout>
+
     <LinearLayout
         android:id="@+id/country_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@id/bio_layout"
+        app:layout_constraintTop_toBottomOf="@id/email_layout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
