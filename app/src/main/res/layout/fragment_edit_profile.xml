@@ -42,7 +42,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:text="Save"
+            android:text="@string/save"
             android:textSize="18sp"
             android:textAlignment="textEnd"
             android:textColor="@color/black"
@@ -55,7 +55,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
-        android:id="@+id/Header_layout"
+        android:id="@+id/header_layout"
         android:layout_width="match_parent"
         android:layout_height="105dp"
         android:background="#044B76"
@@ -68,7 +68,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/add_photo"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            tools:ignore="ContentDescription" />
 
     </LinearLayout>
 
@@ -77,11 +78,12 @@
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:src="@drawable/account_avatar"
-        android:layout_marginTop="140dp"
+        android:layout_marginTop="130dp"
         android:layout_marginStart="16dp"
         android:background="@drawable/back_bg"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="ContentDescription" />
 
     <LinearLayout
         android:id="@+id/fullname_layout"
@@ -135,9 +137,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="3dp"/>
+            android:layout_marginTop="3dp"
+            tools:ignore="Autofill,LabelFor,TextFields" />
 
     </LinearLayout>
+
 
     <LinearLayout
         android:id="@+id/bio_layout"
@@ -151,7 +155,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Bio"
+            android:text="@string/biography"
             android:textAlignment="textStart"
             android:layout_gravity="start"
             android:layout_marginTop="15dp"
@@ -162,7 +166,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="3dp"/>
+            android:layout_marginTop="3dp"
+            tools:ignore="Autofill,LabelFor,TextFields" />
 
     </LinearLayout>
 
@@ -190,7 +195,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="3dp"/>
+            android:layout_marginTop="3dp"
+            tools:ignore="Autofill,LabelFor,TextFields" />
 
     </LinearLayout>
 
@@ -206,7 +212,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Country"
+            android:text="@string/country"
             android:textAlignment="textStart"
             android:layout_gravity="start"
             android:layout_marginTop="15dp"
@@ -217,7 +223,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="3dp"/>
+            android:layout_marginTop="3dp"
+            tools:ignore="Autofill,LabelFor,TextFields" />
 
     </LinearLayout>
 

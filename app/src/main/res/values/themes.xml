@@ -28,4 +28,15 @@
         <item name="colorOnSurfaceInverse">@color/md_theme_light_inverseOnSurface</item>
         <item name="colorPrimaryInverse">@color/md_theme_light_inversePrimary</item>
     </style>
+
+    <!-- AlertDialog Theme -->
+    <style name="CustomAlertDialogTheme" parent="Theme.MaterialComponents.Light.Dialog.Alert">
+        <item name="colorPrimary">@color/md_theme_light_primary</item>
+        <item name="colorPrimaryDark">@color/md_theme_light_primaryContainer</item>
+        <item name="colorAccent">@color/md_theme_light_surface</item>
+        <item name="android:background">@color/md_theme_light_primaryContainer</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="buttonBarNegativeButtonStyle">@android:color/white</item>
+    </style>
 </resources>

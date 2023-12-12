@@ -64,12 +64,16 @@ class ProfileFragment : Fragment() {
             val popupMenu = PopupMenu(requireContext(), binding.threeDotMenu)
 
             popupMenu.setOnMenuItemClickListener { item ->
-                when (item.itemId){
+                when (item.itemId) {
+
                     R.id.edit_profile -> {
+
                         findNavController().navigate(R.id.action_profileFragment_to_editProfileFragment)
                         true
                     }
+
                     R.id.logout -> {
+
                         val alertDialogBuilder = AlertDialog.Builder(requireActivity())
                         alertDialogBuilder.setTitle("Logout")
                         alertDialogBuilder.setMessage("Are you sure you want to log out?")
@@ -92,6 +96,7 @@ class ProfileFragment : Fragment() {
                         alertDialog.show()
                         true
                     }
+
                     R.id.delete_account -> {
 
                         profileViewModel.deleteUser(userId, "Bearer $token")

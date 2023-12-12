@@ -1,17 +1,22 @@
 package com.example.twitturin.ui.fragments
 
+import android.app.AlertDialog
+import android.graphics.Color
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.twitturin.GridSpacingItemDecoration
 import com.example.twitturin.R
 import com.example.twitturin.SessionManager
 import com.example.twitturin.databinding.FragmentEditProfileBinding
+import com.example.twitturin.ui.adapters.ColorAdapter
 import com.example.twitturin.ui.sealeds.EditUserResult
 import com.example.twitturin.viewmodel.ProfileViewModel
 
@@ -69,9 +74,64 @@ class EditProfileFragment : Fragment() {
             }
         }
 
-        binding.HeaderLayout.setOnClickListener {
-//            TODO { open camera or gallery }
+        binding.headerLayout.setOnClickListener {
+            showColorPickerDialog()
         }
+    }
+
+    /** DVRST **/
+    private fun showColorPickerDialog() {
+
+        val colors = listOf(
+            Color.CYAN,
+            Color.MAGENTA,
+            Color.YELLOW,
+            Color.GREEN,
+            Color.BLUE,
+            Color.RED,
+            Color.rgb(255, 165, 0),
+            Color.rgb(205, 92, 92),
+            Color.rgb(72, 61, 139),
+            Color.rgb(244, 164, 96),
+            Color.rgb(169, 169, 169),
+            Color.rgb(245, 245, 220),
+            Color.rgb(255, 228, 181),
+            Color.rgb(102, 205, 170),
+            Color.rgb(179, 157, 219)
+        )
+
+        val numColumns = 5 // Desired number of columns
+        val padding = dpToPx(15) // Convert 15 dp to pixels
+        val spacing = dpToPx(15) // Set the spacing between items in dp
+
+        val recyclerView = RecyclerView(requireContext()).apply {
+            layoutParams = ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+            )
+            layoutManager = GridLayoutManager(requireActivity(), numColumns)
+            setPadding(padding, dpToPx(20), padding, padding) // Convert padding to pixels
+            adapter = ColorAdapter(requireActivity(), colors) { selectedColor ->
+                // Do something with the selected color
+                // Change Background Color
+                binding.headerLayout.setBackgroundColor(selectedColor)
+//                selectedColor.dismiss()
+            }
+            addItemDecoration(GridSpacingItemDecoration(numColumns, spacing, true))
+        }
+
+        val colorPickerDialog = AlertDialog.Builder(requireContext(), R.style.CustomAlertDialogTheme)
+            .setTitle("Choose a color")
+            .setView(recyclerView)
+            .setNegativeButton("Cancel") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .create()
+        colorPickerDialog.show()
+    }
+
+    private fun dpToPx(dp: Int): Int {
+        return (dp * resources.displayMetrics.density).toInt()
     }
 
     companion object {
