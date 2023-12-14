@@ -42,18 +42,18 @@ class ProfileFragment : Fragment() {
         val token = sessionManager.getToken()
 
         profileViewModel.getUserCredentials(userId!!)
-
         profileViewModel.getUserCredentials.observe(viewLifecycleOwner) { result ->
             when (result) {
-
                 is UserCredentialsResult.Success -> {
+
                     binding.profileName.text = result.user.fullName
                     binding.customName.text = "@" + result.user.username
                     binding.profileKindTv.text = result.user.kind
                     binding.profileDescription.text = result.user.bio
                     binding.locationTv.text = result.user.country
-                }
+                    binding.emailTv.text = result.user.email
 
+                }
                 is UserCredentialsResult.Error -> {
                     Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
                 }
@@ -98,7 +98,6 @@ class ProfileFragment : Fragment() {
                     }
 
                     R.id.delete_account -> {
-
                         profileViewModel.deleteUser(userId, "Bearer $token")
                         profileViewModel.deleteResult.observe(viewLifecycleOwner) { result ->
                             when (result) {

@@ -17,8 +17,9 @@ import java.util.Locale
 import java.util.TimeZone
 import java.util.concurrent.TimeUnit
 
-class TweetsAdapter(private var posts: List<Tweet>) : RecyclerView.Adapter<TweetsAdapter.ViewHolder>() {
+class TweetsAdapter() : RecyclerView.Adapter<TweetsAdapter.ViewHolder>() {
 
+    private var posts = emptyList<Tweet>()
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val binding = RcViewBinding.bind(itemView)
     }
@@ -83,4 +84,10 @@ class TweetsAdapter(private var posts: List<Tweet>) : RecyclerView.Adapter<Tweet
     }
 
     override fun getItemCount() = posts.size
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun setData(newList: List<Tweet>){
+        posts = newList
+        notifyDataSetChanged()
+    }
 }

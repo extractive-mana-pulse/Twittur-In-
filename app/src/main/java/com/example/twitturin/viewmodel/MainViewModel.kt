@@ -40,15 +40,15 @@ class MainViewModel(private val repository: Repository): ViewModel() {
     private val _signUpStudentResult = MutableLiveData<SignUpStudentResult>()
     val signUpStudentResult: LiveData<SignUpStudentResult> = _signUpStudentResult
 
-    fun signUp(username: String, studentId: String, major: String, email: String, password: String, kind: String) {
-        val request = SignUpStudent(username, studentId, major, email, password, kind)
+    fun signUp(username: String, studentId: String, major: String, email: String, birthday : String, password: String, kind: String) {
+        val request = SignUpStudent(username, studentId, major, email, birthday, password, kind)
         signUpApi.signUpStudent(request).enqueue(object : Callback<SignUpStudent> {
             override fun onResponse(call: Call<SignUpStudent>, response: Response<SignUpStudent>) {
                 if (response.isSuccessful) {
                     val signUpResponse = response.body()
                     _signUpStudentResult.value = signUpResponse?.let { SignUpStudentResult.Success(it) }
                 } else {
-                    _signUpStudentResult.value = SignUpStudentResult.Error(response.body().toString())
+                    _signUpStudentResult.value = SignUpStudentResult.Error(response.code().toString())
                 }
             }
 

@@ -22,7 +22,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/some_layout"/>
+            app:layout_constraintBottom_toTopOf="@+id/some_layout"
+            tools:ignore="ContentDescription" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/ui_header_layout"
@@ -52,7 +53,8 @@
                 android:textSize="28sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="HardcodedText" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textInputLayout"
@@ -71,9 +73,11 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/student_id_et"
-                    android:hint="username"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:hint="@string/username"
+                    android:imeOptions="actionNext"
+                    android:inputType="text"
                     android:background="@android:color/transparent" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -97,9 +101,10 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/password_et"
-                    android:hint="Password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:hint="@string/password"
+                    android:imeOptions="actionDone"
                     android:inputType="textPassword"
                     android:background="@android:color/transparent"/>
 
@@ -112,7 +117,7 @@
                 android:layout_marginTop="18dp"
                 android:layout_marginEnd="15dp"
                 android:onClick="@{()-> signInFragment.chooseKindPage()}"
-                android:text="Want to register?"
+                android:text="@string/wanna_register"
                 android:textColor="?attr/colorPrimary"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/textInputLayout1" />
@@ -123,7 +128,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="5dp"
-                android:text="Remember me"
+                android:text="@string/remember_me"
                 android:textColor="?attr/colorPrimary"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/textInputLayout1" />
@@ -134,7 +139,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginBottom="24dp"
-                android:text="Sign In"
+                android:text="@string/sign_in"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />

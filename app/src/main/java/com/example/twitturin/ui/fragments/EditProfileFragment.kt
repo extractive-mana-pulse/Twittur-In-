@@ -33,7 +33,7 @@ class EditProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.back.setOnClickListener {
-            requireActivity().onBackPressed()
+            findNavController().navigate(R.id.action_editProfileFragment_to_profileFragment)
         }
 
         val sessionManager = SessionManager(requireContext())

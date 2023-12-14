@@ -83,8 +83,11 @@
                         android:id="@+id/prof_fullname_et"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:hint="@string/full_name"
+                        android:imeOptions="actionNext"
+                        android:inputType="text"
                         android:background="@android:color/transparent"
-                        android:hint="@string/full_name" />
+                        />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -108,8 +111,11 @@
                         android:id="@+id/prof_username_et"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:hint="@string/username"
+                        android:imeOptions="actionNext"
+                        android:inputType="text"
                         android:background="@android:color/transparent"
-                        android:hint="@string/username"/>
+                        />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -134,6 +140,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/subject"
+                        android:imeOptions="actionNext"
+                        android:inputType="text"
                         android:background="@android:color/transparent"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -159,6 +167,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/email"
+                        android:imeOptions="actionNext"
+                        android:inputType="text"
                         android:background="@android:color/transparent"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -171,12 +181,39 @@
                     android:layout_marginTop="15dp"
                     android:background="@drawable/edit_text_bg_ui"
                     app:hintTextColor="?attr/colorOnPrimaryContainer"
+                    app:endIconCheckable="true"
+                    app:endIconMode="clear_text"
+                    app:startIconCheckable="true"
+                    app:startIconDrawable="@drawable/calendar_month"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/textInputLayout3"
+                    app:layout_constraintStart_toStartOf="parent">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/prof_birthday_et"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/transparent"
+                        android:hint="@string/birthday"
+                        android:imeOptions="actionNext"
+                        android:inputType="date" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/textInputLayout5"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/edit_text_bg_ui"
+                    app:hintTextColor="?attr/colorOnPrimaryContainer"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:endIconCheckable="true"
                     app:endIconMode="password_toggle"
                     app:startIconCheckable="true"
                     app:startIconDrawable="@drawable/lock"
-                    app:layout_constraintTop_toBottomOf="@id/textInputLayout3"
+                    app:layout_constraintTop_toBottomOf="@id/textInputLayout4"
                     app:layout_constraintStart_toStartOf="parent">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -184,8 +221,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/password"
+                        android:imeOptions="actionDone"
                         android:inputType="textPassword"
                         android:background="@android:color/transparent"/>
+
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <Button

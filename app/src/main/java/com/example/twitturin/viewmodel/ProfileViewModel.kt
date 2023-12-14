@@ -5,11 +5,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.twitturin.model.network.Api
 import com.example.twitturin.model.data.editUser.EditProfile
+import com.example.twitturin.model.network.Api
 import com.example.twitturin.ui.sealeds.DeleteResult
 import com.example.twitturin.ui.sealeds.EditUserResult
 import com.example.twitturin.ui.sealeds.UserCredentialsResult
+import com.example.twitturin.ui.sealeds.UserTweetsResult
 import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 import retrofit2.Call
@@ -22,9 +23,9 @@ import java.util.concurrent.TimeUnit
 class ProfileViewModel: ViewModel() {
 
     private val client = OkHttpClient.Builder()
-        .connectTimeout(90, TimeUnit.SECONDS)
-        .writeTimeout(90, TimeUnit.SECONDS)
-        .readTimeout(90, TimeUnit.SECONDS)
+        .connectTimeout(180, TimeUnit.SECONDS)
+        .writeTimeout(180, TimeUnit.SECONDS)
+        .readTimeout(180, TimeUnit.SECONDS)
         .build()
 
     private val retrofit = Retrofit.Builder()
@@ -111,5 +112,28 @@ class ProfileViewModel: ViewModel() {
                 _editUserResult.value = EditUserResult.Error(t.message ?: "Unknown error")
             }
         })
+    }
+
+//    var gson = GsonBuilder()
+//        .setLenient()
+//        .create()!!
+
+    private val _data = MutableLiveData<UserTweetsResult>()
+    val data: LiveData<UserTweetsResult> = _data
+
+    fun getPostsByUser(userId: String, token: String) {
+        viewModelScope.launch {
+            try {
+                val response = apiService.getPostsByUser(userId, token)
+                if (response.isSuccessful) {
+                    val userPost = response.body()
+                    _data.value = userPost?.let { UserTweetsResult.Success(it) }
+                } else {
+                    _data.value = UserTweetsResult.Failure(Exception("API request failed"))
+                }
+            } catch (e: Exception) {
+                _data.value = UserTweetsResult.Failure(e)
+            }
+        }
     }
 }

@@ -12,7 +12,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rcView"
@@ -62,4 +62,5 @@
             app:layout_constraintTop_toBottomOf="@id/lottie_infoTv"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </layout>

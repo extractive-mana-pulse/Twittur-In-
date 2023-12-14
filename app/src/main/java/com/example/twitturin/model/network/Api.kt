@@ -35,10 +35,6 @@ interface Api  {
     @POST("auth")
     fun signInUser(@Body authUSer: Login): Call<User>
 
-    /** here we have posts of user in profile page **/
-    @GET("users/{id}")
-    suspend fun getPostsByUser(@Query("userId") userId: String, @Header("Authorization") authToken: String): User
-
     /** professor registration **/
     @POST("users")
     fun signUpProf(@Body user: SignUpProf): Call<SignUpProf>
@@ -63,9 +59,11 @@ interface Api  {
     @PUT("users/{id}")
     fun editUser(@Body editProfile : EditProfile, @Path("id") userId: String, @Header("Authorization") token: String, ): Call<EditProfile>
 
-
     @FormUrlEncoded
     @PATCH("users/{id}")
-    fun updateUserUsername(
-        @Path("id") userId: String, @Header("Authorization") token: String): Call<EditProfile>
+    fun updateUserUsername(@Path("id") userId: String, @Header("Authorization") token: String): Call<EditProfile>
+
+    /** here we have posts of user in profile page **/
+    @GET("users/{id}/tweets")
+    suspend fun getPostsByUser(@Path("id") userId: String, @Header("Authorization") token: String): Response<List<Tweet>>
 }

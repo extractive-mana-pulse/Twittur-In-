@@ -38,8 +38,9 @@ class StudentRegistrationFragment : Fragment() {
             val studentId = binding.studentIdEt.text.toString()
             val major = binding.majorEt.text.toString()
             val email = binding.emailEt.text.toString()
+            val birthday = binding.birthdayEt.text.toString()
             val password = binding.passwordEt.text.toString()
-            viewModel.signUp(username, studentId, major, email, password, "student")
+            viewModel.signUp(username, studentId, major, email, birthday, password, "student")
         }
 
         viewModel.signUpStudentResult.observe(viewLifecycleOwner) { result ->

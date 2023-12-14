@@ -39,9 +39,10 @@ class ProfessorRegistrationFragment : Fragment() {
             val username = binding.profUsernameEt.text.toString()
             val subject = binding.profSubjectEt.text.toString()
             val email = binding.profEmailEt.text.toString()
+            val birthday = binding.profBirthdayEt.text.toString()
             val password = binding.profPasswordEt.text.toString()
 
-            viewModel.signUpProf(fullName, username, subject, email, password, "teacher")
+            viewModel.signUpProf(fullName, username, subject, email, birthday, password, "teacher")
 
         }
 

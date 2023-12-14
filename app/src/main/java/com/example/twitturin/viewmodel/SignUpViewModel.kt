@@ -32,9 +32,9 @@ class SignUpViewModel : ViewModel() {
     private val _profRegResult = MutableLiveData<SignUpProfResult>()
     val profRegResult: LiveData<SignUpProfResult> = _profRegResult
 
-    fun signUpProf(fullName: String, username: String, subject: String, email: String, password: String, kind: String) {
+    fun signUpProf(fullName: String, username: String, subject: String, email: String, birthday : String, password: String, kind: String) {
 
-        val request = SignUpProf(fullName, username, subject, email, password, kind)
+        val request = SignUpProf(fullName, username, subject, email, birthday, password, kind)
 
         profReg.signUpProf(request).enqueue(object : Callback<SignUpProf> {
 
