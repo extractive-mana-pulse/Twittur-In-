@@ -1,11 +1,14 @@
 package com.example.twitturin.ui.fragments
 
 import android.app.AlertDialog
+import android.app.DatePickerDialog
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -18,11 +21,16 @@ import com.example.twitturin.SessionManager
 import com.example.twitturin.databinding.FragmentEditProfileBinding
 import com.example.twitturin.ui.adapters.ColorAdapter
 import com.example.twitturin.ui.sealeds.EditUserResult
+import com.example.twitturin.ui.sealeds.UserCredentialsResult
 import com.example.twitturin.viewmodel.ProfileViewModel
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 class EditProfileFragment : Fragment() {
 
     private lateinit var binding : FragmentEditProfileBinding
+    private val calendar: Calendar = Calendar.getInstance()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentEditProfileBinding.inflate(layoutInflater)
@@ -41,7 +49,32 @@ class EditProfileFragment : Fragment() {
         val userId = sessionManager.getUserId()
 
         val profileViewModel = ViewModelProvider(this)[ProfileViewModel::class.java]
+//        TODO. this code should be modified under edit text. so in this page in edit text fields should be default value of user credentials
+//         or if it's empty field should be empty.
+//        profileViewModel.getUserCredentials(userId!!)
+//        profileViewModel.getUserCredentials.observe(viewLifecycleOwner) { result ->
+//            when (result) {
+//
+//                is UserCredentialsResult.Success -> {
+//
+//                    binding.fullnameEt.text = result.user.fullName
+//                    binding.customName.text = "@" + result.user.username
+//                    binding.profileKindTv.text = result.user.kind
+//                    binding.profileDescription.text = result.user.bio
+//                    binding.locationTv.text = result.user.country
+//                    binding.emailTv.text = result.user.email
+//
+//                }
+//                is UserCredentialsResult.Error -> {
+//                    Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
+//                }
+//            }
+//        }
 
+        binding.birthdayEt.setOnClickListener {
+            Log.d("birthday edit text test" ,"Clicked ?")
+            showDatePickerDialog()
+        }
 
         binding.save.setOnClickListener {
 
@@ -51,10 +84,9 @@ class EditProfileFragment : Fragment() {
                 val username = binding.usernameEt.text.toString()
                 val bio = binding.bioEt.text.toString()
                 val email = binding.emailEt.text.toString()
-                val country = binding.countryEt.text.toString()
-                val birthday = binding.birthdayEt.text.toString()
+                val country = binding.countryEt.selectedCountryName
 
-                profileViewModel.editUser(fullName, username, email, bio, country, birthday, userId!!, token)
+                profileViewModel.editUser(fullName, username, email, bio, country, updateBirthdayEditText().toString(), userId!!, token)
             } else {
                 Toast.makeText(requireContext(), "error", Toast.LENGTH_SHORT).show()
             }
@@ -77,6 +109,23 @@ class EditProfileFragment : Fragment() {
         binding.headerLayout.setOnClickListener {
             showColorPickerDialog()
         }
+    }
+
+    private fun showDatePickerDialog() {
+        val datePickerDialog = DatePickerDialog(requireActivity(), { _, year, month, day ->
+            calendar.set(year, month, day)
+            updateBirthdayEditText() },
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)
+        )
+        datePickerDialog.show()
+    }
+
+    private fun updateBirthdayEditText() {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val formattedDate = dateFormat.format(calendar.time)
+        binding.birthdayEt.setText(formattedDate).toString()
     }
 
     /** DVRST **/

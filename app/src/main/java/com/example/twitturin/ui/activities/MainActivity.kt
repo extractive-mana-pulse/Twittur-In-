@@ -1,8 +1,11 @@
 package com.example.twitturin.ui.activities
 
 import android.annotation.SuppressLint
+import android.os.Build
 import android.os.Bundle
 import android.view.View
+import android.view.WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.NavHostFragment
@@ -14,6 +17,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding : ActivityMainBinding
 
     private val navController by lazy { (supportFragmentManager.findFragmentById(R.id.nav_host_fragment_container) as NavHostFragment).navController }
+    @RequiresApi(Build.VERSION_CODES.R)
     @SuppressLint("PrivateResource")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,8 +26,11 @@ class MainActivity : AppCompatActivity() {
 
         if (isDarkModeActive()){
             window.statusBarColor = ContextCompat.getColor(this, com.google.android.material.R.color.m3_sys_color_dark_surface_container)
+            window.decorView.windowInsetsController?.setSystemBarsAppearance(0, APPEARANCE_LIGHT_STATUS_BARS)
+
         } else {
             window.statusBarColor = ContextCompat.getColor(this, com.google.android.material.R.color.m3_sys_color_light_surface_container)
+            window.decorView.windowInsetsController?.setSystemBarsAppearance(APPEARANCE_LIGHT_STATUS_BARS, APPEARANCE_LIGHT_STATUS_BARS)
         }
 
         binding.bottomNavView.setOnItemSelectedListener {
@@ -42,7 +49,8 @@ class MainActivity : AppCompatActivity() {
             R.id.professorRegistrationFragment,
             R.id.editProfileFragment,
             R.id.privateMessagesFragment,
-            R.id.kindFragment
+            R.id.kindFragment,
+            R.id.profileFragment
         )
 
         navController.addOnDestinationChangedListener { _, destination, _ ->

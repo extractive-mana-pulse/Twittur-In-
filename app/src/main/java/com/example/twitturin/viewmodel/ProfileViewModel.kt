@@ -1,11 +1,13 @@
 package com.example.twitturin.viewmodel
 
 import android.util.Log
+import androidx.compose.animation.core.tween
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.twitturin.model.data.editUser.EditProfile
+import com.example.twitturin.model.data.tweets.Tweet
 import com.example.twitturin.model.network.Api
 import com.example.twitturin.ui.sealeds.DeleteResult
 import com.example.twitturin.ui.sealeds.EditUserResult
@@ -100,11 +102,9 @@ class ProfileViewModel: ViewModel() {
                         Log.d("response body", response.body().toString())
                         Log.d("response code", response.code().toString())
                         Log.d("response message", response.message().toString())
-                    } else {
-                        _editUserResult.value = EditUserResult.Error("Empty response body")
                     }
                 } else {
-                    _editUserResult.value = EditUserResult.Error("API request failed")
+                    _editUserResult.value = EditUserResult.Error(response.code().toString())
                 }
             }
 
@@ -114,26 +114,43 @@ class ProfileViewModel: ViewModel() {
         })
     }
 
-//    var gson = GsonBuilder()
-//        .setLenient()
-//        .create()!!
-
     private val _data = MutableLiveData<UserTweetsResult>()
     val data: LiveData<UserTweetsResult> = _data
 
-    fun getPostsByUser(userId: String, token: String) {
-        viewModelScope.launch {
-            try {
-                val response = apiService.getPostsByUser(userId, token)
+//    fun getPostsByUser(userId: String, token: String) {
+//        viewModelScope.launch {
+//            try {
+//                val response = apiService.getPostsByUser(userId, token)
+//                if (response.isSuccessful) {
+//                    val userPost = response.body()
+//                    _data.value = userPost?.let { UserTweetsResult.Success(it) }
+//                } else {
+//                    _data.value = UserTweetsResult.Failure(Exception("API request failed"))
+//                }
+//            } catch (e: Exception) {
+//                _data.value = UserTweetsResult.Failure(e)
+//            }
+//        }
+//    }
+
+    fun getPostsFromUser(userId: String, token: String){
+        val call = apiService.getPostsByUser(userId, token)
+        call.enqueue(object : Callback<List<Tweet>> {
+            override fun onResponse(call: Call<List<Tweet>>, response: Response<List<Tweet>>) {
                 if (response.isSuccessful) {
-                    val userPost = response.body()
-                    _data.value = userPost?.let { UserTweetsResult.Success(it) }
+                    val tweets = response.body()
+                    _data.value = tweets?.let { UserTweetsResult.Success(it) }
                 } else {
-                    _data.value = UserTweetsResult.Failure(Exception("API request failed"))
+                    _data.value = UserTweetsResult.Failure(response.code().toString())
+                    Log.d("body", response.body().toString())
+                    Log.d("code", response.code().toString())
+                    Log.d("message", response.message().toString())
                 }
-            } catch (e: Exception) {
-                _data.value = UserTweetsResult.Failure(e)
             }
-        }
+
+            override fun onFailure(call: Call<List<Tweet>>, t: Throwable) {
+                t.message
+            }
+        })
     }
 }

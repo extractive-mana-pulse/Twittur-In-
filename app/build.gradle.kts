@@ -86,7 +86,7 @@ dependencies {
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation ("com.squareup.okhttp3:logging-interceptor:4.9.2")
 
-    //    Coroutines
+    // Coroutines
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
     implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
@@ -108,4 +108,7 @@ dependencies {
 
     // LottieFiles
     implementation ("com.airbnb.android:lottie:3.5.0")
+
+    // Country Picker
+    implementation ("com.hbb20:ccp:2.5.3")
 }

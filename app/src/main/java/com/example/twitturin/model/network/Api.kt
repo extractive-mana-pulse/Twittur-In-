@@ -64,6 +64,8 @@ interface Api  {
     fun updateUserUsername(@Path("id") userId: String, @Header("Authorization") token: String): Call<EditProfile>
 
     /** here we have posts of user in profile page **/
-    @GET("users/{id}/tweets")
-    suspend fun getPostsByUser(@Path("id") userId: String, @Header("Authorization") token: String): Response<List<Tweet>>
+//    @GET("/tweets")
+//    fun getTweets(@Query("author") author: String): Call<List<Tweet>>
+    @GET("tweets")
+    fun getPostsByUser(@Query("id") userId: String, @Header("Authorization") token: String): Call<List<Tweet>>
 }

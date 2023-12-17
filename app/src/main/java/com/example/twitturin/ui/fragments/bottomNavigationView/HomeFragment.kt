@@ -9,22 +9,22 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.twitturin.R
 import com.example.twitturin.databinding.FragmentHomeBinding
 import com.example.twitturin.model.data.tweets.Tweet
+import com.example.twitturin.model.repo.Repository
 import com.example.twitturin.ui.adapters.PostAdapter
 import com.example.twitturin.viewmodel.MainViewModel
-import com.example.twitturin.model.repo.Repository
 import com.example.twitturin.viewmodel.ViewModelFactory
 import java.util.Random
+
 
 class HomeFragment : Fragment() {
 
     private lateinit var binding : FragmentHomeBinding
-
     private lateinit var viewModel: MainViewModel
-
     private val postAdapter by lazy { PostAdapter(viewLifecycleOwner) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,14 +44,7 @@ class HomeFragment : Fragment() {
         val repository = Repository()
         val viewModelFactory = ViewModelFactory(repository)
         viewModel = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
-
-        recyclerViewSetup()
         updateRecyclerView()
-    }
-
-    private fun recyclerViewSetup(){
-        binding.rcView.adapter = postAdapter
-        binding.rcView.layoutManager = LinearLayoutManager(requireContext())
     }
 
     fun goToWebView(){
@@ -68,6 +61,9 @@ class HomeFragment : Fragment() {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun updateRecyclerView() {
+        binding.rcView.adapter = postAdapter
+        binding.rcView.addItemDecoration(DividerItemDecoration(binding.rcView.context, DividerItemDecoration.VERTICAL))
+        binding.rcView.layoutManager = LinearLayoutManager(requireContext())
         viewModel.getTweet()
         viewModel.responseTweets.observe(requireActivity()) { response ->
             if (response.isSuccessful) {

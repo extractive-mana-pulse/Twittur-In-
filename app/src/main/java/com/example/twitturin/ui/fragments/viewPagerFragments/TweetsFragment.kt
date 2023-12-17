@@ -8,6 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.isEmpty
+import androidx.core.view.isNotEmpty
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -39,19 +41,22 @@ class TweetsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.anView.setFailureListener { t ->
-            Toast.makeText(requireContext(), t.message, Toast.LENGTH_SHORT).show()
-            Log.d("Lottie", t.message.toString())
-        }
-        binding.anView.setAnimation(R.raw.empty_tweets_list)
+        if (binding.rcView.isEmpty()){
+            binding.anView.visibility = View.VISIBLE
+            binding.anView.setFailureListener { t ->
+                Toast.makeText(requireContext(), t.message, Toast.LENGTH_SHORT).show()
+                Log.d("Lottie", t.message.toString())
+            }
 
-        binding.createTweetTv.setOnClickListener {
-            findNavController().navigate(R.id.action_profileFragment_to_publicPostFragment)
+            binding.createTweetTv.visibility = View.VISIBLE
+            binding.createTweetTv.setOnClickListener {
+                findNavController().navigate(R.id.action_profileFragment_to_publicPostFragment)
+            }
+            binding.createTweetTv.paintFlags = binding.createTweetTv.paintFlags or Paint.UNDERLINE_TEXT_FLAG
+        }else {
+            recyclerViewSetup()
+            updateRecyclerView()
         }
-        binding.createTweetTv.paintFlags = binding.createTweetTv.paintFlags or Paint.UNDERLINE_TEXT_FLAG
-
-        recyclerViewSetup()
-        updateRecyclerView()
     }
 
     private fun recyclerViewSetup(){
@@ -71,17 +76,18 @@ class TweetsFragment : Fragment() {
             when (result) {
                 is UserTweetsResult.Success -> {
                     val tweets = result.tweets
+                    Log.d("success", result.tweets.toString())
                     adapter.setData(tweets)
                 }
 
                 is UserTweetsResult.Failure -> {
-                    val exception = result.exception
-                    Toast.makeText(requireContext(), exception.message, Toast.LENGTH_SHORT).show()
-                    Log.d("Failure", exception.message.toString())
+                    val exception = result.message
+                    Toast.makeText(requireContext(), exception, Toast.LENGTH_SHORT).show()
+                    Log.d("Failure", exception)
                 }
             }
         }
-        viewModel.getPostsByUser(userId!!, "Bearer $token")
+        viewModel.getPostsFromUser(userId!!, "Bearer $token")
     }
 
 

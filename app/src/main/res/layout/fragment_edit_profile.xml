@@ -210,6 +210,7 @@
         app:layout_constraintEnd_toEndOf="parent">
 
         <TextView
+            android:id="@+id/country_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/country"
@@ -218,13 +219,21 @@
             android:layout_marginTop="15dp"
             android:layout_marginStart="16dp"/>
 
-        <EditText
+<!--        <EditText-->
+<!--            android:id="@+id/country_et"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginHorizontal="16dp"-->
+<!--            android:layout_marginTop="3dp"-->
+<!--            tools:ignore="Autofill,LabelFor,TextFields" />-->
+
+        <com.hbb20.CountryCodePicker
             android:id="@+id/country_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="3dp"
-            tools:ignore="Autofill,LabelFor,TextFields" />
+            app:ccp_defaultNameCode="UZBEKISTAN"
+            app:ccp_showPhoneCode="false"
+            app:ccp_showFlag="true"/>
 
     </LinearLayout>
 
@@ -248,14 +257,28 @@
             android:layout_marginStart="16dp"
             tools:ignore="TextViewEdits" />
 
+<!--        <EditText-->
+<!--            android:id="@+id/birthday_et"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginHorizontal="16dp"-->
+<!--            android:layout_marginTop="3dp"-->
+<!--            android:inputType="date"-->
+<!--            tools:ignore="Autofill,LabelFor" />-->
+
         <EditText
             android:id="@+id/birthday_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="3dp"
             android:inputType="date"
-            tools:ignore="Autofill,LabelFor" />
+            android:focusable="false"
+            android:cursorVisible="false"/>
+
+<!--        <DatePicker-->
+<!--            android:id="@+id/birthday_et"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:datePickerMode="calendar"/>-->
 
     </LinearLayout>
 

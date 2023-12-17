@@ -1,10 +1,14 @@
 package com.example.twitturin.ui.fragments.loginFragments
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -18,6 +22,7 @@ import com.example.twitturin.viewmodel.ViewModelFactory
 class StudentRegistrationFragment : Fragment() {
 
     private lateinit var binding : FragmentStudentRegistrationBinding
+    private val editTextList: MutableList<EditText> = mutableListOf()
 
     private lateinit var viewModel : MainViewModel
 
@@ -33,6 +38,7 @@ class StudentRegistrationFragment : Fragment() {
         val viewModelFactory = ViewModelFactory(repository)
         viewModel = ViewModelProvider(requireActivity(), viewModelFactory)[MainViewModel::class.java]
 
+
         binding.signUp.setOnClickListener {
             val username = binding.userNameEt.text.toString()
             val studentId = binding.studentIdEt.text.toString()
@@ -41,6 +47,26 @@ class StudentRegistrationFragment : Fragment() {
             val birthday = binding.birthdayEt.text.toString()
             val password = binding.passwordEt.text.toString()
             viewModel.signUp(username, studentId, major, email, birthday, password, "student")
+        }
+
+        editTextList.add(binding.userNameEt)
+        editTextList.add(binding.studentIdEt)
+        editTextList.add(binding.majorEt)
+        editTextList.add(binding.emailEt)
+        editTextList.add(binding.birthdayEt)
+        editTextList.add(binding.passwordEt)
+
+        // Set text change listeners for each EditText
+        editTextList.forEach { editText ->
+            editText.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+                override fun afterTextChanged(s: Editable?) {
+                    updateButtonState()
+                }
+            })
         }
 
         viewModel.signUpStudentResult.observe(viewLifecycleOwner) { result ->
@@ -59,6 +85,13 @@ class StudentRegistrationFragment : Fragment() {
         binding.backBtn.setOnClickListener {
             requireActivity().onBackPressed()
         }
+    }
+
+    private fun updateButtonState() {
+        val allFieldsFilled = editTextList.all { editText ->
+            editText.text.isNotEmpty()
+        }
+        binding.signUp.isVisible = allFieldsFilled
     }
 
     companion object {
