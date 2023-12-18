@@ -13,9 +13,11 @@ data class User (
   @SerializedName("age"       ) var age       : Int?    = null,
   @SerializedName("country"   ) var country   : String? = null,
   @SerializedName("kind"      ) var kind      : String? = null,
+  @SerializedName("followingCount" ) var followingCount : Int?    = null,
+  @SerializedName("followersCount" ) var followersCount : Int?    = null,
   @SerializedName("bio"       ) var bio       : String? = null,
   @SerializedName("birthday"  ) var birthday  : String? = null,
   @SerializedName("id"        ) var id        : String? = null,
-  @SerializedName("token"     ) var token     : String? = null
+  @SerializedName("token"     ) var token     : String? = null,
 
 )

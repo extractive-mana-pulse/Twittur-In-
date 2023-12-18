@@ -2,7 +2,6 @@ package com.example.twitturin.ui.adapters
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.text.format.DateUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -19,7 +18,6 @@ import com.example.twitturin.model.data.tweets.Tweet
 import com.example.twitturin.ui.activities.DetailActivity
 import com.example.twitturin.ui.sealeds.PostLikeResult
 import com.example.twitturin.viewmodel.LikeViewModel
-import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -27,7 +25,6 @@ import java.util.concurrent.TimeUnit
 class PostAdapter(private val parentLifecycleOwner: LifecycleOwner) : RecyclerView.Adapter<PostAdapter.ViewHolder>() {
 
     private var list = emptyList<Tweet>()
-
     private lateinit var viewModel: LikeViewModel
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -100,6 +97,7 @@ class PostAdapter(private val parentLifecycleOwner: LifecycleOwner) : RecyclerVi
 
         val sessionManager = SessionManager(holder.itemView.context)
         val token = sessionManager.getToken()
+        val userId = sessionManager.getUserId()
 
         viewModel = ViewModelProvider(holder.itemView.context as ViewModelStoreOwner)[LikeViewModel::class.java]
 
@@ -107,15 +105,13 @@ class PostAdapter(private val parentLifecycleOwner: LifecycleOwner) : RecyclerVi
             if (!token.isNullOrEmpty()) {
                 if (isLiked) {
                     likeCount = likeCount!! - 1
-                    isLiked = !isLiked
-                    viewModel.likePost(likeCount.toString(), token)
+                    viewModel.likeDelete(likeCount.toString(), item.id, token)
                     holder.binding.postIconHeart.isSelected = isLiked
                     holder.binding.postHeartCounter.text = likeCount.toString()
                     holder.binding.postIconHeart.setBackgroundResource(R.drawable.heart)
                 } else {
                     likeCount = likeCount!! + 1
-                    isLiked = !isLiked
-                    viewModel.likePost(likeCount.toString(), token)
+                    viewModel.likePost(likeCount.toString(),item.id, token)
                     holder.binding.postIconHeart.isSelected = isLiked
                     holder.binding.postHeartCounter.text = likeCount.toString()
                     holder.binding.postIconHeart.setBackgroundResource(R.drawable.heart_solid_icon)
@@ -130,6 +126,19 @@ class PostAdapter(private val parentLifecycleOwner: LifecycleOwner) : RecyclerVi
         }
 
         viewModel.likePostResult.observe(parentLifecycleOwner) { result ->
+            when (result) {
+                is PostLikeResult.Success -> {
+                    Toast.makeText(holder.itemView.context, "Success", Toast.LENGTH_LONG).show()
+                }
+
+                is PostLikeResult.Error -> {
+                    val errorMessage = result.message
+                    Toast.makeText(holder.itemView.context, errorMessage, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
+        viewModel.likeDeleteResult.observe(parentLifecycleOwner) { result ->
             when (result) {
                 is PostLikeResult.Success -> {
                     Toast.makeText(holder.itemView.context, "Success", Toast.LENGTH_LONG).show()

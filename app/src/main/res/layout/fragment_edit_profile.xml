@@ -266,19 +266,14 @@
 <!--            android:inputType="date"-->
 <!--            tools:ignore="Autofill,LabelFor" />-->
 
-        <EditText
+        <com.santalu.maskedittext.MaskEditText
             android:id="@+id/birthday_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:met_mask="####-##-##"
             android:inputType="date"
-            android:focusable="false"
-            android:cursorVisible="false"/>
-
-<!--        <DatePicker-->
-<!--            android:id="@+id/birthday_et"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:datePickerMode="calendar"/>-->
+            android:layout_marginTop="3dp"
+            android:layout_marginHorizontal="16dp"/>
 
     </LinearLayout>
 

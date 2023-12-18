@@ -52,6 +52,8 @@ class ProfileFragment : Fragment() {
                     binding.profileDescription.text = result.user.bio
                     binding.locationTv.text = result.user.country
                     binding.emailTv.text = result.user.email
+                    binding.followingCounterTv.text = result.user.followingCount.toString()
+                    binding.followersCounterTv.text = result.user.followersCount.toString()
 
                 }
                 is UserCredentialsResult.Error -> {

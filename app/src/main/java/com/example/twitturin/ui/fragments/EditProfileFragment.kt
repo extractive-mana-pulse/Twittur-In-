@@ -4,11 +4,9 @@ import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -21,7 +19,6 @@ import com.example.twitturin.SessionManager
 import com.example.twitturin.databinding.FragmentEditProfileBinding
 import com.example.twitturin.ui.adapters.ColorAdapter
 import com.example.twitturin.ui.sealeds.EditUserResult
-import com.example.twitturin.ui.sealeds.UserCredentialsResult
 import com.example.twitturin.viewmodel.ProfileViewModel
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -51,30 +48,6 @@ class EditProfileFragment : Fragment() {
         val profileViewModel = ViewModelProvider(this)[ProfileViewModel::class.java]
 //        TODO. this code should be modified under edit text. so in this page in edit text fields should be default value of user credentials
 //         or if it's empty field should be empty.
-//        profileViewModel.getUserCredentials(userId!!)
-//        profileViewModel.getUserCredentials.observe(viewLifecycleOwner) { result ->
-//            when (result) {
-//
-//                is UserCredentialsResult.Success -> {
-//
-//                    binding.fullnameEt.text = result.user.fullName
-//                    binding.customName.text = "@" + result.user.username
-//                    binding.profileKindTv.text = result.user.kind
-//                    binding.profileDescription.text = result.user.bio
-//                    binding.locationTv.text = result.user.country
-//                    binding.emailTv.text = result.user.email
-//
-//                }
-//                is UserCredentialsResult.Error -> {
-//                    Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
-//                }
-//            }
-//        }
-
-        binding.birthdayEt.setOnClickListener {
-            Log.d("birthday edit text test" ,"Clicked ?")
-            showDatePickerDialog()
-        }
 
         binding.save.setOnClickListener {
 
@@ -85,13 +58,13 @@ class EditProfileFragment : Fragment() {
                 val bio = binding.bioEt.text.toString()
                 val email = binding.emailEt.text.toString()
                 val country = binding.countryEt.selectedCountryName
+                val birthday = binding.birthdayEt.text.toString()
 
-                profileViewModel.editUser(fullName, username, email, bio, country, updateBirthdayEditText().toString(), userId!!, token)
+                profileViewModel.editUser(fullName, username, email, bio, country, birthday, userId!!, token)
+
             } else {
                 Toast.makeText(requireContext(), "error", Toast.LENGTH_SHORT).show()
             }
-
-
             profileViewModel.editUserResult.observe(viewLifecycleOwner) { result ->
 
                 when (result) {
@@ -105,7 +78,6 @@ class EditProfileFragment : Fragment() {
                 }
             }
         }
-
         binding.headerLayout.setOnClickListener {
             showColorPickerDialog()
         }
@@ -128,7 +100,7 @@ class EditProfileFragment : Fragment() {
         binding.birthdayEt.setText(formattedDate).toString()
     }
 
-    /** DVRST **/
+    /** Color Picker **/
     private fun showColorPickerDialog() {
 
         val colors = listOf(

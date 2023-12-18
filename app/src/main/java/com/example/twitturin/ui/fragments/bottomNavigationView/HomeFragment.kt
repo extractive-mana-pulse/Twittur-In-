@@ -45,18 +45,7 @@ class HomeFragment : Fragment() {
         val viewModelFactory = ViewModelFactory(repository)
         viewModel = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
         updateRecyclerView()
-    }
 
-    fun goToWebView(){
-        findNavController().navigate(R.id.action_homeFragment_to_webViewFragment)
-    }
-
-    fun goToProfile(){
-        findNavController().navigate(R.id.action_homeFragment_to_profileFragment)
-    }
-
-    fun goToPublicPost(){
-        findNavController().navigate(R.id.action_homeFragment_to_publicPostFragment)
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -81,6 +70,20 @@ class HomeFragment : Fragment() {
             }
         }
     }
+
+
+    fun goToWebView(){
+        findNavController().navigate(R.id.action_homeFragment_to_webViewFragment)
+    }
+
+    fun goToProfile(){
+        findNavController().navigate(R.id.action_homeFragment_to_profileFragment)
+    }
+
+    fun goToPublicPost(){
+        findNavController().navigate(R.id.action_homeFragment_to_publicPostFragment)
+    }
+
 
     companion object {
         @JvmStatic

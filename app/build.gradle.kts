@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.ir.backend.js.compile
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -111,4 +113,6 @@ dependencies {
 
     // Country Picker
     implementation ("com.hbb20:ccp:2.5.3")
+
+    implementation ("com.github.santalu:mask-edittext:1.0.2")
 }

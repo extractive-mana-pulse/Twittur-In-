@@ -1,6 +1,8 @@
 package com.example.twitturin.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.twitturin.SingleLiveEvent
 import com.example.twitturin.model.network.Api
@@ -23,21 +25,49 @@ class LikeViewModel: ViewModel() {
     private val _likePostResult = SingleLiveEvent<PostLikeResult>()
     val likePostResult: LiveData<PostLikeResult> = _likePostResult
 
-    fun likePost(count: String, token: String) {
+    fun likePost(count: String, userId: String, token: String) {
         val request = LikeTweet(count)
-        likePostApi.postLike(request,"Bearer $token").enqueue(object : Callback<LikeTweet> {
+        likePostApi.postLike(request, userId,"Bearer $token").enqueue(object : Callback<LikeTweet> {
 
             override fun onResponse(call: Call<LikeTweet>, response: Response<LikeTweet>) {
                 if (response.isSuccessful) {
                     val likePostResponse= response.body()
                     _likePostResult.value = likePostResponse?.let { PostLikeResult.Success(it) }
+                    Log.d("body",response.body().toString())
+                    Log.d("code",response.code().toString())
                 } else {
                     _likePostResult.value = PostLikeResult.Error(response.code().toString())
+                    Log.d("body",response.body().toString())
+                    Log.d("code",response.code().toString())
                 }
             }
 
             override fun onFailure(call: Call<LikeTweet>, t: Throwable) {
                 _likePostResult.value = PostLikeResult.Error(t.message.toString())
+            }
+        })
+    }
+
+    private val _likeDeleteResult = SingleLiveEvent<PostLikeResult>()
+    val likeDeleteResult: LiveData<PostLikeResult> = _likeDeleteResult
+
+    fun likeDelete(count: String, userId: String, token: String) {
+        val request = LikeTweet(count)
+        likePostApi.postLike(request, userId,"Bearer $token").enqueue(object : Callback<LikeTweet> {
+
+            override fun onResponse(call: Call<LikeTweet>, response: Response<LikeTweet>) {
+                if (response.isSuccessful) {
+                    val likePostResponse= response.body()
+                    _likeDeleteResult.value = likePostResponse?.let { PostLikeResult.Success(it) }
+                } else {
+                    _likeDeleteResult.value = PostLikeResult.Error(response.code().toString())
+                    Log.d("body",response.body().toString())
+                    Log.d("code",response.code().toString())
+                }
+            }
+
+            override fun onFailure(call: Call<LikeTweet>, t: Throwable) {
+                _likeDeleteResult.value = PostLikeResult.Error(t.message.toString())
             }
         })
     }

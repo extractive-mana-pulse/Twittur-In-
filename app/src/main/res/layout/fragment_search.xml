@@ -34,22 +34,33 @@
                 android:background="@android:color/transparent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"/>
+                app:layout_constraintStart_toStartOf="parent"
+                tools:ignore="ContentDescription" />
 
-            <SearchView
-                android:id="@+id/searchView"
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="38dp"
-                android:queryBackground="@android:color/transparent"
-                android:iconifiedByDefault="false"
-                android:layout_marginVertical="8dp"
-                android:layout_marginHorizontal="15dp"
-                android:background="@drawable/search_bg"
-                android:queryHint="Search"
+                android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginVertical="8dp"
                 app:layout_constraintStart_toEndOf="@id/accountImage"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+                app:layout_constraintBottom_toBottomOf="parent">
+
+                <SearchView
+                    android:id="@+id/searchView"
+                    android:layout_width="match_parent"
+                    android:layout_height="38dp"
+                    android:queryBackground="@android:color/transparent"
+                    android:iconifiedByDefault="false"
+                    android:background="@drawable/search_bg"
+                    android:queryHint="Search"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/accountImage"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+            </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

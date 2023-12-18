@@ -6,11 +6,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.twitturin.SingleLiveEvent
 import com.example.twitturin.model.data.editUser.EditProfile
 import com.example.twitturin.model.data.tweets.Tweet
 import com.example.twitturin.model.network.Api
 import com.example.twitturin.ui.sealeds.DeleteResult
 import com.example.twitturin.ui.sealeds.EditUserResult
+import com.example.twitturin.ui.sealeds.PostTweet
 import com.example.twitturin.ui.sealeds.UserCredentialsResult
 import com.example.twitturin.ui.sealeds.UserTweetsResult
 import kotlinx.coroutines.launch
@@ -117,22 +119,6 @@ class ProfileViewModel: ViewModel() {
     private val _data = MutableLiveData<UserTweetsResult>()
     val data: LiveData<UserTweetsResult> = _data
 
-//    fun getPostsByUser(userId: String, token: String) {
-//        viewModelScope.launch {
-//            try {
-//                val response = apiService.getPostsByUser(userId, token)
-//                if (response.isSuccessful) {
-//                    val userPost = response.body()
-//                    _data.value = userPost?.let { UserTweetsResult.Success(it) }
-//                } else {
-//                    _data.value = UserTweetsResult.Failure(Exception("API request failed"))
-//                }
-//            } catch (e: Exception) {
-//                _data.value = UserTweetsResult.Failure(e)
-//            }
-//        }
-//    }
-
     fun getPostsFromUser(userId: String, token: String){
         val call = apiService.getPostsByUser(userId, token)
         call.enqueue(object : Callback<List<Tweet>> {
@@ -149,6 +135,26 @@ class ProfileViewModel: ViewModel() {
             }
 
             override fun onFailure(call: Call<List<Tweet>>, t: Throwable) {
+                t.message
+            }
+        })
+    }
+
+    fun followUser(userId: String, token: String){
+        val call = apiService.followUser(userId, token)
+        call.enqueue(object : Callback<Unit> {
+            override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
+                if (response.isSuccessful){
+                    Log.d("response body", response.body().toString())
+                    Log.d("response code", response.code().toString())
+                }
+                else {
+                    Log.d("response body error", response.body().toString())
+                    Log.d("response code error", response.code().toString())
+                }
+            }
+
+            override fun onFailure(call: Call<Unit>, t: Throwable) {
                 t.message
             }
         })

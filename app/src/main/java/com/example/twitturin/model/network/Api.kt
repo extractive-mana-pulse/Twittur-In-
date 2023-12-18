@@ -28,8 +28,11 @@ interface Api  {
     suspend fun deleteUser(@Path("id") userId: String, @Header("Authorization") token: String): Response<Unit>
 
     /** publish user like too  **/
-    @POST("tweets")
-    fun postLike(@Body tweet: LikeTweet, @Header("Authorization") token: String): Call<LikeTweet>
+    @POST("tweets/{id}/likes")
+    fun postLike(@Body tweet: LikeTweet, @Path("id") userId: String, @Header("Authorization") token: String): Call<LikeTweet>
+
+    @DELETE("tweets/{id}/likes")
+    fun deleteLike(@Body tweet: LikeTweet, @Path("id") userId: String, @Header("Authorization") token: String): Call<LikeTweet>
 
     /** login **/
     @POST("auth")
@@ -68,4 +71,7 @@ interface Api  {
 //    fun getTweets(@Query("author") author: String): Call<List<Tweet>>
     @GET("tweets")
     fun getPostsByUser(@Query("id") userId: String, @Header("Authorization") token: String): Call<List<Tweet>>
+
+    @POST("users/following/{toFollow}")
+    fun followUser(@Path("id") userId : String, @Header("Authorization") token : String) : Call<Unit>
 }
