@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
-import com.example.twitturin.SessionManager
+import com.example.twitturin.viewmodel.manager.SessionManager
 import com.example.twitturin.databinding.FragmentPublicPostBinding
 import com.example.twitturin.viewmodel.MainViewModel
 import com.example.twitturin.model.repo.Repository

@@ -1,18 +1,14 @@
 package com.example.twitturin.viewmodel
 
 import android.util.Log
-import androidx.compose.animation.core.tween
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.twitturin.SingleLiveEvent
 import com.example.twitturin.model.data.editUser.EditProfile
-import com.example.twitturin.model.data.tweets.Tweet
 import com.example.twitturin.model.network.Api
 import com.example.twitturin.ui.sealeds.DeleteResult
 import com.example.twitturin.ui.sealeds.EditUserResult
-import com.example.twitturin.ui.sealeds.PostTweet
 import com.example.twitturin.ui.sealeds.UserCredentialsResult
 import com.example.twitturin.ui.sealeds.UserTweetsResult
 import kotlinx.coroutines.launch
@@ -49,7 +45,6 @@ class ProfileViewModel: ViewModel() {
                 val response = apiService.deleteUser(userId, token)
                 if (response.isSuccessful) {
                     _deleteResult.value = DeleteResult.Success
-                    val user = response.body()
                 } else {
                     _deleteResult.value = DeleteResult.Error(response.code().toString())
                 }
@@ -119,26 +114,27 @@ class ProfileViewModel: ViewModel() {
     private val _data = MutableLiveData<UserTweetsResult>()
     val data: LiveData<UserTweetsResult> = _data
 
-    fun getPostsFromUser(userId: String, token: String){
-        val call = apiService.getPostsByUser(userId, token)
-        call.enqueue(object : Callback<List<Tweet>> {
-            override fun onResponse(call: Call<List<Tweet>>, response: Response<List<Tweet>>) {
-                if (response.isSuccessful) {
-                    val tweets = response.body()
-                    _data.value = tweets?.let { UserTweetsResult.Success(it) }
-                } else {
-                    _data.value = UserTweetsResult.Failure(response.code().toString())
-                    Log.d("body", response.body().toString())
-                    Log.d("code", response.code().toString())
-                    Log.d("message", response.message().toString())
-                }
-            }
+//    fun getPostsFromUser(userId: String){
+//        val call = apiService.getPostsByUser(userId)
+//        call.enqueue(object : Callback<List<Tweet>> {
+//            override fun onResponse(call: Call<List<Tweet>>, response: Response<List<Tweet>>) {
+//                if (response.isSuccessful) {
+//                    val tweets = response.body()
+//                    _data.value = tweets?.let { UserTweetsResult.Success(it) }
+//                } else {
+//                    _data.value = UserTweetsResult.Failure(response.code().toString())
+//                    Log.d("body", response.body().toString())
+//                    Log.d("code", response.code().toString())
+//                    Log.d("message", response.message().toString())
+//                }
+//            }
+//
+//            override fun onFailure(call: Call<List<Tweet>>, t: Throwable) {
+//                t.message
+//            }
+//        })
+//    }
 
-            override fun onFailure(call: Call<List<Tweet>>, t: Throwable) {
-                t.message
-            }
-        })
-    }
 
     fun followUser(userId: String, token: String){
         val call = apiService.followUser(userId, token)

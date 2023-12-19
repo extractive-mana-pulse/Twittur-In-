@@ -35,8 +35,8 @@ class KindFragment : Fragment() {
                 findNavController().navigate(R.id.action_kindFragment_to_studentRegistrationFragment)
             }
 
-            goBack.setOnClickListener {
-                requireActivity().onBackPressed()
+            backBtnKind.setOnClickListener {
+                findNavController().navigate(R.id.action_kindFragment_to_signInFragment)
             }
         }
     }

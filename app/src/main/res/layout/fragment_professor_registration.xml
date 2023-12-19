@@ -26,7 +26,7 @@
                 app:layout_constraintStart_toStartOf="parent">
 
                 <ImageButton
-                    android:id="@+id/back_btn"
+                    android:id="@+id/back_btn_prof"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:src="@drawable/baseline_keyboard_backspace_24"
@@ -189,14 +189,15 @@
                     app:layout_constraintTop_toBottomOf="@id/textInputLayout3"
                     app:layout_constraintStart_toStartOf="parent">
 
-                    <com.google.android.material.textfield.TextInputEditText
+                    <com.santalu.maskedittext.MaskEditText
                         android:id="@+id/prof_birthday_et"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:hint="yyyy-MM-dd"
                         android:background="@android:color/transparent"
-                        android:hint="@string/birthday"
+                        app:met_mask="####-##-##"
                         android:imeOptions="actionNext"
-                        android:inputType="date" />
+                        android:inputType="date"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -228,10 +229,11 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <Button
-                    android:id="@+id/sign_up"
+                    android:id="@+id/sign_up_prof"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/sign_up"
+                    android:visibility="invisible"
                     android:layout_marginHorizontal="16dp"
                     android:layout_marginBottom="24dp"
                     app:layout_constraintBottom_toBottomOf="parent"

@@ -270,6 +270,7 @@
             android:id="@+id/birthday_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:hint="yyyy-MM-dd"
             app:met_mask="####-##-##"
             android:inputType="date"
             android:layout_marginTop="3dp"

@@ -39,7 +39,7 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <ImageButton
-                    android:id="@+id/back_btn"
+                    android:id="@+id/back_btn_student"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:layout_marginStart="16dp"
@@ -85,6 +85,9 @@
                     android:background="@drawable/edit_text_bg_ui"
                     app:endIconCheckable="true"
                     app:endIconMode="clear_text"
+                    app:errorEnabled="true"
+                    app:helperText="spaces not allowed"
+                    app:helperTextTextColor="?attr/colorError"
                     app:hintTextColor="?attr/colorOnPrimaryContainer"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -139,6 +142,7 @@
                     android:background="@drawable/edit_text_bg_ui"
                     app:endIconCheckable="true"
                     app:endIconMode="clear_text"
+                    app:helperText="SE,BM,IT,ME,CIE,AD,AE"
                     app:hintTextColor="?attr/colorOnPrimaryContainer"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -152,6 +156,16 @@
                         android:hint="@string/major"
                         android:imeOptions="actionNext"
                         android:inputType="text" />
+
+<!--                    <AutoCompleteTextView-->
+<!--                        android:id="@+id/autoCompleteTV"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_weight="1"-->
+<!--                        android:inputType="none"-->
+<!--                        android:text="SE"-->
+<!--                        android:background="@android:color/transparent"-->
+<!--                        tools:ignore="LabelFor" />-->
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -198,14 +212,16 @@
                     app:startIconCheckable="true"
                     app:startIconDrawable="@drawable/calendar_month">
 
-                    <com.google.android.material.textfield.TextInputEditText
+                    <com.santalu.maskedittext.MaskEditText
                         android:id="@+id/birthday_et"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:hint="yyyy-MM-dd"
                         android:background="@android:color/transparent"
-                        android:hint="@string/birthday"
+                        app:met_mask="####-##-##"
                         android:imeOptions="actionNext"
-                        android:inputType="date" />
+                        android:inputType="date"/>
+
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout

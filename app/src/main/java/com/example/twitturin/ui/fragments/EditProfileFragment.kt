@@ -13,9 +13,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.twitturin.GridSpacingItemDecoration
+import com.example.twitturin.ui.decoration.GridSpacingItemDecoration
 import com.example.twitturin.R
-import com.example.twitturin.SessionManager
+import com.example.twitturin.viewmodel.manager.SessionManager
 import com.example.twitturin.databinding.FragmentEditProfileBinding
 import com.example.twitturin.ui.adapters.ColorAdapter
 import com.example.twitturin.ui.sealeds.EditUserResult

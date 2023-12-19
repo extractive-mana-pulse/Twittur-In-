@@ -54,6 +54,9 @@ interface Api  {
     @GET("tweets")
     suspend fun getTweet(): Response<List<Tweet>>
 
+    @GET("users/{id}/tweets")
+    suspend fun getPostsByUser(@Path("id") userId: String): Response<List<Tweet>>
+
     /** In this API call we are getting the user credentials! **/
     @GET("users/{id}")
     suspend fun getLoggedInUserData(@Path("id") userId : String) : Response<User>
@@ -65,12 +68,6 @@ interface Api  {
     @FormUrlEncoded
     @PATCH("users/{id}")
     fun updateUserUsername(@Path("id") userId: String, @Header("Authorization") token: String): Call<EditProfile>
-
-    /** here we have posts of user in profile page **/
-//    @GET("/tweets")
-//    fun getTweets(@Query("author") author: String): Call<List<Tweet>>
-    @GET("tweets")
-    fun getPostsByUser(@Query("id") userId: String, @Header("Authorization") token: String): Call<List<Tweet>>
 
     @POST("users/following/{toFollow}")
     fun followUser(@Path("id") userId : String, @Header("Authorization") token : String) : Call<Unit>

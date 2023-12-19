@@ -29,7 +29,7 @@ class PrivateMessagesFragment : Fragment() {
     }
 
     fun back(){
-        requireActivity().onBackPressed()
+        findNavController().navigate(R.id.action_privateMessagesFragment_to_homeFragment)
     }
 
     fun goToProfile(){

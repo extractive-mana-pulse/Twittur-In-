@@ -12,7 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
-import com.example.twitturin.SessionManager
+import com.example.twitturin.viewmodel.manager.SessionManager
 import com.example.twitturin.databinding.FragmentSignInBinding
 import com.example.twitturin.ui.sealeds.SignInResult
 import com.example.twitturin.viewmodel.SignInViewModel
@@ -34,7 +34,6 @@ class SignInFragment : Fragment() {
         binding.signInFragment = this
 
         val sessionManager = SessionManager(requireContext())
-
         viewModel = ViewModelProvider(this)[SignInViewModel::class.java]
 
         binding.signIn.setOnClickListener {
@@ -69,24 +68,54 @@ class SignInFragment : Fragment() {
             Log.d("Tag", "hello world")
         }
 
-        binding.rememberMeCheckBox.setOnCheckedChangeListener { compoundButton, _ ->
+//                && binding.studentIdEt.text!!.isNotEmpty() && binding.passwordEt.text!!.isNotEmpty()
+//        binding.rememberMeCheckBox.setOnCheckedChangeListener { compoundButton, _ ->
+//
+//            if (compoundButton.isChecked) {
+//                val preferences = requireActivity().getSharedPreferences("checkbox", MODE_PRIVATE)
+//                val editor: SharedPreferences.Editor = preferences.edit()
+//                editor.putString("remember", "true")
+//                editor.apply()
+//
+//            } else if (!compoundButton.isChecked) {
+//                val preferences = requireActivity().getSharedPreferences("checkbox", MODE_PRIVATE)
+//                val editor: SharedPreferences.Editor = preferences.edit()
+//                editor.putString("remember", "false")
+//                editor.apply()
+//            }
+//        }
 
-            if (compoundButton.isChecked) {
+        binding.rememberMeCheckBox.setOnCheckedChangeListener { compoundButton, isChecked ->
+            val username = binding.studentIdEt.text.toString().trim()
+            val password = binding.passwordEt.text.toString().trim()
+
+            if (username.isNotEmpty() && password.isNotEmpty()) {
+                compoundButton.isChecked = isChecked
+
                 val preferences = requireActivity().getSharedPreferences("checkbox", MODE_PRIVATE)
                 val editor: SharedPreferences.Editor = preferences.edit()
-                editor.putString("remember", "true")
+                editor.putString("remember", isChecked.toString())
                 editor.apply()
 
-            } else if (!compoundButton.isChecked) {
+                // Additional actions when the checkbox state is updated
+            } else {
+                compoundButton.isChecked = false
+
                 val preferences = requireActivity().getSharedPreferences("checkbox", MODE_PRIVATE)
                 val editor: SharedPreferences.Editor = preferences.edit()
                 editor.putString("remember", "false")
                 editor.apply()
+
+                // Additional actions when the checkbox is not checked due to empty username or password
             }
         }
     }
 
     fun chooseKindPage() {
+        val preferences = requireActivity().getSharedPreferences("checkbox", MODE_PRIVATE)
+        val editor: SharedPreferences.Editor = preferences.edit()
+        editor.putString("remember", "false")
+        editor.apply()
         findNavController().navigate(R.id.action_signInFragment_to_kindFragment)
     }
 

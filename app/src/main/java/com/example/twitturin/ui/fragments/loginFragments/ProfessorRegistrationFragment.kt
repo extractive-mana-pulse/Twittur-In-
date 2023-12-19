@@ -20,7 +20,7 @@ import com.example.twitturin.viewmodel.SignUpViewModel
 class ProfessorRegistrationFragment : Fragment() {
 
     private lateinit var binding : FragmentProfessorRegistrationBinding
-    private val editTextList: MutableList<EditText> = mutableListOf()
+    private val profEditTextList: MutableList<EditText> = mutableListOf()
     private lateinit var viewModel : SignUpViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -32,7 +32,7 @@ class ProfessorRegistrationFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel = ViewModelProvider(requireActivity())[SignUpViewModel::class.java]
-        binding.signUp.setOnClickListener {
+        binding.signUpProf.setOnClickListener {
             val fullName = binding.profFullnameEt.text.toString()
             val username = binding.profUsernameEt.text.toString()
             val subject = binding.profSubjectEt.text.toString()
@@ -42,14 +42,14 @@ class ProfessorRegistrationFragment : Fragment() {
             viewModel.signUpProf(fullName, username, subject, email, birthday, password, "teacher")
         }
 
-        editTextList.add(binding.profFullnameEt)
-        editTextList.add(binding.profUsernameEt)
-        editTextList.add(binding.profSubjectEt)
-        editTextList.add(binding.profEmailEt)
-        editTextList.add(binding.profBirthdayEt)
-        editTextList.add(binding.profPasswordEt)
+        profEditTextList.add(binding.profFullnameEt)
+        profEditTextList.add(binding.profUsernameEt)
+        profEditTextList.add(binding.profSubjectEt)
+        profEditTextList.add(binding.profEmailEt)
+        profEditTextList.add(binding.profBirthdayEt)
+        profEditTextList.add(binding.profPasswordEt)
 
-        editTextList.forEach { editText ->
+        profEditTextList.forEach { editText ->
             editText.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(
                     s: CharSequence?,
@@ -80,16 +80,16 @@ class ProfessorRegistrationFragment : Fragment() {
             }
         }
 
-        binding.backBtn.setOnClickListener {
+        binding.backBtnProf.setOnClickListener {
             requireActivity().onBackPressed()
         }
     }
 
     private fun updateButtonState() {
-        val allFieldsFilled = editTextList.all { editText ->
+        val allFieldsFilled = profEditTextList.all { editText ->
             editText.text.isNotBlank()
         }
-        binding.signUp.isVisible = allFieldsFilled
+        binding.signUpProf.isVisible = allFieldsFilled
     }
 
     companion object {

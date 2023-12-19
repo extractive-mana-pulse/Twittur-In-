@@ -2,9 +2,8 @@ package com.example.twitturin.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.twitturin.SingleLiveEvent
+import com.example.twitturin.viewmodel.event.SingleLiveEvent
 import com.example.twitturin.model.network.Api
 import com.example.twitturin.model.data.likeTweet.LikeTweet
 import com.example.twitturin.ui.sealeds.PostLikeResult
@@ -22,7 +21,8 @@ class LikeViewModel: ViewModel() {
         .build()
 
     private val likePostApi: Api = retrofit.create(Api::class.java)
-    private val _likePostResult = SingleLiveEvent<PostLikeResult>()
+    private val _likePostResult =
+        SingleLiveEvent<PostLikeResult>()
     val likePostResult: LiveData<PostLikeResult> = _likePostResult
 
     fun likePost(count: String, userId: String, token: String) {
@@ -48,7 +48,8 @@ class LikeViewModel: ViewModel() {
         })
     }
 
-    private val _likeDeleteResult = SingleLiveEvent<PostLikeResult>()
+    private val _likeDeleteResult =
+        SingleLiveEvent<PostLikeResult>()
     val likeDeleteResult: LiveData<PostLikeResult> = _likeDeleteResult
 
     fun likeDelete(count: String, userId: String, token: String) {

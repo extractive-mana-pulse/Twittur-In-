@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package com.example.twitturin;
+package com.example.twitturin.viewmodel.event;
 
 import android.util.Log;
 

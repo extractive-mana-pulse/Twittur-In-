@@ -3,7 +3,7 @@ package com.example.twitturin.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.twitturin.SingleLiveEvent
+import com.example.twitturin.viewmodel.event.SingleLiveEvent
 import com.example.twitturin.model.network.Api
 import com.example.twitturin.model.data.registration.Login
 import com.example.twitturin.model.data.users.User
@@ -23,7 +23,8 @@ class SignInViewModel : ViewModel() {
 
     private val signInApi: Api = retrofit.create(Api::class.java)
 
-    private val _signInResult = SingleLiveEvent<SignInResult>()
+    private val _signInResult =
+        SingleLiveEvent<SignInResult>()
     val signInResult: SingleLiveEvent<SignInResult> = _signInResult
 
     private val _token = MutableLiveData<String>()

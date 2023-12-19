@@ -114,5 +114,13 @@ dependencies {
     // Country Picker
     implementation ("com.hbb20:ccp:2.5.3")
 
+    // mask edit text
     implementation ("com.github.santalu:mask-edittext:1.0.2")
+
+    // Glide
+    annotationProcessor("com.github.bumptech.glide:compiler:4.12.0")
+    implementation ("com.github.bumptech.glide:glide:4.15.1")
+
+    // rounding image corners
+    implementation ("de.hdodenhof:circleimageview:3.1.0")
 }

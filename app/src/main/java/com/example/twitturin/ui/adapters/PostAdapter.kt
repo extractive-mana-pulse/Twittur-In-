@@ -11,8 +11,9 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.twitturin.R
-import com.example.twitturin.SessionManager
+import com.example.twitturin.viewmodel.manager.SessionManager
 import com.example.twitturin.databinding.RcViewBinding
 import com.example.twitturin.model.data.tweets.Tweet
 import com.example.twitturin.ui.activities.DetailActivity
@@ -43,6 +44,21 @@ class PostAdapter(private val parentLifecycleOwner: LifecycleOwner) : RecyclerVi
         var isLiked: Boolean = false
 
         holder.binding.apply {
+
+            val profileImage = "${item.author?.profilePicture}"
+
+            Glide.with(holder.itemView.context)
+                .load(profileImage)
+                .error(R.drawable.ic_launcher_foreground)
+                .into(userAvatar)
+
+//            Glide.with(holder.itemView.context)
+//                .load(repeat(profileImage) // image url
+//                .placeholder(R.drawable.ic_launcher_foreground) // any placeholder to load at start
+//                .error(R.drawable.baseline_error_24)  // any image in case of error
+//                .override(200, 200) // resizing
+//                .centerCrop()
+//                .into(item.author?.profilePicture)  // imageview object
 
             fullNameTv.text = item.author?.fullName
             Log.d("fullname", item.author?.fullName.toString())
@@ -92,12 +108,12 @@ class PostAdapter(private val parentLifecycleOwner: LifecycleOwner) : RecyclerVi
             intent.putExtra("post_description", item.content)
             intent.putExtra("createdAt", item.createdAt)
             intent.putExtra("userId", item.id)
+            intent.putExtra("userAvatar", item.author?.profilePicture)
             holder.itemView.context.startActivity(intent)
         }
 
         val sessionManager = SessionManager(holder.itemView.context)
         val token = sessionManager.getToken()
-        val userId = sessionManager.getUserId()
 
         viewModel = ViewModelProvider(holder.itemView.context as ViewModelStoreOwner)[LikeViewModel::class.java]
 
@@ -125,6 +141,7 @@ class PostAdapter(private val parentLifecycleOwner: LifecycleOwner) : RecyclerVi
             }
         }
 
+        // Like
         viewModel.likePostResult.observe(parentLifecycleOwner) { result ->
             when (result) {
                 is PostLikeResult.Success -> {
@@ -138,6 +155,7 @@ class PostAdapter(private val parentLifecycleOwner: LifecycleOwner) : RecyclerVi
             }
         }
 
+        // Delete
         viewModel.likeDeleteResult.observe(parentLifecycleOwner) { result ->
             when (result) {
                 is PostLikeResult.Success -> {

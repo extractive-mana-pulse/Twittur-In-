@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
+import com.example.twitturin.R
 import com.example.twitturin.databinding.ActivityDetailBinding
 import com.example.twitturin.ui.fragments.bottomsheets.MyBottomSheetDialogFragment
 import java.text.SimpleDateFormat
@@ -24,7 +26,7 @@ class DetailActivity : AppCompatActivity() {
         val username = intent.getStringExtra("username")
         val description = intent.getStringExtra("post_description")
         val createdTime = intent.getStringExtra("createdAt")
-        val userId = intent.getStringExtra("userId")
+        val userImage = intent.getStringExtra("userAvatar")
 
         val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.getDefault())
         dateFormat.timeZone = TimeZone.getTimeZone("UTC")
@@ -57,6 +59,13 @@ class DetailActivity : AppCompatActivity() {
         }
 
         binding.apply {
+
+            val profileImage = "$userImage"
+            Glide.with(this@DetailActivity)
+                .load(profileImage)
+                .error(R.drawable.ic_launcher_foreground)
+                .into(authorAvatar)
+
             authorFullname.text = fullname
             authorUsername.text = "@$username"
             postDescription.text = description

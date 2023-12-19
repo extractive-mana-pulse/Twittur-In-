@@ -1,4 +1,4 @@
-package com.example.twitturin
+package com.example.twitturin.ui.decoration
 
 import android.graphics.Rect
 import android.view.View

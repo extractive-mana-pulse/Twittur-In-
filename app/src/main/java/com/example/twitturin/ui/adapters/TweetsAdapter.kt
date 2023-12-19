@@ -17,7 +17,7 @@ import java.util.Locale
 import java.util.TimeZone
 import java.util.concurrent.TimeUnit
 
-class TweetsAdapter() : RecyclerView.Adapter<TweetsAdapter.ViewHolder>() {
+class TweetsAdapter : RecyclerView.Adapter<TweetsAdapter.ViewHolder>() {
 
     private var posts = emptyList<Tweet>()
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.twitturin.SingleLiveEvent
+import com.example.twitturin.viewmodel.event.SingleLiveEvent
 import com.example.twitturin.model.network.Api
 import com.example.twitturin.model.data.publicTweet.TweetContent
 import com.example.twitturin.model.data.registration.SignUpStudent
@@ -59,7 +59,8 @@ class MainViewModel(private val repository: Repository): ViewModel() {
     }
 
     private val tweetApi: Api = retrofit.create(Api::class.java)
-    private val _postTweet = SingleLiveEvent<PostTweet>()
+    private val _postTweet =
+        SingleLiveEvent<PostTweet>()
     val postTweetResult: LiveData<PostTweet> = _postTweet
 
     fun postTheTweet(content: String, authToken: String) {
@@ -90,6 +91,14 @@ class MainViewModel(private val repository: Repository): ViewModel() {
         viewModelScope.launch {
             val response = repository.getTweets()
             responseTweets.value = response
+        }
+    }
+
+    private var userTweets: MutableLiveData<Response<List<Tweet>>> = MutableLiveData()
+    fun getUserTweet(userId : String) {
+        viewModelScope.launch {
+            val response = repository.getUserTweets(userId)
+            userTweets.value = response
         }
     }
 }

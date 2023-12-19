@@ -13,6 +13,7 @@ data class User (
   @SerializedName("age"       ) var age       : Int?    = null,
   @SerializedName("country"   ) var country   : String? = null,
   @SerializedName("kind"      ) var kind      : String? = null,
+  @SerializedName("profilePicture" ) var profilePicture : String? = null,
   @SerializedName("followingCount" ) var followingCount : Int?    = null,
   @SerializedName("followersCount" ) var followersCount : Int?    = null,
   @SerializedName("bio"       ) var bio       : String? = null,

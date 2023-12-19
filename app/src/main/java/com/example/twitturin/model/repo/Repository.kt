@@ -10,6 +10,10 @@ class Repository {
         return RetrofitInstance.api.getTweet()
     }
 
+    suspend fun getUserTweets(userId: String) : Response<List<Tweet>> {
+        return RetrofitInstance.api.getPostsByUser(userId)
+    }
+
 //    suspend fun getLoggedInUserData(userId: String) : Response<List<User>> {
 //        return RetrofitInstance.api.getLoggedInUserData(userId)
 //    }
