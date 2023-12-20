@@ -182,7 +182,7 @@
                 android:layout_height="match_parent"
                 android:text="@string/following_counter_tv"
                 android:textStyle="bold"
-                android:textColor="@color/black"
+                android:textColor="?attr/colorOnSurfaceVariant"
                 android:layout_marginTop="5dp"
                 android:gravity="center"/>
 
@@ -202,7 +202,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/followers_counter_tv"
                 android:textStyle="bold"
-                android:textColor="@color/black"
+                android:textColor="?attr/colorOnSurfaceVariant"
                 android:layout_marginTop="5dp"
                 android:layout_marginStart="25sp"
                 app:layout_constraintStart_toEndOf="@id/following_tv"

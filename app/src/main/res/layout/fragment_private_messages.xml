@@ -42,7 +42,7 @@
                 android:textSize="24sp"
                 android:textStyle="bold"
                 android:layout_marginStart="16dp"
-                android:textColor="@color/black"
+                android:textColor="?attr/colorOnSurfaceVariant"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@id/accountImage"/>
@@ -56,7 +56,7 @@
             android:layout_height="wrap_content"
             android:text="This Page Currently Unavailable!"
             android:textStyle="bold"
-            android:textColor="@color/black"
+            android:textColor="?attr/colorOnSurfaceVariant"
             android:textSize="24sp"
             android:textAlignment="center"
             app:layout_constraintTop_toTopOf="parent"

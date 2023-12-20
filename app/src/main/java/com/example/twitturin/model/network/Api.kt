@@ -4,8 +4,8 @@ import com.example.twitturin.model.data.editUser.EditProfile
 import com.example.twitturin.model.data.likeTweet.LikeTweet
 import com.example.twitturin.model.data.publicTweet.TweetContent
 import com.example.twitturin.model.data.registration.Login
-import com.example.twitturin.model.data.registration.SignUpStudent
 import com.example.twitturin.model.data.registration.SignUpProf
+import com.example.twitturin.model.data.registration.SignUpStudent
 import com.example.twitturin.model.data.tweets.Tweet
 import com.example.twitturin.model.data.users.User
 import retrofit2.Call
@@ -19,7 +19,6 @@ import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
-import retrofit2.http.Query
 
 interface Api  {
 
@@ -30,9 +29,6 @@ interface Api  {
     /** publish user like too  **/
     @POST("tweets/{id}/likes")
     fun postLike(@Body tweet: LikeTweet, @Path("id") userId: String, @Header("Authorization") token: String): Call<LikeTweet>
-
-    @DELETE("tweets/{id}/likes")
-    fun deleteLike(@Body tweet: LikeTweet, @Path("id") userId: String, @Header("Authorization") token: String): Call<LikeTweet>
 
     /** login **/
     @POST("auth")
@@ -57,13 +53,18 @@ interface Api  {
     @GET("users/{id}/tweets")
     suspend fun getPostsByUser(@Path("id") userId: String): Response<List<Tweet>>
 
+
     /** In this API call we are getting the user credentials! **/
     @GET("users/{id}")
     suspend fun getLoggedInUserData(@Path("id") userId : String) : Response<User>
 
     /** In this API call we are update the user credentials! **/
     @PUT("users/{id}")
-    fun editUser(@Body editProfile : EditProfile, @Path("id") userId: String, @Header("Authorization") token: String, ): Call<EditProfile>
+    fun editUser(
+        @Body editProfile: EditProfile,
+        @Path("id") userId: String,
+        @Header("Authorization") token: String
+    ): Call<EditProfile>
 
     @FormUrlEncoded
     @PATCH("users/{id}")

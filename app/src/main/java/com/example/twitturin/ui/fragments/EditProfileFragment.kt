@@ -50,7 +50,6 @@ class EditProfileFragment : Fragment() {
 //         or if it's empty field should be empty.
 
         binding.save.setOnClickListener {
-
             if (!token.isNullOrEmpty()){
 
                 val fullName = binding.fullnameEt.text.toString()
@@ -61,12 +60,11 @@ class EditProfileFragment : Fragment() {
                 val birthday = binding.birthdayEt.text.toString()
 
                 profileViewModel.editUser(fullName, username, email, bio, country, birthday, userId!!, token)
-
             } else {
                 Toast.makeText(requireContext(), "error", Toast.LENGTH_SHORT).show()
             }
-            profileViewModel.editUserResult.observe(viewLifecycleOwner) { result ->
 
+            profileViewModel.editUserResult.observe(viewLifecycleOwner) { result ->
                 when (result) {
                     is EditUserResult.Success -> {
                         findNavController().navigate(R.id.action_editProfileFragment_to_profileFragment)
@@ -78,6 +76,7 @@ class EditProfileFragment : Fragment() {
                 }
             }
         }
+
         binding.headerLayout.setOnClickListener {
             showColorPickerDialog()
         }
@@ -133,10 +132,7 @@ class EditProfileFragment : Fragment() {
             layoutManager = GridLayoutManager(requireActivity(), numColumns)
             setPadding(padding, dpToPx(20), padding, padding) // Convert padding to pixels
             adapter = ColorAdapter(requireActivity(), colors) { selectedColor ->
-                // Do something with the selected color
-                // Change Background Color
                 binding.headerLayout.setBackgroundColor(selectedColor)
-//                selectedColor.dismiss()
             }
             addItemDecoration(GridSpacingItemDecoration(numColumns, spacing, true))
         }

@@ -1,6 +1,5 @@
 package com.example.twitturin.ui.fragments.loginFragments
 
-import android.graphics.Paint
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -10,23 +9,20 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
 import androidx.core.view.isVisible
-import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
 import com.example.twitturin.databinding.FragmentStudentRegistrationBinding
-import com.example.twitturin.model.repo.Repository
 import com.example.twitturin.ui.sealeds.SignUpStudentResult
-import com.example.twitturin.viewmodel.MainViewModel
-import com.example.twitturin.viewmodel.ViewModelFactory
+import com.example.twitturin.viewmodel.SignUpViewModel
 
 class StudentRegistrationFragment : Fragment() {
 
     private lateinit var binding : FragmentStudentRegistrationBinding
     private val editTextList: MutableList<EditText> = mutableListOf()
 
-    private lateinit var viewModel : MainViewModel
+    private lateinit var viewModel : SignUpViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentStudentRegistrationBinding.inflate(layoutInflater)
@@ -36,9 +32,8 @@ class StudentRegistrationFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val repository = Repository()
-        val viewModelFactory = ViewModelFactory(repository)
-        viewModel = ViewModelProvider(requireActivity(), viewModelFactory)[MainViewModel::class.java]
+
+        viewModel = ViewModelProvider(this)[SignUpViewModel::class.java]
 
         binding.signUp.setOnClickListener {
             val username = binding.userNameEt.text.toString().trim()

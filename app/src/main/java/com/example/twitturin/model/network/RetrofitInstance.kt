@@ -15,7 +15,7 @@ object RetrofitInstance {
 
     val api: Api by lazy {
         Retrofit.Builder()
-            .baseUrl("https://twitturin.onrender.com/api/")
+            .baseUrl("https://twitturin-dev.onrender.com/api/")
             .addConverterFactory(GsonConverterFactory.create())
             .client(client)
             .build()

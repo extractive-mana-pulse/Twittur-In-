@@ -15,11 +15,9 @@ class ProfileViewPagerAdapter(frag: FragmentManager, lifecycle: Lifecycle) : Fra
     override fun createFragment(position: Int): Fragment {
         return when(position) {
             0 -> {
-                // this fragments create only for profile page. inside profile fragment we've viewPager2 which works with this fragments
                 TweetsFragment()
             }
             1 -> {
-                // this fragments create only for profile page. inside profile fragment we've viewPager2 which works with this fragments
                 LikesFragment()
             }
             else -> {

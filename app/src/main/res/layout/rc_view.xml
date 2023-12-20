@@ -157,7 +157,7 @@
             android:background="@android:color/transparent"
             app:layout_constraintTop_toBottomOf="@id/post_description"
             app:layout_constraintStart_toEndOf="@id/post_heart_counter"
-            tools:ignore="ContentDescription" />
+            tools:ignore="ContentDescription"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

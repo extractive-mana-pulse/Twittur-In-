@@ -1,15 +1,20 @@
 package com.example.twitturin.ui.activities
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.view.WindowInsetsController
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.example.twitturin.R
 import com.example.twitturin.databinding.ActivityDetailBinding
 import com.example.twitturin.ui.fragments.bottomsheets.MyBottomSheetDialogFragment
 import java.text.SimpleDateFormat
-import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
 import java.util.concurrent.TimeUnit
@@ -17,16 +22,34 @@ import java.util.concurrent.TimeUnit
 class DetailActivity : AppCompatActivity() {
 
     private val binding by lazy { ActivityDetailBinding.inflate(layoutInflater) }
-    @SuppressLint("SetTextI18n")
+    @RequiresApi(Build.VERSION_CODES.R)
+    @SuppressLint("SetTextI18n", "PrivateResource")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
+        if (isDarkModeActive()){
+            window.statusBarColor = ContextCompat.getColor(this, com.google.android.material.R.color.m3_sys_color_dark_surface_container)
+            window.decorView.windowInsetsController?.setSystemBarsAppearance(0,
+                WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
+            )
+
+        } else {
+            window.statusBarColor = ContextCompat.getColor(this, com.google.android.material.R.color.m3_sys_color_light_surface_container)
+            window.decorView.windowInsetsController?.setSystemBarsAppearance(
+                WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS,
+                WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
+            )
+        }
 
         val fullname = intent.getStringExtra("fullname")
         val username = intent.getStringExtra("username")
         val description = intent.getStringExtra("post_description")
         val createdTime = intent.getStringExtra("createdAt")
         val userImage = intent.getStringExtra("userAvatar")
+        val id = intent.getStringExtra("id")
+        val sharedPreferences = getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
+        sharedPreferences.edit().putString("id", id).apply()
 
         val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.getDefault())
         dateFormat.timeZone = TimeZone.getTimeZone("UTC")
@@ -60,10 +83,22 @@ class DetailActivity : AppCompatActivity() {
 
         binding.apply {
 
+            authorAvatar.setOnLongClickListener {
+                authorAvatar.buildDrawingCache()
+                val originalBitmap = authorAvatar.drawingCache
+                val image = originalBitmap.copy(originalBitmap.config, true)
+
+                val intent = Intent(this@DetailActivity, FullScreenImageActivity::class.java)
+                intent.putExtra("image", image)
+                startActivity(intent)
+                true
+            }
+
             val profileImage = "$userImage"
             Glide.with(this@DetailActivity)
                 .load(profileImage)
-                .error(R.drawable.ic_launcher_foreground)
+                .error(R.drawable.not_found)
+                .centerCrop()
                 .into(authorAvatar)
 
             authorFullname.text = fullname
@@ -71,11 +106,19 @@ class DetailActivity : AppCompatActivity() {
             postDescription.text = description
 
             followBtn.setOnClickListener {
-                Toast.makeText(
-                    this@DetailActivity,
-                    "actualnost birinchi orinda!",
-                    Toast.LENGTH_SHORT
-                ).show()
+                Toast.makeText(this@DetailActivity, "actualnost birinchi orinda!", Toast.LENGTH_SHORT).show()
+            }
+
+            articlePageCommentsIcon.setOnClickListener {
+                Toast.makeText(this@DetailActivity, "hello", Toast.LENGTH_SHORT).show()
+            }
+
+            articlePageHeartIcon.setOnClickListener {
+                Toast.makeText(this@DetailActivity, "what's up?", Toast.LENGTH_SHORT).show()
+            }
+
+            articlePageShareIcon.setOnClickListener {
+                shareData()
             }
 
             goBackBtn.setOnClickListener {
@@ -92,41 +135,25 @@ class DetailActivity : AppCompatActivity() {
         }
     }
 
-    @SuppressLint("SimpleDateFormat")
-    fun getCurrentlyDateTime(): String {
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-        return dateFormat.format(Date())
+    private fun isDarkModeActive(): Boolean {
+        return when (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) {
+            android.content.res.Configuration.UI_MODE_NIGHT_YES -> true
+            else -> false
+        }
     }
 
-    private fun setTweetCreatedAt(createdAt: String): String {
-        val inputFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH)
-        val outputFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH)
-        val currentDate = getCurrentlyDateTime()
+    private fun shareData() {
 
-        return try {
-            val createdDate = inputFormat.parse(createdAt)
-            val currentDateObj = inputFormat.parse(currentDate)
+        val sharedPreferences = getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
+        val id = sharedPreferences.getString("id", null)
 
-            val elapsedTime = currentDateObj!!.time - createdDate!!.time
-            val elapsedMinutes = elapsedTime / (60 * 1000)
+        val intent = Intent(Intent.ACTION_SEND)
+        val baseUrl = "https://twitturin.onrender.com/tweets"
+        val link = "$baseUrl/$id"
 
-            val formattedDate = createdDate.let { outputFormat.format(it) }
+        intent.putExtra(Intent.EXTRA_TEXT, link)
+        intent.type = "text/plain"
 
-            val timeAgo = when {
-                elapsedMinutes < 1 -> "just now"
-                elapsedMinutes == 1L -> "1 minute ago"
-                elapsedMinutes < 60 -> "$elapsedMinutes minutes ago"
-                elapsedMinutes < 24 * 60 -> {
-                    val hours = elapsedMinutes / 60
-                    "$hours hours ago"
-                }
-                else -> outputFormat.format(createdDate)
-            }
-
-            "$formattedDate ($timeAgo)"
-        } catch (e: Exception) {
-            e.printStackTrace()
-            createdAt
-        }
+        startActivity(Intent.createChooser(intent,"Choose app:"))
     }
 }

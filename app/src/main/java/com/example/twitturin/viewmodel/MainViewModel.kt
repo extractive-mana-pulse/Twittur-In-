@@ -35,41 +35,15 @@ class MainViewModel(private val repository: Repository): ViewModel() {
         .client(client)
         .build()
 
-    private val signUpApi: Api = retrofit.create(Api::class.java)
-
-    private val _signUpStudentResult = SingleLiveEvent<SignUpStudentResult>()
-    val signUpStudentResult: LiveData<SignUpStudentResult> = _signUpStudentResult
-
-    fun signUp(username: String, studentId: String, major: String, email: String, birthday : String, password: String, kind: String) {
-        val request = SignUpStudent(username, studentId, major, email, birthday, password, kind)
-        signUpApi.signUpStudent(request).enqueue(object : Callback<SignUpStudent> {
-            override fun onResponse(call: Call<SignUpStudent>, response: Response<SignUpStudent>) {
-                if (response.isSuccessful) {
-                    val signUpResponse = response.body()
-                    _signUpStudentResult.value = signUpResponse?.let { SignUpStudentResult.Success(it) }
-                } else {
-                    _signUpStudentResult.value = SignUpStudentResult.Error(response.code().toString())
-                }
-            }
-
-            override fun onFailure(call: Call<SignUpStudent>, t: Throwable) {
-                _signUpStudentResult.value = SignUpStudentResult.Error("Network error")
-            }
-        })
-    }
-
     private val tweetApi: Api = retrofit.create(Api::class.java)
-    private val _postTweet =
-        SingleLiveEvent<PostTweet>()
+    private val _postTweet = SingleLiveEvent<PostTweet>()
     val postTweetResult: LiveData<PostTweet> = _postTweet
 
     fun postTheTweet(content: String, authToken: String) {
-
         val request = TweetContent(content)
         val authRequest = tweetApi.postTweet(request, "Bearer $authToken")
 
         authRequest.enqueue(object : Callback<TweetContent> {
-
             override fun onResponse(call: Call<TweetContent>, response: Response<TweetContent>) {
 
                 if (response.isSuccessful) {

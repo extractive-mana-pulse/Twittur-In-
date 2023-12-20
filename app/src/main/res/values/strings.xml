@@ -30,5 +30,9 @@
     <string name="wanna_register">Want to register?</string>
     <string name="remember_me">Remember me</string>
     <string name="sign_in">Sign In</string>
+    <string name="follow">Follow</string>
+    <string name="post">Post</string>
+    <string name="bookmarks">Bookmarks</string>
+    <string name="likes_like"><![CDATA[Likes <<Like>>]]></string>
 
 </resources>

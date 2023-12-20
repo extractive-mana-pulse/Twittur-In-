@@ -36,7 +36,6 @@ class ProfileViewModel: ViewModel() {
         .build()
 
     private val apiService: Api = retrofit.create(Api::class.java)
-
     private val _deleteResult = SingleLiveEvent<DeleteResult>()
     val deleteResult: LiveData<DeleteResult> = _deleteResult
 
@@ -114,28 +113,6 @@ class ProfileViewModel: ViewModel() {
 
     private val _data = MutableLiveData<UserTweetsResult>()
     val data: LiveData<UserTweetsResult> = _data
-
-//    fun getPostsFromUser(userId: String){
-//        val call = apiService.getPostsByUser(userId)
-//        call.enqueue(object : Callback<List<Tweet>> {
-//            override fun onResponse(call: Call<List<Tweet>>, response: Response<List<Tweet>>) {
-//                if (response.isSuccessful) {
-//                    val tweets = response.body()
-//                    _data.value = tweets?.let { UserTweetsResult.Success(it) }
-//                } else {
-//                    _data.value = UserTweetsResult.Failure(response.code().toString())
-//                    Log.d("body", response.body().toString())
-//                    Log.d("code", response.code().toString())
-//                    Log.d("message", response.message().toString())
-//                }
-//            }
-//
-//            override fun onFailure(call: Call<List<Tweet>>, t: Throwable) {
-//                t.message
-//            }
-//        })
-//    }
-
 
     fun followUser(userId: String, token: String){
         val call = apiService.followUser(userId, token)
