@@ -115,6 +115,7 @@
         <action
             android:id="@+id/action_profileFragment_to_publicPostFragment"
             app:destination="@id/publicPostFragment"/>
+
         <action
             android:id="@+id/action_profileFragment_to_fullScreenImageFragment"
             app:destination="@id/fullScreenImageFragment" />
@@ -146,6 +147,9 @@
         <action
             android:id="@+id/action_searchFragment_to_homeFragment"
             app:destination="@id/homeFragment"/>
+        <action
+            android:id="@+id/action_searchFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
 
     </fragment>
 

@@ -7,25 +7,27 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
+import com.example.twitturin.databinding.FragmentSearchBinding
 
 
 class SearchFragment : Fragment() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
+    private lateinit var binding : FragmentSearchBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_search, container, false)
+        binding = FragmentSearchBinding.inflate(layoutInflater)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        binding.accountImageSearch.setOnClickListener {
+            findNavController().navigate(R.id.action_searchFragment_to_profileFragment)
+        }
     }
 
     fun goToProfile(){
-        findNavController().navigate(R.id.profileFragment)
+        findNavController().navigate(R.id.action_searchFragment_to_profileFragment)
     }
 
     companion object {

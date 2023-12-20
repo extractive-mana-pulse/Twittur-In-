@@ -11,6 +11,7 @@ import com.example.twitturin.ui.sealeds.DeleteResult
 import com.example.twitturin.ui.sealeds.EditUserResult
 import com.example.twitturin.ui.sealeds.UserCredentialsResult
 import com.example.twitturin.ui.sealeds.UserTweetsResult
+import com.example.twitturin.viewmodel.event.SingleLiveEvent
 import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 import retrofit2.Call
@@ -36,7 +37,7 @@ class ProfileViewModel: ViewModel() {
 
     private val apiService: Api = retrofit.create(Api::class.java)
 
-    private val _deleteResult = MutableLiveData<DeleteResult>()
+    private val _deleteResult = SingleLiveEvent<DeleteResult>()
     val deleteResult: LiveData<DeleteResult> = _deleteResult
 
     fun deleteUser(userId: String, token : String) {

@@ -37,7 +37,7 @@ class MainViewModel(private val repository: Repository): ViewModel() {
 
     private val signUpApi: Api = retrofit.create(Api::class.java)
 
-    private val _signUpStudentResult = MutableLiveData<SignUpStudentResult>()
+    private val _signUpStudentResult = SingleLiveEvent<SignUpStudentResult>()
     val signUpStudentResult: LiveData<SignUpStudentResult> = _signUpStudentResult
 
     fun signUp(username: String, studentId: String, major: String, email: String, birthday : String, password: String, kind: String) {

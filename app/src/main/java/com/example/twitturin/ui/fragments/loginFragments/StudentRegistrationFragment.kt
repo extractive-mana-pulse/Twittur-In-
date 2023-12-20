@@ -41,12 +41,12 @@ class StudentRegistrationFragment : Fragment() {
         viewModel = ViewModelProvider(requireActivity(), viewModelFactory)[MainViewModel::class.java]
 
         binding.signUp.setOnClickListener {
-            val username = binding.userNameEt.text.toString()
-            val studentId = binding.studentIdEt.text.toString()
-            val major = binding.majorEt.text.toString()
-            val email = binding.emailEt.text.toString()
-            val birthday = binding.birthdayEt.text.toString()
-            val password = binding.passwordEt.text.toString()
+            val username = binding.userNameEt.text.toString().trim()
+            val studentId = binding.studentIdEt.text.toString().trim()
+            val major = binding.majorEt.text.toString().trim()
+            val email = binding.emailEt.text.toString().trim()
+            val birthday = binding.birthdayEt.text.toString().trim()
+            val password = binding.passwordEt.text.toString().trim()
             viewModel.signUp(username, studentId, major, email, birthday, password, "student")
         }
 
@@ -74,6 +74,7 @@ class StudentRegistrationFragment : Fragment() {
             when (result) {
                 is SignUpStudentResult.Success -> {
                     findNavController().navigate(R.id.action_studentRegistrationFragment_to_signInFragment)
+                    Toast.makeText(requireContext(), "Success?", Toast.LENGTH_SHORT).show()
                 }
 
                 is SignUpStudentResult.Error -> {

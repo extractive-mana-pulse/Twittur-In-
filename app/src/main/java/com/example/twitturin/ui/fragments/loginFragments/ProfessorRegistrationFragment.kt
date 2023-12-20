@@ -33,12 +33,12 @@ class ProfessorRegistrationFragment : Fragment() {
 
         viewModel = ViewModelProvider(requireActivity())[SignUpViewModel::class.java]
         binding.signUpProf.setOnClickListener {
-            val fullName = binding.profFullnameEt.text.toString()
-            val username = binding.profUsernameEt.text.toString()
-            val subject = binding.profSubjectEt.text.toString()
-            val email = binding.profEmailEt.text.toString()
-            val birthday = binding.profBirthdayEt.text.toString()
-            val password = binding.profPasswordEt.text.toString()
+            val fullName = binding.profFullnameEt.text.toString().trim()
+            val username = binding.profUsernameEt.text.toString().trim()
+            val subject = binding.profSubjectEt.text.toString().trim()
+            val email = binding.profEmailEt.text.toString().trim()
+            val birthday = binding.profBirthdayEt.text.toString().trim()
+            val password = binding.profPasswordEt.text.toString().trim()
             viewModel.signUpProf(fullName, username, subject, email, birthday, password, "teacher")
         }
 
