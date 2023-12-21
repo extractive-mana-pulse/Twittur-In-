@@ -136,6 +136,7 @@
                     app:endIconCheckable="true"
                     app:endIconMode="clear_text"
                     app:helperText="SE,BM,IT,ME,CIE,AD,AE"
+                    app:errorEnabled="true"
                     app:hintTextColor="?attr/colorOnPrimaryContainer"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -161,61 +162,6 @@
 <!--                        tools:ignore="LabelFor" />-->
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/textInputLayout3"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="16dp"
-                    android:layout_marginTop="15dp"
-                    android:background="@drawable/edit_text_bg_ui"
-                    app:endIconCheckable="true"
-                    app:endIconMode="clear_text"
-                    app:hintTextColor="?attr/colorOnPrimaryContainer"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/textInputLayout2"
-                    app:startIconCheckable="true"
-                    app:startIconDrawable="@drawable/mail">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/email_et"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@android:color/transparent"
-                        android:hint="@string/email"
-                        android:imeOptions="actionNext"
-                        android:inputType="text" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/textInputLayout4"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="16dp"
-                    android:layout_marginTop="15dp"
-                    android:background="@drawable/edit_text_bg_ui"
-                    app:endIconCheckable="true"
-                    app:endIconMode="clear_text"
-                    app:hintTextColor="?attr/colorOnPrimaryContainer"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/textInputLayout3"
-                    app:startIconCheckable="true"
-                    app:startIconDrawable="@drawable/calendar_month">
-
-                    <com.santalu.maskedittext.MaskEditText
-                        android:id="@+id/birthday_et"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="yyyy-MM-dd"
-                        android:background="@android:color/transparent"
-                        app:met_mask="####-##-##"
-                        android:imeOptions="actionNext"
-                        android:inputType="date"/>
-
-                </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/textInputLayout5"
@@ -230,7 +176,7 @@
                     app:hintTextColor="?attr/colorOnPrimaryContainer"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/textInputLayout4"
+                    app:layout_constraintTop_toBottomOf="@id/textInputLayout2"
                     app:startIconCheckable="true"
                     app:startIconDrawable="@drawable/lock">
 

@@ -30,7 +30,7 @@ class MainViewModel(private val repository: Repository): ViewModel() {
         .build()
 
     private val retrofit = Retrofit.Builder()
-        .baseUrl("https://twitturin.onrender.com/api/")
+        .baseUrl("https://twitturin-dev.onrender.com/api/")
         .addConverterFactory(GsonConverterFactory.create())
         .client(client)
         .build()

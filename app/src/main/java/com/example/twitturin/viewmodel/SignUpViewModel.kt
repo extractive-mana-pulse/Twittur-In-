@@ -35,8 +35,8 @@ class SignUpViewModel : ViewModel() {
     private val _profRegResult = SingleLiveEvent<SignUpProfResult>()
     val profRegResult: LiveData<SignUpProfResult> = _profRegResult
 
-    fun signUpProf(fullName: String, username: String, subject: String, email: String, birthday : String, password: String, kind: String) {
-        val request = SignUpProf(fullName, username, subject, email, birthday, password, kind)
+    fun signUpProf(fullName: String, username: String, subject: String, password: String, kind: String) {
+        val request = SignUpProf(fullName, username, subject, password, kind)
 
         profReg.signUpProf(request).enqueue(object : Callback<SignUpProf> {
             override fun onResponse(call: Call<SignUpProf>, response: Response<SignUpProf>) {
@@ -58,8 +58,8 @@ class SignUpViewModel : ViewModel() {
     private val _signUpStudentResult = SingleLiveEvent<SignUpStudentResult>()
     val signUpStudentResult: LiveData<SignUpStudentResult> = _signUpStudentResult
 
-    fun signUp(username: String, studentId: String, major: String, email: String, birthday : String, password: String, kind: String) {
-        val request = SignUpStudent(username, studentId, major, email, birthday, password, kind)
+    fun signUp(username: String, studentId: String, major: String, password: String, kind: String) {
+        val request = SignUpStudent(username, studentId, major, password, kind)
         profReg.signUpStudent(request).enqueue(object : Callback<SignUpStudent> {
             override fun onResponse(call: Call<SignUpStudent>, response: Response<SignUpStudent>) {
                 if (response.isSuccessful) {
@@ -71,7 +71,7 @@ class SignUpViewModel : ViewModel() {
             }
 
             override fun onFailure(call: Call<SignUpStudent>, t: Throwable) {
-                _signUpStudentResult.value = SignUpStudentResult.Error("Network error")
+                _signUpStudentResult.value = SignUpStudentResult.Error(t.message.toString())
             }
         })
     }

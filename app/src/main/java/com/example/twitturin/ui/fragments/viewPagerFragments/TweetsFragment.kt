@@ -73,6 +73,7 @@ class TweetsFragment : Fragment() {
         binding.rcView.adapter = postAdapter
         binding.rcView.addItemDecoration(DividerItemDecoration(binding.rcView.context, DividerItemDecoration.VERTICAL))
         binding.rcView.layoutManager = LinearLayoutManager(requireContext())
+
         viewModel.getUserTweet(userId!!)
         viewModel.responseTweets.observe(requireActivity()) { response ->
             if (response.isSuccessful) {
@@ -86,6 +87,7 @@ class TweetsFragment : Fragment() {
                     Toast.makeText(requireContext(), "Success", Toast.LENGTH_SHORT).show()
                     val tweetList: MutableList<Tweet> = tweets.toMutableList()
                     postAdapter.setData(tweetList)
+                    postAdapter.notifyDataSetChanged()
                 }
             } else {
                 Log.d("code error",response.code().toString())

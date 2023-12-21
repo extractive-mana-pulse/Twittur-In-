@@ -17,14 +17,13 @@ import retrofit2.converter.gson.GsonConverterFactory
 class SignInViewModel : ViewModel() {
 
     private val retrofit = Retrofit.Builder()
-        .baseUrl("https://twitturin.onrender.com/api/")
+        .baseUrl("https://twitturin-dev.onrender.com/api/")
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
     private val signInApi: Api = retrofit.create(Api::class.java)
 
-    private val _signInResult =
-        SingleLiveEvent<SignInResult>()
+    private val _signInResult = SingleLiveEvent<SignInResult>()
     val signInResult: SingleLiveEvent<SignInResult> = _signInResult
 
     private val _token = MutableLiveData<String>()

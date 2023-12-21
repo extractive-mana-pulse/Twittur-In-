@@ -39,17 +39,13 @@ class StudentRegistrationFragment : Fragment() {
             val username = binding.userNameEt.text.toString().trim()
             val studentId = binding.studentIdEt.text.toString().trim()
             val major = binding.majorEt.text.toString().trim()
-            val email = binding.emailEt.text.toString().trim()
-            val birthday = binding.birthdayEt.text.toString().trim()
             val password = binding.passwordEt.text.toString().trim()
-            viewModel.signUp(username, studentId, major, email, birthday, password, "student")
+            viewModel.signUp(username, studentId, major, password, "student")
         }
 
         editTextList.add(binding.userNameEt)
         editTextList.add(binding.studentIdEt)
         editTextList.add(binding.majorEt)
-        editTextList.add(binding.emailEt)
-        editTextList.add(binding.birthdayEt)
         editTextList.add(binding.passwordEt)
 
         // Set text change listeners for each EditText

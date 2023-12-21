@@ -16,7 +16,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 class LikeViewModel: ViewModel() {
 
     private val retrofit = Retrofit.Builder()
-        .baseUrl("https://twitturin.onrender.com/api/")
+        .baseUrl("https://twitturin-dev.onrender.com/api/")
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 

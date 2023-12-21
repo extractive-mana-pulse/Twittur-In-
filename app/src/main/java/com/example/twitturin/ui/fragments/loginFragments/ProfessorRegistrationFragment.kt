@@ -39,7 +39,7 @@ class ProfessorRegistrationFragment : Fragment() {
             val email = binding.profEmailEt.text.toString().trim()
             val birthday = binding.profBirthdayEt.text.toString().trim()
             val password = binding.profPasswordEt.text.toString().trim()
-            viewModel.signUpProf(fullName, username, subject, email, birthday, password, "teacher")
+            viewModel.signUpProf(fullName, username, subject, password, "teacher")
         }
 
         profEditTextList.add(binding.profFullnameEt)
