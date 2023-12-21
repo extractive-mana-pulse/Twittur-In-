@@ -35,4 +35,14 @@
     <string name="bookmarks">Bookmarks</string>
     <string name="likes_like"><![CDATA[Likes <<Like>>]]></string>
 
+    <string-array name="major_array">
+        <item>SE</item>
+        <item>BM</item>
+        <item>IT</item>
+        <item>ME</item>
+        <item>CIE</item>
+        <item>AD</item>
+        <item>AE</item>
+    </string-array>
+
 </resources>

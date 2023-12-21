@@ -21,7 +21,6 @@ import com.example.twitturin.viewmodel.SignInViewModel
 class SignInFragment : Fragment() {
 
     private lateinit var binding: FragmentSignInBinding
-
     private lateinit var viewModel: SignInViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -68,22 +67,6 @@ class SignInFragment : Fragment() {
             Log.d("Tag", "hello world")
         }
 
-//                && binding.studentIdEt.text!!.isNotEmpty() && binding.passwordEt.text!!.isNotEmpty()
-//        binding.rememberMeCheckBox.setOnCheckedChangeListener { compoundButton, _ ->
-//
-//            if (compoundButton.isChecked) {
-//                val preferences = requireActivity().getSharedPreferences("checkbox", MODE_PRIVATE)
-//                val editor: SharedPreferences.Editor = preferences.edit()
-//                editor.putString("remember", "true")
-//                editor.apply()
-//
-//            } else if (!compoundButton.isChecked) {
-//                val preferences = requireActivity().getSharedPreferences("checkbox", MODE_PRIVATE)
-//                val editor: SharedPreferences.Editor = preferences.edit()
-//                editor.putString("remember", "false")
-//                editor.apply()
-//            }
-//        }
 
         binding.rememberMeCheckBox.setOnCheckedChangeListener { compoundButton, isChecked ->
             val username = binding.studentIdEt.text.toString().trim()
@@ -94,10 +77,9 @@ class SignInFragment : Fragment() {
 
                 val preferences = requireActivity().getSharedPreferences("checkbox", MODE_PRIVATE)
                 val editor: SharedPreferences.Editor = preferences.edit()
+
                 editor.putString("remember", isChecked.toString())
                 editor.apply()
-
-                // Additional actions when the checkbox state is updated
             } else {
                 compoundButton.isChecked = false
 
@@ -105,8 +87,6 @@ class SignInFragment : Fragment() {
                 val editor: SharedPreferences.Editor = preferences.edit()
                 editor.putString("remember", "false")
                 editor.apply()
-
-                // Additional actions when the checkbox is not checked due to empty username or password
             }
         }
     }
@@ -122,5 +102,23 @@ class SignInFragment : Fragment() {
     companion object {
         @JvmStatic
         fun newInstance() = SignInFragment()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        val preferences = requireActivity().getSharedPreferences("checkbox", MODE_PRIVATE)
+        val editor: SharedPreferences.Editor = preferences.edit()
+        editor.putString("remember","false")
+        editor.clear()
+        editor.apply()
+    }
+    override fun onDestroyView() {
+        super.onDestroyView()
+
+        val preferences = requireActivity().getSharedPreferences("checkbox", MODE_PRIVATE)
+        val editor: SharedPreferences.Editor = preferences.edit()
+        editor.putString("remember","false")
+        editor.clear()
+        editor.apply()
     }
 }

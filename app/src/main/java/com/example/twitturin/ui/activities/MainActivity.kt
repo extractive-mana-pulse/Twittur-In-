@@ -1,6 +1,7 @@
 package com.example.twitturin.ui.activities
 
 import android.annotation.SuppressLint
+import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
 import android.view.View
@@ -66,6 +67,25 @@ class MainActivity : AppCompatActivity() {
             android.content.res.Configuration.UI_MODE_NIGHT_YES -> true
             else -> false
         }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        val preferences = getSharedPreferences("checkbox", MODE_PRIVATE)
+        val editor: SharedPreferences.Editor = preferences.edit()
+        editor.putString("remember","false")
+        editor.clear()
+        editor.apply()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        val preferences = getSharedPreferences("checkbox", MODE_PRIVATE)
+        val editor: SharedPreferences.Editor = preferences.edit()
+        editor.putString("remember","false")
+        editor.clear()
+        editor.apply()
     }
     override fun onSupportNavigateUp(): Boolean {
         return super.onSupportNavigateUp()

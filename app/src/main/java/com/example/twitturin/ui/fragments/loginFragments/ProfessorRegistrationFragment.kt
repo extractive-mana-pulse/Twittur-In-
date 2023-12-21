@@ -36,8 +36,6 @@ class ProfessorRegistrationFragment : Fragment() {
             val fullName = binding.profFullnameEt.text.toString().trim()
             val username = binding.profUsernameEt.text.toString().trim()
             val subject = binding.profSubjectEt.text.toString().trim()
-            val email = binding.profEmailEt.text.toString().trim()
-            val birthday = binding.profBirthdayEt.text.toString().trim()
             val password = binding.profPasswordEt.text.toString().trim()
             viewModel.signUpProf(fullName, username, subject, password, "teacher")
         }
@@ -45,8 +43,6 @@ class ProfessorRegistrationFragment : Fragment() {
         profEditTextList.add(binding.profFullnameEt)
         profEditTextList.add(binding.profUsernameEt)
         profEditTextList.add(binding.profSubjectEt)
-        profEditTextList.add(binding.profEmailEt)
-        profEditTextList.add(binding.profBirthdayEt)
         profEditTextList.add(binding.profPasswordEt)
 
         profEditTextList.forEach { editText ->
@@ -66,6 +62,28 @@ class ProfessorRegistrationFragment : Fragment() {
                 }
             })
         }
+
+        binding.profUsernameEt.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // TODO
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                // TODO
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                val inputText = s?.toString()
+
+                if (inputText != null && inputText.contains(" ")) {
+                    binding.textInputLayout1.error = "No spaces allowed"
+                    binding.signUpProf.isEnabled = false
+                } else {
+                    binding.textInputLayout1.error = null
+                    binding.signUpProf.isEnabled = true
+                }
+            }
+        })
 
         viewModel.profRegResult.observe(viewLifecycleOwner) { result ->
             when (result) {

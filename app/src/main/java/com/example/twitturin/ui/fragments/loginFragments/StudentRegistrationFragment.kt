@@ -6,6 +6,8 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.Toast
 import androidx.core.view.isVisible
@@ -21,7 +23,6 @@ class StudentRegistrationFragment : Fragment() {
 
     private lateinit var binding : FragmentStudentRegistrationBinding
     private val editTextList: MutableList<EditText> = mutableListOf()
-
     private lateinit var viewModel : SignUpViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -32,23 +33,21 @@ class StudentRegistrationFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
         viewModel = ViewModelProvider(this)[SignUpViewModel::class.java]
 
         binding.signUp.setOnClickListener {
+            val fullname = binding.fullNameEt.text.toString().trim()
             val username = binding.userNameEt.text.toString().trim()
             val studentId = binding.studentIdEt.text.toString().trim()
-            val major = binding.majorEt.text.toString().trim()
+            val major = binding.planetsSpinner.selectedItem.toString()
             val password = binding.passwordEt.text.toString().trim()
-            viewModel.signUp(username, studentId, major, password, "student")
+            viewModel.signUp(fullname, username, studentId, major, password, "student")
         }
 
         editTextList.add(binding.userNameEt)
         editTextList.add(binding.studentIdEt)
-        editTextList.add(binding.majorEt)
         editTextList.add(binding.passwordEt)
 
-        // Set text change listeners for each EditText
         editTextList.forEach { editText ->
             editText.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -60,6 +59,43 @@ class StudentRegistrationFragment : Fragment() {
                 }
             })
         }
+
+        ArrayAdapter.createFromResource(requireContext(), R.array.major_array, android.R.layout.simple_spinner_item).also { adapter ->
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            binding.planetsSpinner.adapter = adapter
+        }
+
+        binding.planetsSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+                // TODO
+            }
+
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+                // TODO
+            }
+        }
+
+        binding.userNameEt.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // TODO
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                // TODO
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                val inputText = s?.toString()
+
+                if (inputText != null && inputText.contains(" ")) {
+                    binding.textInputLayout.error = "No spaces allowed"
+                    binding.signUp.isEnabled = false
+                } else {
+                    binding.textInputLayout.error = null
+                    binding.signUp.isEnabled = true
+                }
+            }
+        })
 
         viewModel.signUpStudentResult.observe(viewLifecycleOwner) { result ->
             when (result) {

@@ -58,8 +58,8 @@ class SignUpViewModel : ViewModel() {
     private val _signUpStudentResult = SingleLiveEvent<SignUpStudentResult>()
     val signUpStudentResult: LiveData<SignUpStudentResult> = _signUpStudentResult
 
-    fun signUp(username: String, studentId: String, major: String, password: String, kind: String) {
-        val request = SignUpStudent(username, studentId, major, password, kind)
+    fun signUp(fullName: String, username: String, studentId: String, major: String, password: String, kind: String) {
+        val request = SignUpStudent(fullName, username, studentId, major, password, kind)
         profReg.signUpStudent(request).enqueue(object : Callback<SignUpStudent> {
             override fun onResponse(call: Call<SignUpStudent>, response: Response<SignUpStudent>) {
                 if (response.isSuccessful) {
