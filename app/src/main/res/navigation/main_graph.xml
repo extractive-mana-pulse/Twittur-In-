@@ -119,6 +119,12 @@
         <action
             android:id="@+id/action_profileFragment_to_fullScreenImageFragment"
             app:destination="@id/fullScreenImageFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_followersListFragment"
+            app:destination="@id/followersListFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_followingListFragment"
+            app:destination="@id/followingListFragment" />
 
     </fragment>
 
@@ -134,6 +140,9 @@
             app:destination="@id/homeFragment"
             app:popUpTo="@id/publicPostFragment"
             app:popUpToInclusive="true"/>
+        <action
+            android:id="@+id/action_publicPostFragment_to_tweetsFragment"
+            app:destination="@id/tweetsFragment" />
 
     </fragment>
 
@@ -176,6 +185,9 @@
         <action
             android:id="@+id/action_tweetsFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_tweetsFragment_to_publicPostFragment"
+            app:destination="@id/publicPostFragment" />
 
     </fragment>
 
@@ -306,6 +318,24 @@
             android:id="@+id/action_fullScreenImageFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
 
+    </fragment>
+    <fragment
+        android:id="@+id/followersListFragment"
+        android:name="com.example.twitturin.ui.fragments.FollowersListFragment"
+        android:label="fragment_followers_list"
+        tools:layout="@layout/fragment_followers_list" >
+        <action
+            android:id="@+id/action_followersListFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/followingListFragment"
+        android:name="com.example.twitturin.ui.decoration.FollowingListFragment"
+        android:label="fragment_following_list"
+        tools:layout="@layout/fragment_following_list" >
+        <action
+            android:id="@+id/action_followingListFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
     </fragment>
 
 </navigation>

@@ -1,5 +1,6 @@
 package com.example.twitturin.model.network
 
+import android.app.appsearch.SearchResult
 import com.example.twitturin.model.data.editUser.EditProfile
 import com.example.twitturin.model.data.likeTweet.LikeTweet
 import com.example.twitturin.model.data.publicTweet.TweetContent
@@ -19,6 +20,7 @@ import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface Api  {
 
@@ -72,4 +74,19 @@ interface Api  {
 
     @POST("users/following/{toFollow}")
     fun followUser(@Path("id") userId : String, @Header("Authorization") token : String) : Call<Unit>
+
+    @GET("users/{id}/followers")
+    suspend fun getListOfFollowers(@Path("id")userId : String) : Response<List<User>>
+
+    @GET("users/{id}/following")
+    suspend fun getListOfFollowing(@Path("id")userId : String) : Response<List<User>>
+
+    @GET("users/{id}/likes")
+    suspend fun getListOfLikedPosts(@Path("id")userId : String) : Response<List<Tweet>>
+
+    @GET("tweets/{id}/replies")
+    suspend fun getRepliesOfPost(@Path("id")tweetId : String) : Response<List<Tweet>>
+
+    @GET("search")
+    suspend fun searchNews(@Query("keyword") keyword: Tweet) : Response<Tweet>
 }

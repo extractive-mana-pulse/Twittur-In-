@@ -2,6 +2,7 @@ package com.example.twitturin.model.repo
 
 import com.example.twitturin.model.network.RetrofitInstance
 import com.example.twitturin.model.data.tweets.Tweet
+import com.example.twitturin.model.data.users.User
 import retrofit2.Response
 
 class Repository {
@@ -14,7 +15,21 @@ class Repository {
         return RetrofitInstance.api.getPostsByUser(userId)
     }
 
-//    suspend fun getLoggedInUserData(userId: String) : Response<List<User>> {
-//        return RetrofitInstance.api.getLoggedInUserData(userId)
-//    }
+    suspend fun getFollowersList(userId: String) : Response<List<User>> {
+        return RetrofitInstance.api.getListOfFollowers(userId)
+    }
+
+    suspend fun getFollowingList(userId: String) : Response<List<User>> {
+        return RetrofitInstance.api.getListOfFollowing(userId)
+    }
+
+    suspend fun getListOfLikedPosts(userId: String) : Response<List<Tweet>> {
+        return RetrofitInstance.api.getListOfLikedPosts(userId)
+    }
+
+    suspend fun getRepliesOfTweet(tweetId: String) : Response<List<Tweet>> {
+        return RetrofitInstance.api.getRepliesOfPost(tweetId)
+    }
+
+    suspend fun searchNews(searchQuery: Tweet) = RetrofitInstance.api.searchNews(searchQuery)
 }

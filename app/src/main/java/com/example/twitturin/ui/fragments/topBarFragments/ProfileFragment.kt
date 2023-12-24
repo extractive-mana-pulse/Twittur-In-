@@ -22,6 +22,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.PopupMenu
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -32,8 +33,10 @@ import com.example.twitturin.databinding.FragmentProfileBinding
 import com.example.twitturin.ui.adapters.ProfileViewPagerAdapter
 import com.example.twitturin.ui.fragments.FullScreenImageFragment
 import com.example.twitturin.ui.sealeds.DeleteResult
+import com.example.twitturin.ui.sealeds.FollowersResult
 import com.example.twitturin.ui.sealeds.UserCredentialsResult
 import com.example.twitturin.viewmodel.ProfileViewModel
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayoutMediator
 
 class ProfileFragment : Fragment() {
@@ -59,55 +62,44 @@ class ProfileFragment : Fragment() {
             binding.swipeToRefreshLayout.isRefreshing = false
         }
 
+        binding.followersTv.setOnClickListener {
+            findNavController().navigate(R.id.action_profileFragment_to_followersListFragment)
+        }
+
+        binding.followingTv.setOnClickListener {
+            findNavController().navigate(R.id.action_profileFragment_to_followingListFragment)
+        }
+
         profileViewModel.getUserCredentials(userId!!)
         profileViewModel.getUserCredentials.observe(viewLifecycleOwner) { result ->
             when (result) {
                 is UserCredentialsResult.Success -> {
+
                     val profileImage = "${result.user.profilePicture}"
-
-//                    binding.profileImage.setOnClickListener {
-//
-//                        // TODO when i press to profile image i need to open it in full screen size
-//                        val imageUrl = "${result.user.profilePicture}" // Replace with the actual URL of the profile image
-//
-//                        val action = ProfileFragmentDirections.actionProfileFragmentToFullScreenImageFragment(imageUrl)
-//                        findNavController().navigate(action)
-//                    }
-
-
-
-                    binding.profileImage.setOnClickListener {
-                        val fullScreenImageFragment = FullScreenImageFragment()
-
-                        // Create a new copy of the image bitmap
-                        binding.profileImage.buildDrawingCache()
-                        val originalBitmap = binding.profileImage.drawingCache
-                        val image = originalBitmap.copy(originalBitmap.config, true)
-
-                        // Pass the new copy of the bitmap as an argument to the fragment
-                        val extras = Bundle()
-                        extras.putParcelable("image", image)
-                        fullScreenImageFragment.arguments = extras
-
-                        // Start the fragment transaction
-                        val fragmentManager = requireActivity().supportFragmentManager
-                        val fragmentTransaction = fragmentManager.beginTransaction()
-                        fragmentTransaction.replace(R.id.nav_host_fragment_container, fullScreenImageFragment)
-                        fragmentTransaction.addToBackStack(null)
-                        fragmentTransaction.commit()
-                    }
-
-
                     Glide.with(requireContext())
                         .load(profileImage)
                         .into(binding.profileImage)
 
-                    binding.profileName.text = result.user.fullName
+                    binding.profileName.text = result.user.fullName ?: "Twittur User"
+
                     binding.customName.text = "@" + result.user.username
                     binding.profileKindTv.text = result.user.kind
-                    binding.profileDescription.text = result.user.bio
-                    binding.locationTv.text = result.user.country
-                    binding.emailTv.text = result.user.email
+                    binding.profileDescription.text = result.user.bio ?: "This user does not appear to have any biography."
+
+                    binding.locationImg.visibility = if (binding.locationTv.text.isEmpty()) {
+                        View.GONE
+                    } else {
+                        binding.locationTv.text = result.user.country
+                        View.VISIBLE
+                    }
+
+                    binding.emailImg.visibility = if (binding.emailTv.text.isEmpty()) {
+                        View.GONE
+                    } else {
+                        binding.emailTv.text = result.user.country
+                        View.VISIBLE
+                    }
+
                     binding.followingCounterTv.text = result.user.followingCount.toString()
                     binding.followersCounterTv.text = result.user.followersCount.toString()
 
@@ -117,6 +109,26 @@ class ProfileFragment : Fragment() {
                 }
             }
         }
+
+        binding.profileImage.setOnClickListener {
+            val fullScreenImageFragment = FullScreenImageFragment()
+
+            binding.profileImage.buildDrawingCache()
+            val originalBitmap = binding.profileImage.drawingCache
+            val image = originalBitmap.copy(originalBitmap.config, true)
+
+            val extras = Bundle()
+            extras.putParcelable("image", image)
+            fullScreenImageFragment.arguments = extras
+
+            val fragmentManager = requireActivity().supportFragmentManager
+            val fragmentTransaction = fragmentManager.beginTransaction()
+            fragmentTransaction.replace(R.id.nav_host_fragment_container, fullScreenImageFragment)
+            fragmentTransaction.addToBackStack(null)
+            fragmentTransaction.commit()
+        }
+
+
 
         binding.threeDotMenu.setOnClickListener {
             val popupMenu = PopupMenu(requireContext(), binding.threeDotMenu)
@@ -211,25 +223,6 @@ class ProfileFragment : Fragment() {
         binding.back.setOnClickListener {
             requireActivity().onBackPressed()
         }
-    }
-
-    private fun ImageView.roundedCornerDrawable(radius: Float) {
-        val bitmap = (drawable as? BitmapDrawable)?.bitmap ?: return
-        val outputBitmap = Bitmap.createBitmap(bitmap.width, bitmap.height, Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(outputBitmap)
-
-        val paint = Paint()
-        val rect = Rect(0, 0, bitmap.width, bitmap.height)
-        val rectF = RectF(rect)
-
-        paint.isAntiAlias = true
-        canvas.drawARGB(0, 0, 0, 0)
-        canvas.drawRoundRect(rectF, radius, radius, paint)
-
-        paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
-        canvas.drawBitmap(bitmap, rect, rect, paint)
-
-        setImageDrawable(BitmapDrawable(resources, outputBitmap))
     }
 
     companion object {

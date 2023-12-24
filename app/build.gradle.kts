@@ -25,12 +25,12 @@ android {
     }
 
     buildTypes {
+        debug {
+            buildConfigField ("String", "BASE_URL", "\"https://twitturin-dev.onrender.com/api/\"")
+        }
         release {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            buildConfigField("String", "BASE_URL", "\"https://twitturin-dev.onrender.com/api/\"")
         }
     }
     buildFeatures{
@@ -38,6 +38,7 @@ android {
 //      noinspection DataBindingWithoutKapt
         dataBinding = true
 //      compose = true
+        buildConfig = true
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8

@@ -10,49 +10,66 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.twitturin.R
 import com.example.twitturin.databinding.ActivityDetailBinding
+import com.example.twitturin.model.data.tweets.Tweet
+import com.example.twitturin.model.repo.Repository
+import com.example.twitturin.ui.adapters.PostAdapter
 import com.example.twitturin.ui.fragments.bottomsheets.MyBottomSheetDialogFragment
+import com.example.twitturin.viewmodel.MainViewModel
+import com.example.twitturin.viewmodel.ViewModelFactory
 import java.text.SimpleDateFormat
 import java.util.Locale
+import java.util.Random
 import java.util.TimeZone
 import java.util.concurrent.TimeUnit
 
 class DetailActivity : AppCompatActivity() {
 
     private val binding by lazy { ActivityDetailBinding.inflate(layoutInflater) }
+    private val postAdapter by lazy { PostAdapter(this@DetailActivity) }
+    private lateinit var viewModel: MainViewModel
     @RequiresApi(Build.VERSION_CODES.R)
     @SuppressLint("SetTextI18n", "PrivateResource")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        if (isDarkModeActive()){
-            window.statusBarColor = ContextCompat.getColor(this, com.google.android.material.R.color.m3_sys_color_dark_surface_container)
-            window.decorView.windowInsetsController?.setSystemBarsAppearance(0,
-                WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
-            )
+//        if (isDarkModeActive()){
+//            window.statusBarColor = ContextCompat.getColor(this, com.google.android.material.R.color.m3_sys_color_dark_surface_container)
+//            window.decorView.windowInsetsController?.setSystemBarsAppearance(0,
+//                WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
+//            )
+//
+//        } else {
+//            window.statusBarColor = ContextCompat.getColor(this, com.google.android.material.R.color.m3_sys_color_light_surface_container)
+//            window.decorView.windowInsetsController?.setSystemBarsAppearance(
+//                WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS,
+//                WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
+//            )
+//        }
 
-        } else {
-            window.statusBarColor = ContextCompat.getColor(this, com.google.android.material.R.color.m3_sys_color_light_surface_container)
-            window.decorView.windowInsetsController?.setSystemBarsAppearance(
-                WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS,
-                WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
-            )
-        }
-
+        val userImage = intent.getStringExtra("userAvatar")
         val fullname = intent.getStringExtra("fullname")
         val username = intent.getStringExtra("username")
         val description = intent.getStringExtra("post_description")
         val createdTime = intent.getStringExtra("createdAt")
-        val userImage = intent.getStringExtra("userAvatar")
+        val likes = intent.getStringExtra("likes")
         val id = intent.getStringExtra("id")
         val sharedPreferences = getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
         sharedPreferences.edit().putString("id", id).apply()
 
         val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.getDefault())
         dateFormat.timeZone = TimeZone.getTimeZone("UTC")
+
+        val repository = Repository()
+        val viewModelFactory = ViewModelFactory(repository)
+        viewModel = ViewModelProvider(this@DetailActivity, viewModelFactory)[MainViewModel::class.java]
+        updateRecyclerView()
 
         try {
             val date = dateFormat.parse(createdTime.toString())
@@ -101,9 +118,9 @@ class DetailActivity : AppCompatActivity() {
                 .centerCrop()
                 .into(authorAvatar)
 
-            authorFullname.text = fullname
             authorUsername.text = "@$username"
             postDescription.text = description
+            articlePageLikesCounter.text = likes
 
             followBtn.setOnClickListener {
                 Toast.makeText(this@DetailActivity, "actualnost birinchi orinda!", Toast.LENGTH_SHORT).show()
@@ -155,5 +172,33 @@ class DetailActivity : AppCompatActivity() {
         intent.type = "text/plain"
 
         startActivity(Intent.createChooser(intent,"Choose app:"))
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun updateRecyclerView() {
+        val sharedPreferences = getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
+        val tweetId = sharedPreferences.getString("id", null)
+
+        binding.articleRcView.adapter = postAdapter
+        binding.articleRcView.layoutManager = LinearLayoutManager(this)
+        binding.articleRcView.addItemDecoration(DividerItemDecoration(binding.articleRcView.context, DividerItemDecoration.VERTICAL))
+
+        viewModel.getRepliesOfPost(tweetId!!)
+
+        viewModel.repliesOfPosts.observe(this) { response ->
+            if (response.isSuccessful) {
+                response.body()?.let { tweets ->
+                    val tweetList: MutableList<Tweet> = tweets.toMutableList()
+                    postAdapter.setData(tweetList)
+                    binding.swipeToRefreshArticle.setOnRefreshListener {
+                        postAdapter.notifyDataSetChanged()
+                        binding.swipeToRefreshArticle.isRefreshing = false
+                        tweetList.shuffle(Random(System.currentTimeMillis()))
+                    }
+                }
+            } else {
+                Toast.makeText(this, response.code().toString(), Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 }

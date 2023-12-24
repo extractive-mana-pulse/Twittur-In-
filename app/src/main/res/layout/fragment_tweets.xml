@@ -24,42 +24,32 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
-<!--        <com.airbnb.lottie.LottieAnimationView-->
-<!--            android:id="@+id/anView"-->
-<!--            android:layout_width="282dp"-->
-<!--            android:layout_height="282dp"-->
-<!--            app:lottie_loop="false"-->
-<!--            app:lottie_autoPlay="true"-->
-<!--            app:layout_constraintWidth_percent="0.4"-->
-<!--            app:layout_constraintDimensionRatio="1.1"-->
-<!--            app:lottie_fileName="empty_tweets_list.json"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintTop_toTopOf="parent"-->
-<!--            app:layout_constraintStart_toStartOf="parent"/>-->
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/anView"
+            android:layout_width="282dp"
+            android:layout_height="282dp"
+            app:lottie_loop="false"
+            app:lottie_autoPlay="true"
+            android:visibility="visible"
+            app:layout_constraintWidth_percent="0.4"
+            app:layout_constraintDimensionRatio="1.1"
+            app:lottie_fileName="empty_tweets_list.json"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
 
-<!--        <TextView-->
-<!--            android:id="@+id/lottie_infoTv"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="You Don't Have Tweets"-->
-<!--            android:textStyle="italic"-->
-<!--            android:textSize="18sp"-->
-<!--            android:textColor="?attr/colorPrimaryInverse"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toBottomOf="@id/anView"/>-->
-
-<!--        <TextView-->
-<!--            android:id="@+id/create_tweet_tv"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="Would you like to create the tweet?"-->
-<!--            android:textStyle="bold"-->
-<!--            android:textSize="24sp"-->
-<!--            android:textColor="?attr/colorPrimary"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toBottomOf="@id/lottie_infoTv"/>-->
+        <TextView
+            android:id="@+id/lottie_infoTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="You Don't Have Tweets"
+            android:textStyle="italic"
+            android:textSize="18sp"
+            android:visibility="visible"
+            android:textColor="?attr/colorPrimaryInverse"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/anView"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

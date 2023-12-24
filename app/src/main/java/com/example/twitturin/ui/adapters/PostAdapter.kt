@@ -28,7 +28,7 @@ import java.util.concurrent.TimeUnit
 class PostAdapter(private val parentLifecycleOwner: LifecycleOwner) : RecyclerView.Adapter<PostAdapter.ViewHolder>() {
 
     private var list = emptyList<Tweet>()
-    private lateinit var viewModel: LikeViewModel
+//    private lateinit var viewModel: LikeViewModel
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val binding = RcViewBinding.bind(itemView)
@@ -43,8 +43,8 @@ class PostAdapter(private val parentLifecycleOwner: LifecycleOwner) : RecyclerVi
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = list[position]
         val baseUrl = "https://twitturin.onrender.com/tweets"
-        var likeCount: Int? = item.likes
-        var isLiked: Boolean = false
+//        var likeCount: Int? = item.likes
+//        var isLiked: Boolean = false
 
         holder.binding.apply {
             val profileImage = "${item.author?.profilePicture}"
@@ -55,7 +55,7 @@ class PostAdapter(private val parentLifecycleOwner: LifecycleOwner) : RecyclerVi
                 .centerCrop()
                 .into(userAvatar)
 
-            fullNameTv.text = item.author?.fullName
+            fullNameTv.text = item.author?.fullName ?: "Twittur User"
             usernameTv.text = "@" + item.author?.username
             postDescription.text = item.content
             postCommentsCounter.text = item.replyCount.toString()
@@ -98,6 +98,7 @@ class PostAdapter(private val parentLifecycleOwner: LifecycleOwner) : RecyclerVi
             intent.putExtra("username", item.author?.username)
             intent.putExtra("post_description", item.content)
             intent.putExtra("createdAt", item.createdAt)
+            intent.putExtra("likes", item.likes.toString())
             intent.putExtra("id",item.id)
             intent.putExtra("userAvatar", item.author?.profilePicture)
 
@@ -114,56 +115,56 @@ class PostAdapter(private val parentLifecycleOwner: LifecycleOwner) : RecyclerVi
             holder.itemView.context.startActivity(Intent.createChooser(intent,"Choose app:"))
         }
 
-        val sessionManager = SessionManager(holder.itemView.context)
-        val token = sessionManager.getToken()
-
-        viewModel = ViewModelProvider(holder.itemView.context as ViewModelStoreOwner)[LikeViewModel::class.java]
-
-        holder.binding.postIconHeart.setOnClickListener {
-            if (!token.isNullOrEmpty()) {
-                if (isLiked) {
-                    likeCount = likeCount!! - 1
-                    viewModel.likeDelete(likeCount.toString(), item.id, token)
-                    holder.binding.postIconHeart.isSelected = isLiked
-                    holder.binding.postHeartCounter.text = likeCount.toString()
-                    holder.binding.postIconHeart.setBackgroundResource(R.drawable.heart)
-                } else {
-                    likeCount = likeCount!! + 1
-                    viewModel.likePost(likeCount.toString(),item.id, token)
-                    holder.binding.postIconHeart.isSelected = isLiked
-                    holder.binding.postHeartCounter.text = likeCount.toString()
-                    holder.binding.postIconHeart.setBackgroundResource(R.drawable.heart_solid_icon)
-                }
-            } else {
-                Toast.makeText(holder.itemView.context, "Something went wrong! Please try again.", Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        // Like
-        viewModel.likePostResult.observe(parentLifecycleOwner) { result ->
-            when (result) {
-                is PostLikeResult.Success -> {  }
-
-                is PostLikeResult.Error -> {
-                    val errorMessage = result.message
-                    Toast.makeText(holder.itemView.context, errorMessage, Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
-
-        // Delete
-        viewModel.likeDeleteResult.observe(parentLifecycleOwner) { result ->
-            when (result) {
-                is PostLikeResult.Success -> {
-                    Toast.makeText(holder.itemView.context, "Success", Toast.LENGTH_LONG).show()
-                }
-
-                is PostLikeResult.Error -> {
-                    val errorMessage = result.message
-                    Toast.makeText(holder.itemView.context, errorMessage, Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
+//        val sessionManager = SessionManager(holder.itemView.context)
+//        val token = sessionManager.getToken()
+//
+//        viewModel = ViewModelProvider(holder.itemView.context as ViewModelStoreOwner)[LikeViewModel::class.java]
+//
+//        holder.binding.postIconHeart.setOnClickListener {
+//            if (!token.isNullOrEmpty()) {
+//                if (isLiked) {
+//                    likeCount = likeCount!! - 1
+//                    viewModel.likeDelete(likeCount.toString(), item.id, token)
+//                    holder.binding.postIconHeart.isSelected = isLiked
+//                    holder.binding.postHeartCounter.text = likeCount.toString()
+//                    holder.binding.postIconHeart.setBackgroundResource(R.drawable.heart)
+//                } else {
+//                    likeCount = likeCount!! + 1
+//                    viewModel.likePost(likeCount.toString(),item.id, token)
+//                    holder.binding.postIconHeart.isSelected = isLiked
+//                    holder.binding.postHeartCounter.text = likeCount.toString()
+//                    holder.binding.postIconHeart.setBackgroundResource(R.drawable.heart_solid_icon)
+//                }
+//            } else {
+//                Toast.makeText(holder.itemView.context, "Something went wrong! Please try again.", Toast.LENGTH_SHORT).show()
+//            }
+//        }
+//
+//        // Like
+//        viewModel.likePostResult.observe(parentLifecycleOwner) { result ->
+//            when (result) {
+//                is PostLikeResult.Success -> {  }
+//
+//                is PostLikeResult.Error -> {
+//                    val errorMessage = result.message
+//                    Toast.makeText(holder.itemView.context, errorMessage, Toast.LENGTH_SHORT).show()
+//                }
+//            }
+//        }
+//
+//        // Delete
+//        viewModel.likeDeleteResult.observe(parentLifecycleOwner) { result ->
+//            when (result) {
+//                is PostLikeResult.Success -> {
+//                    Toast.makeText(holder.itemView.context, "Success", Toast.LENGTH_LONG).show()
+//                }
+//
+//                is PostLikeResult.Error -> {
+//                    val errorMessage = result.message
+//                    Toast.makeText(holder.itemView.context, errorMessage, Toast.LENGTH_SHORT).show()
+//                }
+//            }
+//        }
     }
 
     override fun getItemCount(): Int {

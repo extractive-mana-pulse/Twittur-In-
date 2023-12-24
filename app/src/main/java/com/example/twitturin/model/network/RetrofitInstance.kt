@@ -4,6 +4,7 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
+import com.example.twitturin.BuildConfig
 
 object RetrofitInstance {
 
@@ -15,7 +16,7 @@ object RetrofitInstance {
 
     val api: Api by lazy {
         Retrofit.Builder()
-            .baseUrl("https://twitturin-dev.onrender.com/api/")
+            .baseUrl(BuildConfig.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .client(client)
             .build()

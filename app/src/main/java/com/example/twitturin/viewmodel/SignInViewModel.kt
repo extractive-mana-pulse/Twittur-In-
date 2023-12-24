@@ -3,6 +3,7 @@ package com.example.twitturin.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.twitturin.BuildConfig
 import com.example.twitturin.viewmodel.event.SingleLiveEvent
 import com.example.twitturin.model.network.Api
 import com.example.twitturin.model.data.registration.Login
@@ -17,7 +18,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 class SignInViewModel : ViewModel() {
 
     private val retrofit = Retrofit.Builder()
-        .baseUrl("https://twitturin-dev.onrender.com/api/")
+        .baseUrl(BuildConfig.BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
@@ -47,10 +48,8 @@ class SignInViewModel : ViewModel() {
                     _token.value = token!!
                     _userId.value = userId!!
                     _signInResult.value = signInResponse.let { SignInResult.Success(it) }
-
                 } else {
-
-                    _signInResult.value = SignInResult.Error(response.code().toString())
+                    _signInResult.value = SignInResult.Error("User doesn't exist")
                 }
             }
 

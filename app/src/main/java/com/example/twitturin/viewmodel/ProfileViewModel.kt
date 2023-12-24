@@ -20,6 +20,8 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
+import com.example.twitturin.BuildConfig
+import com.example.twitturin.ui.sealeds.FollowersResult
 
 class ProfileViewModel: ViewModel() {
 
@@ -30,7 +32,7 @@ class ProfileViewModel: ViewModel() {
         .build()
 
     private val retrofit = Retrofit.Builder()
-        .baseUrl("https://twitturin-dev.onrender.com/api/")
+        .baseUrl(BuildConfig.BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
         .client(client)
         .build()
@@ -111,26 +113,26 @@ class ProfileViewModel: ViewModel() {
         })
     }
 
-    private val _data = MutableLiveData<UserTweetsResult>()
-    val data: LiveData<UserTweetsResult> = _data
-
-    fun followUser(userId: String, token: String){
-        val call = apiService.followUser(userId, token)
-        call.enqueue(object : Callback<Unit> {
-            override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
-                if (response.isSuccessful){
-                    Log.d("response body", response.body().toString())
-                    Log.d("response code", response.code().toString())
-                }
-                else {
-                    Log.d("response body error", response.body().toString())
-                    Log.d("response code error", response.code().toString())
-                }
-            }
-
-            override fun onFailure(call: Call<Unit>, t: Throwable) {
-                t.message
-            }
-        })
-    }
+//    private val _data = MutableLiveData<UserTweetsResult>()
+//    val data: LiveData<UserTweetsResult> = _data
+//
+//    fun followUser(userId: String, token: String){
+//        val call = apiService.followUser(userId, token)
+//        call.enqueue(object : Callback<Unit> {
+//            override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
+//                if (response.isSuccessful){
+//                    Log.d("response body", response.body().toString())
+//                    Log.d("response code", response.code().toString())
+//                }
+//                else {
+//                    Log.d("response body error", response.body().toString())
+//                    Log.d("response code error", response.code().toString())
+//                }
+//            }
+//
+//            override fun onFailure(call: Call<Unit>, t: Throwable) {
+//                t.message
+//            }
+//        })
+//    }
 }

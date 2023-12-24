@@ -3,6 +3,7 @@ package com.example.twitturin.viewmodel
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import com.example.twitturin.BuildConfig
 import com.example.twitturin.viewmodel.event.SingleLiveEvent
 import com.example.twitturin.model.network.Api
 import com.example.twitturin.model.data.likeTweet.LikeTweet
@@ -16,7 +17,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 class LikeViewModel: ViewModel() {
 
     private val retrofit = Retrofit.Builder()
-        .baseUrl("https://twitturin-dev.onrender.com/api/")
+        .baseUrl(BuildConfig.BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 

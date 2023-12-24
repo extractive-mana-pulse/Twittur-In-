@@ -3,6 +3,7 @@ package com.example.twitturin.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.twitturin.BuildConfig
 import com.example.twitturin.model.network.Api
 import com.example.twitturin.model.data.registration.SignUpProf
 import com.example.twitturin.model.data.registration.SignUpStudent
@@ -26,7 +27,7 @@ class SignUpViewModel : ViewModel() {
         .build()
 
     private val retrofit = Retrofit.Builder()
-        .baseUrl("https://twitturin-dev.onrender.com/api/")
+        .baseUrl(BuildConfig.BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
         .client(client)
         .build()

@@ -1,13 +1,17 @@
 package com.example.twitturin.ui.fragments.loginFragments
 
+import android.annotation.SuppressLint
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.compose.ui.graphics.Color
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -16,6 +20,7 @@ import com.example.twitturin.viewmodel.manager.SessionManager
 import com.example.twitturin.databinding.FragmentSignInBinding
 import com.example.twitturin.ui.sealeds.SignInResult
 import com.example.twitturin.viewmodel.SignInViewModel
+import com.google.android.material.snackbar.Snackbar
 
 
 class SignInFragment : Fragment() {
@@ -28,6 +33,7 @@ class SignInFragment : Fragment() {
         return binding.root
     }
 
+    @SuppressLint("ResourceAsColor")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.signInFragment = this
@@ -36,10 +42,43 @@ class SignInFragment : Fragment() {
         viewModel = ViewModelProvider(this)[SignInViewModel::class.java]
 
         binding.signIn.setOnClickListener {
-            val username = binding.studentIdEt.text.toString()
-            val password = binding.passwordEt.text.toString()
+            val username = binding.usernameSignInEt.text.toString().trim()
+            val password = binding.passwordEt.text.toString().trim()
             viewModel.signIn(username, password)
         }
+
+        val textWatcher1 = object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // Not used
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                // Enable or disable the button based on the EditText fields' contents
+                binding.signIn.isEnabled = !binding.usernameSignInEt.text.isNullOrBlank() && !binding.passwordEt.text.isNullOrBlank()
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                // Not used
+            }
+        }
+
+        val textWatcher2 = object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // Not used
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                // Enable or disable the button based on the EditText fields' contents
+                binding.signIn.isEnabled = !binding.usernameSignInEt.text.isNullOrBlank() && !binding.passwordEt.text.isNullOrBlank()
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                // Not used
+            }
+        }
+
+        binding.usernameSignInEt.addTextChangedListener(textWatcher1)
+        binding.passwordEt.addTextChangedListener(textWatcher2)
 
         viewModel.signInResult.observe(viewLifecycleOwner) { result ->
             when (result) {
@@ -53,45 +92,25 @@ class SignInFragment : Fragment() {
 
                 is SignInResult.Error -> {
                     val errorMessage = result.message
-                    Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
+                    val rootView: View = requireActivity().findViewById(R.id.rootLayout)
+                    val duration = Snackbar.LENGTH_SHORT
+                    val actionText = "Retry"
+
+                    val snackbar = Snackbar.make(rootView, errorMessage, duration)
+                        snackbar.setBackgroundTint(com.airbnb.lottie.R.color.error_color_material_dark)
+                        .setAnchorView(binding.signIn)
+                    snackbar.setAction(actionText) {
+                        binding.usernameSignInEt.text?.clear()
+                        binding.passwordEt.text?.clear()
+                    }
+                    snackbar.show()
                 }
-            }
-        }
-
-        val pref = requireActivity().getSharedPreferences("checkbox", MODE_PRIVATE)
-        val checkbox = pref.getString("remember", "")
-
-        if (checkbox.equals("true")) {
-            findNavController().navigate(R.id.action_signInFragment_to_homeFragment)
-        } else if (checkbox.equals("false")) {
-            Log.d("Tag", "hello world")
-        }
-
-
-        binding.rememberMeCheckBox.setOnCheckedChangeListener { compoundButton, isChecked ->
-            val username = binding.studentIdEt.text.toString().trim()
-            val password = binding.passwordEt.text.toString().trim()
-
-            if (username.isNotEmpty() && password.isNotEmpty()) {
-                compoundButton.isChecked = isChecked
-
-                val preferences = requireActivity().getSharedPreferences("checkbox", MODE_PRIVATE)
-                val editor: SharedPreferences.Editor = preferences.edit()
-
-                editor.putString("remember", isChecked.toString())
-                editor.apply()
-            } else {
-                compoundButton.isChecked = false
-
-                val preferences = requireActivity().getSharedPreferences("checkbox", MODE_PRIVATE)
-                val editor: SharedPreferences.Editor = preferences.edit()
-                editor.putString("remember", "false")
-                editor.apply()
             }
         }
     }
 
     fun chooseKindPage() {
+        /* this code is about fixing bug when checkbox code return back at the future */
         val preferences = requireActivity().getSharedPreferences("checkbox", MODE_PRIVATE)
         val editor: SharedPreferences.Editor = preferences.edit()
         editor.putString("remember", "false")
@@ -102,23 +121,5 @@ class SignInFragment : Fragment() {
     companion object {
         @JvmStatic
         fun newInstance() = SignInFragment()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        val preferences = requireActivity().getSharedPreferences("checkbox", MODE_PRIVATE)
-        val editor: SharedPreferences.Editor = preferences.edit()
-        editor.putString("remember","false")
-        editor.clear()
-        editor.apply()
-    }
-    override fun onDestroyView() {
-        super.onDestroyView()
-
-        val preferences = requireActivity().getSharedPreferences("checkbox", MODE_PRIVATE)
-        val editor: SharedPreferences.Editor = preferences.edit()
-        editor.putString("remember","false")
-        editor.clear()
-        editor.apply()
     }
 }

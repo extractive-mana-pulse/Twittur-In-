@@ -11,6 +11,7 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/rootLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="?attr/colorSurface">
@@ -72,7 +73,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/login_tv">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/student_id_et"
+                    android:id="@+id/username_sign_in_et"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/username"
@@ -122,16 +123,16 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/login_password_layout" />
 
-            <CheckBox
-                android:id="@+id/remember_me_check_box"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="5dp"
-                android:text="@string/remember_me"
-                android:textColor="?attr/colorPrimary"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/login_password_layout" />
+<!--            <CheckBox-->
+<!--                android:id="@+id/remember_me_check_box"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginStart="16dp"-->
+<!--                android:layout_marginTop="5dp"-->
+<!--                android:text="@string/remember_me"-->
+<!--                android:textColor="?attr/colorPrimary"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@id/login_password_layout" />-->
 
             <Button
                 android:id="@+id/sign_in"
@@ -140,6 +141,7 @@
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginBottom="24dp"
                 android:text="@string/sign_in"
+                android:enabled="false"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"/>

@@ -4,14 +4,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.twitturin.viewmodel.event.SingleLiveEvent
-import com.example.twitturin.model.network.Api
+import com.example.twitturin.BuildConfig
 import com.example.twitturin.model.data.publicTweet.TweetContent
-import com.example.twitturin.model.data.registration.SignUpStudent
 import com.example.twitturin.model.data.tweets.Tweet
+import com.example.twitturin.model.data.users.User
+import com.example.twitturin.model.network.Api
 import com.example.twitturin.model.repo.Repository
 import com.example.twitturin.ui.sealeds.PostTweet
-import com.example.twitturin.ui.sealeds.SignUpStudentResult
+import com.example.twitturin.ui.sealeds.SearchResource
+import com.example.twitturin.viewmodel.event.SingleLiveEvent
 import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 import retrofit2.Call
@@ -30,7 +31,7 @@ class MainViewModel(private val repository: Repository): ViewModel() {
         .build()
 
     private val retrofit = Retrofit.Builder()
-        .baseUrl("https://twitturin-dev.onrender.com/api/")
+        .baseUrl(BuildConfig.BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
         .client(client)
         .build()
@@ -68,11 +69,60 @@ class MainViewModel(private val repository: Repository): ViewModel() {
         }
     }
 
-    private var userTweets: MutableLiveData<Response<List<Tweet>>> = MutableLiveData()
+    var userTweets: MutableLiveData<Response<List<Tweet>>> = MutableLiveData()
     fun getUserTweet(userId : String) {
         viewModelScope.launch {
             val response = repository.getUserTweets(userId)
             userTweets.value = response
         }
+    }
+
+    var followersList: MutableLiveData<Response<List<User>>> = MutableLiveData()
+    fun getFollowers(userId : String) {
+        viewModelScope.launch {
+            val response = repository.getFollowersList(userId)
+            followersList.value = response
+        }
+    }
+
+    var followingList: MutableLiveData<Response<List<User>>> = MutableLiveData()
+    fun getFollowing(userId : String) {
+        viewModelScope.launch {
+            val response = repository.getFollowingList(userId)
+            followingList.value = response
+        }
+    }
+
+    var likedPosts: MutableLiveData<Response<List<Tweet>>> = MutableLiveData()
+    fun getLikedPosts(userId : String) {
+        viewModelScope.launch {
+            val response = repository.getListOfLikedPosts(userId)
+            likedPosts.value = response
+        }
+    }
+
+    var repliesOfPosts: MutableLiveData<Response<List<Tweet>>> = MutableLiveData()
+    fun getRepliesOfPost(tweetId : String) {
+        viewModelScope.launch {
+            val response = repository.getRepliesOfTweet(tweetId)
+            repliesOfPosts.value = response
+        }
+    }
+
+    val searchNews: MutableLiveData<SearchResource> = MutableLiveData()
+
+    fun searchString(searchQuery: Tweet) = viewModelScope.launch {
+        searchNews.postValue(SearchResource.Loading())
+        val response = repository.searchNews(searchQuery)
+        searchNews.postValue(handleSearchNews(response))
+    }
+
+    private fun handleSearchNews(response: Response<Tweet>): SearchResource{
+        if(response.isSuccessful){
+            response.body()?.let { resultResponse ->
+                return SearchResource.Success(resultResponse)
+            }
+        }
+        return SearchResource.Error(response.message())
     }
 }

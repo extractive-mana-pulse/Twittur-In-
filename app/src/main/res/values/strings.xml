@@ -34,6 +34,7 @@
     <string name="post">Post</string>
     <string name="bookmarks">Bookmarks</string>
     <string name="likes_like"><![CDATA[Likes <<Like>>]]></string>
+    <string name="readers">Readers</string>
 
     <string-array name="major_array">
         <item>SE</item>
