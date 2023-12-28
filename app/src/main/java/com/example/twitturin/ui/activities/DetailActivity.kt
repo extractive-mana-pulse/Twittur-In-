@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.view.View
 import android.view.WindowInsetsController
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -20,8 +21,11 @@ import com.example.twitturin.model.data.tweets.Tweet
 import com.example.twitturin.model.repo.Repository
 import com.example.twitturin.ui.adapters.PostAdapter
 import com.example.twitturin.ui.fragments.bottomsheets.MyBottomSheetDialogFragment
+import com.example.twitturin.ui.sealeds.FollowResult
+import com.example.twitturin.viewmodel.FollowUserViewModel
 import com.example.twitturin.viewmodel.MainViewModel
 import com.example.twitturin.viewmodel.ViewModelFactory
+import com.example.twitturin.viewmodel.manager.SessionManager
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.Random
@@ -32,26 +36,31 @@ class DetailActivity : AppCompatActivity() {
 
     private val binding by lazy { ActivityDetailBinding.inflate(layoutInflater) }
     private val postAdapter by lazy { PostAdapter(this@DetailActivity) }
+    private lateinit var followViewModel: FollowUserViewModel
     private lateinit var viewModel: MainViewModel
+    private var isFollowing: Boolean = false
+
+
     @RequiresApi(Build.VERSION_CODES.R)
     @SuppressLint("SetTextI18n", "PrivateResource")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-//        if (isDarkModeActive()){
-//            window.statusBarColor = ContextCompat.getColor(this, com.google.android.material.R.color.m3_sys_color_dark_surface_container)
-//            window.decorView.windowInsetsController?.setSystemBarsAppearance(0,
-//                WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
-//            )
-//
-//        } else {
-//            window.statusBarColor = ContextCompat.getColor(this, com.google.android.material.R.color.m3_sys_color_light_surface_container)
-//            window.decorView.windowInsetsController?.setSystemBarsAppearance(
-//                WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS,
-//                WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
-//            )
-//        }
+        if (isDarkModeActive()){
+            window.statusBarColor = ContextCompat.getColor(this, com.google.android.material.R.color.m3_sys_color_dark_surface_container)
+            window.decorView.windowInsetsController?.setSystemBarsAppearance(0,
+                WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
+            )
+
+        } else {
+            window.statusBarColor = ContextCompat.getColor(this, com.google.android.material.R.color.m3_sys_color_light_surface_container)
+            window.decorView.windowInsetsController?.setSystemBarsAppearance(
+                WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS,
+                WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
+            )
+        }
+
 
         val userImage = intent.getStringExtra("userAvatar")
         val fullname = intent.getStringExtra("fullname")
@@ -60,8 +69,10 @@ class DetailActivity : AppCompatActivity() {
         val createdTime = intent.getStringExtra("createdAt")
         val likes = intent.getStringExtra("likes")
         val id = intent.getStringExtra("id")
+        val userId = intent.getStringExtra("userId")
         val sharedPreferences = getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
         sharedPreferences.edit().putString("id", id).apply()
+
 
         val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.getDefault())
         dateFormat.timeZone = TimeZone.getTimeZone("UTC")
@@ -69,6 +80,7 @@ class DetailActivity : AppCompatActivity() {
         val repository = Repository()
         val viewModelFactory = ViewModelFactory(repository)
         viewModel = ViewModelProvider(this@DetailActivity, viewModelFactory)[MainViewModel::class.java]
+        followViewModel = ViewModelProvider(this@DetailActivity)[FollowUserViewModel::class.java]
         updateRecyclerView()
 
         try {
@@ -117,21 +129,36 @@ class DetailActivity : AppCompatActivity() {
                 .error(R.drawable.not_found)
                 .centerCrop()
                 .into(authorAvatar)
-
+            authorFullname.text = fullname ?: "Twittur User"
             authorUsername.text = "@$username"
             postDescription.text = description
             articlePageLikesCounter.text = likes
 
+            val sessionManager = SessionManager(this@DetailActivity)
+            val token = sessionManager.getToken()
+
             followBtn.setOnClickListener {
-                Toast.makeText(this@DetailActivity, "actualnost birinchi orinda!", Toast.LENGTH_SHORT).show()
+                followViewModel.followUsers(userId!!, "Bearer $token")
+            }
+
+            followViewModel.followResult.observe(this@DetailActivity) { result ->
+                when (result) {
+                    is FollowResult.Success -> {
+                        Toast.makeText(this@DetailActivity, "now you follow: $username", Toast.LENGTH_SHORT).show()
+                    }
+                    is FollowResult.Error -> {
+                        val errorMessage = result.message
+                        Toast.makeText(this@DetailActivity, errorMessage, Toast.LENGTH_SHORT).show()
+                    }
+                }
             }
 
             articlePageCommentsIcon.setOnClickListener {
-                Toast.makeText(this@DetailActivity, "hello", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@DetailActivity, "in progress", Toast.LENGTH_SHORT).show()
             }
 
             articlePageHeartIcon.setOnClickListener {
-                Toast.makeText(this@DetailActivity, "what's up?", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@DetailActivity, "in progress", Toast.LENGTH_SHORT).show()
             }
 
             articlePageShareIcon.setOnClickListener {
@@ -173,6 +200,7 @@ class DetailActivity : AppCompatActivity() {
 
         startActivity(Intent.createChooser(intent,"Choose app:"))
     }
+
 
     @SuppressLint("NotifyDataSetChanged")
     private fun updateRecyclerView() {

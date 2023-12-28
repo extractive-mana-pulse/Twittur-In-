@@ -8,12 +8,15 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStoreOwner
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.twitturin.databinding.FragmentFollowersListBinding
 import com.example.twitturin.model.data.users.User
 import com.example.twitturin.model.repo.Repository
 import com.example.twitturin.ui.adapters.FollowersAdapter
+import com.example.twitturin.ui.sealeds.FollowResult
+import com.example.twitturin.viewmodel.FollowUserViewModel
 import com.example.twitturin.viewmodel.MainViewModel
 import com.example.twitturin.viewmodel.ViewModelFactory
 import com.example.twitturin.viewmodel.manager.SessionManager
@@ -21,11 +24,13 @@ import com.example.twitturin.viewmodel.manager.SessionManager
 class FollowersListFragment : Fragment() {
 
     private lateinit var binding : FragmentFollowersListBinding
-    private val followersAdapter by lazy { FollowersAdapter() }
+    private val followersAdapter by lazy { FollowersAdapter(viewLifecycleOwner) }
+    private lateinit var followViewModel: FollowUserViewModel
     private lateinit var viewModel : MainViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentFollowersListBinding.inflate(layoutInflater)
+        followViewModel = ViewModelProvider(this)[FollowUserViewModel::class.java]
         return binding.root
     }
 
@@ -41,6 +46,7 @@ class FollowersListFragment : Fragment() {
         }
 
         updateRecyclerView()
+
     }
 
 

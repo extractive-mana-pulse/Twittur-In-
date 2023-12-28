@@ -23,7 +23,7 @@ import com.example.twitturin.viewmodel.manager.SessionManager
 class FollowingListFragment : Fragment() {
 
     private lateinit var binding : FragmentFollowingListBinding
-    private val followingAdapter by lazy { FollowersAdapter() }
+    private val followingAdapter by lazy { FollowersAdapter(viewLifecycleOwner) }
     private lateinit var viewModel : MainViewModel
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentFollowingListBinding.inflate(layoutInflater)

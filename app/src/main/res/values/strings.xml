@@ -35,6 +35,7 @@
     <string name="bookmarks">Bookmarks</string>
     <string name="likes_like"><![CDATA[Likes <<Like>>]]></string>
     <string name="readers">Readers</string>
+    <string name="unfollow">Unfollow</string>
 
     <string-array name="major_array">
         <item>SE</item>

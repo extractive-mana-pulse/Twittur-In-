@@ -99,9 +99,28 @@ class ProfileFragment : Fragment() {
                         binding.emailTv.text = result.user.country
                         View.VISIBLE
                     }
-
                     binding.followingCounterTv.text = result.user.followingCount.toString()
                     binding.followersCounterTv.text = result.user.followersCount.toString()
+
+//                    val followingCount = result.user.followingCount
+
+//                    if (followingCount == 0) {
+//                        binding.followingTv.text = "No following"
+//                        binding.followingCounterTv.visibility = View.INVISIBLE
+//                    } else {
+//                        binding.followingCounterTv.visibility = View.VISIBLE
+//                        binding.followingCounterTv.text = followingCount.toString()
+//                    }
+
+//                    val followersCount = result.user.followersCount
+
+//                    if (followersCount == 0) {
+//                        binding.followersTv.text = "No followers"
+//                        binding.followersCounterTv.visibility = View.INVISIBLE
+//                    } else {
+//                        binding.followersCounterTv.visibility = View.VISIBLE
+//                        binding.followersCounterTv.text = followersCount.toString()
+//                    }
 
                 }
                 is UserCredentialsResult.Error -> {

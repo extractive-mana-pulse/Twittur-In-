@@ -22,4 +22,13 @@ object RetrofitInstance {
             .build()
             .create(Api::class.java)
     }
+
+    val followApi: FollowApi by lazy {
+        Retrofit.Builder()
+            .baseUrl(BuildConfig.BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(client)
+            .build()
+            .create(FollowApi::class.java)
+    }
 }

@@ -70,16 +70,7 @@ interface Api  {
 
     @FormUrlEncoded
     @PATCH("users/{id}")
-    fun updateUserUsername(@Path("id") userId: String, @Header("Authorization") token: String): Call<EditProfile>
-
-    @POST("users/following/{toFollow}")
-    fun followUser(@Path("id") userId : String, @Header("Authorization") token : String) : Call<Unit>
-
-    @GET("users/{id}/followers")
-    suspend fun getListOfFollowers(@Path("id")userId : String) : Response<List<User>>
-
-    @GET("users/{id}/following")
-    suspend fun getListOfFollowing(@Path("id")userId : String) : Response<List<User>>
+    fun updateUserUsername(@Path("id") userId: String, @Header("Authorization") token: String) : Call<EditProfile>
 
     @GET("users/{id}/likes")
     suspend fun getListOfLikedPosts(@Path("id")userId : String) : Response<List<Tweet>>

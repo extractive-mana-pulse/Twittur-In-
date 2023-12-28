@@ -117,6 +117,17 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/more_settings"/>
 
+                <Button
+                    android:id="@+id/unfollow_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:text="@string/unfollow"
+                    android:layout_marginEnd="14dp"
+                    android:visibility="invisible"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/more_settings"/>
+
                 <ImageButton
                     android:id="@+id/more_settings"
                     android:layout_width="wrap_content"
@@ -189,20 +200,20 @@
                     android:layout_marginVertical="8dp"
                     android:layout_marginStart="8dp"/>
 
-                <TextView
-                    android:id="@+id/article_page_saves_counter"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="193"
-                    android:layout_marginVertical="8dp"
-                    android:layout_marginStart="26dp"/>
+<!--                <TextView-->
+<!--                    android:id="@+id/article_page_saves_counter"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="193"-->
+<!--                    android:layout_marginVertical="8dp"-->
+<!--                    android:layout_marginStart="26dp"/>-->
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/bookmarks"
-                    android:layout_marginVertical="8dp"
-                    android:layout_marginStart="8dp"/>
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="@string/bookmarks"-->
+<!--                    android:layout_marginVertical="8dp"-->
+<!--                    android:layout_marginStart="8dp"/>-->
 
             </LinearLayout>
 

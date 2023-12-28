@@ -100,6 +100,7 @@ class PostAdapter(private val parentLifecycleOwner: LifecycleOwner) : RecyclerVi
             intent.putExtra("createdAt", item.createdAt)
             intent.putExtra("likes", item.likes.toString())
             intent.putExtra("id",item.id)
+            intent.putExtra("userId",item.author?.id)
             intent.putExtra("userAvatar", item.author?.profilePicture)
 
             holder.itemView.context.startActivity(intent)

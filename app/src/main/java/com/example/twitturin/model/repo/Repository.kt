@@ -16,11 +16,11 @@ class Repository {
     }
 
     suspend fun getFollowersList(userId: String) : Response<List<User>> {
-        return RetrofitInstance.api.getListOfFollowers(userId)
+        return RetrofitInstance.followApi.getListOfFollowers(userId)
     }
 
     suspend fun getFollowingList(userId: String) : Response<List<User>> {
-        return RetrofitInstance.api.getListOfFollowing(userId)
+        return RetrofitInstance.followApi.getListOfFollowing(userId)
     }
 
     suspend fun getListOfLikedPosts(userId: String) : Response<List<Tweet>> {

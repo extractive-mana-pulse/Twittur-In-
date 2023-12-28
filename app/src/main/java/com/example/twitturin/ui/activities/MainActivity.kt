@@ -25,14 +25,14 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-//        if (isDarkModeActive()){
-//            window.statusBarColor = ContextCompat.getColor(this, com.google.android.material.R.color.m3_sys_color_dark_surface_container)
-//            window.decorView.windowInsetsController?.setSystemBarsAppearance(0, APPEARANCE_LIGHT_STATUS_BARS)
-//
-//        } else {
-//            window.statusBarColor = ContextCompat.getColor(this, com.google.android.material.R.color.m3_sys_color_light_surface_container)
-//            window.decorView.windowInsetsController?.setSystemBarsAppearance(APPEARANCE_LIGHT_STATUS_BARS, APPEARANCE_LIGHT_STATUS_BARS)
-//        }
+        if (isDarkModeActive()){
+            window.statusBarColor = ContextCompat.getColor(this, com.google.android.material.R.color.m3_sys_color_dark_surface_container)
+            window.decorView.windowInsetsController?.setSystemBarsAppearance(0, APPEARANCE_LIGHT_STATUS_BARS)
+
+        } else {
+            window.statusBarColor = ContextCompat.getColor(this, com.google.android.material.R.color.m3_sys_color_light_surface_container)
+            window.decorView.windowInsetsController?.setSystemBarsAppearance(APPEARANCE_LIGHT_STATUS_BARS, APPEARANCE_LIGHT_STATUS_BARS)
+        }
 
         binding.bottomNavView.setOnItemSelectedListener {
             when(it.itemId) {
@@ -68,26 +68,4 @@ class MainActivity : AppCompatActivity() {
             else -> false
         }
     }
-
-//    override fun onStop() {
-//        super.onStop()
-//        val preferences = getSharedPreferences("checkbox", MODE_PRIVATE)
-//        val editor: SharedPreferences.Editor = preferences.edit()
-//        editor.putString("remember","false")
-//        editor.clear()
-//        editor.apply()
-//    }
-//
-//    override fun onDestroy() {
-//        super.onDestroy()
-//
-//        val preferences = getSharedPreferences("checkbox", MODE_PRIVATE)
-//        val editor: SharedPreferences.Editor = preferences.edit()
-//        editor.putString("remember","false")
-//        editor.clear()
-//        editor.apply()
-//    }
-//    override fun onSupportNavigateUp(): Boolean {
-//        return super.onSupportNavigateUp()
-//    }
 }

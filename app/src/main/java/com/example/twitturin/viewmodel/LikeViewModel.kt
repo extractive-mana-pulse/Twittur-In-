@@ -22,8 +22,8 @@ class LikeViewModel: ViewModel() {
         .build()
 
     private val likePostApi: Api = retrofit.create(Api::class.java)
-    private val _likePostResult =
-        SingleLiveEvent<PostLikeResult>()
+    private val _likePostResult = SingleLiveEvent<PostLikeResult>()
+
     val likePostResult: LiveData<PostLikeResult> = _likePostResult
 
     fun likePost(count: String, userId: String, token: String) {
