@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -13,41 +14,71 @@
         android:layout_gravity="center_horizontal" />
 
     <LinearLayout
+        android:id="@+id/follow_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginHorizontal="16dp">
+        android:background="@drawable/bottom_sheet_item_bg"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginVertical="8dp">
 
         <ImageView
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
             android:layout_gravity="center"
-            android:src="@drawable/person_add"/>
+            android:src="@drawable/person_add"
+            android:layout_margin="16dp"
+            tools:ignore="ContentDescription" />
 
-        <Button
-            android:layout_width="match_parent"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="read \@username"
-            android:textAlignment="textStart"/>
+            android:text="@string/follow"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            android:layout_marginStart="16dp"/>
+
+        <TextView
+            android:id="@+id/b_username_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/username"
+            android:textSize="18sp"
+            android:textStyle="italic|bold"
+            android:layout_marginStart="2.5dp"
+            android:layout_gravity="center"/>
+
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/report_post_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginHorizontal="16dp">
+        android:background="@drawable/bottom_sheet_item_bg"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginVertical="8dp">
 
         <ImageView
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
             android:layout_gravity="center"
-            android:src="@drawable/report"/>
+            android:src="@drawable/report"
+            android:layout_margin="16dp"
+            tools:ignore="ContentDescription"/>
 
-        <Button
-            android:layout_width="match_parent"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="repost tweet"
-            android:textAlignment="textStart"/>
+            android:text="@string/report_post"
+            android:layout_gravity="center"
+            android:textAlignment="center"
+            android:textSize="18sp"
+            android:textStyle="italic"
+            android:layout_marginStart="16dp"/>
+
     </LinearLayout>
 
 </LinearLayout>

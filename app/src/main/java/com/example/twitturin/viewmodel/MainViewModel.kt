@@ -1,15 +1,18 @@
 package com.example.twitturin.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.twitturin.BuildConfig
 import com.example.twitturin.model.data.publicTweet.TweetContent
+import com.example.twitturin.model.data.replyToTweet.ReplyContent
 import com.example.twitturin.model.data.tweets.Tweet
 import com.example.twitturin.model.data.users.User
 import com.example.twitturin.model.network.Api
 import com.example.twitturin.model.repo.Repository
+import com.example.twitturin.ui.sealeds.PostReply
 import com.example.twitturin.ui.sealeds.PostTweet
 import com.example.twitturin.ui.sealeds.SearchResource
 import com.example.twitturin.viewmodel.event.SingleLiveEvent
@@ -57,6 +60,34 @@ class MainViewModel(private val repository: Repository): ViewModel() {
 
             override fun onFailure(call: Call<TweetContent>, t: Throwable) {
                 _postTweet.value = PostTweet.Error("Network error")
+            }
+        })
+    }
+
+    private val _postReply = SingleLiveEvent<PostReply>()
+    val postReplyResult: LiveData<PostReply> = _postReply
+
+    fun postReply(content: String, tweetId: String, authToken: String) {
+        val reply = ReplyContent(content)
+        val replyRequest = tweetApi.postReply(reply, tweetId, authToken)
+
+        replyRequest.enqueue(object : Callback<ReplyContent> {
+            override fun onResponse(call: Call<ReplyContent>, response: Response<ReplyContent>) {
+
+                if (response.isSuccessful) {
+                    val postReply = response.body()
+                    _postReply.value = postReply?.let { PostReply.Success(it) }
+                } else {
+                    _postReply.value = PostReply.Error(response.code().toString())
+                    Log.d("body", response.body().toString())
+                    Log.d("error body", response.errorBody().toString())
+                    Log.d("message", response.message().toString())
+                    Log.d("code", response.code().toString())
+                }
+            }
+
+            override fun onFailure(call: Call<ReplyContent>, t: Throwable) {
+                _postReply.value = PostReply.Error("Network error")
             }
         })
     }

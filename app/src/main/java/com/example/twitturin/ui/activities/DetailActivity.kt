@@ -5,6 +5,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.util.Log
 import android.view.View
 import android.view.WindowInsetsController
 import android.widget.Toast
@@ -12,6 +14,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
@@ -22,6 +25,8 @@ import com.example.twitturin.model.repo.Repository
 import com.example.twitturin.ui.adapters.PostAdapter
 import com.example.twitturin.ui.fragments.bottomsheets.MyBottomSheetDialogFragment
 import com.example.twitturin.ui.sealeds.FollowResult
+import com.example.twitturin.ui.sealeds.PostReply
+import com.example.twitturin.ui.sealeds.PostTweet
 import com.example.twitturin.viewmodel.FollowUserViewModel
 import com.example.twitturin.viewmodel.MainViewModel
 import com.example.twitturin.viewmodel.ViewModelFactory
@@ -38,29 +43,12 @@ class DetailActivity : AppCompatActivity() {
     private val postAdapter by lazy { PostAdapter(this@DetailActivity) }
     private lateinit var followViewModel: FollowUserViewModel
     private lateinit var viewModel: MainViewModel
-    private var isFollowing: Boolean = false
-
 
     @RequiresApi(Build.VERSION_CODES.R)
-    @SuppressLint("SetTextI18n", "PrivateResource")
+    @SuppressLint("SetTextI18n", "PrivateResource", "NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-
-        if (isDarkModeActive()){
-            window.statusBarColor = ContextCompat.getColor(this, com.google.android.material.R.color.m3_sys_color_dark_surface_container)
-            window.decorView.windowInsetsController?.setSystemBarsAppearance(0,
-                WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
-            )
-
-        } else {
-            window.statusBarColor = ContextCompat.getColor(this, com.google.android.material.R.color.m3_sys_color_light_surface_container)
-            window.decorView.windowInsetsController?.setSystemBarsAppearance(
-                WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS,
-                WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
-            )
-        }
-
 
         val userImage = intent.getStringExtra("userAvatar")
         val fullname = intent.getStringExtra("fullname")
@@ -70,9 +58,10 @@ class DetailActivity : AppCompatActivity() {
         val likes = intent.getStringExtra("likes")
         val id = intent.getStringExtra("id")
         val userId = intent.getStringExtra("userId")
-        val sharedPreferences = getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
-        sharedPreferences.edit().putString("id", id).apply()
 
+        val sharedPreferences = getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
+        sharedPreferences.edit().putString("username", username).apply()
+        sharedPreferences.edit().putString("id", id).apply()
 
         val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.getDefault())
         dateFormat.timeZone = TimeZone.getTimeZone("UTC")
@@ -80,6 +69,42 @@ class DetailActivity : AppCompatActivity() {
         val repository = Repository()
         val viewModelFactory = ViewModelFactory(repository)
         viewModel = ViewModelProvider(this@DetailActivity, viewModelFactory)[MainViewModel::class.java]
+
+        val sessionManager = SessionManager(this@DetailActivity)
+        val token = sessionManager.getToken()
+
+        binding.sentReply.setOnClickListener {
+            val handler = Handler()
+            val reply = binding.replyEt.text.toString()
+
+            if (reply.isEmpty()){
+                Toast.makeText(this@DetailActivity, "reply field should not be empty", Toast.LENGTH_SHORT).show()
+            }else{
+                viewModel.postReply(reply, id!!, "Bearer $token")
+            }
+
+            binding.sentReply.isEnabled = false
+            handler.postDelayed({ binding.sentReply.isEnabled = true }, 3000)
+        }
+
+        viewModel.postReplyResult.observe(this@DetailActivity) { result ->
+
+            when (result) {
+                is PostReply.Success -> {
+                    binding.replyEt.text.clear()
+                    viewModel.getRepliesOfPost(id!!)
+                    postAdapter.notifyDataSetChanged()
+                }
+
+                is PostReply.Error -> {
+                    val errorMessage = result.message
+                    Toast.makeText(this@DetailActivity, errorMessage, Toast.LENGTH_SHORT).show()
+                    binding.sentReply.isEnabled = true
+                }
+            }
+        }
+
+
         followViewModel = ViewModelProvider(this@DetailActivity)[FollowUserViewModel::class.java]
         updateRecyclerView()
 
@@ -129,13 +154,11 @@ class DetailActivity : AppCompatActivity() {
                 .error(R.drawable.not_found)
                 .centerCrop()
                 .into(authorAvatar)
+
             authorFullname.text = fullname ?: "Twittur User"
             authorUsername.text = "@$username"
             postDescription.text = description
             articlePageLikesCounter.text = likes
-
-            val sessionManager = SessionManager(this@DetailActivity)
-            val token = sessionManager.getToken()
 
             followBtn.setOnClickListener {
                 followViewModel.followUsers(userId!!, "Bearer $token")
@@ -179,13 +202,6 @@ class DetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun isDarkModeActive(): Boolean {
-        return when (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) {
-            android.content.res.Configuration.UI_MODE_NIGHT_YES -> true
-            else -> false
-        }
-    }
-
     private fun shareData() {
 
         val sharedPreferences = getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
@@ -220,6 +236,7 @@ class DetailActivity : AppCompatActivity() {
                     postAdapter.setData(tweetList)
                     binding.swipeToRefreshArticle.setOnRefreshListener {
                         postAdapter.notifyDataSetChanged()
+                        viewModel.getRepliesOfPost(tweetId)
                         binding.swipeToRefreshArticle.isRefreshing = false
                         tweetList.shuffle(Random(System.currentTimeMillis()))
                     }

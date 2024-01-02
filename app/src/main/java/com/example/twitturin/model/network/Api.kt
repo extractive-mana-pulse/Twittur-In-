@@ -1,12 +1,12 @@
 package com.example.twitturin.model.network
 
-import android.app.appsearch.SearchResult
 import com.example.twitturin.model.data.editUser.EditProfile
 import com.example.twitturin.model.data.likeTweet.LikeTweet
 import com.example.twitturin.model.data.publicTweet.TweetContent
 import com.example.twitturin.model.data.registration.Login
 import com.example.twitturin.model.data.registration.SignUpProf
 import com.example.twitturin.model.data.registration.SignUpStudent
+import com.example.twitturin.model.data.replyToTweet.ReplyContent
 import com.example.twitturin.model.data.tweets.Tweet
 import com.example.twitturin.model.data.users.User
 import retrofit2.Call
@@ -80,4 +80,11 @@ interface Api  {
 
     @GET("search")
     suspend fun searchNews(@Query("keyword") keyword: Tweet) : Response<Tweet>
+
+    @POST("tweets/{id}/replies")
+    fun postReply(
+        @Body reply: ReplyContent,
+        @Path("id")tweetId: String,
+        @Header("Authorization") token: String
+    ): Call<ReplyContent>
 }

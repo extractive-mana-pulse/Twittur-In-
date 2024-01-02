@@ -232,6 +232,7 @@
             app:tabTextColor="?attr/colorOnSurface"
             app:tabIndicatorAnimationMode="linear"
             app:tabSelectedTextColor="?attr/colorPrimary"
+            app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget"
             app:tabBackground="@drawable/tab_bg"
             app:tabIndicatorHeight="6dp"
             app:tabMaxWidth="0dp"
@@ -259,7 +260,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tb"/>
-
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

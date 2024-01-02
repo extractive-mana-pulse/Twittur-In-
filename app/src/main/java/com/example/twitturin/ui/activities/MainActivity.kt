@@ -25,15 +25,6 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        if (isDarkModeActive()){
-            window.statusBarColor = ContextCompat.getColor(this, com.google.android.material.R.color.m3_sys_color_dark_surface_container)
-            window.decorView.windowInsetsController?.setSystemBarsAppearance(0, APPEARANCE_LIGHT_STATUS_BARS)
-
-        } else {
-            window.statusBarColor = ContextCompat.getColor(this, com.google.android.material.R.color.m3_sys_color_light_surface_container)
-            window.decorView.windowInsetsController?.setSystemBarsAppearance(APPEARANCE_LIGHT_STATUS_BARS, APPEARANCE_LIGHT_STATUS_BARS)
-        }
-
         binding.bottomNavView.setOnItemSelectedListener {
             when(it.itemId) {
                 R.id.home -> { navController.navigate(R.id.homeFragment) }
@@ -60,12 +51,6 @@ class MainActivity : AppCompatActivity() {
             } else {
                 binding.bottomNavView.visibility = View.VISIBLE
             }
-        }
-    }
-    private fun isDarkModeActive(): Boolean {
-        return when (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) {
-            android.content.res.Configuration.UI_MODE_NIGHT_YES -> true
-            else -> false
         }
     }
 }

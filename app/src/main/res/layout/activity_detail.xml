@@ -83,7 +83,7 @@
 
                 <TextView
                     android:id="@+id/author_fullname"
-                    android:layout_width="180dp"
+                    android:layout_width="170dp"
                     android:layout_height="wrap_content"
                     android:text=""
                     android:textSize="18sp"
@@ -165,6 +165,7 @@
                 app:layout_constraintStart_toStartOf="parent"/>
 
             <ImageView
+                android:id="@+id/divider2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/rc_view_divider"
@@ -190,6 +191,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="803"
+                    android:layout_gravity="center"
                     android:textStyle="bold"
                     android:layout_marginVertical="8dp"/>
 
@@ -197,6 +199,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/likes_like"
+                    android:layout_gravity="center"
                     android:layout_marginVertical="8dp"
                     android:layout_marginStart="8dp"/>
 
@@ -228,46 +231,57 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 tools:ignore="ContentDescription"/>
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/layout_article_icons"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
                 android:orientation="horizontal"
-                app:layout_constraintTop_toBottomOf="@id/layout_likes_views_counter"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginHorizontal="16dp">
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/layout_likes_views_counter">
 
                 <ImageButton
                     android:id="@+id/article_page_comments_icon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/comments"
                     android:layout_marginVertical="8dp"
                     android:background="@android:color/transparent"
-                    tools:ignore="ContentDescription"/>
+                    android:src="@drawable/comments"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="ContentDescription" />
 
                 <ImageButton
                     android:id="@+id/article_page_heart_icon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/heart"
-                    android:background="@android:color/transparent"
-                    android:layout_marginStart="155dp"
                     android:layout_marginVertical="8dp"
-                    tools:ignore="ContentDescription"/>
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/heart"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.5"
+                    tools:ignore="ContentDescription" />
 
                 <ImageButton
                     android:id="@+id/article_page_share_icon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/share"
-                    android:layout_marginStart="155dp"
+                    android:layout_marginVertical="8dp"
                     android:background="@android:color/transparent"
+                    android:src="@drawable/share"
                     tools:ignore="ContentDescription"
-                    android:layout_marginVertical="8dp"/>
 
-            </LinearLayout>
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <ImageView
                 android:id="@+id/last_divider_before_rc"
@@ -288,7 +302,7 @@
                 android:layout_marginHorizontal="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/reply_layout"
                 app:layout_constraintTop_toBottomOf="@id/last_divider_before_rc">
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -297,6 +311,42 @@
                     android:layout_height="wrap_content"/>
 
             </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/reply_layout"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:background="@drawable/reply_bg"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <EditText
+                    android:id="@+id/reply_et"
+                    android:layout_width="0dp"
+                    android:layout_height="45dp"
+                    android:hint="Reply..."
+                    android:layout_marginHorizontal="16dp"
+                    android:background="@android:color/transparent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:imeOptions="actionDone"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/sent_reply"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    tools:ignore="Autofill,TextFields" />
+
+                <ImageButton
+                    android:id="@+id/sent_reply"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:src="@drawable/send_filled"
+                    android:background="@android:color/transparent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    tools:ignore="ContentDescription"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

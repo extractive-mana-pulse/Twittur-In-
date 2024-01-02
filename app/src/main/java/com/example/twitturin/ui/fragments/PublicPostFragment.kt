@@ -44,6 +44,7 @@ class PublicPostFragment : Fragment() {
 
         binding.btnTweet.setOnClickListener {
             if (!token.isNullOrEmpty()){
+                binding.btnTweet.isEnabled = false
                 val tweetContent = binding.contentEt.text.toString()
                 viewModel.postTheTweet(tweetContent, token)
             } else {
@@ -61,6 +62,7 @@ class PublicPostFragment : Fragment() {
                 is PostTweet.Error -> {
                     val errorMessage = result.message
                     Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
+                    binding.btnTweet.isEnabled = true
                 }
             }
         }

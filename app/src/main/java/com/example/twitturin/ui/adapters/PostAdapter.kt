@@ -52,6 +52,7 @@ class PostAdapter(private val parentLifecycleOwner: LifecycleOwner) : RecyclerVi
             Glide.with(holder.itemView.context)
                 .load(profileImage)
                 .error(R.drawable.not_found)
+                .placeholder(R.drawable.loading)
                 .centerCrop()
                 .into(userAvatar)
 
