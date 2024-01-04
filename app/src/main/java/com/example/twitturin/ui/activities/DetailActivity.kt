@@ -5,16 +5,12 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.util.Log
 import android.view.View
-import android.view.WindowInsetsController
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
@@ -26,7 +22,6 @@ import com.example.twitturin.ui.adapters.PostAdapter
 import com.example.twitturin.ui.fragments.bottomsheets.MyBottomSheetDialogFragment
 import com.example.twitturin.ui.sealeds.FollowResult
 import com.example.twitturin.ui.sealeds.PostReply
-import com.example.twitturin.ui.sealeds.PostTweet
 import com.example.twitturin.viewmodel.FollowUserViewModel
 import com.example.twitturin.viewmodel.MainViewModel
 import com.example.twitturin.viewmodel.ViewModelFactory
@@ -68,13 +63,15 @@ class DetailActivity : AppCompatActivity() {
 
         val repository = Repository()
         val viewModelFactory = ViewModelFactory(repository)
+        followViewModel = ViewModelProvider(this@DetailActivity)[FollowUserViewModel::class.java]
         viewModel = ViewModelProvider(this@DetailActivity, viewModelFactory)[MainViewModel::class.java]
+
+        updateRecyclerView()
 
         val sessionManager = SessionManager(this@DetailActivity)
         val token = sessionManager.getToken()
 
         binding.sentReply.setOnClickListener {
-            val handler = Handler()
             val reply = binding.replyEt.text.toString()
 
             if (reply.isEmpty()){
@@ -82,9 +79,7 @@ class DetailActivity : AppCompatActivity() {
             }else{
                 viewModel.postReply(reply, id!!, "Bearer $token")
             }
-
             binding.sentReply.isEnabled = false
-            handler.postDelayed({ binding.sentReply.isEnabled = true }, 3000)
         }
 
         viewModel.postReplyResult.observe(this@DetailActivity) { result ->
@@ -94,6 +89,7 @@ class DetailActivity : AppCompatActivity() {
                     binding.replyEt.text.clear()
                     viewModel.getRepliesOfPost(id!!)
                     postAdapter.notifyDataSetChanged()
+                    binding.sentReply.isEnabled = true
                 }
 
                 is PostReply.Error -> {
@@ -103,10 +99,6 @@ class DetailActivity : AppCompatActivity() {
                 }
             }
         }
-
-
-        followViewModel = ViewModelProvider(this@DetailActivity)[FollowUserViewModel::class.java]
-        updateRecyclerView()
 
         try {
             val date = dateFormat.parse(createdTime.toString())
@@ -148,9 +140,9 @@ class DetailActivity : AppCompatActivity() {
                 true
             }
 
-            val profileImage = "$userImage"
+            val profileImageUrl = "$userImage"
             Glide.with(this@DetailActivity)
-                .load(profileImage)
+                .load(profileImageUrl)
                 .error(R.drawable.not_found)
                 .centerCrop()
                 .into(authorAvatar)

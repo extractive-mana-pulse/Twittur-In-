@@ -34,7 +34,7 @@
                 android:background="@drawable/back_btn_bg"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                android:src="@drawable/baseline_keyboard_backspace_24"
+                android:src="@drawable/keyboard_backspace"
                 tools:ignore="ContentDescription" />
 
             <TextView
@@ -67,7 +67,7 @@
             android:id="@+id/profile_image"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:src="@drawable/account_avatar"
+            android:src="@drawable/avatar"
             android:layout_marginTop="110dp"
             android:layout_marginStart="16dp"
             android:background="@drawable/back_bg"

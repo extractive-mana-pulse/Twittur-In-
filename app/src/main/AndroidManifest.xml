@@ -15,6 +15,9 @@
         android:theme="@style/AppTheme"
         tools:targetApi="31">
         <activity
+            android:name=".ui.activities.ReportActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.activities.FullScreenImageActivity"
             android:exported="false" />
         <activity
