@@ -63,6 +63,18 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 tools:ignore="ContentDescription" />
 
+<!--            <com.google.android.material.navigation.NavigationView-->
+<!--                android:id="@+id/navigation_view"-->
+<!--                android:layout_width="32dp"-->
+<!--                android:layout_height="32dp"-->
+<!--                app:menu="@menu/navigation_drawer"-->
+<!--                android:layout_marginStart="16dp"-->
+<!--                android:layout_gravity="start"-->
+<!--                app:headerLayout="@layout/navigation_drawer_header_layout"-->
+<!--                app:layout_constraintTop_toTopOf="parent"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintBottom_toBottomOf="parent"/>-->
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 <!--        rcView          -->

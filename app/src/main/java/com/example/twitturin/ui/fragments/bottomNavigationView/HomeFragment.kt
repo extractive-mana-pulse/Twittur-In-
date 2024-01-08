@@ -45,7 +45,6 @@ class HomeFragment : Fragment() {
         val viewModelFactory = ViewModelFactory(repository)
         viewModel = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
         updateRecyclerView()
-
     }
 
     @SuppressLint("NotifyDataSetChanged")

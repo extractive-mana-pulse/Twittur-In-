@@ -38,10 +38,7 @@ class   FollowUserViewModel : ViewModel() {
                 if (response.isSuccessful) {
                     _followResult.value = FollowResult.Success
                 } else {
-                    _followResult.value = FollowResult.Error(response.code().toString())
-                    Log.d("error code", response.code().toString())
-                    Log.d("error body", response.body().toString())
-                    Log.d("message_ body", response.message().toString())
+                    _followResult.value = FollowResult.Error(response.message().toString())
                 }
             }
 
@@ -68,7 +65,7 @@ class   FollowUserViewModel : ViewModel() {
             }
 
             override fun onFailure(call: Call<User>, t: Throwable) {
-                _deleteFollow.value = DeleteFollow.Error("Failed to follow user")
+                _deleteFollow.value = DeleteFollow.Error("Failed to unfollow user")
             }
         })
     }

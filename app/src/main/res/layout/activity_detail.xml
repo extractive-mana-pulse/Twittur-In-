@@ -16,6 +16,7 @@
         android:fillViewport="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/detail_root_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -334,13 +335,14 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/sent_reply"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    tools:ignore="Autofill,TextFields" />
+                    tools:ignore="Autofill,TextFields"/>
 
                 <ImageButton
                     android:id="@+id/sent_reply"
                     android:layout_width="45dp"
                     android:layout_height="45dp"
                     android:src="@drawable/send_filled"
+
                     android:background="@android:color/transparent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"

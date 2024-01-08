@@ -16,10 +16,13 @@
         android:layout_height="match_parent"
         android:background="?attr/colorSurface">
 
-        <ImageView
-            android:layout_width="95dp"
-            android:layout_height="95dp"
-            android:src="@drawable/logo"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:textSize="48sp"
+            android:textColor="?attr/colorPrimary"
+            android:textStyle="italic|bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -67,7 +70,7 @@
                 android:background="@drawable/edit_text_bg_ui"
                 app:hintTextColor="?attr/colorOnPrimaryContainer"
                 app:startIconCheckable="true"
-                app:startIconDrawable="@drawable/id_icon"
+                app:startIconDrawable="@drawable/username_person"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/login_tv">
@@ -123,28 +126,17 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/login_password_layout" />
 
-<!--            <CheckBox-->
-<!--                android:id="@+id/remember_me_check_box"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginStart="16dp"-->
-<!--                android:layout_marginTop="5dp"-->
-<!--                android:text="@string/remember_me"-->
-<!--                android:textColor="?attr/colorPrimary"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toBottomOf="@id/login_password_layout" />-->
-
             <Button
                 android:id="@+id/sign_in"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
+                android:layout_height="55dp"
                 android:layout_marginBottom="24dp"
+                android:layout_marginHorizontal="24dp"
                 android:text="@string/sign_in"
                 android:enabled="false"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

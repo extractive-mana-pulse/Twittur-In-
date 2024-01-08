@@ -22,16 +22,15 @@ class ReportActivity : AppCompatActivity() {
             }
 
             radioSpam.setOnCheckedChangeListener { buttonView, isChecked ->
-                Toast.makeText(this@ReportActivity, "spam $isChecked", Toast.LENGTH_SHORT).show()
-                Toast.makeText(this@ReportActivity, "spam ${buttonView.text}", Toast.LENGTH_SHORT).show()
+                testTv.text = scamDescTv.text.toString()
             }
+
             radioPrivacy.setOnCheckedChangeListener{ buttonView, isChecked ->
-                Toast.makeText(this@ReportActivity, "privacy $isChecked", Toast.LENGTH_SHORT).show()
-                Toast.makeText(this@ReportActivity, "privacy ${buttonView.text}", Toast.LENGTH_SHORT).show()
+                testTv.text = privacyDescTv.text.toString()
             }
+
             radioAbuse.setOnCheckedChangeListener{ buttonView, isChecked ->
-                Toast.makeText(this@ReportActivity, "abuse $isChecked", Toast.LENGTH_SHORT).show()
-                Toast.makeText(this@ReportActivity, "abuse ${buttonView.text}", Toast.LENGTH_SHORT).show()
+                testTv.text = abuseAndHarassmentDescTv.text.toString()
             }
         }
     }

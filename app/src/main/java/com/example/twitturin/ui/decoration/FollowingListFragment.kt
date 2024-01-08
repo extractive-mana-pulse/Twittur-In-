@@ -16,6 +16,7 @@ import com.example.twitturin.databinding.FragmentFollowingListBinding
 import com.example.twitturin.model.data.users.User
 import com.example.twitturin.model.repo.Repository
 import com.example.twitturin.ui.adapters.FollowersAdapter
+import com.example.twitturin.ui.adapters.FollowingAdapter
 import com.example.twitturin.viewmodel.MainViewModel
 import com.example.twitturin.viewmodel.ViewModelFactory
 import com.example.twitturin.viewmodel.manager.SessionManager
@@ -23,7 +24,7 @@ import com.example.twitturin.viewmodel.manager.SessionManager
 class FollowingListFragment : Fragment() {
 
     private lateinit var binding : FragmentFollowingListBinding
-    private val followingAdapter by lazy { FollowersAdapter(viewLifecycleOwner) }
+    private val followingAdapter by lazy { FollowingAdapter(viewLifecycleOwner) }
     private lateinit var viewModel : MainViewModel
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentFollowingListBinding.inflate(layoutInflater)

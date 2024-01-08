@@ -5,11 +5,15 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isEmpty
 import androidx.core.view.isVisible
+import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,6 +30,7 @@ import com.example.twitturin.viewmodel.FollowUserViewModel
 import com.example.twitturin.viewmodel.MainViewModel
 import com.example.twitturin.viewmodel.ViewModelFactory
 import com.example.twitturin.viewmodel.manager.SessionManager
+import com.google.android.material.snackbar.Snackbar
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.Random
@@ -40,7 +45,7 @@ class DetailActivity : AppCompatActivity() {
     private lateinit var viewModel: MainViewModel
 
     @RequiresApi(Build.VERSION_CODES.R)
-    @SuppressLint("SetTextI18n", "PrivateResource", "NotifyDataSetChanged")
+    @SuppressLint("SetTextI18n", "PrivateResource", "NotifyDataSetChanged", "ResourceAsColor")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -56,6 +61,7 @@ class DetailActivity : AppCompatActivity() {
 
         val sharedPreferences = getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
         sharedPreferences.edit().putString("username", username).apply()
+        sharedPreferences.edit().putString("userId", userId).apply()
         sharedPreferences.edit().putString("id", id).apply()
 
         val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.getDefault())
@@ -71,31 +77,43 @@ class DetailActivity : AppCompatActivity() {
         val sessionManager = SessionManager(this@DetailActivity)
         val token = sessionManager.getToken()
 
-        binding.sentReply.setOnClickListener {
-            val reply = binding.replyEt.text.toString()
+        binding.sentReply.isEnabled = false
 
-            if (reply.isEmpty()){
-                Toast.makeText(this@DetailActivity, "reply field should not be empty", Toast.LENGTH_SHORT).show()
-            }else{
-                viewModel.postReply(reply, id!!, "Bearer $token")
-            }
+        binding.sentReply.setOnClickListener {
+            val reply = binding.replyEt.text?.toString()?.trim()
+            viewModel.postReply(reply!!, id!!, "Bearer $token")
             binding.sentReply.isEnabled = false
         }
+
+        val textWatcher1 = object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // Not used
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                binding.sentReply.isEnabled = !binding.replyEt.text.isNullOrBlank()
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                // Not used
+            }
+        }
+        binding.replyEt.addTextChangedListener(textWatcher1)
 
         viewModel.postReplyResult.observe(this@DetailActivity) { result ->
 
             when (result) {
                 is PostReply.Success -> {
-                    binding.replyEt.text.clear()
+                    binding.replyEt.text?.clear()
                     viewModel.getRepliesOfPost(id!!)
                     postAdapter.notifyDataSetChanged()
-                    binding.sentReply.isEnabled = true
+                    binding.replyEt.addTextChangedListener(textWatcher1)
                 }
 
                 is PostReply.Error -> {
                     val errorMessage = result.message
                     Toast.makeText(this@DetailActivity, errorMessage, Toast.LENGTH_SHORT).show()
-                    binding.sentReply.isEnabled = true
+                    binding.replyEt.addTextChangedListener(textWatcher1)
                 }
             }
         }

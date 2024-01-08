@@ -10,8 +10,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.compose.ui.graphics.Color
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -33,7 +37,7 @@ class SignInFragment : Fragment() {
         return binding.root
     }
 
-    @SuppressLint("ResourceAsColor")
+    @SuppressLint("ResourceAsColor", "RestrictedApi", "MissingInflatedId")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.signInFragment = this
@@ -91,19 +95,43 @@ class SignInFragment : Fragment() {
                 }
 
                 is SignInResult.Error -> {
-                    val errorMessage = result.message
+
+                    val error = result.message
                     val rootView: View = requireActivity().findViewById(R.id.rootLayout)
                     val duration = Snackbar.LENGTH_SHORT
                     val actionText = "Retry"
 
-                    val snackbar = Snackbar.make(rootView, errorMessage, duration)
-                        snackbar.setBackgroundTint(com.airbnb.lottie.R.color.error_color_material_dark)
+                    val snackbar = Snackbar
+                        .make(rootView, error, duration)
+                        .setBackgroundTint(resources.getColor(R.color.md_theme_light_errorContainer))
+                        .setTextColor(resources.getColor(R.color.md_theme_light_onErrorContainer))
+                        .setActionTextColor(resources.getColor(R.color.md_theme_light_onErrorContainer))
                         .setAnchorView(binding.signIn)
-                    snackbar.setAction(actionText) {
+                        .setAction(actionText) {
                         binding.usernameSignInEt.text?.clear()
                         binding.passwordEt.text?.clear()
                     }
+
                     snackbar.show()
+
+//                    val snackbarLayout = layoutInflater.inflate(R.layout.custom_snackbar_layout, null)
+//
+//                    val textView = snackbarLayout.findViewById<TextView>(R.id.snackbar_error_tv)
+//                    val retryButton = snackbarLayout.findViewById<Button>(R.id.snackbar_retry_btn)
+//                    val rootView: View = requireActivity().findViewById(R.id.rootLayout)
+//                    val duration = Snackbar.LENGTH_SHORT
+//                    textView.text = result.message
+//                    retryButton.setOnClickListener {
+//                        binding.usernameSignInEt.text?.clear()
+//                        binding.passwordEt.text?.clear()
+//                    }
+//
+//                    val snackbar = Snackbar.make(rootView, "", duration)
+//                    snackbar.setAnchorView(binding.signIn)
+//                    (snackbar.view as Snackbar.SnackbarLayout).apply {
+//                        addView(snackbarLayout)
+//                    }
+//                    snackbar.show()
                 }
             }
         }

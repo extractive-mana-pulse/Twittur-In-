@@ -39,13 +39,16 @@
     <string name="report_post">Report a post</string>
     <string name="report">Report</string>
     <string name="scam_desc">Financial scams, posting malicious links, misusing hashtags, fake engagement, repetitive replies, Retweets, or Direct Messages</string>
-    <string name="privacy_desc">Financial scams, posting malicious links, misusing hashtags, fake engagement, repetitive replies, Retweets, or Direct Messages</string>
+    <string name="privacy_desc">Sharing private information, threatening to share/expose private information, sharing non-consensual intimate images, sharing images of me that I don’t want on the platform</string>
     <string name="privacy">Privacy</string>
     <string name="spam">Spam</string>
     <string name="abuse_and_harassment"><![CDATA[Abuse & Harassment]]></string>
     <string name="abuse_and_harassment_desc">Insults, Unwanted Sexual Content and Graphic Objectification, Unwanted NSFW and Graphic Content, Violent Event Denial, Targeted Harassment and Inciting Harassment</string>
     <string name="report_expl_desc">If your complaint is reasonable, we will definitely inform you about it and take action!</string>
     <string name="report_desc_tv">Please describe why you want to report this tweet</string>
+    <string name="next">Next</string>
+    <string name="profile">Profile</string>
+    <string name="language">language</string>
 
     <string-array name="major_array">
         <item>SE</item>

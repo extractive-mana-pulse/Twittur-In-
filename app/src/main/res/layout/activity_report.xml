@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".ui.activities.ReportActivity">
 
+<!--  Toolbar  -->
     <LinearLayout
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -62,6 +63,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/report_desc_tv"/>
 
+<!--  Layout of Radio Buttons  -->
     <LinearLayout
         android:id="@+id/list_of_reports_layout"
         android:layout_width="wrap_content"
@@ -80,6 +82,7 @@
             tools:ignore="UselessParent"
             android:layout_marginHorizontal="16dp">
 
+<!--      SPAM      -->
             <RadioButton
                 android:id="@+id/radio_spam"
                 android:layout_width="wrap_content"
@@ -88,11 +91,13 @@
                 android:textStyle="bold"/>
 
             <TextView
+                android:id="@+id/scam_desc_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/scam_desc"
                 android:textAlignment="textStart"/>
 
+<!--      PRIVACY      -->
             <RadioButton
                 android:id="@+id/radio_privacy"
                 android:layout_width="wrap_content"
@@ -101,10 +106,12 @@
                 android:textStyle="bold"/>
 
             <TextView
+                android:id="@+id/privacy_desc_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/privacy_desc"/>
 
+<!--      ABUSE      -->
             <RadioButton
                 android:id="@+id/radio_abuse"
                 android:layout_width="wrap_content"
@@ -113,6 +120,7 @@
                 android:textStyle="bold"/>
 
             <TextView
+                android:id="@+id/abuse_and_harassment_desc_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/abuse_and_harassment_desc"/>
@@ -120,5 +128,26 @@
         </RadioGroup>
 
     </LinearLayout>
+
+    <Button
+        android:id="@+id/report_next_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/next"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <TextView
+        android:id="@+id/test_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="@string/app_name"
+        android:layout_marginHorizontal="16dp"
+        app:layout_constraintBottom_toTopOf="@id/report_next_btn"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
