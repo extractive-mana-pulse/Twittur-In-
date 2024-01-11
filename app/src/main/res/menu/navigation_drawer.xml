@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    tools:showIn="navigation_view">
 
     <group
         android:id="@+id/hello_world"
@@ -15,9 +15,31 @@
 
         <item
             android:id="@+id/language_item"
-            android:icon="@drawable/avatar"
+            android:icon="@drawable/language"
             android:title="@string/language"/>
 
     </group>
+
+
+    <item
+        tools:ignore="MenuTitle">
+
+        <menu>
+
+            <item
+                android:id="@+id/my_tweets"
+                android:icon="@drawable/post"
+                android:title="@string/my_posts" />
+
+            <item
+                android:id="@+id/time_table"
+                android:icon="@drawable/calendar"
+                android:title="@string/time_table"/>
+
+        </menu>
+
+
+    </item>
+
 
 </menu>

@@ -36,6 +36,11 @@
     <!--        Snackbar        -->
     <style name="Widget.App.SnackbarButton" parent="Widget.Material3.Button.TextButton.Snackbar">
         <item name="android:textColor">@color/md_theme_light_onErrorContainer</item>
+    </style>
+
+    <style name="fab_3_rounded">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
 
     </style>
 

@@ -54,7 +54,7 @@ class MainViewModel(private val repository: Repository): ViewModel() {
                     val postTweet = response.body()
                     _postTweet.value = postTweet?.let { PostTweet.Success(it) }
                 } else {
-                    _postTweet.value = PostTweet.Error(response.code().toString())
+                    _postTweet.value = PostTweet.Error(response.headers().toString())
                 }
             }
 

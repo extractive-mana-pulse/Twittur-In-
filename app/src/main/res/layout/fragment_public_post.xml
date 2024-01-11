@@ -11,15 +11,14 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/public_post_root_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/btn_layout"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginHorizontal="16dp"
+            android:layout_height="55dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
@@ -28,10 +27,11 @@
                 android:id="@+id/btn_cancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Cancel"
+                android:text="@string/cancel"
                 android:textColor="#13BCA9"
+                android:onClick="@{() -> publicPostFragment.cancelBtn()}"
+                android:layout_marginStart="16dp"
                 android:background="@android:color/transparent"
-                android:onClick="@{ () -> publicPostFragment.cancelBtn() }"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"/>
@@ -39,44 +39,42 @@
             <Button
                 android:id="@+id/btn_tweet"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="publish"
+                android:layout_height="40dp"
+                android:text="@string/publish"
+                android:background="@drawable/publish_btn_bg"
+                android:layout_marginEnd="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-<!--        <androidx.compose.ui.platform.ComposeView-->
-<!--            android:id="@+id/compose"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="0dp"-->
-<!--            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toBottomOf="@id/btn_layout" />-->
+        <ImageView
+            android:id="@+id/public_post_divider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rc_view_divider"
+            app:layout_constraintTop_toBottomOf="@id/btn_layout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:ignore="ContentDescription" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textInputLayout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        <EditText
+            android:id="@+id/content_et"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:hint="What's going on ?"
-            android:backgroundTint="?attr/colorPrimary"
-            app:hintTextColor="?attr/colorOnPrimaryContainer"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:hint="@string/publication_context"
+            android:inputType="text"
+            android:gravity="start"
+            android:padding="16dp"
+            android:clickable="true"
+            android:background="@android:color/transparent"
+            app:layout_constraintTop_toBottomOf="@id/public_post_divider"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btn_layout">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/content_et"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="start"
-                android:background="@android:color/transparent"/>
-
-        </com.google.android.material.textfield.TextInputLayout>
+            android:autofillHints="name"
+            android:focusable="true" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

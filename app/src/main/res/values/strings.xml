@@ -48,7 +48,15 @@
     <string name="report_desc_tv">Please describe why you want to report this tweet</string>
     <string name="next">Next</string>
     <string name="profile">Profile</string>
-    <string name="language">language</string>
+    <string name="language">Language</string>
+    <string name="open">open</string>
+    <string name="close">close</string>
+    <string name="time_table">Timetable</string>
+    <string name="my_posts">My Posts</string>
+    <string name="choose_language">Choose language</string>
+    <string name="cancel">Cancel</string>
+    <string name="publish">Publish</string>
+    <string name="publication_context">What\'s going on ?</string>
 
     <string-array name="major_array">
         <item>SE</item>

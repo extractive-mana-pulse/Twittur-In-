@@ -10,103 +10,97 @@
             type="com.example.twitturin.ui.fragments.bottomNavigationView.HomeFragment"/>
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="?attr/colorSurface">
+        android:layout_height="match_parent">
 
-        <!--        Toolbar         -->
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorSurfaceContainer"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            android:layout_height="match_parent"
+            android:background="?attr/colorSurface">
 
-            <ImageView
-                android:id="@+id/accountImage"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:onClick="@{ () -> homeFragment.goToProfile() }"
-                android:layout_marginStart="16dp"
-                android:src="@drawable/avatar"
+            <!--        Toolbar         -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorSurfaceContainer"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                tools:ignore="ContentDescription" />
+                app:layout_constraintEnd_toEndOf="parent">
 
-            <TextView
-                android:id="@+id/logo"
+                <ImageView
+                    android:id="@+id/accountImage"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_marginStart="16dp"
+                    android:src="@drawable/avatar"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    tools:ignore="ContentDescription"/>
+
+                <TextView
+                    android:id="@+id/logo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/app_name"
+                    android:textColor="?attr/colorOnSecondaryContainer"
+                    android:textSize="18sp"
+                    android:textStyle="italic"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    tools:ignore="ContentDescription" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!--        rcView          -->
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/swipe_to_refresh_layout"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintTop_toBottomOf="@id/toolbar"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rcView"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"/>
+
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/add_post"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/app_name"
-                android:textColor="?attr/colorOnSecondaryContainer"
-                android:textSize="18sp"
-                android:textStyle="italic"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                tools:ignore="ContentDescription" />
-
-            <ImageView
-                android:id="@+id/time_table"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:src="@drawable/calendar"
-                android:onClick="@{() -> homeFragment.goToWebView()}"
                 android:layout_marginEnd="16dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginBottom="25dp"
+                android:onClick="@{ ()-> homeFragment.goToPublicPost() }"
+                android:contentDescription="@string/app_name"
+                android:backgroundTint="?attr/colorSecondaryContainer"
+                android:padding="5dp"
+                android:src="@drawable/add"
+                app:shapeAppearanceOverlay="@style/fab_3_rounded"
                 app:layout_constraintBottom_toBottomOf="parent"
-                tools:ignore="ContentDescription" />
-
-<!--            <com.google.android.material.navigation.NavigationView-->
-<!--                android:id="@+id/navigation_view"-->
-<!--                android:layout_width="32dp"-->
-<!--                android:layout_height="32dp"-->
-<!--                app:menu="@menu/navigation_drawer"-->
-<!--                android:layout_marginStart="16dp"-->
-<!--                android:layout_gravity="start"-->
-<!--                app:headerLayout="@layout/navigation_drawer_header_layout"-->
-<!--                app:layout_constraintTop_toTopOf="parent"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintBottom_toBottomOf="parent"/>-->
+                app:layout_constraintEnd_toEndOf="parent"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-<!--        rcView          -->
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/swipe_to_refresh_layout"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintTop_toBottomOf="@id/toolbar"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rcView"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"/>
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/add"
+        <com.google.android.material.navigation.NavigationView
+            android:id="@+id/navigation_view"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="25dp"
-            android:layout_marginBottom="25dp"
-            android:onClick="@{ ()-> homeFragment.goToPublicPost() }"
-            android:contentDescription="@string/app_name"
-            android:backgroundTint="?attr/colorSecondaryContainer"
-            android:padding="5dp"
-            android:src="@drawable/add"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            android:layout_height="match_parent"
+            app:menu="@menu/navigation_drawer"
+            android:layout_marginStart="16dp"
+            android:layout_gravity="start"
+            android:fitsSystemWindows="true"
+            app:headerLayout="@layout/navigation_drawer_header_layout"/>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.drawerlayout.widget.DrawerLayout>
 
 </layout>

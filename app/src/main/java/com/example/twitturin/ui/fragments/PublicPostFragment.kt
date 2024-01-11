@@ -15,6 +15,7 @@ import com.example.twitturin.viewmodel.MainViewModel
 import com.example.twitturin.model.repo.Repository
 import com.example.twitturin.viewmodel.ViewModelFactory
 import com.example.twitturin.ui.sealeds.PostTweet
+import com.google.android.material.snackbar.Snackbar
 
 
 class PublicPostFragment : Fragment() {
@@ -22,10 +23,6 @@ class PublicPostFragment : Fragment() {
     private lateinit var binding : FragmentPublicPostBinding
 
     private lateinit var viewModel: MainViewModel
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentPublicPostBinding.inflate(layoutInflater)
@@ -60,8 +57,23 @@ class PublicPostFragment : Fragment() {
                 }
 
                 is PostTweet.Error -> {
-                    val errorMessage = result.message
-                    Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
+
+                    val error = result.message
+                    val unExpectedError =  "Something went wrong, please try again!"
+                    val rootView: View = requireActivity().findViewById(R.id.public_post_root_layout)
+                    val duration = Snackbar.LENGTH_SHORT
+//                    val actionText = "Retry"
+
+                    val snackbar = Snackbar
+                        .make(rootView, unExpectedError, duration)
+                        .setBackgroundTint(resources.getColor(R.color.md_theme_light_errorContainer))
+                        .setTextColor(resources.getColor(R.color.md_theme_light_onErrorContainer))
+                        .setActionTextColor(resources.getColor(R.color.md_theme_light_onErrorContainer))
+//                        .setAnchorView(binding.signIn)
+//                        .setAction(actionText) {
+//                            binding.contentEt.text?.clear()
+//                        }
+                    snackbar.show()
                     binding.btnTweet.isEnabled = true
                 }
             }

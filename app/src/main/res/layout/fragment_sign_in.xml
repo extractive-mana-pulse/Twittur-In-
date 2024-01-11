@@ -69,6 +69,8 @@
                 android:layout_marginTop="25dp"
                 android:background="@drawable/edit_text_bg_ui"
                 app:hintTextColor="?attr/colorOnPrimaryContainer"
+                app:endIconCheckable="true"
+                app:endIconMode="clear_text"
                 app:startIconCheckable="true"
                 app:startIconDrawable="@drawable/username_person"
                 app:layout_constraintEnd_toEndOf="parent"

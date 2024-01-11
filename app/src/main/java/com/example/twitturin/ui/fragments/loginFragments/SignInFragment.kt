@@ -111,38 +111,13 @@ class SignInFragment : Fragment() {
                         binding.usernameSignInEt.text?.clear()
                         binding.passwordEt.text?.clear()
                     }
-
                     snackbar.show()
-
-//                    val snackbarLayout = layoutInflater.inflate(R.layout.custom_snackbar_layout, null)
-//
-//                    val textView = snackbarLayout.findViewById<TextView>(R.id.snackbar_error_tv)
-//                    val retryButton = snackbarLayout.findViewById<Button>(R.id.snackbar_retry_btn)
-//                    val rootView: View = requireActivity().findViewById(R.id.rootLayout)
-//                    val duration = Snackbar.LENGTH_SHORT
-//                    textView.text = result.message
-//                    retryButton.setOnClickListener {
-//                        binding.usernameSignInEt.text?.clear()
-//                        binding.passwordEt.text?.clear()
-//                    }
-//
-//                    val snackbar = Snackbar.make(rootView, "", duration)
-//                    snackbar.setAnchorView(binding.signIn)
-//                    (snackbar.view as Snackbar.SnackbarLayout).apply {
-//                        addView(snackbarLayout)
-//                    }
-//                    snackbar.show()
                 }
             }
         }
     }
 
     fun chooseKindPage() {
-        /* this code is about fixing bug when checkbox code return back at the future */
-        val preferences = requireActivity().getSharedPreferences("checkbox", MODE_PRIVATE)
-        val editor: SharedPreferences.Editor = preferences.edit()
-        editor.putString("remember", "false")
-        editor.apply()
         findNavController().navigate(R.id.action_signInFragment_to_kindFragment)
     }
 
