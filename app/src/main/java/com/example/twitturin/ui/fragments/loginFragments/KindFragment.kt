@@ -13,10 +13,6 @@ class KindFragment : Fragment() {
 
     private lateinit var binding : FragmentKindBinding
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentKindBinding.inflate(layoutInflater)
         return binding.root

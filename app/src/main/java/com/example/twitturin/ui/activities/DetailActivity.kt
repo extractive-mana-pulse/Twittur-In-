@@ -8,9 +8,9 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -28,6 +28,7 @@ import com.example.twitturin.viewmodel.FollowUserViewModel
 import com.example.twitturin.viewmodel.MainViewModel
 import com.example.twitturin.viewmodel.ViewModelFactory
 import com.example.twitturin.viewmodel.manager.SessionManager
+import com.google.android.material.snackbar.Snackbar
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.Random
@@ -57,7 +58,9 @@ class DetailActivity : AppCompatActivity() {
         val userId = intent.getStringExtra("userId")
 
         val sharedPreferences = getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
+        sharedPreferences.edit().putString("userAvatar", userImage).apply()
         sharedPreferences.edit().putString("username", username).apply()
+        sharedPreferences.edit().putString("fullname", fullname).apply()
         sharedPreferences.edit().putString("userId", userId).apply()
         sharedPreferences.edit().putString("id", id).apply()
 
@@ -73,6 +76,13 @@ class DetailActivity : AppCompatActivity() {
 
         val sessionManager = SessionManager(this@DetailActivity)
         val token = sessionManager.getToken()
+        val userId2 = sessionManager.getUserId()
+
+        if (userId == userId2) {
+            binding.followBtn.visibility = View.GONE
+        } else {
+            binding.followBtn.visibility = View.VISIBLE
+        }
 
         binding.sentReply.isEnabled = false
 
@@ -109,7 +119,7 @@ class DetailActivity : AppCompatActivity() {
 
                 is PostReply.Error -> {
                     val errorMessage = result.message
-                    Toast.makeText(this@DetailActivity, errorMessage, Toast.LENGTH_SHORT).show()
+                    snackbarError(errorMessage)
                     binding.replyEt.addTextChangedListener(textWatcher1)
                 }
             }
@@ -173,10 +183,6 @@ class DetailActivity : AppCompatActivity() {
                 followViewModel.followUsers(userId!!, "Bearer $token")
             }
 
-            unfollowBtn.setOnClickListener {
-                followViewModel.deleteFollow(userId!!, "Bearer $token")
-            }
-
 
             followViewModel.followResult.observe(this@DetailActivity) { result ->
                 when (result) {
@@ -185,37 +191,37 @@ class DetailActivity : AppCompatActivity() {
                         val currentFollowedUsernames = followedUsernames.value ?: mutableListOf()
                         currentFollowedUsernames.add(followingUserName.toString())
 
-                        followBtn.visibility = View.GONE
-                        unfollowBtn.visibility = View.VISIBLE
+//                        followBtn.visibility = View.GONE
+//                        unfollowBtn.visibility = View.VISIBLE
 
-                        Toast.makeText(this@DetailActivity, "now you follow: $username", Toast.LENGTH_SHORT).show()
+                        snackbar("now you follow: ${username?.uppercase()}")
                     }
                     is FollowResult.Error -> {
                         val errorMessage = result.message
-                        Toast.makeText(this@DetailActivity, errorMessage, Toast.LENGTH_SHORT).show()
+                        snackbarError(errorMessage)
                     }
                 }
             }
 
-            fun isUserFollowed(username: String): Boolean {
-                val currentFollowedUsernames = followedUsernames.value ?: mutableListOf()
-                return currentFollowedUsernames.contains(username)
-            }
-
-            if (followedUsernames.equals(isUserFollowed(username.toString()))){
-                followBtn.visibility = View.GONE
-                unfollowBtn.visibility = View.VISIBLE
-            } else {
-                followBtn.visibility = View.VISIBLE
-                unfollowBtn.visibility = View.GONE
-            }
+//            fun isUserFollowed(username: String): Boolean {
+//                val currentFollowedUsernames = followedUsernames.value ?: mutableListOf()
+//                return currentFollowedUsernames.contains(username)
+//            }
+//
+//            if (followedUsernames.equals(isUserFollowed(username.toString()))){
+//                followBtn.visibility = View.GONE
+//                unfollowBtn.visibility = View.VISIBLE
+//            } else {
+//                followBtn.visibility = View.VISIBLE
+//                unfollowBtn.visibility = View.GONE
+//            }
 
             articlePageCommentsIcon.setOnClickListener {
-                Toast.makeText(this@DetailActivity, "in progress", Toast.LENGTH_SHORT).show()
+                snackbar("In Progress")
             }
 
             articlePageHeartIcon.setOnClickListener {
-                Toast.makeText(this@DetailActivity, "in progress", Toast.LENGTH_SHORT).show()
+                snackbar("In Progress")
             }
 
             articlePageShareIcon.setOnClickListener {
@@ -276,8 +282,31 @@ class DetailActivity : AppCompatActivity() {
                     }
                 }
             } else {
-                Toast.makeText(this, response.code().toString(), Toast.LENGTH_SHORT).show()
+                snackbarError("Something went wrong! Please refresh the page!")
             }
         }
+    }
+
+    private fun snackbar(message : String) {
+        val rootView = findViewById<ConstraintLayout>(R.id.detail_root_layout)
+        val duration = Snackbar.LENGTH_SHORT
+
+        val snackbar = Snackbar
+            .make(rootView!!, message, duration)
+            .setBackgroundTint(resources.getColor(R.color.md_theme_light_primary))
+            .setTextColor(resources.getColor(R.color.md_theme_light_onPrimaryContainer))
+        snackbar.show()
+    }
+
+    private fun snackbarError(error : String) {
+        val rootView = findViewById<ConstraintLayout>(R.id.detail_root_layout)
+        val duration = Snackbar.LENGTH_SHORT
+
+        val snackbar = Snackbar
+            .make(rootView!!, error, duration)
+            .setBackgroundTint(resources.getColor(R.color.md_theme_light_errorContainer))
+            .setTextColor(resources.getColor(R.color.md_theme_light_onErrorContainer))
+            .setActionTextColor(resources.getColor(R.color.md_theme_light_onErrorContainer))
+        snackbar.show()
     }
 }

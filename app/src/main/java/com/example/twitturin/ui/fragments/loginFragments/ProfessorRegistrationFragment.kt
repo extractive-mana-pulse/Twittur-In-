@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -16,6 +16,7 @@ import com.example.twitturin.R
 import com.example.twitturin.databinding.FragmentProfessorRegistrationBinding
 import com.example.twitturin.ui.sealeds.SignUpProfResult
 import com.example.twitturin.viewmodel.SignUpViewModel
+import com.google.android.material.snackbar.Snackbar
 
 class ProfessorRegistrationFragment : Fragment() {
 
@@ -92,8 +93,7 @@ class ProfessorRegistrationFragment : Fragment() {
                 }
 
                 is SignUpProfResult.Error -> {
-                    val errorMessage = result.message
-                    Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
+                    snackbarError(result.message)
                 }
             }
         }
@@ -108,6 +108,18 @@ class ProfessorRegistrationFragment : Fragment() {
             editText.text.isNotBlank()
         }
         binding.signUpProf.isVisible = allFieldsFilled
+    }
+
+    private fun snackbarError(error : String) {
+        val rootView = view?.findViewById<ConstraintLayout>(R.id.prof_reg_root_layout)
+        val duration = Snackbar.LENGTH_SHORT
+
+        val snackbar = Snackbar
+            .make(rootView!!, error, duration)
+            .setBackgroundTint(resources.getColor(R.color.md_theme_light_errorContainer))
+            .setTextColor(resources.getColor(R.color.md_theme_light_onErrorContainer))
+            .setActionTextColor(resources.getColor(R.color.md_theme_light_onErrorContainer))
+        snackbar.show()
     }
 
     companion object {

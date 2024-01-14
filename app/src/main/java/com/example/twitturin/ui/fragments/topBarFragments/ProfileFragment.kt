@@ -2,40 +2,27 @@ package com.example.twitturin.ui.fragments.topBarFragments
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
-import android.content.Context
 import android.content.Context.MODE_PRIVATE
-import android.content.SharedPreferences
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Paint
-import android.graphics.PorterDuff
-import android.graphics.PorterDuffXfermode
-import android.graphics.Rect
-import android.graphics.RectF
-import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.PopupMenu
-import android.widget.Toast
-import androidx.core.view.isVisible
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.twitturin.R
-import com.example.twitturin.viewmodel.manager.SessionManager
 import com.example.twitturin.databinding.FragmentProfileBinding
 import com.example.twitturin.ui.adapters.ProfileViewPagerAdapter
 import com.example.twitturin.ui.fragments.FullScreenImageFragment
 import com.example.twitturin.ui.sealeds.DeleteResult
-import com.example.twitturin.ui.sealeds.FollowersResult
 import com.example.twitturin.ui.sealeds.UserCredentialsResult
 import com.example.twitturin.viewmodel.ProfileViewModel
+import com.example.twitturin.viewmodel.manager.SessionManager
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayoutMediator
 
@@ -57,9 +44,6 @@ class ProfileFragment : Fragment() {
         val userId = sessionManager.getUserId()
         val token = sessionManager.getToken()
 
-//        binding.swipeToRefreshLayout.setOnRefreshListener {
-//            binding.swipeToRefreshLayout.isRefreshing = false
-//        }
 
         binding.followersTv.setOnClickListener {
             findNavController().navigate(R.id.action_profileFragment_to_followersListFragment)
@@ -123,7 +107,7 @@ class ProfileFragment : Fragment() {
 
                 }
                 is UserCredentialsResult.Error -> {
-                    Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
+                    snackbarError(result.message)
                 }
             }
         }
@@ -184,20 +168,32 @@ class ProfileFragment : Fragment() {
                     }
 
                     R.id.delete_account -> {
-                        profileViewModel.deleteUser(userId, "Bearer $token")
+                        val sharedPreferences = requireActivity().getSharedPreferences("my_shared_prefs", MODE_PRIVATE)
+                        val username = sharedPreferences.getString("username", "")
+
+                        val alertDialogBuilder = AlertDialog.Builder(requireActivity())
+                        alertDialogBuilder.setTitle("${username?.uppercase()}: Are you sure you want to delete account?")
+                        alertDialogBuilder.setMessage("Please note that once an account is deleted, it cannot be restored and all activity will be deleted")
+                        alertDialogBuilder.setPositiveButton("Yes") { dialog, which ->
+                            profileViewModel.deleteUser(userId, "Bearer $token")
+                        }
+
+                        alertDialogBuilder.setNegativeButton("No") { dialog, which ->
+                            dialog.dismiss()
+                        }
+
+                        alertDialogBuilder.setCancelable(true)
+                        val alertDialog = alertDialogBuilder.create()
+                        alertDialog.show()
+
                         profileViewModel.deleteResult.observe(viewLifecycleOwner) { result ->
                             when (result) {
                                 is DeleteResult.Success -> {
-                                    val pref = requireActivity().getSharedPreferences("checkbox", MODE_PRIVATE)
-                                    val editor = pref.edit()
-                                    editor.remove("remember")
-                                    editor.clear()
-                                    editor.apply()
                                     findNavController().navigate(R.id.action_profileFragment_to_signInFragment)
-                                    Toast.makeText(requireContext(), "Delete", Toast.LENGTH_SHORT).show()
+                                    snackbar("Deleted")
                                 }
                                 is DeleteResult.Error -> {
-                                    Toast.makeText(requireContext(), result.message, Toast.LENGTH_SHORT).show()
+                                    snackbarError(result.message)
                                 }
                             }
                         }
@@ -241,6 +237,29 @@ class ProfileFragment : Fragment() {
         binding.back.setOnClickListener {
             requireActivity().onBackPressed()
         }
+    }
+
+    private fun snackbar(message : String) {
+        val rootView = view?.findViewById<ConstraintLayout>(R.id.profile_root_layout)
+        val duration = Snackbar.LENGTH_SHORT
+
+        val snackbar = Snackbar
+            .make(rootView!!, message, duration)
+            .setBackgroundTint(resources.getColor(R.color.md_theme_light_primary))
+            .setTextColor(resources.getColor(R.color.md_theme_light_onPrimaryContainer))
+        snackbar.show()
+    }
+
+    private fun snackbarError(error : String) {
+        val rootView = view?.findViewById<ConstraintLayout>(R.id.profile_root_layout)
+        val duration = Snackbar.LENGTH_SHORT
+
+        val snackbar = Snackbar
+            .make(rootView!!, error, duration)
+            .setBackgroundTint(resources.getColor(R.color.md_theme_light_errorContainer))
+            .setTextColor(resources.getColor(R.color.md_theme_light_onErrorContainer))
+            .setActionTextColor(resources.getColor(R.color.md_theme_light_onErrorContainer))
+        snackbar.show()
     }
 
     companion object {

@@ -74,28 +74,28 @@ class SearchFragment : Fragment() {
         }
     }
 
-    private fun searchDatabase() {
-        viewModel.searchNews.observe(viewLifecycleOwner) { response ->
-            when (response) {
-                is SearchResource.Success -> {
-                    hideProgressBar()
-                    response.data.let { newsResponse ->
-                        val tweetList: List<Tweet> = listOf(newsResponse)
-                        myAdapter.setData(tweetList)
-                    }
-                }
-
-                is SearchResource.Error -> {
-                    hideProgressBar()
-                }
-
-                is SearchResource.Loading -> {
-                    showProgressBar()
-                    Toast.makeText(requireContext(), "Loading . . .", Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
-    }
+//    private fun searchDatabase() {
+//        viewModel.searchNews.observe(viewLifecycleOwner) { response ->
+//            when (response) {
+//                is SearchResource.Success -> {
+//                    hideProgressBar()
+//                    response.data.let { newsResponse ->
+//                        val tweetList: List<Tweet> = listOf(newsResponse)
+//                        myAdapter.setData(tweetList)
+//                    }
+//                }
+//
+//                is SearchResource.Error -> {
+//                    hideProgressBar()
+//                }
+//
+//                is SearchResource.Loading -> {
+//                    showProgressBar()
+//                    Toast.makeText(requireContext(), "Loading . . .", Toast.LENGTH_SHORT).show()
+//                }
+//            }
+//        }
+//    }
 
     private fun showProgressBar() {
         binding.paginationProgressBar.visibility = View.VISIBLE

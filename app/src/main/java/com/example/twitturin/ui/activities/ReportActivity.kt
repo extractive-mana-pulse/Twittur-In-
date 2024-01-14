@@ -1,10 +1,7 @@
 package com.example.twitturin.ui.activities
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
-import com.example.twitturin.R
+import androidx.appcompat.app.AppCompatActivity
 import com.example.twitturin.databinding.ActivityReportBinding
 
 class ReportActivity : AppCompatActivity() {

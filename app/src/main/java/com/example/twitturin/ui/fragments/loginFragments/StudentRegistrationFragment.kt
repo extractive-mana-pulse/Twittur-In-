@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.EditText
-import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -18,6 +18,7 @@ import com.example.twitturin.R
 import com.example.twitturin.databinding.FragmentStudentRegistrationBinding
 import com.example.twitturin.ui.sealeds.SignUpStudentResult
 import com.example.twitturin.viewmodel.SignUpViewModel
+import com.google.android.material.snackbar.Snackbar
 
 class StudentRegistrationFragment : Fragment() {
 
@@ -101,12 +102,10 @@ class StudentRegistrationFragment : Fragment() {
             when (result) {
                 is SignUpStudentResult.Success -> {
                     findNavController().navigate(R.id.action_studentRegistrationFragment_to_signInFragment)
-                    Toast.makeText(requireContext(), "Success?", Toast.LENGTH_SHORT).show()
                 }
 
                 is SignUpStudentResult.Error -> {
-                    val errorMessage = result.message
-                    Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
+                    snackbarError(result.message)
                 }
             }
         }
@@ -121,6 +120,18 @@ class StudentRegistrationFragment : Fragment() {
             editText.text.isNotEmpty()
         }
         binding.signUp.isVisible = allFieldsFilled
+    }
+
+    private fun snackbarError(error : String) {
+        val rootView = view?.findViewById<ConstraintLayout>(R.id.stud_reg_root_layout)
+        val duration = Snackbar.LENGTH_SHORT
+
+        val snackbar = Snackbar
+            .make(rootView!!, error, duration)
+            .setBackgroundTint(resources.getColor(R.color.md_theme_light_errorContainer))
+            .setTextColor(resources.getColor(R.color.md_theme_light_onErrorContainer))
+            .setActionTextColor(resources.getColor(R.color.md_theme_light_onErrorContainer))
+        snackbar.show()
     }
 
     companion object {

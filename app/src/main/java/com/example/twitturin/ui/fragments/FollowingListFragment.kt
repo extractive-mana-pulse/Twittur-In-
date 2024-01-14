@@ -1,25 +1,25 @@
-package com.example.twitturin.ui.decoration
+package com.example.twitturin.ui.fragments
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.twitturin.R
-import com.example.twitturin.databinding.FragmentFollowersListBinding
 import com.example.twitturin.databinding.FragmentFollowingListBinding
 import com.example.twitturin.model.data.users.User
 import com.example.twitturin.model.repo.Repository
-import com.example.twitturin.ui.adapters.FollowersAdapter
 import com.example.twitturin.ui.adapters.FollowingAdapter
 import com.example.twitturin.viewmodel.MainViewModel
 import com.example.twitturin.viewmodel.ViewModelFactory
 import com.example.twitturin.viewmodel.manager.SessionManager
+import com.google.android.material.snackbar.Snackbar
 import java.util.Random
 
 class FollowingListFragment : Fragment() {
@@ -60,15 +60,26 @@ class FollowingListFragment : Fragment() {
                     followingAdapter.setData(tweetList)
                     binding.swipeToRefreshLayoutFollowingList.setOnRefreshListener {
                         tweetList.shuffle(Random(System.currentTimeMillis()))
-                        followingAdapter.notifyDataSetChanged()
                         viewModel.getFollowing(userId)
                         binding.swipeToRefreshLayoutFollowingList.isRefreshing = false
                     }
                 }
             } else {
-                Toast.makeText(requireContext(), response.code().toString(), Toast.LENGTH_SHORT).show()
+                snackbarError(response.body().toString())
             }
         }
+    }
+
+    private fun snackbarError(error : String) {
+        val rootView = view?.findViewById<ConstraintLayout>(R.id.following_root_layout1)
+        val duration = Snackbar.LENGTH_SHORT
+
+        val snackbar = Snackbar
+            .make(rootView!!, error, duration)
+            .setBackgroundTint(resources.getColor(R.color.md_theme_light_errorContainer))
+            .setTextColor(resources.getColor(R.color.md_theme_light_onErrorContainer))
+            .setActionTextColor(resources.getColor(R.color.md_theme_light_onErrorContainer))
+        snackbar.show()
     }
 
     companion object {

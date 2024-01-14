@@ -1,24 +1,22 @@
 package com.example.twitturin.ui.adapters
 
 import android.annotation.SuppressLint
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import android.widget.LinearLayout
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.twitturin.R
-import com.example.twitturin.databinding.RcViewFollowersBinding
 import com.example.twitturin.databinding.RcViewFollowingBinding
 import com.example.twitturin.model.data.users.User
 import com.example.twitturin.ui.sealeds.DeleteFollow
-import com.example.twitturin.ui.sealeds.FollowResult
 import com.example.twitturin.viewmodel.FollowUserViewModel
 import com.example.twitturin.viewmodel.manager.SessionManager
+import com.google.android.material.snackbar.Snackbar
 
 class FollowingAdapter(private val parentLifecycleOwner: LifecycleOwner) : RecyclerView.Adapter<FollowingAdapter.ViewHolder>() {
 
@@ -36,12 +34,13 @@ class FollowingAdapter(private val parentLifecycleOwner: LifecycleOwner) : Recyc
     @SuppressLint("SetTextI18n", "NotifyDataSetChanged")
     override fun onBindViewHolder(holder: FollowingAdapter.ViewHolder, position: Int) {
         val item = list[position]
+        val context = holder.itemView.context
 
         holder.binding.apply {
 
             val profileImage = item.profilePicture
 
-            Glide.with(holder.itemView.context)
+            Glide.with(context)
                 .load(profileImage)
                 .error(R.drawable.not_found)
                 .into(userFollowerAvatar)
@@ -51,9 +50,9 @@ class FollowingAdapter(private val parentLifecycleOwner: LifecycleOwner) : Recyc
             postDescription.text = item.bio ?: "This user does not appear to have any biography."
         }
 
-        val sessionManager = SessionManager(holder.itemView.context)
+        val sessionManager = SessionManager(context)
         val token = sessionManager.getToken()
-        followViewModel = ViewModelProvider(holder.itemView.context as ViewModelStoreOwner)[FollowUserViewModel::class.java]
+        followViewModel = ViewModelProvider(context as ViewModelStoreOwner)[FollowUserViewModel::class.java]
 
         holder.binding.unfollowBtn.setOnClickListener {
             followViewModel.deleteFollow(item.id!!,"Bearer $token")
@@ -62,17 +61,42 @@ class FollowingAdapter(private val parentLifecycleOwner: LifecycleOwner) : Recyc
         followViewModel.deleteFollowResult.observe(parentLifecycleOwner) { result ->
             when (result) {
                 is DeleteFollow.Success -> {
-                    Toast.makeText(holder.itemView.context, "Success", Toast.LENGTH_SHORT).show()
+                    val error = "you unfollow: ${item.username?.uppercase()}"
+                    val rootView = holder.itemView.findViewById<LinearLayout>(R.id.following_root_layout)
+                    val duration = Snackbar.LENGTH_SHORT
+
+                    val snackbar = Snackbar
+                        .make(rootView, error, duration)
+                        .setBackgroundTint(context.resources.getColor(R.color.md_theme_light_primary))
+                        .setTextColor(context.resources.getColor(R.color.md_theme_light_onPrimaryContainer))
+                    snackbar.show()
                 }
                 is DeleteFollow.Error -> {
+
                     val error = result.message
-                    Toast.makeText(holder.itemView.context, error, Toast.LENGTH_SHORT).show()
+                    val rootView = holder.itemView.findViewById<LinearLayout>(R.id.following_root_layout)
+                    val duration = Snackbar.LENGTH_SHORT
+
+                    val snackbar = Snackbar
+                        .make(rootView, error, duration)
+                        .setBackgroundTint(context.resources.getColor(R.color.md_theme_light_errorContainer))
+                        .setTextColor(context.resources.getColor(R.color.md_theme_light_onErrorContainer))
+                        .setActionTextColor(context.resources.getColor(R.color.md_theme_light_onErrorContainer))
+                    snackbar.show()
                 }
             }
         }
 
         holder.itemView.setOnClickListener {
-            Toast.makeText(holder.itemView.context, "in progress", Toast.LENGTH_SHORT).show()
+            val error = "In Progress"
+            val rootView = holder.itemView.findViewById<LinearLayout>(R.id.following_root_layout)
+            val duration = Snackbar.LENGTH_SHORT
+
+            val snackbar = Snackbar
+                .make(rootView!!, error, duration)
+                .setBackgroundTint(context.resources.getColor(R.color.md_theme_light_primary))
+                .setTextColor(context.resources.getColor(R.color.md_theme_light_onPrimaryContainer))
+            snackbar.show()
         }
     }
 

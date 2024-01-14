@@ -329,7 +329,7 @@
     </fragment>
     <fragment
         android:id="@+id/followingListFragment"
-        android:name="com.example.twitturin.ui.decoration.FollowingListFragment"
+        android:name="com.example.twitturin.ui.fragments.FollowingListFragment"
         android:label="fragment_following_list"
         tools:layout="@layout/fragment_following_list" >
         <action

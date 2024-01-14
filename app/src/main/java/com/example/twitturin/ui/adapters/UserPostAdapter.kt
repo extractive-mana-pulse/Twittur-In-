@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.lifecycle.LifecycleOwner
@@ -24,6 +25,7 @@ import com.example.twitturin.viewmodel.MainViewModel
 import com.example.twitturin.viewmodel.ProfileViewModel
 import com.example.twitturin.viewmodel.ViewModelFactory
 import com.example.twitturin.viewmodel.manager.SessionManager
+import com.google.android.material.snackbar.Snackbar
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -139,11 +141,27 @@ class UserPostAdapter(private val parentLifecycleOwner: LifecycleOwner) : Recycl
                                 profileViewModel.deleteTweetResult.observe(parentLifecycleOwner){ result ->
                                     when(result){
                                         is DeleteResult.Success -> {
-                                            Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show()
+                                            val error = "Deleted"
+                                            val rootView = holder.itemView.findViewById<LinearLayout>(R.id.followers_root_layout)
+                                            val duration = Snackbar.LENGTH_SHORT
+
+                                            val snackbar = Snackbar
+                                                .make(rootView!!, error, duration)
+                                                .setBackgroundTint(context.resources.getColor(R.color.md_theme_light_primary))
+                                                .setTextColor(context.resources.getColor(R.color.md_theme_light_onPrimaryContainer))
+                                            snackbar.show()
                                         }
                                         is  DeleteResult.Error -> {
                                             val error = result.message
-                                            Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
+                                            val rootView = holder.itemView.findViewById<LinearLayout>(R.id.user_own_root_layout)
+                                            val duration = Snackbar.LENGTH_SHORT
+
+                                            val snackbar = Snackbar
+                                                .make(rootView!!, error, duration)
+                                                .setBackgroundTint(context.resources.getColor(R.color.md_theme_light_errorContainer))
+                                                .setTextColor(context.resources.getColor(R.color.md_theme_light_onErrorContainer))
+                                                .setActionTextColor(context.resources.getColor(R.color.md_theme_light_onErrorContainer))
+                                            snackbar.show()
                                         }
                                     }
                                 }

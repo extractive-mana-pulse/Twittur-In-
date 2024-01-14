@@ -7,19 +7,21 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.twitturin.ui.decoration.GridSpacingItemDecoration
 import com.example.twitturin.R
-import com.example.twitturin.viewmodel.manager.SessionManager
 import com.example.twitturin.databinding.FragmentEditProfileBinding
 import com.example.twitturin.ui.adapters.ColorAdapter
+import com.example.twitturin.ui.decoration.GridSpacingItemDecoration
 import com.example.twitturin.ui.sealeds.EditUserResult
 import com.example.twitturin.viewmodel.ProfileViewModel
+import com.example.twitturin.viewmodel.manager.SessionManager
+import com.google.android.material.snackbar.Snackbar
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -50,19 +52,25 @@ class EditProfileFragment : Fragment() {
 //         or if it's empty field should be empty.
 
         binding.save.setOnClickListener {
-            if (!token.isNullOrEmpty()){
 
-                val fullName = binding.fullnameEt.text.toString()
-                val username = binding.usernameEt.text.toString()
-                val bio = binding.bioEt.text.toString()
-                val email = binding.emailEt.text.toString()
-                val country = binding.countryEt.selectedCountryName
-                val birthday = binding.birthdayEt.text.toString()
+            val fullName = binding.fullnameEt.text.toString()
+            val username = binding.usernameEt.text.toString()
+            val bio = binding.bioEt.text.toString()
+            val email = binding.emailEt.text.toString()
+            val country = binding.countryEt.selectedCountryName
+            val birthday = binding.birthdayEt.text.toString()
 
-                profileViewModel.editUser(fullName, username, email, bio, country, birthday, userId!!, token)
-            } else {
-                Toast.makeText(requireContext(), "error", Toast.LENGTH_SHORT).show()
-            }
+            profileViewModel.editUser(
+                fullName,
+                username,
+                email,
+                bio,
+                country,
+                birthday,
+                userId!!,
+                "Bearer $token"
+            )
+
 
             profileViewModel.editUserResult.observe(viewLifecycleOwner) { result ->
                 when (result) {
@@ -71,7 +79,7 @@ class EditProfileFragment : Fragment() {
                     }
 
                     is EditUserResult.Error -> {
-                        Toast.makeText(requireContext(), result.errorMessage, Toast.LENGTH_SHORT).show()
+                        snackbarError(result.errorMessage)
                     }
                 }
             }
@@ -149,6 +157,18 @@ class EditProfileFragment : Fragment() {
 
     private fun dpToPx(dp: Int): Int {
         return (dp * resources.displayMetrics.density).toInt()
+    }
+
+    private fun snackbarError(error : String) {
+        val rootView = view?.findViewById<ConstraintLayout>(R.id.edit_profile_root_layout)
+        val duration = Snackbar.LENGTH_SHORT
+
+        val snackbar = Snackbar
+            .make(rootView!!, error, duration)
+            .setBackgroundTint(resources.getColor(R.color.md_theme_light_errorContainer))
+            .setTextColor(resources.getColor(R.color.md_theme_light_onErrorContainer))
+            .setActionTextColor(resources.getColor(R.color.md_theme_light_onErrorContainer))
+        snackbar.show()
     }
 
     companion object {

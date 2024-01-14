@@ -1,29 +1,20 @@
 package com.example.twitturin.ui.fragments.loginFragments
 
 import android.annotation.SuppressLint
-import android.content.Context.MODE_PRIVATE
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
-import androidx.compose.ui.graphics.Color
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
-import com.example.twitturin.viewmodel.manager.SessionManager
 import com.example.twitturin.databinding.FragmentSignInBinding
 import com.example.twitturin.ui.sealeds.SignInResult
 import com.example.twitturin.viewmodel.SignInViewModel
+import com.example.twitturin.viewmodel.manager.SessionManager
 import com.google.android.material.snackbar.Snackbar
 
 

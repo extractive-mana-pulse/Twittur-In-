@@ -1,26 +1,17 @@
 package com.example.twitturin.ui.adapters
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelStoreOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.twitturin.R
-import com.example.twitturin.viewmodel.manager.SessionManager
 import com.example.twitturin.databinding.RcViewBinding
 import com.example.twitturin.model.data.tweets.Tweet
 import com.example.twitturin.ui.activities.DetailActivity
-import com.example.twitturin.ui.sealeds.PostLikeResult
-import com.example.twitturin.viewmodel.LikeViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit

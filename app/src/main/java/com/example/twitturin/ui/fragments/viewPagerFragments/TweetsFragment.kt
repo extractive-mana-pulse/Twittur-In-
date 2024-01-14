@@ -2,11 +2,10 @@ package com.example.twitturin.ui.fragments.viewPagerFragments
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -19,12 +18,13 @@ import com.example.twitturin.ui.adapters.UserPostAdapter
 import com.example.twitturin.viewmodel.MainViewModel
 import com.example.twitturin.viewmodel.ViewModelFactory
 import com.example.twitturin.viewmodel.manager.SessionManager
+import com.google.android.material.snackbar.Snackbar
 import java.util.Random
 
 class TweetsFragment : Fragment() {
 
-    private lateinit var binding: FragmentTweetsBinding
     private lateinit var viewModel: MainViewModel
+    private lateinit var binding: FragmentTweetsBinding
     private val userPostAdapter by lazy { UserPostAdapter(viewLifecycleOwner) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -37,8 +37,7 @@ class TweetsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.anView.setFailureListener { t ->
-            Toast.makeText(requireContext(), t.message, Toast.LENGTH_SHORT).show()
-            Log.d("Lottie", t.message.toString())
+            snackbarError(t.message.toString())
         }
         binding.anView.setAnimation(R.raw.empty_tweets_list)
 
@@ -91,9 +90,21 @@ class TweetsFragment : Fragment() {
                 }
 
             } else {
-                Toast.makeText(requireContext(), response.code().toString(), Toast.LENGTH_SHORT).show()
+                snackbarError(response.body().toString())
             }
         }
+    }
+
+    private fun snackbarError(error : String) {
+        val rootView = view?.findViewById<ConstraintLayout>(R.id.tweets_root_layout)
+        val duration = Snackbar.LENGTH_SHORT
+
+        val snackbar = Snackbar
+            .make(rootView!!, error, duration)
+            .setBackgroundTint(resources.getColor(R.color.md_theme_light_errorContainer))
+            .setTextColor(resources.getColor(R.color.md_theme_light_onErrorContainer))
+            .setActionTextColor(resources.getColor(R.color.md_theme_light_onErrorContainer))
+        snackbar.show()
     }
 
     companion object {
