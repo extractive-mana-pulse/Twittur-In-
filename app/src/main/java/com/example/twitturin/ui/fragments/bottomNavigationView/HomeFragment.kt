@@ -6,11 +6,8 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -25,7 +22,6 @@ import com.example.twitturin.model.data.users.User
 import com.example.twitturin.model.repo.Repository
 import com.example.twitturin.ui.adapters.PostAdapter
 import com.example.twitturin.ui.fragments.bottomsheets.LanguageFragment
-import com.example.twitturin.ui.fragments.bottomsheets.MyBottomSheetDialogFragment
 import com.example.twitturin.viewmodel.MainViewModel
 import com.example.twitturin.viewmodel.ViewModelFactory
 import java.util.Random
@@ -33,9 +29,9 @@ import java.util.Random
 
 class HomeFragment : Fragment() {
 
+    private lateinit var viewModel: MainViewModel
     private lateinit var binding : FragmentHomeBinding
     private lateinit var toggle : ActionBarDrawerToggle
-    private lateinit var viewModel: MainViewModel
     private val postAdapter by lazy { PostAdapter(viewLifecycleOwner) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -80,6 +76,8 @@ class HomeFragment : Fragment() {
                 R.id.language_item -> LanguageFragment().show(requireActivity().supportFragmentManager, "LanguageFragment")
                 R.id.time_table -> findNavController().navigate(R.id.action_homeFragment_to_webViewFragment)
             }
+            menuItem.isChecked = true
+            binding.drawerLayout.close()
             true
         }
 

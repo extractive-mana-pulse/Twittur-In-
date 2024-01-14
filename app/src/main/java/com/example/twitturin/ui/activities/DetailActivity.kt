@@ -11,9 +11,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isEmpty
-import androidx.core.view.isVisible
-import androidx.core.widget.doOnTextChanged
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,14 +21,13 @@ import com.example.twitturin.databinding.ActivityDetailBinding
 import com.example.twitturin.model.data.tweets.Tweet
 import com.example.twitturin.model.repo.Repository
 import com.example.twitturin.ui.adapters.PostAdapter
-import com.example.twitturin.ui.fragments.bottomsheets.MyBottomSheetDialogFragment
+import com.example.twitturin.ui.fragments.bottomsheets.MoreSettingsDetailFragment
 import com.example.twitturin.ui.sealeds.FollowResult
 import com.example.twitturin.ui.sealeds.PostReply
 import com.example.twitturin.viewmodel.FollowUserViewModel
 import com.example.twitturin.viewmodel.MainViewModel
 import com.example.twitturin.viewmodel.ViewModelFactory
 import com.example.twitturin.viewmodel.manager.SessionManager
-import com.google.android.material.snackbar.Snackbar
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.Random
@@ -170,13 +167,27 @@ class DetailActivity : AppCompatActivity() {
             postDescription.text = description
             articlePageLikesCounter.text = likes
 
+            val followedUsernames: MutableLiveData<MutableList<String>> = MutableLiveData()
+
             followBtn.setOnClickListener {
                 followViewModel.followUsers(userId!!, "Bearer $token")
             }
 
+            unfollowBtn.setOnClickListener {
+                followViewModel.deleteFollow(userId!!, "Bearer $token")
+            }
+
+
             followViewModel.followResult.observe(this@DetailActivity) { result ->
                 when (result) {
                     is FollowResult.Success -> {
+                        val followingUserName = result.username.username
+                        val currentFollowedUsernames = followedUsernames.value ?: mutableListOf()
+                        currentFollowedUsernames.add(followingUserName.toString())
+
+                        followBtn.visibility = View.GONE
+                        unfollowBtn.visibility = View.VISIBLE
+
                         Toast.makeText(this@DetailActivity, "now you follow: $username", Toast.LENGTH_SHORT).show()
                     }
                     is FollowResult.Error -> {
@@ -184,6 +195,19 @@ class DetailActivity : AppCompatActivity() {
                         Toast.makeText(this@DetailActivity, errorMessage, Toast.LENGTH_SHORT).show()
                     }
                 }
+            }
+
+            fun isUserFollowed(username: String): Boolean {
+                val currentFollowedUsernames = followedUsernames.value ?: mutableListOf()
+                return currentFollowedUsernames.contains(username)
+            }
+
+            if (followedUsernames.equals(isUserFollowed(username.toString()))){
+                followBtn.visibility = View.GONE
+                unfollowBtn.visibility = View.VISIBLE
+            } else {
+                followBtn.visibility = View.VISIBLE
+                unfollowBtn.visibility = View.GONE
             }
 
             articlePageCommentsIcon.setOnClickListener {
@@ -203,7 +227,7 @@ class DetailActivity : AppCompatActivity() {
             }
 
             moreSettings.setOnClickListener {
-                val bottomSheetDialogFragment = MyBottomSheetDialogFragment()
+                val bottomSheetDialogFragment = MoreSettingsDetailFragment()
                 bottomSheetDialogFragment.show(
                     supportFragmentManager,
                     "MyBottomSheetDialogFragment"

@@ -12,6 +12,7 @@ import com.example.twitturin.model.data.tweets.Tweet
 import com.example.twitturin.model.data.users.User
 import com.example.twitturin.model.network.Api
 import com.example.twitturin.model.repo.Repository
+import com.example.twitturin.ui.sealeds.DeleteResult
 import com.example.twitturin.ui.sealeds.PostReply
 import com.example.twitturin.ui.sealeds.PostTweet
 import com.example.twitturin.ui.sealeds.SearchResource

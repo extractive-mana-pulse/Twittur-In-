@@ -20,13 +20,14 @@ import com.example.twitturin.viewmodel.FollowUserViewModel
 import com.example.twitturin.viewmodel.MainViewModel
 import com.example.twitturin.viewmodel.ViewModelFactory
 import com.example.twitturin.viewmodel.manager.SessionManager
+import java.util.Random
 
 class FollowersListFragment : Fragment() {
 
+    private lateinit var viewModel : MainViewModel
+    private lateinit var followViewModel: FollowUserViewModel
     private lateinit var binding : FragmentFollowersListBinding
     private val followersAdapter by lazy { FollowersAdapter(viewLifecycleOwner) }
-    private lateinit var followViewModel: FollowUserViewModel
-    private lateinit var viewModel : MainViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentFollowersListBinding.inflate(layoutInflater)
@@ -44,9 +45,7 @@ class FollowersListFragment : Fragment() {
         binding.backBtnFollowersList.setOnClickListener {
             requireActivity().onBackPressed()
         }
-
         updateRecyclerView()
-
     }
 
 
@@ -63,7 +62,12 @@ class FollowersListFragment : Fragment() {
                 response.body()?.let { tweets ->
                     val tweetList: MutableList<User> = tweets.toMutableList()
                     followersAdapter.setData(tweetList)
-                    followersAdapter.notifyDataSetChanged()
+                    binding.swipeToRefreshLayoutFollowersList.setOnRefreshListener {
+                        tweetList.shuffle(Random(System.currentTimeMillis()))
+                        followersAdapter.notifyDataSetChanged()
+                        viewModel.getFollowing(userId)
+                        binding.swipeToRefreshLayoutFollowersList.isRefreshing = false
+                    }
                 }
             } else {
                 Toast.makeText(requireContext(), response.code().toString(), Toast.LENGTH_SHORT).show()

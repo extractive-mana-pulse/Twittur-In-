@@ -62,8 +62,7 @@ class FollowingAdapter(private val parentLifecycleOwner: LifecycleOwner) : Recyc
         followViewModel.deleteFollowResult.observe(parentLifecycleOwner) { result ->
             when (result) {
                 is DeleteFollow.Success -> {
-//                    Log.d("unfollow","unfollowing!${item.username}")
-//                    Toast.makeText(holder.itemView.context, "you unfollow: ${item.username}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(holder.itemView.context, "Success", Toast.LENGTH_SHORT).show()
                 }
                 is DeleteFollow.Error -> {
                     val error = result.message

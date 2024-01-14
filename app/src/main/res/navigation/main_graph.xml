@@ -347,7 +347,7 @@
     </fragment>
     <dialog
         android:id="@+id/myBottomSheetDialogFragment"
-        android:name="com.example.twitturin.ui.fragments.bottomsheets.MyBottomSheetDialogFragment"
+        android:name="com.example.twitturin.ui.fragments.bottomsheets.MoreSettingsDetailFragment"
         android:label="MyBottomSheetDialogFragment" >
         <action
             android:id="@+id/action_myBottomSheetDialogFragment_to_reportFragment"

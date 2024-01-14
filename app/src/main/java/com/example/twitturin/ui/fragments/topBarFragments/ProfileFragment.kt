@@ -42,7 +42,6 @@ import com.google.android.material.tabs.TabLayoutMediator
 class ProfileFragment : Fragment() {
 
     private lateinit var binding: FragmentProfileBinding
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentProfileBinding.inflate(layoutInflater)
         return binding.root
@@ -58,9 +57,9 @@ class ProfileFragment : Fragment() {
         val userId = sessionManager.getUserId()
         val token = sessionManager.getToken()
 
-        binding.swipeToRefreshLayout.setOnRefreshListener {
-            binding.swipeToRefreshLayout.isRefreshing = false
-        }
+//        binding.swipeToRefreshLayout.setOnRefreshListener {
+//            binding.swipeToRefreshLayout.isRefreshing = false
+//        }
 
         binding.followersTv.setOnClickListener {
             findNavController().navigate(R.id.action_profileFragment_to_followersListFragment)

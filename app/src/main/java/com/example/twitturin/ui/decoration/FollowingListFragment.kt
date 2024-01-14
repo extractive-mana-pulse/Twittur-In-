@@ -20,12 +20,13 @@ import com.example.twitturin.ui.adapters.FollowingAdapter
 import com.example.twitturin.viewmodel.MainViewModel
 import com.example.twitturin.viewmodel.ViewModelFactory
 import com.example.twitturin.viewmodel.manager.SessionManager
+import java.util.Random
 
 class FollowingListFragment : Fragment() {
 
+    private lateinit var viewModel : MainViewModel
     private lateinit var binding : FragmentFollowingListBinding
     private val followingAdapter by lazy { FollowingAdapter(viewLifecycleOwner) }
-    private lateinit var viewModel : MainViewModel
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentFollowingListBinding.inflate(layoutInflater)
         return binding.root
@@ -57,7 +58,12 @@ class FollowingListFragment : Fragment() {
                 response.body()?.let { tweets ->
                     val tweetList: MutableList<User> = tweets.toMutableList()
                     followingAdapter.setData(tweetList)
-                    followingAdapter.notifyDataSetChanged()
+                    binding.swipeToRefreshLayoutFollowingList.setOnRefreshListener {
+                        tweetList.shuffle(Random(System.currentTimeMillis()))
+                        followingAdapter.notifyDataSetChanged()
+                        viewModel.getFollowing(userId)
+                        binding.swipeToRefreshLayoutFollowingList.isRefreshing = false
+                    }
                 }
             } else {
                 Toast.makeText(requireContext(), response.code().toString(), Toast.LENGTH_SHORT).show()

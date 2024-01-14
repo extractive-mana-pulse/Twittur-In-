@@ -20,7 +20,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class   FollowUserViewModel : ViewModel() {
+class FollowUserViewModel : ViewModel() {
 
     private val retrofit = Retrofit.Builder()
         .baseUrl(BuildConfig.BASE_URL)
@@ -36,7 +36,7 @@ class   FollowUserViewModel : ViewModel() {
         api.followUser(id, token).enqueue(object : Callback<User> {
             override fun onResponse(call: Call<User>, response: Response<User>) {
                 if (response.isSuccessful) {
-                    _followResult.value = FollowResult.Success
+                    _followResult.value = FollowResult.Success(User())
                 } else {
                     _followResult.value = FollowResult.Error(response.message().toString())
                 }

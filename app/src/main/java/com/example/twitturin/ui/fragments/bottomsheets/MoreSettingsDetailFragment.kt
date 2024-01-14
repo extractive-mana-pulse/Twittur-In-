@@ -21,7 +21,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
-class MyBottomSheetDialogFragment : BottomSheetDialogFragment() {
+class MoreSettingsDetailFragment : BottomSheetDialogFragment() {
 
     private lateinit var followViewModel: FollowUserViewModel
 

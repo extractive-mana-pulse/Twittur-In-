@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/delete_user_own_tweet"
+        android:icon="@drawable/delete"
+        android:title="Delete post"
+        tools:ignore="MenuTitle"/>
+</menu>

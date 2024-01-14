@@ -56,6 +56,24 @@ class ProfileViewModel: ViewModel() {
         }
     }
 
+    private val _deleteTweetResult = SingleLiveEvent<DeleteResult>()
+    val deleteTweetResult: LiveData<DeleteResult> = _deleteTweetResult
+
+    fun deleteTweet(tweetId: String, token : String) {
+        viewModelScope.launch {
+            try {
+                val response = apiService.deleteTweet(tweetId, token)
+                if (response.isSuccessful) {
+                    _deleteTweetResult.value = DeleteResult.Success
+                } else {
+                    _deleteTweetResult.value = DeleteResult.Error(response.code().toString())
+                }
+            } catch (e: Exception) {
+                _deleteTweetResult.value = DeleteResult.Error("An error occurred: ${e.message}")
+            }
+        }
+    }
+
 
     private val _getUserCredentials = MutableLiveData<UserCredentialsResult>()
     val getUserCredentials: LiveData<UserCredentialsResult> = _getUserCredentials
@@ -112,27 +130,4 @@ class ProfileViewModel: ViewModel() {
             }
         })
     }
-
-//    private val _data = MutableLiveData<UserTweetsResult>()
-//    val data: LiveData<UserTweetsResult> = _data
-//
-//    fun followUser(userId: String, token: String){
-//        val call = apiService.followUser(userId, token)
-//        call.enqueue(object : Callback<Unit> {
-//            override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
-//                if (response.isSuccessful){
-//                    Log.d("response body", response.body().toString())
-//                    Log.d("response code", response.code().toString())
-//                }
-//                else {
-//                    Log.d("response body error", response.body().toString())
-//                    Log.d("response code error", response.code().toString())
-//                }
-//            }
-//
-//            override fun onFailure(call: Call<Unit>, t: Throwable) {
-//                t.message
-//            }
-//        })
-//    }
 }

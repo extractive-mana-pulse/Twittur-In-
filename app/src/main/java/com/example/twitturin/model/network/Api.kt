@@ -28,6 +28,9 @@ interface Api  {
     @DELETE("users/{id}")
     suspend fun deleteUser(@Path("id") userId: String, @Header("Authorization") token: String): Response<Unit>
 
+    @DELETE("tweets/{id}")
+    suspend fun deleteTweet(@Path("id") tweetId: String, @Header("Authorization") token: String): Response<Unit>
+
     /** publish user like too  **/
     @POST("tweets/{id}/likes")
     fun postLike(@Body tweet: LikeTweet, @Path("id") userId: String, @Header("Authorization") token: String): Call<LikeTweet>
