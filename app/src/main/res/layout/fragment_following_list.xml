@@ -43,6 +43,35 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/anView_following"
+        android:layout_width="282dp"
+        android:layout_height="282dp"
+        app:lottie_loop="false"
+        app:lottie_autoPlay="true"
+        android:visibility="visible"
+        app:layout_constraintWidth_percent="0.4"
+        app:layout_constraintDimensionRatio="1.1"
+        app:lottie_fileName="empty_tweets_list.json"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"/>
+
+    <TextView
+        android:id="@+id/empty_following_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="You are not following anyone"
+        android:textStyle="italic"
+        android:textSize="18sp"
+        android:visibility="visible"
+        android:textColor="?attr/colorPrimaryInverse"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/anView_following"/>
+
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_to_refresh_layout_following_list"
         android:layout_width="match_parent"

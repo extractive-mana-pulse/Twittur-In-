@@ -4,7 +4,7 @@
     tools:showIn="navigation_view">
 
     <group
-        android:id="@+id/hello_world"
+        android:id="@+id/main_group"
         android:checkableBehavior="single">
 
         <item
@@ -15,40 +15,14 @@
 
         <item
             android:id="@+id/language_item"
-            android:icon="@drawable/language"
+            android:icon="@drawable/translate"
             android:title="@string/language"/>
-
-<!--        <item-->
-<!--            android:id="@+id/my_tweets"-->
-<!--            android:icon="@drawable/post"-->
-<!--            android:title="@string/my_posts"/>-->
 
         <item
             android:id="@+id/time_table"
-            android:icon="@drawable/calendar"
+            android:icon="@drawable/calendar_month"
             android:title="@string/time_table"/>
-
 
     </group>
 
-
-<!--    <item-->
-<!--        android:title=""-->
-<!--        tools:ignore="MenuTitle">-->
-
-<!--        <menu>-->
-
-<!--            <item-->
-<!--                android:id="@+id/my_tweets"-->
-<!--                android:icon="@drawable/post"-->
-<!--                android:title="@string/my_posts"-->
-<!--                android:checked="false"/>-->
-
-<!--            <item-->
-<!--                android:id="@+id/time_table"-->
-<!--                android:icon="@drawable/calendar"-->
-<!--                android:title="@string/time_table"/>-->
-
-<!--        </menu>-->
-<!--    </item>-->
 </menu>

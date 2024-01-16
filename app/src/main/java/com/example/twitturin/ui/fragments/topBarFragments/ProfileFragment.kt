@@ -58,9 +58,11 @@ class ProfileFragment : Fragment() {
             when (result) {
                 is UserCredentialsResult.Success -> {
 
-                    val profileImage = "${result.user.profilePicture}"
+                    val profileImage = "${result.user.profilePicture ?: R.drawable.username_person}"
                     Glide.with(requireContext())
                         .load(profileImage)
+                        .error(R.drawable.not_found)
+                        .placeholder(R.drawable.username_person)
                         .into(binding.profileImage)
 
                     binding.profileName.text = result.user.fullName ?: "Twittur User"

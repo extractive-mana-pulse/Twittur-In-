@@ -98,9 +98,8 @@
             app:menu="@menu/navigation_drawer"
             android:layout_marginStart="16dp"
             android:layout_gravity="start"
-            android:fitsSystemWindows="true"/>
-
-<!--        app:headerLayout="@layout/navigation_drawer_header_layout"-->
+            android:fitsSystemWindows="true"
+            app:headerLayout="@layout/navigation_drawer_header_layout"/>
 
 <!--    style="@style/Widget.App.NavigationView"    -->
     </androidx.drawerlayout.widget.DrawerLayout>

@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <ImageView
@@ -53,7 +52,7 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <TextView
-            android:id="@+id/following_counter_tv"
+            android:id="@+id/nav_following_counter_tv"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="@string/following_counter_tv"
@@ -73,7 +72,7 @@
             app:layout_constraintTop_toBottomOf="@id/profile_description"/>
 
         <TextView
-            android:id="@+id/followers_counter_tv"
+            android:id="@+id/nav_followers_counter_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/followers_counter_tv"

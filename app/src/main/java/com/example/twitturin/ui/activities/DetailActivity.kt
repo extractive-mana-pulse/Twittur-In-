@@ -7,6 +7,7 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -58,11 +59,15 @@ class DetailActivity : AppCompatActivity() {
         val userId = intent.getStringExtra("userId")
 
         val sharedPreferences = getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
-        sharedPreferences.edit().putString("userAvatar", userImage).apply()
+        sharedPreferences.edit().putString("userImage", userImage).apply()
         sharedPreferences.edit().putString("username", username).apply()
         sharedPreferences.edit().putString("fullname", fullname).apply()
         sharedPreferences.edit().putString("userId", userId).apply()
         sharedPreferences.edit().putString("id", id).apply()
+
+        Log.d("user userImage",userImage.toString())
+        Log.d("user username",username.toString())
+        Log.d("user fullname",fullname.toString())
 
         val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.getDefault())
         dateFormat.timeZone = TimeZone.getTimeZone("UTC")
@@ -172,7 +177,7 @@ class DetailActivity : AppCompatActivity() {
                 .centerCrop()
                 .into(authorAvatar)
 
-            authorFullname.text = fullname ?: "Twittur User"
+            authorFullname.text = fullname
             authorUsername.text = "@$username"
             postDescription.text = description
             articlePageLikesCounter.text = likes

@@ -1,12 +1,14 @@
 package com.example.twitturin.ui.fragments.bottomNavigationView
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.ActionBarDrawerToggle
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
@@ -21,8 +23,11 @@ import com.example.twitturin.model.data.tweets.Tweet
 import com.example.twitturin.model.data.users.User
 import com.example.twitturin.model.repo.Repository
 import com.example.twitturin.ui.adapters.PostAdapter
+import com.example.twitturin.ui.sealeds.UserCredentialsResult
 import com.example.twitturin.viewmodel.MainViewModel
+import com.example.twitturin.viewmodel.ProfileViewModel
 import com.example.twitturin.viewmodel.ViewModelFactory
+import com.example.twitturin.viewmodel.manager.SessionManager
 import com.google.android.material.snackbar.Snackbar
 import java.util.Random
 
@@ -30,7 +35,6 @@ class HomeFragment : Fragment() {
 
     private lateinit var viewModel: MainViewModel
     private lateinit var binding : FragmentHomeBinding
-    private lateinit var toggle : ActionBarDrawerToggle
     private val postAdapter by lazy { PostAdapter(viewLifecycleOwner) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,15 +47,75 @@ class HomeFragment : Fragment() {
         return binding.root
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.homeFragment = this
 
-        val user = User()
-        val url = user.profilePicture
+        val sharedPreferences = requireContext().getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
+        val userImage = sharedPreferences.getString("userImage", "")
+        val fullname = sharedPreferences.getString("fullname", "")
+        val username = sharedPreferences.getString("username", "")
+
+        // TODO {work with this code and fix error getting null}
+
+        val headerView: View = binding.navigationView.getHeaderView(0)
+
+        headerView.setOnClickListener { findNavController().navigate(R.id.action_homeFragment_to_profileFragment) }
+
+        val sessionManager = SessionManager(requireContext())
+        val userId = sessionManager.getUserId()
+        val profileViewModel = ViewModelProvider(this)[ProfileViewModel::class.java]
+
+        profileViewModel.getUserCredentials(userId!!)
+
+        profileViewModel.getUserCredentials.observe(viewLifecycleOwner) { result ->
+
+            when (result) {
+                is UserCredentialsResult.Success -> {
+
+                    val imageView: ImageView = headerView.findViewById(R.id.nav_avatar)
+                    val fullName: TextView = headerView.findViewById(R.id.nav_full_name_tv)
+                    val userName: TextView = headerView.findViewById(R.id.nav_username_tv)
+                    val followingTv: TextView = headerView.findViewById(R.id.nav_following_counter_tv)
+                    val followersTv: TextView = headerView.findViewById(R.id.nav_followers_counter_tv)
+
+                    val profileImage = "${result.user.profilePicture}"
+
+                    Glide.with(requireContext())
+                        .load(profileImage)
+                        .error(R.drawable.not_found)
+                        .placeholder(R.drawable.username_person)
+                        .into(imageView)
+
+                    fullName.text = result.user.fullName ?: "Twittur User"
+
+                    userName.text = "@" + result.user.username
+
+                    followingTv.text = result.user.followingCount.toString()
+                    followersTv.text = result.user.followersCount.toString()
+
+                }
+                is UserCredentialsResult.Error -> {
+                    snackbarError(result.message)
+                }
+            }
+        }
+
+
+
+
+
+//
+//        Glide.with(requireActivity())
+//            .load(userImage)
+//            .into(imageView)
+//
+//        fullName.text = fullname
+//        userName.text = username
 
         Glide.with(requireActivity())
-            .load(url)
+            .load(userImage)
             .error(R.drawable.not_found)
             .centerCrop()
             .into(binding.accountImage)
@@ -65,10 +129,6 @@ class HomeFragment : Fragment() {
         val viewModelFactory = ViewModelFactory(repository)
         viewModel = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
 
-        toggle = ActionBarDrawerToggle(requireActivity(), binding.drawerLayout, R.string.open, R.string.close)
-        binding.drawerLayout.addDrawerListener(toggle)
-        toggle.syncState()
-
         binding.navigationView.setNavigationItemSelectedListener {menuItem ->
             when(menuItem.itemId){
                 R.id.profile_item -> findNavController().navigate(R.id.action_homeFragment_to_profileFragment)
@@ -79,38 +139,7 @@ class HomeFragment : Fragment() {
             binding.drawerLayout.close()
             true
         }
-
-// TODO {work with this code and fix error getting null}
-
-//        val headerView: View = binding.navigationView.getHeaderView(0)
-
-//        val sharedPreferences = requireActivity().getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
-//        val userImage = sharedPreferences.getString("userAvatar", "")
-//        val fullname = sharedPreferences.getString("fullname", "")
-//        val username = sharedPreferences.getString("username", "")
-//
-//        val imageView: ImageView = headerView.findViewById(R.id.nav_avatar)
-//        val fullName: TextView = headerView.findViewById(R.id.nav_full_name_tv)
-//        val userName: TextView = headerView.findViewById(R.id.nav_username_tv)
-//
-//        Glide.with(requireActivity())
-//            .load("$userImage")
-//            .into(imageView)
-//
-//        Log.d("fullname", fullname.toString())
-//
-//        fullName.text = fullname
-//        userName.text = username
-
         updateRecyclerView()
-    }
-
-    @Deprecated("Deprecated in Java")
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (toggle.onOptionsItemSelected(item)){
-            return true
-        }
-        return super.onOptionsItemSelected(item)
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -131,7 +160,7 @@ class HomeFragment : Fragment() {
                     }
                 }
             } else {
-                snackbarError()
+                snackbarError(error = "Something went wrong, Please refresh page!")
             }
         }
     }
@@ -152,8 +181,7 @@ class HomeFragment : Fragment() {
         snackbar.show()
     }
 
-    private fun snackbarError() {
-        val error = "Something went wrong! Please refresh the page!"
+    private fun snackbarError(error : String) {
         val rootView = view?.findViewById<DrawerLayout>(R.id.drawer_layout)
         val duration = Snackbar.LENGTH_SHORT
 

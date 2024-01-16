@@ -46,7 +46,7 @@ class MainViewModel(private val repository: Repository): ViewModel() {
 
     fun postTheTweet(content: String, authToken: String) {
         val request = TweetContent(content)
-        val authRequest = tweetApi.postTweet(request, "Bearer $authToken")
+        val authRequest = tweetApi.postTweet(request, authToken)
 
         authRequest.enqueue(object : Callback<TweetContent> {
             override fun onResponse(call: Call<TweetContent>, response: Response<TweetContent>) {
@@ -55,7 +55,7 @@ class MainViewModel(private val repository: Repository): ViewModel() {
                     val postTweet = response.body()
                     _postTweet.value = postTweet?.let { PostTweet.Success(it) }
                 } else {
-                    _postTweet.value = PostTweet.Error(response.headers().toString())
+                    _postTweet.value = PostTweet.Error(response.body().toString())
                 }
             }
 

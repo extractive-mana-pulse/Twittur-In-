@@ -35,6 +35,11 @@ class FollowingListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.anViewFollowing.setFailureListener { t ->
+            snackbarError(t.message.toString())
+        }
+        binding.anViewFollowing.setAnimation(R.raw.empty_tweets_list)
+
         val repository = Repository()
         val viewModelFactory = ViewModelFactory(repository)
         viewModel = ViewModelProvider(this,viewModelFactory)[MainViewModel::class.java]
@@ -62,6 +67,18 @@ class FollowingListFragment : Fragment() {
                         tweetList.shuffle(Random(System.currentTimeMillis()))
                         viewModel.getFollowing(userId)
                         binding.swipeToRefreshLayoutFollowingList.isRefreshing = false
+                    }
+
+                    if (tweetList.isEmpty()){
+                        binding.rcViewFollowing.visibility = View.GONE
+                        binding.anViewFollowing.visibility = View.VISIBLE
+                        binding.emptyFollowingTv.visibility = View.VISIBLE
+                    } else {
+                        binding.rcViewFollowing.visibility = View.VISIBLE
+                        binding.anViewFollowing.visibility = View.GONE
+                        binding.emptyFollowingTv.visibility = View.GONE
+
+                        followingAdapter.setData(tweetList)
                     }
                 }
             } else {

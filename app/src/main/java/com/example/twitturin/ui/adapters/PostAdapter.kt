@@ -5,6 +5,7 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -12,6 +13,7 @@ import com.example.twitturin.R
 import com.example.twitturin.databinding.RcViewBinding
 import com.example.twitturin.model.data.tweets.Tweet
 import com.example.twitturin.ui.activities.DetailActivity
+import com.google.android.material.snackbar.Snackbar
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -34,79 +36,98 @@ class PostAdapter(private val parentLifecycleOwner: LifecycleOwner) : RecyclerVi
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = list[position]
         val baseUrl = "https://twitturin.onrender.com/tweets"
+        val context = holder.itemView.context
 //        var likeCount: Int? = item.likes
 //        var isLiked: Boolean = false
 
         holder.binding.apply {
-            val profileImage = "${item.author?.profilePicture}"
+            item.apply {
+                val profileImage = "${author?.profilePicture}"
 
-            Glide.with(holder.itemView.context)
-                .load(profileImage)
-                .error(R.drawable.not_found)
-                .placeholder(R.drawable.loading)
-                .centerCrop()
-                .into(userAvatar)
+                Glide.with(context)
+                    .load(profileImage)
+                    .error(R.drawable.not_found)
+                    .placeholder(R.drawable.loading)
+                    .centerCrop()
+                    .into(userAvatar)
 
-            fullNameTv.text = item.author?.fullName ?: "Twittur User"
-            usernameTv.text = "@" + item.author?.username
-            postDescription.text = item.content
-            postCommentsCounter.text = item.replyCount.toString()
-            postHeartCounter.text = item.likes.toString()
+                fullNameTv.text = author?.fullName ?: "Twittur User"
+                usernameTv.text = "@" + author?.username
+                postDescription.text = content
+                postCommentsCounter.text = replyCount.toString()
+                postHeartCounter.text = likes.toString()
 
-            val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.getDefault())
-            dateFormat.timeZone = TimeZone.getTimeZone("UTC")
+                val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.getDefault())
+                dateFormat.timeZone = TimeZone.getTimeZone("UTC")
 
-            try {
-                val date = dateFormat.parse(item.createdAt)
-                val currentTime = System.currentTimeMillis()
-                val durationMillis = currentTime - date.time
+                try {
+                    val date = dateFormat.parse(item.createdAt)
+                    val currentTime = System.currentTimeMillis()
+                    val durationMillis = currentTime - date.time
 
-                val seconds = TimeUnit.MILLISECONDS.toSeconds(durationMillis)
-                val minutes = TimeUnit.MILLISECONDS.toMinutes(durationMillis)
-                val hours = TimeUnit.MILLISECONDS.toHours(durationMillis)
-                val days = TimeUnit.MILLISECONDS.toDays(durationMillis)
-                val weeks = days / 7
+                    val seconds = TimeUnit.MILLISECONDS.toSeconds(durationMillis)
+                    val minutes = TimeUnit.MILLISECONDS.toMinutes(durationMillis)
+                    val hours = TimeUnit.MILLISECONDS.toHours(durationMillis)
+                    val days = TimeUnit.MILLISECONDS.toDays(durationMillis)
+                    val weeks = days / 7
 
-                val durationString = when {
-                    weeks > 0 -> "$weeks w."
-                    days > 0 -> "$days d."
-                    hours > 0 -> "$hours h."
-                    minutes > 0 -> "$minutes m."
-                    else -> "$seconds s."
+                    val durationString = when {
+                        weeks > 0 -> "$weeks w."
+                        days > 0 -> "$days d."
+                        hours > 0 -> "$hours h."
+                        minutes > 0 -> "$minutes m."
+                        else -> "$seconds s."
+                    }
+                    println("Post created $durationString")
+                    createdAtTv.text = durationString
+
+                } catch (e: Exception) {
+                    println("Invalid date")
+                    createdAtTv.text = "Invalid date"
                 }
-                println("Post created $durationString")
-                createdAtTv.text = durationString
 
-            } catch (e: Exception) {
-                println("Invalid date")
-                createdAtTv.text = "Invalid date"
+                postIconHeart.setOnClickListener {
+                    val error = "In Progress"
+                    val rootView = holder.itemView.findViewById<LinearLayout>(R.id.home_root_layout)
+                    val duration = Snackbar.LENGTH_SHORT
+
+                    val snackbar = Snackbar
+                        .make(rootView, error, duration)
+                        .setBackgroundTint(context.resources.getColor(R.color.md_theme_light_errorContainer))
+                        .setTextColor(context.resources.getColor(R.color.md_theme_light_onErrorContainer))
+                        .setActionTextColor(context.resources.getColor(R.color.md_theme_light_onErrorContainer))
+                    snackbar.show()
+                }
+
+                holder.itemView.setOnClickListener {
+                    val intent = Intent(context, DetailActivity::class.java)
+
+                    intent.putExtra("fullname", author?.fullName ?: "Twittur User")
+                    intent.putExtra("username", author?.username)
+                    intent.putExtra("post_description", content)
+                    intent.putExtra("createdAt", createdAt)
+                    intent.putExtra("likes", likes.toString())
+                    intent.putExtra("id",id)
+                    intent.putExtra("userId",author?.id)
+                    intent.putExtra("userAvatar", author?.profilePicture ?: R.drawable.ic_launcher_foreground)
+
+                    context.startActivity(intent)
+                }
+
+                postIconShare.setOnClickListener {
+                    val intent = Intent(Intent.ACTION_SEND)
+                    val link = "$baseUrl/$id"
+
+                    intent.putExtra(Intent.EXTRA_TEXT, link)
+                    intent.type = "text/plain"
+
+                    context.startActivity(Intent.createChooser(intent,"Choose app:"))
+                }
             }
         }
 
-        holder.itemView.setOnClickListener {
-            val intent = Intent(holder.itemView.context, DetailActivity::class.java)
 
-            intent.putExtra("fullname", item.author?.fullName)
-            intent.putExtra("username", item.author?.username)
-            intent.putExtra("post_description", item.content)
-            intent.putExtra("createdAt", item.createdAt)
-            intent.putExtra("likes", item.likes.toString())
-            intent.putExtra("id",item.id)
-            intent.putExtra("userId",item.author?.id)
-            intent.putExtra("userAvatar", item.author?.profilePicture)
 
-            holder.itemView.context.startActivity(intent)
-        }
-
-        holder.binding.postIconShare.setOnClickListener {
-            val intent = Intent(Intent.ACTION_SEND)
-            val link = baseUrl+"/"+item.id
-
-            intent.putExtra(Intent.EXTRA_TEXT, link)
-            intent.type = "text/plain"
-
-            holder.itemView.context.startActivity(Intent.createChooser(intent,"Choose app:"))
-        }
 
 //        val sessionManager = SessionManager(holder.itemView.context)
 //        val token = sessionManager.getToken()
