@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.PopupMenu
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
@@ -141,19 +142,19 @@ class UserPostAdapter(private val parentLifecycleOwner: LifecycleOwner) : Recycl
                                 profileViewModel.deleteTweetResult.observe(parentLifecycleOwner){ result ->
                                     when(result){
                                         is DeleteResult.Success -> {
-                                            val error = "Deleted"
-                                            val rootView = holder.itemView.findViewById<LinearLayout>(R.id.followers_root_layout)
+                                            val message = "Deleted"
+                                            val rootView = holder.itemView.findViewById<ConstraintLayout>(R.id.user_own_root_layout)
                                             val duration = Snackbar.LENGTH_SHORT
 
                                             val snackbar = Snackbar
-                                                .make(rootView!!, error, duration)
+                                                .make(rootView!!, message, duration)
                                                 .setBackgroundTint(context.resources.getColor(R.color.md_theme_light_primary))
                                                 .setTextColor(context.resources.getColor(R.color.md_theme_light_onPrimaryContainer))
                                             snackbar.show()
                                         }
                                         is  DeleteResult.Error -> {
                                             val error = result.message
-                                            val rootView = holder.itemView.findViewById<LinearLayout>(R.id.user_own_root_layout)
+                                            val rootView = holder.itemView.findViewById<ConstraintLayout>(R.id.user_own_root_layout)
                                             val duration = Snackbar.LENGTH_SHORT
 
                                             val snackbar = Snackbar

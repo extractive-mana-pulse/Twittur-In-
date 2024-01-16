@@ -177,7 +177,7 @@ class DetailActivity : AppCompatActivity() {
                 .centerCrop()
                 .into(authorAvatar)
 
-            authorFullname.text = fullname
+            authorFullname.text = fullname ?: "Twittur User"
             authorUsername.text = "@$username"
             postDescription.text = description
             articlePageLikesCounter.text = likes

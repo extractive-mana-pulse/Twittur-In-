@@ -11,6 +11,7 @@ import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
 import com.example.twitturin.ui.sealeds.DeleteResult
 import com.example.twitturin.ui.sealeds.FollowResult
@@ -97,6 +98,7 @@ class MoreSettingsDetailFragment : BottomSheetDialogFragment() {
                 when(result){
                     is DeleteResult.Success -> {
                         snackbar(message = "Deleted")
+                        findNavController().navigate(R.id.homeFragment)
                     }
                     is  DeleteResult.Error -> {
                         snackbarError(result.message)
