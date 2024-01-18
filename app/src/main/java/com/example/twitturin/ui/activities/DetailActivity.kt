@@ -3,15 +3,12 @@ package com.example.twitturin.ui.activities
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.os.Build
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -19,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.twitturin.R
 import com.example.twitturin.databinding.ActivityDetailBinding
+import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.model.data.tweets.Tweet
 import com.example.twitturin.model.repo.Repository
 import com.example.twitturin.ui.adapters.PostAdapter
@@ -29,21 +27,25 @@ import com.example.twitturin.viewmodel.FollowUserViewModel
 import com.example.twitturin.viewmodel.MainViewModel
 import com.example.twitturin.viewmodel.ViewModelFactory
 import com.example.twitturin.viewmodel.manager.SessionManager
-import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.Random
 import java.util.TimeZone
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
+@Suppress("DEPRECATION")
+@AndroidEntryPoint
 class DetailActivity : AppCompatActivity() {
 
     private val binding by lazy { ActivityDetailBinding.inflate(layoutInflater) }
     private val postAdapter by lazy { PostAdapter(this@DetailActivity) }
     private lateinit var followViewModel: FollowUserViewModel
     private lateinit var viewModel: MainViewModel
+    @Inject lateinit var sessionManager: SessionManager
+    @Inject lateinit var snackbarHelper: SnackbarHelper
 
-    @RequiresApi(Build.VERSION_CODES.R)
     @SuppressLint("SetTextI18n", "PrivateResource", "NotifyDataSetChanged", "ResourceAsColor")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,10 +67,6 @@ class DetailActivity : AppCompatActivity() {
         sharedPreferences.edit().putString("userId", userId).apply()
         sharedPreferences.edit().putString("id", id).apply()
 
-        Log.d("user userImage",userImage.toString())
-        Log.d("user username",username.toString())
-        Log.d("user fullname",fullname.toString())
-
         val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.getDefault())
         dateFormat.timeZone = TimeZone.getTimeZone("UTC")
 
@@ -79,7 +77,6 @@ class DetailActivity : AppCompatActivity() {
 
         updateRecyclerView()
 
-        val sessionManager = SessionManager(this@DetailActivity)
         val token = sessionManager.getToken()
         val userId2 = sessionManager.getUserId()
 
@@ -123,8 +120,11 @@ class DetailActivity : AppCompatActivity() {
                 }
 
                 is PostReply.Error -> {
-                    val errorMessage = result.message
-                    snackbarError(errorMessage)
+                    snackbarHelper.snackbarError(
+                        findViewById(R.id.detail_root_layout),
+                        findViewById(R.id.detail_root_layout),
+                        result.message,
+                        ""){}
                     binding.replyEt.addTextChangedListener(textWatcher1)
                 }
             }
@@ -134,7 +134,7 @@ class DetailActivity : AppCompatActivity() {
             val date = dateFormat.parse(createdTime.toString())
             val currentTime = System.currentTimeMillis()
 
-            val durationMillis = currentTime - date.time
+            val durationMillis = currentTime - date!!.time
 
             val seconds = TimeUnit.MILLISECONDS.toSeconds(durationMillis)
             val minutes = TimeUnit.MILLISECONDS.toMinutes(durationMillis)
@@ -161,7 +161,7 @@ class DetailActivity : AppCompatActivity() {
 
             authorAvatar.setOnLongClickListener {
                 authorAvatar.buildDrawingCache()
-                val originalBitmap = authorAvatar.drawingCache
+                val originalBitmap: Bitmap = authorAvatar.drawingCache
                 val image = originalBitmap.copy(originalBitmap.config, true)
 
                 val intent = Intent(this@DetailActivity, FullScreenImageActivity::class.java)
@@ -196,37 +196,37 @@ class DetailActivity : AppCompatActivity() {
                         val currentFollowedUsernames = followedUsernames.value ?: mutableListOf()
                         currentFollowedUsernames.add(followingUserName.toString())
 
-//                        followBtn.visibility = View.GONE
-//                        unfollowBtn.visibility = View.VISIBLE
-
-                        snackbar("now you follow: ${username?.uppercase()}")
+                        snackbarHelper.snackbar(
+                            findViewById(R.id.detail_root_layout),
+                            findViewById(R.id.reply_layout),
+                            message = "now you follow ${username?.uppercase()}"
+                        )
                     }
+
                     is FollowResult.Error -> {
-                        val errorMessage = result.message
-                        snackbarError(errorMessage)
+                        snackbarHelper.snackbarError(
+                            findViewById(R.id.detail_root_layout),
+                            findViewById(R.id.reply_layout),
+                            result.message,
+                            ""){}
                     }
                 }
             }
 
-//            fun isUserFollowed(username: String): Boolean {
-//                val currentFollowedUsernames = followedUsernames.value ?: mutableListOf()
-//                return currentFollowedUsernames.contains(username)
-//            }
-//
-//            if (followedUsernames.equals(isUserFollowed(username.toString()))){
-//                followBtn.visibility = View.GONE
-//                unfollowBtn.visibility = View.VISIBLE
-//            } else {
-//                followBtn.visibility = View.VISIBLE
-//                unfollowBtn.visibility = View.GONE
-//            }
-
             articlePageCommentsIcon.setOnClickListener {
-                snackbar("In Progress")
+                snackbarHelper.snackbar(
+                    findViewById(R.id.detail_root_layout),
+                    findViewById(R.id.reply_layout),
+                    message = "In Progress"
+                )
             }
 
             articlePageHeartIcon.setOnClickListener {
-                snackbar("In Progress")
+                snackbarHelper.snackbar(
+                    findViewById(R.id.detail_root_layout),
+                    findViewById(R.id.reply_layout),
+                    message = "In Progress"
+                )
             }
 
             articlePageShareIcon.setOnClickListener {
@@ -287,31 +287,12 @@ class DetailActivity : AppCompatActivity() {
                     }
                 }
             } else {
-                snackbarError("Something went wrong! Please refresh the page!")
+                snackbarHelper.snackbarError(
+                    findViewById(R.id.detail_root_layout),
+                    findViewById(R.id.reply_layout),
+                    response.message().toString(),
+                    ""){}
             }
         }
-    }
-
-    private fun snackbar(message : String) {
-        val rootView = findViewById<ConstraintLayout>(R.id.detail_root_layout)
-        val duration = Snackbar.LENGTH_SHORT
-
-        val snackbar = Snackbar
-            .make(rootView!!, message, duration)
-            .setBackgroundTint(resources.getColor(R.color.md_theme_light_primary))
-            .setTextColor(resources.getColor(R.color.md_theme_light_onPrimaryContainer))
-        snackbar.show()
-    }
-
-    private fun snackbarError(error : String) {
-        val rootView = findViewById<ConstraintLayout>(R.id.detail_root_layout)
-        val duration = Snackbar.LENGTH_SHORT
-
-        val snackbar = Snackbar
-            .make(rootView!!, error, duration)
-            .setBackgroundTint(resources.getColor(R.color.md_theme_light_errorContainer))
-            .setTextColor(resources.getColor(R.color.md_theme_light_onErrorContainer))
-            .setActionTextColor(resources.getColor(R.color.md_theme_light_onErrorContainer))
-        snackbar.show()
     }
 }

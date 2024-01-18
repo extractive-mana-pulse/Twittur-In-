@@ -25,10 +25,16 @@ import com.example.twitturin.viewmodel.ProfileViewModel
 import com.example.twitturin.viewmodel.manager.SessionManager
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayoutMediator
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class ProfileFragment : Fragment() {
 
     private lateinit var binding: FragmentProfileBinding
+
+    @Inject
+    lateinit var sessionManager: SessionManager
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentProfileBinding.inflate(layoutInflater)
         return binding.root
@@ -39,7 +45,7 @@ class ProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.profileFragment = this
 
-        val sessionManager = SessionManager(requireContext())
+
         val profileViewModel = ViewModelProvider(this)[ProfileViewModel::class.java]
         val userId = sessionManager.getUserId()
         val token = sessionManager.getToken()

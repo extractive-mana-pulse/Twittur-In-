@@ -1,11 +1,15 @@
 package com.example.twitturin.model.repo
 
-import com.example.twitturin.model.network.RetrofitInstance
 import com.example.twitturin.model.data.tweets.Tweet
 import com.example.twitturin.model.data.users.User
+import com.example.twitturin.model.network.RetrofitInstance
 import retrofit2.Response
 
 class Repository {
+
+//    override suspend fun doNetworkCall() {
+        // TODO
+//    }
 
     suspend fun getTweets() : Response<List<Tweet>> {
         return RetrofitInstance.api.getTweet()

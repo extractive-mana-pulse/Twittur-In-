@@ -5,23 +5,27 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.twitturin.R
 import com.example.twitturin.databinding.RcViewBinding
+import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.model.data.tweets.Tweet
 import com.example.twitturin.ui.activities.DetailActivity
-import com.google.android.material.snackbar.Snackbar
+import com.example.twitturin.viewmodel.LikeViewModel
+import com.example.twitturin.viewmodel.manager.SessionManager
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 class PostAdapter(private val parentLifecycleOwner: LifecycleOwner) : RecyclerView.Adapter<PostAdapter.ViewHolder>() {
 
     private var list = emptyList<Tweet>()
-//    private lateinit var viewModel: LikeViewModel
+    @Inject lateinit var sessionManager: SessionManager
+    @Inject lateinit var snackbarHelper: SnackbarHelper
+    private lateinit var viewModel: LikeViewModel
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val binding = RcViewBinding.bind(itemView)
@@ -63,7 +67,7 @@ class PostAdapter(private val parentLifecycleOwner: LifecycleOwner) : RecyclerVi
                 try {
                     val date = dateFormat.parse(item.createdAt)
                     val currentTime = System.currentTimeMillis()
-                    val durationMillis = currentTime - date.time
+                    val durationMillis = currentTime - date!!.time
 
                     val seconds = TimeUnit.MILLISECONDS.toSeconds(durationMillis)
                     val minutes = TimeUnit.MILLISECONDS.toMinutes(durationMillis)
@@ -87,16 +91,11 @@ class PostAdapter(private val parentLifecycleOwner: LifecycleOwner) : RecyclerVi
                 }
 
                 postIconHeart.setOnClickListener {
-                    val error = "In Progress"
-                    val rootView = holder.itemView.findViewById<LinearLayout>(R.id.home_root_layout)
-                    val duration = Snackbar.LENGTH_SHORT
-
-                    val snackbar = Snackbar
-                        .make(rootView, error, duration)
-                        .setBackgroundTint(context.resources.getColor(R.color.md_theme_light_errorContainer))
-                        .setTextColor(context.resources.getColor(R.color.md_theme_light_onErrorContainer))
-                        .setActionTextColor(context.resources.getColor(R.color.md_theme_light_onErrorContainer))
-                    snackbar.show()
+                    snackbarHelper.snackbar(
+                        holder.itemView.findViewById(R.id.home_root_layout),
+                        holder.itemView.findViewById(R.id.home_root_layout),
+                        message = "In Progress"
+                    )
                 }
 
                 holder.itemView.setOnClickListener {
@@ -126,10 +125,6 @@ class PostAdapter(private val parentLifecycleOwner: LifecycleOwner) : RecyclerVi
             }
         }
 
-
-
-
-//        val sessionManager = SessionManager(holder.itemView.context)
 //        val token = sessionManager.getToken()
 //
 //        viewModel = ViewModelProvider(holder.itemView.context as ViewModelStoreOwner)[LikeViewModel::class.java]

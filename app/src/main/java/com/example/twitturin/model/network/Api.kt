@@ -1,5 +1,6 @@
 package com.example.twitturin.model.network
 
+import com.example.twitturin.model.data.ImageResource
 import com.example.twitturin.model.data.editUser.EditProfile
 import com.example.twitturin.model.data.likeTweet.LikeTweet
 import com.example.twitturin.model.data.publicTweet.TweetContent
@@ -90,4 +91,11 @@ interface Api  {
         @Path("id")tweetId: String,
         @Header("Authorization") token: String
     ): Call<ReplyContent>
+
+    @POST("users/{id}/profilePicture")
+    fun loadImage(
+        @Body image : ImageResource,
+        @Path("id") userId : String,
+        @Header("Authorization") token : String
+    ) : Call<ImageResource>
 }

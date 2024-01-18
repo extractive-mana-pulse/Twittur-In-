@@ -2,8 +2,11 @@ package com.example.twitturin.viewmodel.manager
 
 import android.content.Context
 import android.content.SharedPreferences
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class SessionManager(private val context: Context) {
+@Singleton
+class SessionManager @Inject constructor(private val context: Context) {
 
     companion object {
         private const val PREF_NAME = "MyPrefs"

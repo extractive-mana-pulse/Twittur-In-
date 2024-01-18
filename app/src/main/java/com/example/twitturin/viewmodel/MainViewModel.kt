@@ -17,6 +17,7 @@ import com.example.twitturin.ui.sealeds.PostReply
 import com.example.twitturin.ui.sealeds.PostTweet
 import com.example.twitturin.ui.sealeds.SearchResource
 import com.example.twitturin.viewmodel.event.SingleLiveEvent
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 import retrofit2.Call
@@ -25,8 +26,10 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
-class MainViewModel(private val repository: Repository): ViewModel() {
+//@HiltViewModel
+class MainViewModel (private val repository: Repository): ViewModel() {
 
     private val client = OkHttpClient.Builder()
         .connectTimeout(90, TimeUnit.SECONDS)
@@ -144,7 +147,7 @@ class MainViewModel(private val repository: Repository): ViewModel() {
     val searchNews: MutableLiveData<SearchResource> = MutableLiveData()
 
     fun searchString(searchQuery: Tweet) = viewModelScope.launch {
-        searchNews.postValue(SearchResource.Loading())
+        searchNews.postValue(SearchResource.Loading)
         val response = repository.searchNews(searchQuery)
         searchNews.postValue(handleSearchNews(response))
     }

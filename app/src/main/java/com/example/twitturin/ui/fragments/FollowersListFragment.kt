@@ -20,14 +20,18 @@ import com.example.twitturin.viewmodel.MainViewModel
 import com.example.twitturin.viewmodel.ViewModelFactory
 import com.example.twitturin.viewmodel.manager.SessionManager
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.Random
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class FollowersListFragment : Fragment() {
 
     private lateinit var viewModel : MainViewModel
+    @Inject lateinit var sessionManager : SessionManager
     private lateinit var followViewModel: FollowUserViewModel
     private lateinit var binding : FragmentFollowersListBinding
-    private val followersAdapter by lazy { FollowersAdapter(viewLifecycleOwner) }
+    private val followersAdapter by lazy {  FollowersAdapter(viewLifecycleOwner) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentFollowersListBinding.inflate(layoutInflater)
@@ -60,7 +64,6 @@ class FollowersListFragment : Fragment() {
         binding.rcViewFollowers.adapter = followersAdapter
         binding.rcViewFollowers.addItemDecoration(DividerItemDecoration(binding.rcViewFollowers.context, DividerItemDecoration.VERTICAL))
         binding.rcViewFollowers.layoutManager = LinearLayoutManager(requireContext())
-        val sessionManager = SessionManager(requireContext())
         val userId = sessionManager.getUserId()
         viewModel.getFollowers(userId!!)
         viewModel.followersList.observe(requireActivity()) { response ->

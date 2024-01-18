@@ -6,10 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.PopupMenu
-import android.widget.Toast
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
@@ -17,24 +14,24 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.twitturin.R
 import com.example.twitturin.databinding.RcViewUserTweetsBinding
+import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.model.data.tweets.Tweet
-import com.example.twitturin.model.repo.Repository
 import com.example.twitturin.ui.activities.DetailActivity
 import com.example.twitturin.ui.sealeds.DeleteResult
 import com.example.twitturin.viewmodel.LikeViewModel
-import com.example.twitturin.viewmodel.MainViewModel
 import com.example.twitturin.viewmodel.ProfileViewModel
-import com.example.twitturin.viewmodel.ViewModelFactory
 import com.example.twitturin.viewmodel.manager.SessionManager
-import com.google.android.material.snackbar.Snackbar
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 class UserPostAdapter(private val parentLifecycleOwner: LifecycleOwner) : RecyclerView.Adapter<UserPostAdapter.ViewHolder>() {
 
     private var list = emptyList<Tweet>()
     private lateinit var likeViewModel: LikeViewModel
+    @Inject lateinit var sessionManager: SessionManager
+    @Inject lateinit var snackbarHelper: SnackbarHelper
     private lateinit var profileViewModel: ProfileViewModel
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -78,7 +75,7 @@ class UserPostAdapter(private val parentLifecycleOwner: LifecycleOwner) : Recycl
                 try {
                     val date = dateFormat.parse(createdAt)
                     val currentTime = System.currentTimeMillis()
-                    val durationMillis = currentTime - date.time
+                    val durationMillis = currentTime - date!!.time
 
                     val seconds = TimeUnit.MILLISECONDS.toSeconds(durationMillis)
                     val minutes = TimeUnit.MILLISECONDS.toMinutes(durationMillis)
@@ -134,7 +131,7 @@ class UserPostAdapter(private val parentLifecycleOwner: LifecycleOwner) : Recycl
                         when (item.itemId){
 
                             R.id.delete_user_own_tweet -> {
-                                val sessionManager = SessionManager(context)
+
                                 val token = sessionManager.getToken()
                                 profileViewModel = ViewModelProvider(context as ViewModelStoreOwner)[ProfileViewModel::class.java]
                                 profileViewModel.deleteTweet(/* this id == tweetId */ id,"Bearer $token")
@@ -142,27 +139,17 @@ class UserPostAdapter(private val parentLifecycleOwner: LifecycleOwner) : Recycl
                                 profileViewModel.deleteTweetResult.observe(parentLifecycleOwner){ result ->
                                     when(result){
                                         is DeleteResult.Success -> {
-                                            val message = "Deleted"
-                                            val rootView = holder.itemView.findViewById<ConstraintLayout>(R.id.user_own_root_layout)
-                                            val duration = Snackbar.LENGTH_SHORT
-
-                                            val snackbar = Snackbar
-                                                .make(rootView!!, message, duration)
-                                                .setBackgroundTint(context.resources.getColor(R.color.md_theme_light_primary))
-                                                .setTextColor(context.resources.getColor(R.color.md_theme_light_onPrimaryContainer))
-                                            snackbar.show()
-                                        }
+                                            snackbarHelper.snackbar(
+                                                holder.itemView.findViewById(R.id.user_own_root_layout),
+                                                holder.itemView.findViewById(R.id.user_own_root_layout),
+                                                message = "Deleted"
+                                            ) }
                                         is  DeleteResult.Error -> {
-                                            val error = result.message
-                                            val rootView = holder.itemView.findViewById<ConstraintLayout>(R.id.user_own_root_layout)
-                                            val duration = Snackbar.LENGTH_SHORT
-
-                                            val snackbar = Snackbar
-                                                .make(rootView!!, error, duration)
-                                                .setBackgroundTint(context.resources.getColor(R.color.md_theme_light_errorContainer))
-                                                .setTextColor(context.resources.getColor(R.color.md_theme_light_onErrorContainer))
-                                                .setActionTextColor(context.resources.getColor(R.color.md_theme_light_onErrorContainer))
-                                            snackbar.show()
+                                            snackbarHelper.snackbarError(
+                                                holder.itemView.findViewById(R.id.user_own_root_layout),
+                                                holder.itemView.findViewById(R.id.user_own_root_layout),
+                                                result.message,
+                                                ""){}
                                         }
                                     }
                                 }
@@ -196,7 +183,6 @@ class UserPostAdapter(private val parentLifecycleOwner: LifecycleOwner) : Recycl
         }
 
 
-//        val sessionManager = SessionManager(holder.itemView.context)
 //        val token = sessionManager.getToken()
 //
 //        viewModel = ViewModelProvider(holder.itemView.context as ViewModelStoreOwner)[LikeViewModel::class.java]

@@ -4,7 +4,6 @@ import com.example.twitturin.model.data.editUser.EditProfile
 
 sealed class EditUserResult {
 
-//    object Success : EditUserResult()
     data class Success(val editUser : EditProfile) : EditUserResult()
     data class Error(val errorMessage: String) : EditUserResult()
 }

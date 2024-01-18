@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.twitturin.databinding.ActivityReportBinding
 
+@Suppress("DEPRECATION")
 class ReportActivity : AppCompatActivity() {
 
     private lateinit var binding : ActivityReportBinding
@@ -18,15 +19,15 @@ class ReportActivity : AppCompatActivity() {
                 onBackPressed()
             }
 
-            radioSpam.setOnCheckedChangeListener { buttonView, isChecked ->
+            radioSpam.setOnCheckedChangeListener { _, _ ->
                 testTv.text = scamDescTv.text.toString()
             }
 
-            radioPrivacy.setOnCheckedChangeListener{ buttonView, isChecked ->
+            radioPrivacy.setOnCheckedChangeListener{ _, _ ->
                 testTv.text = privacyDescTv.text.toString()
             }
 
-            radioAbuse.setOnCheckedChangeListener{ buttonView, isChecked ->
+            radioAbuse.setOnCheckedChangeListener{ _, _ ->
                 testTv.text = abuseAndHarassmentDescTv.text.toString()
             }
         }

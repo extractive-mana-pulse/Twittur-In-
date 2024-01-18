@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
@@ -12,18 +11,22 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.twitturin.R
 import com.example.twitturin.databinding.RcViewFollowersBinding
+import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.model.data.users.User
 import com.example.twitturin.ui.sealeds.FollowResult
 import com.example.twitturin.viewmodel.FollowUserViewModel
 import com.example.twitturin.viewmodel.manager.SessionManager
-import com.google.android.material.snackbar.Snackbar
 import java.util.*
+import javax.inject.Inject
 
-class FollowersAdapter(private val parentLifecycleOwner: LifecycleOwner) : RecyclerView.Adapter<FollowersAdapter.ViewHolder>() {
+class FollowersAdapter (
+    private val parentLifecycleOwner: LifecycleOwner
+) : RecyclerView.Adapter<FollowersAdapter.ViewHolder>() {
 
     private var list = emptyList<User>()
+    @Inject lateinit var sessionManager: SessionManager
+    @Inject lateinit var snackbarHelper: SnackbarHelper
     private lateinit var followViewModel: FollowUserViewModel
-
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val binding = RcViewFollowersBinding.bind(itemView)
     }
@@ -52,7 +55,6 @@ class FollowersAdapter(private val parentLifecycleOwner: LifecycleOwner) : Recyc
             postDescription.text = item.bio ?: "This user does not appear to have any biography."
         }
 
-        val sessionManager = SessionManager(context)
         val token = sessionManager.getToken()
         followViewModel = ViewModelProvider(context as ViewModelStoreOwner)[FollowUserViewModel::class.java]
 
@@ -61,43 +63,33 @@ class FollowersAdapter(private val parentLifecycleOwner: LifecycleOwner) : Recyc
         }
 
         followViewModel.followResult.observe(parentLifecycleOwner) { result ->
+
             when (result) {
+
                 is FollowResult.Success -> {
-                    val error = "now you follow: ${item.username?.uppercase()}"
-                    val rootView = holder.itemView.findViewById<LinearLayout>(R.id.followers_root_layout)
-                    val duration = Snackbar.LENGTH_SHORT
-
-                    val snackbar = Snackbar
-                        .make(rootView!!, error, duration)
-                        .setBackgroundTint(context.resources.getColor(R.color.md_theme_light_primary))
-                        .setTextColor(context.resources.getColor(R.color.md_theme_light_onPrimaryContainer))
-                    snackbar.show()
+                    snackbarHelper.snackbar(
+                        holder.itemView.findViewById(R.id.followers_root_layout),
+                        holder.itemView.findViewById(R.id.followers_root_layout),
+                        message = "now you follow: ${item.username?.uppercase()}"
+                    )
                 }
-                is FollowResult.Error -> {
-                    val error = result.message
-                    val rootView = holder.itemView.findViewById<LinearLayout>(R.id.followers_root_layout)
-                    val duration = Snackbar.LENGTH_SHORT
 
-                    val snackbar = Snackbar
-                        .make(rootView!!, error, duration)
-                        .setBackgroundTint(context.resources.getColor(R.color.md_theme_light_errorContainer))
-                        .setTextColor(context.resources.getColor(R.color.md_theme_light_onErrorContainer))
-                        .setActionTextColor(context.resources.getColor(R.color.md_theme_light_onErrorContainer))
-                    snackbar.show()
+                is FollowResult.Error -> {
+                    snackbarHelper.snackbarError(
+                        holder.itemView.findViewById(R.id.followers_root_layout),
+                        holder.itemView.findViewById(R.id.followers_root_layout),
+                        result.message,
+                        ""){}
                 }
             }
         }
 
         holder.itemView.setOnClickListener {
-            val error = "In Progress"
-            val rootView = holder.itemView.findViewById<LinearLayout>(R.id.followers_root_layout)
-            val duration = Snackbar.LENGTH_SHORT
-
-            val snackbar = Snackbar
-                .make(rootView!!, error, duration)
-                .setBackgroundTint(context.resources.getColor(R.color.md_theme_light_primary))
-                .setTextColor(context.resources.getColor(R.color.md_theme_light_onPrimaryContainer))
-            snackbar.show()
+            snackbarHelper.snackbar(
+                holder.itemView.findViewById(R.id.followers_root_layout),
+                holder.itemView.findViewById(R.id.followers_root_layout),
+                message = "In Progress"
+            )
         }
     }
 

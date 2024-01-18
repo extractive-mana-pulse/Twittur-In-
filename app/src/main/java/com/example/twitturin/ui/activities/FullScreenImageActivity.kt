@@ -1,15 +1,11 @@
 package com.example.twitturin.ui.activities
 
 import android.graphics.Bitmap
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.WindowInsetsController
-import android.widget.ImageView
-import androidx.core.content.ContextCompat
-import com.example.twitturin.R
-import com.example.twitturin.databinding.ActivityDetailBinding
+import androidx.appcompat.app.AppCompatActivity
 import com.example.twitturin.databinding.ActivityFullScreenImageBinding
 
+@Suppress("DEPRECATION")
 class FullScreenImageActivity : AppCompatActivity() {
 
     private val binding by lazy { ActivityFullScreenImageBinding.inflate(layoutInflater) }

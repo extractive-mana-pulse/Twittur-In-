@@ -5,12 +5,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.twitturin.BuildConfig
 import com.example.twitturin.model.data.editUser.EditProfile
 import com.example.twitturin.model.network.Api
 import com.example.twitturin.ui.sealeds.DeleteResult
 import com.example.twitturin.ui.sealeds.EditUserResult
 import com.example.twitturin.ui.sealeds.UserCredentialsResult
-import com.example.twitturin.ui.sealeds.UserTweetsResult
 import com.example.twitturin.viewmodel.event.SingleLiveEvent
 import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
@@ -20,8 +20,6 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
-import com.example.twitturin.BuildConfig
-import com.example.twitturin.ui.sealeds.FollowersResult
 
 class ProfileViewModel: ViewModel() {
 

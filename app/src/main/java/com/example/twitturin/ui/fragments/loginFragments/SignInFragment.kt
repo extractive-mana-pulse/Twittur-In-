@@ -12,18 +12,22 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
 import com.example.twitturin.databinding.FragmentSignInBinding
+import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.ui.sealeds.SignInResult
 import com.example.twitturin.viewmodel.SignInViewModel
 import com.example.twitturin.viewmodel.manager.SessionManager
-import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-
+@AndroidEntryPoint
 class SignInFragment : Fragment() {
 
-    private lateinit var binding: FragmentSignInBinding
     private lateinit var viewModel: SignInViewModel
+    @Inject lateinit var sessionManager: SessionManager
+    @Inject lateinit var snackbarHelper: SnackbarHelper
+    private lateinit var binding: FragmentSignInBinding
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentSignInBinding.inflate(layoutInflater)
         return binding.root
     }
@@ -33,7 +37,6 @@ class SignInFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.signInFragment = this
 
-        val sessionManager = SessionManager(requireContext())
         viewModel = ViewModelProvider(this)[SignInViewModel::class.java]
 
         binding.signIn.setOnClickListener {
@@ -87,25 +90,20 @@ class SignInFragment : Fragment() {
 
                 is SignInResult.Error -> {
 
-                    val error = result.message
-                    val rootView: View = requireActivity().findViewById(R.id.rootLayout)
-                    val duration = Snackbar.LENGTH_SHORT
-                    val actionText = "Retry"
+                    snackbarHelper.snackbarError(
+                        view.findViewById(R.id.rootLayout),
+                        binding.signIn,
+                        result.message,
+                        "Retry") { retryOperation() }
 
-                    val snackbar = Snackbar
-                        .make(rootView, error, duration)
-                        .setBackgroundTint(resources.getColor(R.color.md_theme_light_errorContainer))
-                        .setTextColor(resources.getColor(R.color.md_theme_light_onErrorContainer))
-                        .setActionTextColor(resources.getColor(R.color.md_theme_light_onErrorContainer))
-                        .setAnchorView(binding.signIn)
-                        .setAction(actionText) {
-                        binding.usernameSignInEt.text?.clear()
-                        binding.passwordEt.text?.clear()
-                    }
-                    snackbar.show()
                 }
             }
         }
+    }
+
+    private fun retryOperation() {
+        binding.usernameSignInEt.text?.clear()
+        binding.passwordEt.text?.clear()
     }
 
     fun chooseKindPage() {

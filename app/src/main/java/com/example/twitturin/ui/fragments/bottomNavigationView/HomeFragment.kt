@@ -1,9 +1,7 @@
 package com.example.twitturin.ui.fragments.bottomNavigationView
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,8 +17,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.twitturin.R
 import com.example.twitturin.databinding.FragmentHomeBinding
+import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.model.data.tweets.Tweet
-import com.example.twitturin.model.data.users.User
 import com.example.twitturin.model.repo.Repository
 import com.example.twitturin.ui.adapters.PostAdapter
 import com.example.twitturin.ui.sealeds.UserCredentialsResult
@@ -29,12 +27,16 @@ import com.example.twitturin.viewmodel.ProfileViewModel
 import com.example.twitturin.viewmodel.ViewModelFactory
 import com.example.twitturin.viewmodel.manager.SessionManager
 import com.google.android.material.snackbar.Snackbar
-import java.util.Random
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class HomeFragment : Fragment() {
 
     private lateinit var viewModel: MainViewModel
     private lateinit var binding : FragmentHomeBinding
+    @Inject lateinit var sessionManager: SessionManager
+    @Inject lateinit var snackbarHelper: SnackbarHelper
     private val postAdapter by lazy { PostAdapter(viewLifecycleOwner) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,23 +54,13 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.homeFragment = this
 
-        val sharedPreferences = requireContext().getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
-        val userImage = sharedPreferences.getString("userImage", "")
-        val fullname = sharedPreferences.getString("fullname", "")
-        val username = sharedPreferences.getString("username", "")
-
-        // TODO {work with this code and fix error getting null}
-
         val headerView: View = binding.navigationView.getHeaderView(0)
-
         headerView.setOnClickListener { findNavController().navigate(R.id.action_homeFragment_to_profileFragment) }
 
-        val sessionManager = SessionManager(requireContext())
         val userId = sessionManager.getUserId()
         val profileViewModel = ViewModelProvider(this)[ProfileViewModel::class.java]
 
         profileViewModel.getUserCredentials(userId!!)
-
         profileViewModel.getUserCredentials.observe(viewLifecycleOwner) { result ->
 
             when (result) {
@@ -96,30 +88,17 @@ class HomeFragment : Fragment() {
                     followersTv.text = result.user.followersCount.toString()
 
                 }
+
                 is UserCredentialsResult.Error -> {
-                    snackbarError(result.message)
+
+                    snackbarHelper.snackbarError(
+                        view.findViewById<DrawerLayout>(R.id.drawer_layout),
+                        view.findViewById(R.id.bottom_nav_view),
+                        result.message,
+                        ""){}
                 }
             }
         }
-
-
-
-
-
-//
-//        Glide.with(requireActivity())
-//            .load(userImage)
-//            .into(imageView)
-//
-//        fullName.text = fullname
-//        userName.text = username
-
-        Glide.with(requireActivity())
-            .load(userImage)
-            .error(R.drawable.not_found)
-            .centerCrop()
-            .into(binding.accountImage)
-
 
         binding.accountImage.setOnClickListener {
             binding.drawerLayout.openDrawer(GravityCompat.START)
@@ -132,7 +111,11 @@ class HomeFragment : Fragment() {
         binding.navigationView.setNavigationItemSelectedListener {menuItem ->
             when(menuItem.itemId){
                 R.id.profile_item -> findNavController().navigate(R.id.action_homeFragment_to_profileFragment)
-                R.id.language_item ->  snackbar() /*LanguageFragment().show(requireActivity().supportFragmentManager, "LanguageFragment")*/
+                R.id.language_item ->  snackbarHelper.snackbar(
+                    requireActivity().findViewById(R.id.drawer_layout),
+                    requireActivity().findViewById(R.id.add_post),
+                    message = "In Progress"
+                ) /*LanguageFragment().show(requireActivity().supportFragmentManager, "LanguageFragment")*/
                 R.id.time_table -> findNavController().navigate(R.id.action_homeFragment_to_webViewFragment)
             }
             menuItem.isChecked = true
@@ -154,43 +137,25 @@ class HomeFragment : Fragment() {
                     val tweetList: MutableList<Tweet> = tweets.toMutableList()
                     postAdapter.setData(tweetList)
                     binding.swipeToRefreshLayout.setOnRefreshListener {
-                        tweetList.shuffle(Random(System.currentTimeMillis()))
+                        val freshList = tweetList.sortedByDescending { it.createdAt }
+                        tweetList.clear()
+                        tweetList.addAll(freshList)
                         postAdapter.notifyDataSetChanged()
                         binding.swipeToRefreshLayout.isRefreshing = false
                     }
                 }
             } else {
-                snackbarError(error = "Something went wrong, Please refresh page!")
+                snackbarHelper.snackbarError(
+                    requireActivity().findViewById(R.id.drawer_layout),
+                    requireActivity().findViewById(R.id.bottom_nav_view),
+                    response.message().toString(),
+                    ""){}
             }
         }
     }
 
     fun goToPublicPost(){
         findNavController().navigate(R.id.action_homeFragment_to_publicPostFragment)
-    }
-
-    private fun snackbar() {
-        val error = "In Progress"
-        val rootView = view?.findViewById<DrawerLayout>(R.id.drawer_layout)
-        val duration = Snackbar.LENGTH_SHORT
-
-        val snackbar = Snackbar
-            .make(rootView!!, error, duration)
-            .setBackgroundTint(resources.getColor(R.color.md_theme_light_primary))
-            .setTextColor(resources.getColor(R.color.md_theme_light_onPrimaryContainer))
-        snackbar.show()
-    }
-
-    private fun snackbarError(error : String) {
-        val rootView = view?.findViewById<DrawerLayout>(R.id.drawer_layout)
-        val duration = Snackbar.LENGTH_SHORT
-
-        val snackbar = Snackbar
-            .make(rootView!!, error, duration)
-            .setBackgroundTint(resources.getColor(R.color.md_theme_light_errorContainer))
-            .setTextColor(resources.getColor(R.color.md_theme_light_onErrorContainer))
-            .setActionTextColor(resources.getColor(R.color.md_theme_light_onErrorContainer))
-        snackbar.show()
     }
 
     companion object {
