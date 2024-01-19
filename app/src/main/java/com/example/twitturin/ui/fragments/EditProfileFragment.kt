@@ -1,14 +1,11 @@
 package com.example.twitturin.ui.fragments
 
 import android.app.AlertDialog
-import android.app.DatePickerDialog
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -16,22 +13,24 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.twitturin.R
 import com.example.twitturin.databinding.FragmentEditProfileBinding
+import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.ui.adapters.ColorAdapter
 import com.example.twitturin.ui.decoration.GridSpacingItemDecoration
 import com.example.twitturin.ui.sealeds.EditUserResult
 import com.example.twitturin.viewmodel.ProfileViewModel
 import com.example.twitturin.viewmodel.manager.SessionManager
-import com.google.android.material.snackbar.Snackbar
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Locale
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class EditProfileFragment : Fragment() {
 
+    @Inject lateinit var snackbarHelper: SnackbarHelper
+    @Inject lateinit var sessionManager: SessionManager
+//    private val calendar: Calendar = Calendar.getInstance()
     private lateinit var binding : FragmentEditProfileBinding
-    private val calendar: Calendar = Calendar.getInstance()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentEditProfileBinding.inflate(layoutInflater)
         return binding.root
     }
@@ -43,7 +42,6 @@ class EditProfileFragment : Fragment() {
             findNavController().navigate(R.id.action_editProfileFragment_to_profileFragment)
         }
 
-        val sessionManager = SessionManager(requireContext())
         val token = sessionManager.getToken()
         val userId = sessionManager.getUserId()
 
@@ -79,7 +77,11 @@ class EditProfileFragment : Fragment() {
                     }
 
                     is EditUserResult.Error -> {
-                        snackbarError(result.errorMessage)
+                        snackbarHelper.snackbarError(
+                            requireActivity().findViewById(R.id.edit_profile_root_layout),
+                            requireActivity().findViewById(R.id.edit_profile_root_layout),
+                            error = result.errorMessage,
+                            ""){}
                     }
                 }
             }
@@ -90,24 +92,23 @@ class EditProfileFragment : Fragment() {
         }
     }
 
-    private fun showDatePickerDialog() {
-        val datePickerDialog = DatePickerDialog(requireActivity(), { _, year, month, day ->
-            calendar.set(year, month, day)
-            updateBirthdayEditText() },
-            calendar.get(Calendar.YEAR),
-            calendar.get(Calendar.MONTH),
-            calendar.get(Calendar.DAY_OF_MONTH)
-        )
-        datePickerDialog.show()
-    }
+//    private fun showDatePickerDialog() {
+//        val datePickerDialog = DatePickerDialog(requireActivity(), { _, year, month, day ->
+//            calendar.set(year, month, day)
+//            updateBirthdayEditText() },
+//            calendar.get(Calendar.YEAR),
+//            calendar.get(Calendar.MONTH),
+//            calendar.get(Calendar.DAY_OF_MONTH)
+//        )
+//        datePickerDialog.show()
+//    }
 
-    private fun updateBirthdayEditText() {
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        val formattedDate = dateFormat.format(calendar.time)
-        binding.birthdayEt.setText(formattedDate).toString()
-    }
+//    private fun updateBirthdayEditText() {
+//        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+//        val formattedDate = dateFormat.format(calendar.time)
+//        binding.birthdayEt.setText(formattedDate).toString()
+//    }
 
-    /** Color Picker **/
     private fun showColorPickerDialog() {
 
         val colors = listOf(
@@ -157,18 +158,6 @@ class EditProfileFragment : Fragment() {
 
     private fun dpToPx(dp: Int): Int {
         return (dp * resources.displayMetrics.density).toInt()
-    }
-
-    private fun snackbarError(error : String) {
-        val rootView = view?.findViewById<ConstraintLayout>(R.id.edit_profile_root_layout)
-        val duration = Snackbar.LENGTH_SHORT
-
-        val snackbar = Snackbar
-            .make(rootView!!, error, duration)
-            .setBackgroundTint(resources.getColor(R.color.md_theme_light_errorContainer))
-            .setTextColor(resources.getColor(R.color.md_theme_light_onErrorContainer))
-            .setActionTextColor(resources.getColor(R.color.md_theme_light_onErrorContainer))
-        snackbar.show()
     }
 
     companion object {

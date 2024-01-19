@@ -1,4 +1,4 @@
-package com.example.twitturin.ui.fragments.bottomsheets
+package com.example.twitturin.ui.fragments.bottom_sheets
 
 import android.os.Bundle
 import android.view.LayoutInflater

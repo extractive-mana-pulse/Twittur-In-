@@ -20,7 +20,7 @@ import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.model.data.tweets.Tweet
 import com.example.twitturin.model.repo.Repository
 import com.example.twitturin.ui.adapters.PostAdapter
-import com.example.twitturin.ui.fragments.bottomsheets.MoreSettingsDetailFragment
+import com.example.twitturin.ui.fragments.bottom_sheets.MoreSettingsDetailFragment
 import com.example.twitturin.ui.sealeds.FollowResult
 import com.example.twitturin.ui.sealeds.PostReply
 import com.example.twitturin.viewmodel.FollowUserViewModel

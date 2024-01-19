@@ -320,7 +320,7 @@
     </fragment>
     <fragment
         android:id="@+id/followersListFragment"
-        android:name="com.example.twitturin.ui.fragments.FollowersListFragment"
+        android:name="com.example.twitturin.ui.fragments.follow.FollowersListFragment"
         android:label="fragment_followers_list"
         tools:layout="@layout/fragment_followers_list" >
         <action
@@ -329,7 +329,7 @@
     </fragment>
     <fragment
         android:id="@+id/followingListFragment"
-        android:name="com.example.twitturin.ui.fragments.FollowingListFragment"
+        android:name="com.example.twitturin.ui.fragments.follow.FollowingListFragment"
         android:label="fragment_following_list"
         tools:layout="@layout/fragment_following_list" >
         <action
@@ -347,7 +347,7 @@
     </fragment>
     <dialog
         android:id="@+id/myBottomSheetDialogFragment"
-        android:name="com.example.twitturin.ui.fragments.bottomsheets.MoreSettingsDetailFragment"
+        android:name="com.example.twitturin.ui.fragments.bottom_sheets.MoreSettingsDetailFragment"
         android:label="MyBottomSheetDialogFragment" >
         <action
             android:id="@+id/action_myBottomSheetDialogFragment_to_reportFragment"

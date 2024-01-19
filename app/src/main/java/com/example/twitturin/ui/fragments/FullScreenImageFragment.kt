@@ -8,11 +8,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.twitturin.databinding.FragmentFullScreenImageBinding
 
+@Suppress("DEPRECATION")
 class FullScreenImageFragment : Fragment() {
 
     private lateinit var binding : FragmentFullScreenImageBinding
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentFullScreenImageBinding.inflate(layoutInflater)
         return  binding.root
     }

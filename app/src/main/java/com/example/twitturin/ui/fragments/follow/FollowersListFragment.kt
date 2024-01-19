@@ -1,17 +1,17 @@
-package com.example.twitturin.ui.fragments
+package com.example.twitturin.ui.fragments.follow
 
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.twitturin.R
 import com.example.twitturin.databinding.FragmentFollowersListBinding
+import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.model.data.users.User
 import com.example.twitturin.model.repo.Repository
 import com.example.twitturin.ui.adapters.FollowersAdapter
@@ -19,21 +19,22 @@ import com.example.twitturin.viewmodel.FollowUserViewModel
 import com.example.twitturin.viewmodel.MainViewModel
 import com.example.twitturin.viewmodel.ViewModelFactory
 import com.example.twitturin.viewmodel.manager.SessionManager
-import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Random
 import javax.inject.Inject
 
+@Suppress("DEPRECATION")
 @AndroidEntryPoint
 class FollowersListFragment : Fragment() {
 
     private lateinit var viewModel : MainViewModel
+    @Inject lateinit var snackbarHelper: SnackbarHelper
     @Inject lateinit var sessionManager : SessionManager
     private lateinit var followViewModel: FollowUserViewModel
     private lateinit var binding : FragmentFollowersListBinding
     private val followersAdapter by lazy {  FollowersAdapter(viewLifecycleOwner) }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentFollowersListBinding.inflate(layoutInflater)
         followViewModel = ViewModelProvider(this)[FollowUserViewModel::class.java]
         return binding.root
@@ -43,7 +44,11 @@ class FollowersListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.anViewFollowers.setFailureListener { t ->
-            snackbarError(t.message.toString())
+            snackbarHelper.snackbarError(
+                requireActivity().findViewById(R.id.followers_root_layout),
+                requireActivity().findViewById(R.id.followers_root_layout),
+                error = t.message.toString(),
+                ""){}
         }
         binding.anViewFollowers.setAnimation(R.raw.empty_tweets_list)
 
@@ -94,21 +99,14 @@ class FollowersListFragment : Fragment() {
                     }
                 }
             } else {
-                snackbarError(response.body().toString())
+                snackbarHelper.snackbarError(
+                    requireActivity().findViewById(R.id.followers_root_layout),
+                    requireActivity().findViewById(R.id.followers_root_layout),
+                    error = response.body().toString(),
+                    ""){}
+
             }
         }
-    }
-
-    private fun snackbarError(error : String) {
-        val rootView = view?.findViewById<ConstraintLayout>(R.id.followers_root_layout)
-        val duration = Snackbar.LENGTH_SHORT
-
-        val snackbar = Snackbar
-            .make(rootView!!, error, duration)
-            .setBackgroundTint(resources.getColor(R.color.md_theme_light_errorContainer))
-            .setTextColor(resources.getColor(R.color.md_theme_light_onErrorContainer))
-            .setActionTextColor(resources.getColor(R.color.md_theme_light_onErrorContainer))
-        snackbar.show()
     }
 
     companion object {

@@ -1,33 +1,38 @@
-package com.example.twitturin.ui.fragments
+package com.example.twitturin.ui.fragments.follow
 
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.twitturin.R
 import com.example.twitturin.databinding.FragmentFollowingListBinding
+import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.model.data.users.User
 import com.example.twitturin.model.repo.Repository
 import com.example.twitturin.ui.adapters.FollowingAdapter
 import com.example.twitturin.viewmodel.MainViewModel
 import com.example.twitturin.viewmodel.ViewModelFactory
 import com.example.twitturin.viewmodel.manager.SessionManager
-import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.Random
+import javax.inject.Inject
 
+@Suppress("DEPRECATION")
+@AndroidEntryPoint
 class FollowingListFragment : Fragment() {
 
     private lateinit var viewModel : MainViewModel
+    @Inject lateinit var sessionManager: SessionManager
+    @Inject lateinit var snackbarHelper: SnackbarHelper
     private lateinit var binding : FragmentFollowingListBinding
     private val followingAdapter by lazy { FollowingAdapter(viewLifecycleOwner) }
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentFollowingListBinding.inflate(layoutInflater)
         return binding.root
     }
@@ -36,7 +41,11 @@ class FollowingListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.anViewFollowing.setFailureListener { t ->
-            snackbarError(t.message.toString())
+            snackbarHelper.snackbarError(
+                requireActivity().findViewById(R.id.following_root_layout1),
+                requireActivity().findViewById(R.id.following_root_layout1),
+                error = t.message.toString(),
+                ""){}
         }
         binding.anViewFollowing.setAnimation(R.raw.empty_tweets_list)
 
@@ -55,7 +64,6 @@ class FollowingListFragment : Fragment() {
         binding.rcViewFollowing.adapter = followingAdapter
         binding.rcViewFollowing.addItemDecoration(DividerItemDecoration(binding.rcViewFollowing.context, DividerItemDecoration.VERTICAL))
         binding.rcViewFollowing.layoutManager = LinearLayoutManager(requireContext())
-        val sessionManager = SessionManager(requireContext())
         val userId = sessionManager.getUserId()
         viewModel.getFollowing(userId!!)
         viewModel.followingList.observe(requireActivity()) { response ->
@@ -82,21 +90,13 @@ class FollowingListFragment : Fragment() {
                     }
                 }
             } else {
-                snackbarError(response.body().toString())
+                snackbarHelper.snackbarError(
+                    requireActivity().findViewById(R.id.following_root_layout1),
+                    requireActivity().findViewById(R.id.following_root_layout1),
+                    error = response.body().toString(),
+                    ""){}
             }
         }
-    }
-
-    private fun snackbarError(error : String) {
-        val rootView = view?.findViewById<ConstraintLayout>(R.id.following_root_layout1)
-        val duration = Snackbar.LENGTH_SHORT
-
-        val snackbar = Snackbar
-            .make(rootView!!, error, duration)
-            .setBackgroundTint(resources.getColor(R.color.md_theme_light_errorContainer))
-            .setTextColor(resources.getColor(R.color.md_theme_light_onErrorContainer))
-            .setActionTextColor(resources.getColor(R.color.md_theme_light_onErrorContainer))
-        snackbar.show()
     }
 
     companion object {
