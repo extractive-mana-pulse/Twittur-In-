@@ -1,4 +1,4 @@
-package com.example.twitturin.ui.fragments.bottomNavigationView
+package com.example.twitturin.ui.fragments.bottom_nav_view
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -26,10 +26,10 @@ import com.example.twitturin.viewmodel.MainViewModel
 import com.example.twitturin.viewmodel.ProfileViewModel
 import com.example.twitturin.viewmodel.ViewModelFactory
 import com.example.twitturin.viewmodel.manager.SessionManager
-import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+@Suppress("DEPRECATION")
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
 
@@ -44,7 +44,7 @@ class HomeFragment : Fragment() {
         setHasOptionsMenu(true)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentHomeBinding.inflate(layoutInflater)
         return binding.root
     }

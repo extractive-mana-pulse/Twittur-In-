@@ -1,4 +1,4 @@
-package com.example.twitturin.ui.fragments.topBarFragments
+package com.example.twitturin.ui.fragments.topAppBar
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -11,7 +11,7 @@ import com.example.twitturin.databinding.FragmentWebViewBinding
 class WebViewFragment : Fragment() {
 
     private lateinit var binding : FragmentWebViewBinding
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentWebViewBinding.inflate(layoutInflater)
         return binding.root
     }

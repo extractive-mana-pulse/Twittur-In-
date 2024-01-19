@@ -1,4 +1,4 @@
-package com.example.twitturin.ui.fragments.loginFragments
+package com.example.twitturin.ui.fragments.login
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,8 +12,7 @@ import com.example.twitturin.databinding.FragmentKindBinding
 class KindFragment : Fragment() {
 
     private lateinit var binding : FragmentKindBinding
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentKindBinding.inflate(layoutInflater)
         return binding.root
     }

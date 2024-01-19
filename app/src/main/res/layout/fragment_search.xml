@@ -2,12 +2,12 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.fragments.bottomNavigationView.SearchFragment">
+    tools:context=".ui.fragments.bottom_nav_view.SearchFragment">
 
     <data>
         <variable
             name="searchFragment"
-            type="com.example.twitturin.ui.fragments.bottomNavigationView.SearchFragment"/>
+            type="com.example.twitturin.ui.fragments.bottom_nav_view.SearchFragment"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

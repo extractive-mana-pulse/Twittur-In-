@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.fragments.loginFragments.KindFragment">
+    tools:context=".ui.fragments.login.KindFragment">
 
     <ImageButton
         android:id="@+id/back_btn_kind"

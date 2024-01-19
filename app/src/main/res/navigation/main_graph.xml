@@ -8,7 +8,7 @@
 <!--  home Fragment  -->
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.twitturin.ui.fragments.bottomNavigationView.HomeFragment"
+        android:name="com.example.twitturin.ui.fragments.bottom_nav_view.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home">
 
@@ -40,7 +40,7 @@
 <!--  privateMessagesFragment  -->
     <fragment
         android:id="@+id/privateMessagesFragment"
-        android:name="com.example.twitturin.ui.fragments.bottomNavigationView.PrivateMessagesFragment"
+        android:name="com.example.twitturin.ui.fragments.bottom_nav_view.PrivateMessagesFragment"
         android:label="fragment_private_messages"
         tools:layout="@layout/fragment_private_messages">
 
@@ -68,7 +68,7 @@
 <!--  notificationsFragment  -->
     <fragment
         android:id="@+id/notificationsFragment"
-        android:name="com.example.twitturin.ui.fragments.bottomNavigationView.NotificationsFragment"
+        android:name="com.example.twitturin.ui.fragments.bottom_nav_view.NotificationsFragment"
         android:label="fragment_notifications"
         tools:layout="@layout/fragment_notifications">
 
@@ -80,7 +80,7 @@
 <!--  profileFragment  -->
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.example.twitturin.ui.fragments.topBarFragments.ProfileFragment"
+        android:name="com.example.twitturin.ui.fragments.topAppBar.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile">
 
@@ -148,7 +148,7 @@
 <!--  searchFragment  -->
     <fragment
         android:id="@+id/searchFragment"
-        android:name="com.example.twitturin.ui.fragments.bottomNavigationView.SearchFragment"
+        android:name="com.example.twitturin.ui.fragments.bottom_nav_view.SearchFragment"
         android:label="fragment_search"
         tools:layout="@layout/fragment_search">
 
@@ -164,7 +164,7 @@
 <!--  webViewFragment  -->
     <fragment
         android:id="@+id/webViewFragment"
-        android:name="com.example.twitturin.ui.fragments.topBarFragments.WebViewFragment"
+        android:name="com.example.twitturin.ui.fragments.topAppBar.WebViewFragment"
         android:label="fragment_web_view"
         tools:layout="@layout/fragment_web_view" >
 
@@ -177,7 +177,7 @@
 <!--  tweetsFragment  -->
     <fragment
         android:id="@+id/tweetsFragment"
-        android:name="com.example.twitturin.ui.fragments.viewPagerFragments.TweetsFragment"
+        android:name="com.example.twitturin.ui.fragments.viewPager.TweetsFragment"
         android:label="fragment_tweets"
         tools:layout="@layout/fragment_tweets">
 
@@ -193,7 +193,7 @@
 <!--  likesFragment  -->
     <fragment
         android:id="@+id/likesFragment"
-        android:name="com.example.twitturin.ui.fragments.viewPagerFragments.LikesFragment"
+        android:name="com.example.twitturin.ui.fragments.viewPager.LikesFragment"
         android:label="fragment_likes"
         tools:layout="@layout/fragment_likes" >
 
@@ -206,7 +206,7 @@
 <!--  signInFragment  -->
     <fragment
         android:id="@+id/signInFragment"
-        android:name="com.example.twitturin.ui.fragments.loginFragments.SignInFragment"
+        android:name="com.example.twitturin.ui.fragments.login.SignInFragment"
         android:label="fragment_sign_in"
         tools:layout="@layout/fragment_sign_in">
 
@@ -242,7 +242,7 @@
 <!--    kind fragment    -->
     <fragment
         android:id="@+id/kindFragment"
-        android:name="com.example.twitturin.ui.fragments.loginFragments.KindFragment"
+        android:name="com.example.twitturin.ui.fragments.login.KindFragment"
         android:label="fragment_kind"
         tools:layout="@layout/fragment_kind">
 
@@ -269,7 +269,7 @@
 <!--    professor registration fragment    -->
     <fragment
         android:id="@+id/professorRegistrationFragment"
-        android:name="com.example.twitturin.ui.fragments.loginFragments.ProfessorRegistrationFragment"
+        android:name="com.example.twitturin.ui.fragments.login.ProfessorRegistrationFragment"
         android:label="fragment_professor_registration"
         tools:layout="@layout/fragment_professor_registration">
 
@@ -288,7 +288,7 @@
 <!--    student registration fragment    -->
     <fragment
         android:id="@+id/studentRegistrationFragment"
-        android:name="com.example.twitturin.ui.fragments.loginFragments.StudentRegistrationFragment"
+        android:name="com.example.twitturin.ui.fragments.login.StudentRegistrationFragment"
         android:label="fragment_student_registration"
         tools:layout="@layout/fragment_student_registration">
 

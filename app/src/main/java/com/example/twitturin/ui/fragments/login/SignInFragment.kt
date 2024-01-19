@@ -1,4 +1,4 @@
-package com.example.twitturin.ui.fragments.loginFragments
+package com.example.twitturin.ui.fragments.login
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -47,31 +47,29 @@ class SignInFragment : Fragment() {
 
         val textWatcher1 = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                // Not used
+                //
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                // Enable or disable the button based on the EditText fields' contents
                 binding.signIn.isEnabled = !binding.usernameSignInEt.text.isNullOrBlank() && !binding.passwordEt.text.isNullOrBlank()
             }
 
             override fun afterTextChanged(s: Editable?) {
-                // Not used
+                //
             }
         }
 
         val textWatcher2 = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                // Not used
+                //
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                // Enable or disable the button based on the EditText fields' contents
                 binding.signIn.isEnabled = !binding.usernameSignInEt.text.isNullOrBlank() && !binding.passwordEt.text.isNullOrBlank()
             }
 
             override fun afterTextChanged(s: Editable?) {
-                // Not used
+                //
             }
         }
 

@@ -2,12 +2,12 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.fragments.viewPagerFragments.LikesFragment">
+    tools:context=".ui.fragments.viewPager.LikesFragment">
 
     <data>
         <variable
             name="likesFragment"
-            type="com.example.twitturin.ui.fragments.viewPagerFragments.LikesFragment"/>
+            type="com.example.twitturin.ui.fragments.viewPager.LikesFragment"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

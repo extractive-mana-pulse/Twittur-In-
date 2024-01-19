@@ -4,8 +4,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.example.twitturin.ui.fragments.viewPagerFragments.LikesFragment
-import com.example.twitturin.ui.fragments.viewPagerFragments.TweetsFragment
+import com.example.twitturin.ui.fragments.viewPager.LikesFragment
+import com.example.twitturin.ui.fragments.viewPager.TweetsFragment
 
 class ProfileViewPagerAdapter(frag: FragmentManager, lifecycle: Lifecycle) : FragmentStateAdapter(frag, lifecycle) {
     override fun getItemCount(): Int {

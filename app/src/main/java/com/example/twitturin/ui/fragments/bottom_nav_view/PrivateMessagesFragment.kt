@@ -1,4 +1,4 @@
-package com.example.twitturin.ui.fragments.bottomNavigationView
+package com.example.twitturin.ui.fragments.bottom_nav_view
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -14,11 +14,7 @@ class PrivateMessagesFragment : Fragment() {
 
     private lateinit var binding : FragmentPrivateMessagesBinding
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentPrivateMessagesBinding.inflate(layoutInflater)
         return binding.root
     }

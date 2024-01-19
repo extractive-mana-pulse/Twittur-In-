@@ -1,4 +1,4 @@
-package com.example.twitturin.ui.fragments.topBarFragments
+package com.example.twitturin.ui.fragments.topAppBar
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
@@ -9,33 +9,32 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.twitturin.R
 import com.example.twitturin.databinding.FragmentProfileBinding
+import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.ui.adapters.ProfileViewPagerAdapter
 import com.example.twitturin.ui.fragments.FullScreenImageFragment
 import com.example.twitturin.ui.sealeds.DeleteResult
 import com.example.twitturin.ui.sealeds.UserCredentialsResult
 import com.example.twitturin.viewmodel.ProfileViewModel
 import com.example.twitturin.viewmodel.manager.SessionManager
-import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+@Suppress("DEPRECATION")
 @AndroidEntryPoint
 class ProfileFragment : Fragment() {
 
+    @Inject lateinit var sessionManager: SessionManager
+    @Inject lateinit var snackbarHelper: SnackbarHelper
     private lateinit var binding: FragmentProfileBinding
 
-    @Inject
-    lateinit var sessionManager: SessionManager
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentProfileBinding.inflate(layoutInflater)
         return binding.root
     }
@@ -68,7 +67,6 @@ class ProfileFragment : Fragment() {
                     Glide.with(requireContext())
                         .load(profileImage)
                         .error(R.drawable.not_found)
-                        .placeholder(R.drawable.username_person)
                         .into(binding.profileImage)
 
                     binding.profileName.text = result.user.fullName ?: "Twittur User"
@@ -92,30 +90,14 @@ class ProfileFragment : Fragment() {
                     }
                     binding.followingCounterTv.text = result.user.followingCount.toString()
                     binding.followersCounterTv.text = result.user.followersCount.toString()
-
-//                    val followingCount = result.user.followingCount
-
-//                    if (followingCount == 0) {
-//                        binding.followingTv.text = "No following"
-//                        binding.followingCounterTv.visibility = View.INVISIBLE
-//                    } else {
-//                        binding.followingCounterTv.visibility = View.VISIBLE
-//                        binding.followingCounterTv.text = followingCount.toString()
-//                    }
-
-//                    val followersCount = result.user.followersCount
-
-//                    if (followersCount == 0) {
-//                        binding.followersTv.text = "No followers"
-//                        binding.followersCounterTv.visibility = View.INVISIBLE
-//                    } else {
-//                        binding.followersCounterTv.visibility = View.VISIBLE
-//                        binding.followersCounterTv.text = followersCount.toString()
-//                    }
-
                 }
+
                 is UserCredentialsResult.Error -> {
-                    snackbarError(result.message)
+                    snackbarHelper.snackbarError(
+                        requireActivity().findViewById(R.id.profile_root_layout),
+                        requireActivity().findViewById(R.id.profile_root_layout),
+                        error = result.message,
+                        ""){}
                 }
             }
         }
@@ -182,11 +164,11 @@ class ProfileFragment : Fragment() {
                         val alertDialogBuilder = AlertDialog.Builder(requireActivity())
                         alertDialogBuilder.setTitle("${username?.uppercase()}: Are you sure you want to delete account?")
                         alertDialogBuilder.setMessage("Please note that once an account is deleted, it cannot be restored and all activity will be deleted")
-                        alertDialogBuilder.setPositiveButton("Yes") { dialog, which ->
+                        alertDialogBuilder.setPositiveButton("Yes") { _, _ ->
                             profileViewModel.deleteUser(userId, "Bearer $token")
                         }
 
-                        alertDialogBuilder.setNegativeButton("No") { dialog, which ->
+                        alertDialogBuilder.setNegativeButton("No") { dialog, _ ->
                             dialog.dismiss()
                         }
 
@@ -198,10 +180,18 @@ class ProfileFragment : Fragment() {
                             when (result) {
                                 is DeleteResult.Success -> {
                                     findNavController().navigate(R.id.action_profileFragment_to_signInFragment)
-                                    snackbar("Deleted")
+                                    snackbarHelper.snackbar(
+                                        requireActivity().findViewById(R.id.profile_root_layout),
+                                        requireActivity().findViewById(R.id.profile_root_layout),
+                                        message = "Deleted"
+                                    )
                                 }
                                 is DeleteResult.Error -> {
-                                    snackbarError(result.message)
+                                    snackbarHelper.snackbarError(
+                                        requireActivity().findViewById(R.id.profile_root_layout),
+                                        requireActivity().findViewById(R.id.profile_root_layout),
+                                        error = result.message,
+                                        ""){}
                                 }
                             }
                         }
@@ -245,29 +235,6 @@ class ProfileFragment : Fragment() {
         binding.back.setOnClickListener {
             requireActivity().onBackPressed()
         }
-    }
-
-    private fun snackbar(message : String) {
-        val rootView = view?.findViewById<ConstraintLayout>(R.id.profile_root_layout)
-        val duration = Snackbar.LENGTH_SHORT
-
-        val snackbar = Snackbar
-            .make(rootView!!, message, duration)
-            .setBackgroundTint(resources.getColor(R.color.md_theme_light_primary))
-            .setTextColor(resources.getColor(R.color.md_theme_light_onPrimaryContainer))
-        snackbar.show()
-    }
-
-    private fun snackbarError(error : String) {
-        val rootView = view?.findViewById<ConstraintLayout>(R.id.profile_root_layout)
-        val duration = Snackbar.LENGTH_SHORT
-
-        val snackbar = Snackbar
-            .make(rootView!!, error, duration)
-            .setBackgroundTint(resources.getColor(R.color.md_theme_light_errorContainer))
-            .setTextColor(resources.getColor(R.color.md_theme_light_onErrorContainer))
-            .setActionTextColor(resources.getColor(R.color.md_theme_light_onErrorContainer))
-        snackbar.show()
     }
 
     companion object {

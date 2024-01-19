@@ -13,6 +13,7 @@ import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
+import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.ui.sealeds.DeleteResult
 import com.example.twitturin.ui.sealeds.FollowResult
 import com.example.twitturin.viewmodel.FollowUserViewModel
@@ -21,18 +22,21 @@ import com.example.twitturin.viewmodel.manager.SessionManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MoreSettingsDetailFragment : BottomSheetDialogFragment() {
 
     private lateinit var followViewModel: FollowUserViewModel
     private lateinit var profileViewModel: ProfileViewModel
+    @Inject lateinit var sessionManager: SessionManager
+    @Inject lateinit var snackbarHelper: SnackbarHelper
 
     @SuppressLint("SetTextI18n", "MissingInflatedId")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.bottom_sheet_layout, container, false)
 
-        val sessionManager = SessionManager(requireContext())
         val token = sessionManager.getToken()
         val userId2 = sessionManager.getUserId()
 
@@ -70,10 +74,18 @@ class MoreSettingsDetailFragment : BottomSheetDialogFragment() {
         followViewModel.followResult.observe(viewLifecycleOwner) { result ->
             when (result) {
                 is FollowResult.Success -> {
-                    snackbar("now you follow: ${username?.uppercase()}")
+                    snackbarHelper.snackbar(
+                        requireActivity().findViewById(R.id.bottom_sheet_root_layout),
+                        requireActivity().findViewById(R.id.bottom_sheet_root_layout),
+                        message = "now you follow: ${username?.uppercase()}"
+                    )
                 }
                 is FollowResult.Error -> {
-                    snackbarError(result.message)
+                    snackbarHelper.snackbarError(
+                        requireActivity().findViewById(R.id.bottom_sheet_root_layout),
+                        requireActivity().findViewById(R.id.bottom_sheet_root_layout),
+                        result.message,
+                        ""){}
                 }
             }
         }
@@ -83,11 +95,11 @@ class MoreSettingsDetailFragment : BottomSheetDialogFragment() {
             val alertDialogBuilder = AlertDialog.Builder(requireActivity())
             alertDialogBuilder.setTitle("Are you sure you want to delete the post?")
             alertDialogBuilder.setMessage("Please note that once you delete a publication it cannot be restored")
-            alertDialogBuilder.setPositiveButton("Yes") { dialog, which ->
+            alertDialogBuilder.setPositiveButton("Yes") { _, _ ->
                 profileViewModel.deleteTweet( tweetId!!,"Bearer $token")
             }
 
-            alertDialogBuilder.setNegativeButton("No") { dialog, which ->
+            alertDialogBuilder.setNegativeButton("No") { _, _ ->
                 dismiss()
             }
 
@@ -97,18 +109,30 @@ class MoreSettingsDetailFragment : BottomSheetDialogFragment() {
             profileViewModel.deleteTweetResult.observe(viewLifecycleOwner){ result ->
                 when(result){
                     is DeleteResult.Success -> {
-                        snackbar(message = "Deleted")
+                        snackbarHelper.snackbar(
+                            requireActivity().findViewById(R.id.bottom_sheet_root_layout),
+                            requireActivity().findViewById(R.id.bottom_sheet_root_layout),
+                            message = "Deleted"
+                        )
                         findNavController().navigate(R.id.homeFragment)
                     }
                     is  DeleteResult.Error -> {
-                        snackbarError(result.message)
+                        snackbarHelper.snackbarError(
+                            requireActivity().findViewById(R.id.bottom_sheet_root_layout),
+                            requireActivity().findViewById(R.id.bottom_sheet_root_layout),
+                            result.message,
+                            ""){}
                     }
                 }
             }
         }
 
         reportLayout.setOnClickListener {
-            snackbar(message = "In Progress")
+            snackbarHelper.snackbar(
+                requireActivity().findViewById(R.id.bottom_sheet_root_layout),
+                requireActivity().findViewById(R.id.bottom_sheet_root_layout),
+                message = "In Progress"
+            )
 //            TODO { when report a post end point is ready activate this code }
 //            val intent = Intent(requireActivity(), ReportActivity::class.java)
 //            startActivity(intent)
@@ -123,28 +147,5 @@ class MoreSettingsDetailFragment : BottomSheetDialogFragment() {
             behavior?.peekHeight = 800
         }
         return view
-    }
-
-    private fun snackbar(message : String) {
-        val rootView = view?.findViewById<LinearLayout>(R.id.bottom_sheet_root_layout)
-        val duration = Snackbar.LENGTH_SHORT
-
-        val snackbar = Snackbar
-            .make(rootView!!, message, duration)
-            .setBackgroundTint(resources.getColor(R.color.md_theme_light_primary))
-            .setTextColor(resources.getColor(R.color.md_theme_light_onPrimaryContainer))
-        snackbar.show()
-    }
-
-    private fun snackbarError(error : String) {
-        val rootView = view?.findViewById<LinearLayout>(R.id.bottom_sheet_root_layout)
-        val duration = Snackbar.LENGTH_SHORT
-
-        val snackbar = Snackbar
-            .make(rootView!!, error, duration)
-            .setBackgroundTint(resources.getColor(R.color.md_theme_light_errorContainer))
-            .setTextColor(resources.getColor(R.color.md_theme_light_onErrorContainer))
-            .setActionTextColor(resources.getColor(R.color.md_theme_light_onErrorContainer))
-        snackbar.show()
     }
 }

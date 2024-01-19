@@ -1,4 +1,4 @@
-package com.example.twitturin.ui.fragments.loginFragments
+package com.example.twitturin.ui.fragments.login
 
 import android.os.Bundle
 import android.text.Editable
@@ -7,24 +7,28 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
 import com.example.twitturin.databinding.FragmentProfessorRegistrationBinding
+import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.ui.sealeds.SignUpProfResult
 import com.example.twitturin.viewmodel.SignUpViewModel
-import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@Suppress("DEPRECATION")
+@AndroidEntryPoint
 class ProfessorRegistrationFragment : Fragment() {
 
+    private lateinit var viewModel : SignUpViewModel
+    @Inject lateinit var snackbarHelper: SnackbarHelper
     private lateinit var binding : FragmentProfessorRegistrationBinding
     private val profEditTextList: MutableList<EditText> = mutableListOf()
-    private lateinit var viewModel : SignUpViewModel
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentProfessorRegistrationBinding.inflate(layoutInflater)
         return binding.root
     }
@@ -93,7 +97,11 @@ class ProfessorRegistrationFragment : Fragment() {
                 }
 
                 is SignUpProfResult.Error -> {
-                    snackbarError(result.message)
+                    snackbarHelper.snackbarError(
+                        requireActivity().findViewById(R.id.prof_reg_root_layout),
+                        requireActivity().findViewById(R.id.prof_reg_root_layout),
+                        error = result.message,
+                        ""){}
                 }
             }
         }
@@ -108,18 +116,6 @@ class ProfessorRegistrationFragment : Fragment() {
             editText.text.isNotBlank()
         }
         binding.signUpProf.isVisible = allFieldsFilled
-    }
-
-    private fun snackbarError(error : String) {
-        val rootView = view?.findViewById<ConstraintLayout>(R.id.prof_reg_root_layout)
-        val duration = Snackbar.LENGTH_SHORT
-
-        val snackbar = Snackbar
-            .make(rootView!!, error, duration)
-            .setBackgroundTint(resources.getColor(R.color.md_theme_light_errorContainer))
-            .setTextColor(resources.getColor(R.color.md_theme_light_onErrorContainer))
-            .setActionTextColor(resources.getColor(R.color.md_theme_light_onErrorContainer))
-        snackbar.show()
     }
 
     companion object {

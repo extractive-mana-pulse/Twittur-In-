@@ -1,4 +1,4 @@
-package com.example.twitturin.ui.fragments.loginFragments
+package com.example.twitturin.ui.fragments.login
 
 import android.os.Bundle
 import android.text.Editable
@@ -9,24 +9,28 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.EditText
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
 import com.example.twitturin.databinding.FragmentStudentRegistrationBinding
+import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.ui.sealeds.SignUpStudentResult
 import com.example.twitturin.viewmodel.SignUpViewModel
-import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@Suppress("DEPRECATION")
+@AndroidEntryPoint
 class StudentRegistrationFragment : Fragment() {
 
-    private lateinit var binding : FragmentStudentRegistrationBinding
-    private val editTextList: MutableList<EditText> = mutableListOf()
     private lateinit var viewModel : SignUpViewModel
+    @Inject lateinit var snackbarHelper: SnackbarHelper
+    private val editTextList: MutableList<EditText> = mutableListOf()
+    private lateinit var binding : FragmentStudentRegistrationBinding
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentStudentRegistrationBinding.inflate(layoutInflater)
         return binding.root
     }
@@ -68,21 +72,21 @@ class StudentRegistrationFragment : Fragment() {
 
         binding.planetsSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-                // TODO
+                //
             }
 
             override fun onNothingSelected(p0: AdapterView<*>?) {
-                // TODO
+                //
             }
         }
 
         binding.userNameEt.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                // TODO
+                //
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                // TODO
+                //
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -105,7 +109,11 @@ class StudentRegistrationFragment : Fragment() {
                 }
 
                 is SignUpStudentResult.Error -> {
-                    snackbarError(result.message)
+                    snackbarHelper.snackbarError(
+                        requireActivity().findViewById(R.id.stud_reg_root_layout),
+                        requireActivity().findViewById(R.id.stud_reg_root_layout),
+                        error = result.message,
+                        ""){ /*better when u write function than just paste it HERE! */ }
                 }
             }
         }
@@ -120,18 +128,6 @@ class StudentRegistrationFragment : Fragment() {
             editText.text.isNotEmpty()
         }
         binding.signUp.isVisible = allFieldsFilled
-    }
-
-    private fun snackbarError(error : String) {
-        val rootView = view?.findViewById<ConstraintLayout>(R.id.stud_reg_root_layout)
-        val duration = Snackbar.LENGTH_SHORT
-
-        val snackbar = Snackbar
-            .make(rootView!!, error, duration)
-            .setBackgroundTint(resources.getColor(R.color.md_theme_light_errorContainer))
-            .setTextColor(resources.getColor(R.color.md_theme_light_onErrorContainer))
-            .setActionTextColor(resources.getColor(R.color.md_theme_light_onErrorContainer))
-        snackbar.show()
     }
 
     companion object {
