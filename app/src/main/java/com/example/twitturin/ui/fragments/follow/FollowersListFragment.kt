@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -28,11 +29,12 @@ import javax.inject.Inject
 class FollowersListFragment : Fragment() {
 
     private lateinit var viewModel : MainViewModel
-    @Inject lateinit var snackbarHelper: SnackbarHelper
     @Inject lateinit var sessionManager : SessionManager
+    @Inject lateinit var snackbarHelper: SnackbarHelper
     private lateinit var followViewModel: FollowUserViewModel
     private lateinit var binding : FragmentFollowersListBinding
-    private val followersAdapter by lazy {  FollowersAdapter(viewLifecycleOwner) }
+    private val fViewModel: FollowUserViewModel by viewModels()
+    private val followersAdapter by lazy { FollowersAdapter(viewLifecycleOwner, fViewModel) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentFollowersListBinding.inflate(layoutInflater)
@@ -46,12 +48,12 @@ class FollowersListFragment : Fragment() {
         binding.anViewFollowers.setFailureListener { t ->
             snackbarHelper.snackbarError(
                 requireActivity().findViewById(R.id.followers_root_layout),
-                requireActivity().findViewById(R.id.followers_root_layout),
+                binding.anchorTv,
                 error = t.message.toString(),
                 ""){}
         }
-        binding.anViewFollowers.setAnimation(R.raw.empty_tweets_list)
 
+        binding.anViewFollowers.setAnimation(R.raw.empty_tweets_list)
 
         val repository = Repository()
         val viewModelFactory = ViewModelFactory(repository)
@@ -101,10 +103,9 @@ class FollowersListFragment : Fragment() {
             } else {
                 snackbarHelper.snackbarError(
                     requireActivity().findViewById(R.id.followers_root_layout),
-                    requireActivity().findViewById(R.id.followers_root_layout),
+                    binding.anchorTv,
                     error = response.body().toString(),
                     ""){}
-
             }
         }
     }

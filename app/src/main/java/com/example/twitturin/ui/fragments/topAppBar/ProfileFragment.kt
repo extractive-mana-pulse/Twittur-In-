@@ -188,8 +188,8 @@ class ProfileFragment : Fragment() {
                                 }
                                 is DeleteResult.Error -> {
                                     snackbarHelper.snackbarError(
-                                        requireActivity().findViewById(R.id.profile_root_layout),
-                                        requireActivity().findViewById(R.id.profile_root_layout),
+                                        view.findViewById(R.id.profile_root_layout),
+                                        binding.profileRootLayout,
                                         error = result.message,
                                         ""){}
                                 }

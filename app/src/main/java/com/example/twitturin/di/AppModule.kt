@@ -3,26 +3,26 @@ package com.example.twitturin.di
 import android.app.Application
 import android.content.Context
 import android.content.res.Resources
+import androidx.lifecycle.LifecycleOwner
+import com.example.twitturin.BuildConfig
 import com.example.twitturin.domain.repository.MyRepository
 import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.model.network.Api
+import com.example.twitturin.model.network.FollowApi
 import com.example.twitturin.model.repo.Repository
+import com.example.twitturin.ui.activities.MainActivity
 import com.example.twitturin.viewmodel.manager.SessionManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
-
-//    @Provides
-//    @Singleton
-//    fun provideMyRepo(api : Api) : MyRepository{
-//        return Repository(api)
-//    }
 
     @Provides
     @Singleton
@@ -40,5 +40,20 @@ object AppModule {
     @Singleton
     fun provideSnackbarHelper(resources: Resources): SnackbarHelper {
         return SnackbarHelper(resources)
+    }
+
+    @Provides
+    @Singleton
+    fun provideRetrofit(): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(BuildConfig.BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideFollowApi(retrofit: Retrofit): FollowApi {
+        return retrofit.create(FollowApi::class.java)
     }
 }

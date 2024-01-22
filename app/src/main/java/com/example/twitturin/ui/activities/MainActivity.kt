@@ -39,7 +39,10 @@ class MainActivity : AppCompatActivity() {
             R.id.editProfileFragment,
             R.id.privateMessagesFragment,
             R.id.kindFragment,
-            R.id.profileFragment
+            R.id.profileFragment,
+            R.id.followersListFragment,
+            R.id.followingListFragment,
+
         )
 
         navController.addOnDestinationChangedListener { _, destination, _ ->

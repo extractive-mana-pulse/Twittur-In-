@@ -53,7 +53,18 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    tools:ignore="ContentDescription" />
+                    tools:ignore="ContentDescription"/>
+
+                <ImageView
+                    android:id="@+id/test_image"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_marginEnd="16dp"
+                    android:src="@drawable/bug_report"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    tools:ignore="ContentDescription"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

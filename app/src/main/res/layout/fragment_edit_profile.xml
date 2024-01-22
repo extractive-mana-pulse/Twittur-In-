@@ -19,12 +19,12 @@
             android:id="@+id/back"
             android:layout_width="32dp"
             android:layout_height="32dp"
+            android:src="@drawable/ios_back"
             android:layout_marginStart="16dp"
             app:layout_constraintTop_toTopOf="parent"
-            android:background="@drawable/back_btn_bg"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:src="@drawable/keyboard_backspace"
+            android:background="@android:color/transparent"
             tools:ignore="ContentDescription"/>
 
         <TextView
@@ -46,7 +46,6 @@
             android:text="@string/save"
             android:textSize="18sp"
             android:textAlignment="textEnd"
-            android:textColor="@color/black"
             android:background="@android:color/transparent"
             android:layout_marginEnd="16dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -143,7 +142,6 @@
 
     </LinearLayout>
 
-
     <LinearLayout
         android:id="@+id/bio_layout"
         android:layout_width="match_parent"
@@ -171,7 +169,6 @@
             tools:ignore="Autofill,LabelFor,TextFields" />
 
     </LinearLayout>
-
 
     <LinearLayout
         android:id="@+id/email_layout"
@@ -220,14 +217,6 @@
             android:layout_marginTop="15dp"
             android:layout_marginStart="16dp"/>
 
-<!--        <EditText-->
-<!--            android:id="@+id/country_et"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginHorizontal="16dp"-->
-<!--            android:layout_marginTop="3dp"-->
-<!--            tools:ignore="Autofill,LabelFor,TextFields" />-->
-
         <com.hbb20.CountryCodePicker
             android:id="@+id/country_et"
             android:layout_width="match_parent"
@@ -258,15 +247,6 @@
             android:layout_marginStart="16dp"
             tools:ignore="TextViewEdits" />
 
-<!--        <EditText-->
-<!--            android:id="@+id/birthday_et"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginHorizontal="16dp"-->
-<!--            android:layout_marginTop="3dp"-->
-<!--            android:inputType="date"-->
-<!--            tools:ignore="Autofill,LabelFor" />-->
-
         <com.santalu.maskedittext.MaskEditText
             android:id="@+id/birthday_et"
             android:layout_width="match_parent"
@@ -275,8 +255,15 @@
             app:met_mask="####-##-##"
             android:inputType="date"
             android:layout_marginTop="3dp"
-            android:layout_marginHorizontal="16dp"/>
+            android:layout_marginHorizontal="16dp"
+            tools:ignore="HardcodedText"/>
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/test_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -107,24 +107,21 @@ class ProfileViewModel: ViewModel() {
     ) {
         val request =  EditProfile(fullName, username, email, bio, country, birthday)
         /*username, email, birthday, bio, country, fullName*/
-        val authRequest = apiService.editUser(request, userId, "Bearer $token")
+        val authRequest = apiService.editUser(request, userId, token)
         authRequest.enqueue(object : Callback<EditProfile> {
             override fun onResponse(call: Call<EditProfile>, response: Response<EditProfile>) {
                 if (response.isSuccessful) {
                     val editProfile = response.body()
                     if (editProfile != null) {
                         _editUserResult.value = EditUserResult.Success(editProfile)
-                        Log.d("response body", response.body().toString())
-                        Log.d("response code", response.code().toString())
-                        Log.d("response message", response.message().toString())
                     }
                 } else {
-                    _editUserResult.value = EditUserResult.Error(response.code().toString())
+                    _editUserResult.value = EditUserResult.Error(response.code())
                 }
             }
 
             override fun onFailure(call: Call<EditProfile>, t: Throwable) {
-                _editUserResult.value = EditUserResult.Error(t.message ?: "Unknown error")
+                _editUserResult.value = EditUserResult.Error(404)
             }
         })
     }

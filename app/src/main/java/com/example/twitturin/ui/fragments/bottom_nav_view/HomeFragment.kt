@@ -1,6 +1,7 @@
 package com.example.twitturin.ui.fragments.bottom_nav_view
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -20,6 +21,7 @@ import com.example.twitturin.databinding.FragmentHomeBinding
 import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.model.data.tweets.Tweet
 import com.example.twitturin.model.repo.Repository
+import com.example.twitturin.ui.activities.PhotoPickerActivity
 import com.example.twitturin.ui.adapters.PostAdapter
 import com.example.twitturin.ui.sealeds.UserCredentialsResult
 import com.example.twitturin.viewmodel.MainViewModel
@@ -53,6 +55,17 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.homeFragment = this
+
+        /* this block of code for testing purpose only */
+
+        binding.testImage.setOnClickListener {
+            activity?.let {
+                val intent = Intent(it, PhotoPickerActivity::class.java)
+                startActivity(intent)
+            }
+        }
+
+        /* this block of code for testing purpose only */
 
         val headerView: View = binding.navigationView.getHeaderView(0)
         headerView.setOnClickListener { findNavController().navigate(R.id.action_homeFragment_to_profileFragment) }

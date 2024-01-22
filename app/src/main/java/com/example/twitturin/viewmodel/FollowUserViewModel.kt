@@ -1,33 +1,26 @@
 package com.example.twitturin.viewmodel
 
+
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.twitturin.BuildConfig
 import com.example.twitturin.model.data.users.User
-import com.example.twitturin.model.network.Api
 import com.example.twitturin.model.network.FollowApi
 import com.example.twitturin.ui.sealeds.DeleteFollow
-import com.example.twitturin.ui.sealeds.EditUserResult
 import com.example.twitturin.ui.sealeds.FollowResult
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import dagger.hilt.android.lifecycle.HiltViewModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Inject
 
-class FollowUserViewModel : ViewModel() {
+@HiltViewModel
+class FollowUserViewModel @Inject constructor(private val api : FollowApi) : ViewModel() {
 
-    private val retrofit = Retrofit.Builder()
-        .baseUrl(BuildConfig.BASE_URL)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-
-    private val api: FollowApi = retrofit.create(FollowApi::class.java)
 
     private val _followResult = MutableLiveData<FollowResult>()
     val followResult: LiveData<FollowResult> = _followResult

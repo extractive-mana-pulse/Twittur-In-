@@ -1,11 +1,17 @@
 package com.example.twitturin.ui.fragments
 
+import android.app.Activity
 import android.app.AlertDialog
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -17,6 +23,7 @@ import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.ui.adapters.ColorAdapter
 import com.example.twitturin.ui.decoration.GridSpacingItemDecoration
 import com.example.twitturin.ui.sealeds.EditUserResult
+import com.example.twitturin.ui.sealeds.HttpResponses
 import com.example.twitturin.viewmodel.ProfileViewModel
 import com.example.twitturin.viewmodel.manager.SessionManager
 import dagger.hilt.android.AndroidEntryPoint
@@ -30,6 +37,8 @@ class EditProfileFragment : Fragment() {
 //    private val calendar: Calendar = Calendar.getInstance()
     private lateinit var binding : FragmentEditProfileBinding
 
+    private val PICK_PHOTO_REQUEST_CODE = 1
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentEditProfileBinding.inflate(layoutInflater)
         return binding.root
@@ -42,8 +51,15 @@ class EditProfileFragment : Fragment() {
             findNavController().navigate(R.id.action_editProfileFragment_to_profileFragment)
         }
 
+        binding.profileImage.setOnClickListener {
+            pickPhoto()
+        }
+
         val token = sessionManager.getToken()
         val userId = sessionManager.getUserId()
+
+        Log.d("token",token.toString())
+        Log.d("userId",userId.toString())
 
         val profileViewModel = ViewModelProvider(this)[ProfileViewModel::class.java]
 //        TODO. this code should be modified under edit text. so in this page in edit text fields should be default value of user credentials
@@ -69,7 +85,6 @@ class EditProfileFragment : Fragment() {
                 "Bearer $token"
             )
 
-
             profileViewModel.editUserResult.observe(viewLifecycleOwner) { result ->
                 when (result) {
                     is EditUserResult.Success -> {
@@ -77,10 +92,11 @@ class EditProfileFragment : Fragment() {
                     }
 
                     is EditUserResult.Error -> {
+//                        val x = HttpResponses.Error(statusCode = result.errorMessage)
                         snackbarHelper.snackbarError(
-                            requireActivity().findViewById(R.id.edit_profile_root_layout),
-                            requireActivity().findViewById(R.id.edit_profile_root_layout),
-                            error = result.errorMessage,
+                            view.findViewById<ConstraintLayout>(R.id.edit_profile_root_layout),
+                            binding.testTv,
+                            error = result.error,
                             ""){}
                     }
                 }
@@ -158,6 +174,20 @@ class EditProfileFragment : Fragment() {
 
     private fun dpToPx(dp: Int): Int {
         return (dp * resources.displayMetrics.density).toInt()
+    }
+
+    private fun pickPhoto() {
+        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        startActivityForResult(intent, PICK_PHOTO_REQUEST_CODE)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == PICK_PHOTO_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            val selectedImageUri = data?.data
+            // Handle the selected image URI
+        }
     }
 
     companion object {

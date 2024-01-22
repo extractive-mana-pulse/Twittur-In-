@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
@@ -11,19 +12,19 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.twitturin.R
 import com.example.twitturin.databinding.RcViewFollowingBinding
-import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.model.data.users.User
 import com.example.twitturin.ui.sealeds.DeleteFollow
 import com.example.twitturin.viewmodel.FollowUserViewModel
 import com.example.twitturin.viewmodel.manager.SessionManager
 import javax.inject.Inject
 
-class FollowingAdapter(private val parentLifecycleOwner: LifecycleOwner) : RecyclerView.Adapter<FollowingAdapter.ViewHolder>() {
+class FollowingAdapter @Inject constructor(
+    private val lifecycleOwner : LifecycleOwner,
+    private val followViewModel: FollowUserViewModel
+) : RecyclerView.Adapter<FollowingAdapter.ViewHolder>() {
 
     private var list = emptyList<User>()
-    @Inject lateinit var sessionManager: SessionManager
-    @Inject lateinit var snackbarHelper: SnackbarHelper
-    private lateinit var followViewModel: FollowUserViewModel
+    private lateinit var sessionManager: SessionManager
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val binding = RcViewFollowingBinding.bind(itemView)
@@ -37,6 +38,8 @@ class FollowingAdapter(private val parentLifecycleOwner: LifecycleOwner) : Recyc
     override fun onBindViewHolder(holder: FollowingAdapter.ViewHolder, position: Int) {
         val item = list[position]
         val context = holder.itemView.context
+
+        sessionManager = SessionManager(context)
 
         holder.binding.apply {
 
@@ -53,39 +56,26 @@ class FollowingAdapter(private val parentLifecycleOwner: LifecycleOwner) : Recyc
         }
 
         val token = sessionManager.getToken()
-        followViewModel = ViewModelProvider(context as ViewModelStoreOwner)[FollowUserViewModel::class.java]
 
         holder.binding.unfollowBtn.setOnClickListener {
             followViewModel.deleteFollow(item.id!!,"Bearer $token")
         }
 
-        followViewModel.deleteFollowResult.observe(parentLifecycleOwner) { result ->
+        followViewModel.deleteFollowResult.observe(lifecycleOwner) { result ->
             when (result) {
 
                 is DeleteFollow.Success -> {
-                    snackbarHelper.snackbar(
-                        holder.itemView.findViewById(R.id.following_root_layout),
-                        holder.itemView.findViewById(R.id.following_root_layout),
-                        message = "you unfollow: ${item.username?.uppercase()}"
-                    )
+                    Toast.makeText(context, "you unfollow: ${item.username?.uppercase()}", Toast.LENGTH_SHORT).show()
                 }
 
                 is DeleteFollow.Error -> {
-                    snackbarHelper.snackbarError(
-                        holder.itemView.findViewById(R.id.following_root_layout),
-                        holder.itemView.findViewById(R.id.following_root_layout),
-                        result.message,
-                        ""){}
+                    Toast.makeText(context, result.message, Toast.LENGTH_SHORT).show()
                 }
             }
         }
 
         holder.itemView.setOnClickListener {
-            snackbarHelper.snackbar(
-                holder.itemView.findViewById(R.id.following_root_layout),
-                holder.itemView.findViewById(R.id.following_root_layout),
-                message = "In Progress"
-            )
+            Toast.makeText(context, "In Progress", Toast.LENGTH_SHORT).show()
         }
     }
 

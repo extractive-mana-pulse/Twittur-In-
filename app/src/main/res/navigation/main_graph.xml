@@ -318,6 +318,7 @@
             app:destination="@id/profileFragment" />
 
     </fragment>
+
     <fragment
         android:id="@+id/followersListFragment"
         android:name="com.example.twitturin.ui.fragments.follow.FollowersListFragment"
@@ -327,6 +328,7 @@
             android:id="@+id/action_followersListFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/followingListFragment"
         android:name="com.example.twitturin.ui.fragments.follow.FollowingListFragment"
@@ -336,22 +338,12 @@
             android:id="@+id/action_followingListFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/reportFragment"
-        android:name="com.example.twitturin.ui.fragments.ReportFragment"
-        android:label="fragment_report"
-        tools:layout="@layout/fragment_report" >
-        <action
-            android:id="@+id/action_reportFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
-    </fragment>
+
     <dialog
         android:id="@+id/myBottomSheetDialogFragment"
         android:name="com.example.twitturin.ui.fragments.bottom_sheets.MoreSettingsDetailFragment"
         android:label="MyBottomSheetDialogFragment" >
-        <action
-            android:id="@+id/action_myBottomSheetDialogFragment_to_reportFragment"
-            app:destination="@id/reportFragment" />
+        
     </dialog>
 
 </navigation>

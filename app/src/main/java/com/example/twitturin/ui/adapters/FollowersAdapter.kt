@@ -4,9 +4,8 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelStoreOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.twitturin.R
@@ -19,14 +18,15 @@ import com.example.twitturin.viewmodel.manager.SessionManager
 import java.util.*
 import javax.inject.Inject
 
-class FollowersAdapter (
-    private val parentLifecycleOwner: LifecycleOwner
+class FollowersAdapter @Inject constructor(
+    private val lifecycleOwner : LifecycleOwner,
+    private val followViewModel: FollowUserViewModel
 ) : RecyclerView.Adapter<FollowersAdapter.ViewHolder>() {
 
     private var list = emptyList<User>()
-    @Inject lateinit var sessionManager: SessionManager
-    @Inject lateinit var snackbarHelper: SnackbarHelper
-    private lateinit var followViewModel: FollowUserViewModel
+    private lateinit var sessionManager: SessionManager
+//    private lateinit var snackbarHelper: SnackbarHelper
+
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val binding = RcViewFollowersBinding.bind(itemView)
     }
@@ -41,6 +41,10 @@ class FollowersAdapter (
         val item = list[position]
 
         val context = holder.itemView.context
+
+        sessionManager = SessionManager(context)
+//        snackbarHelper = SnackbarHelper(context.resources)
+
         holder.binding.apply {
 
             val profileImage = item.profilePicture
@@ -56,40 +60,42 @@ class FollowersAdapter (
         }
 
         val token = sessionManager.getToken()
-        followViewModel = ViewModelProvider(context as ViewModelStoreOwner)[FollowUserViewModel::class.java]
 
         holder.binding.followBtn.setOnClickListener {
             followViewModel.followUsers(item.id!!,"Bearer $token")
         }
 
-        followViewModel.followResult.observe(parentLifecycleOwner) { result ->
+        followViewModel.followResult.observe(lifecycleOwner) { result ->
 
             when (result) {
 
                 is FollowResult.Success -> {
-                    snackbarHelper.snackbar(
-                        holder.itemView.findViewById(R.id.followers_root_layout),
-                        holder.itemView.findViewById(R.id.followers_root_layout),
-                        message = "now you follow: ${item.username?.uppercase()}"
-                    )
+                    Toast.makeText(context, "now you follow: ${item.username?.uppercase()}", Toast.LENGTH_SHORT).show()
+//                    snackbarHelper.snackbar(
+//                        holder.itemView.findViewById(R.id.followers_rc_root_layout),
+//                        holder.itemView.findViewById(R.id.anchor_rc_followers_tv),
+//                        message = "now you follow: ${item.username?.uppercase()}"
+//                    )
                 }
 
                 is FollowResult.Error -> {
-                    snackbarHelper.snackbarError(
-                        holder.itemView.findViewById(R.id.followers_root_layout),
-                        holder.itemView.findViewById(R.id.followers_root_layout),
-                        result.message,
-                        ""){}
+                    Toast.makeText(context, result.message, Toast.LENGTH_SHORT).show()
+//                    snackbarHelper.snackbarError(
+//                        holder.itemView.findViewById(R.id.followers_rc_root_layout),
+//                        holder.itemView.findViewById(R.id.anchor_rc_followers_tv),
+//                        result.message,
+//                        ""){}
                 }
             }
         }
 
         holder.itemView.setOnClickListener {
-            snackbarHelper.snackbar(
-                holder.itemView.findViewById(R.id.followers_root_layout),
-                holder.itemView.findViewById(R.id.followers_root_layout),
-                message = "In Progress"
-            )
+            Toast.makeText(context, "In Progress", Toast.LENGTH_SHORT).show()
+//            snackbarHelper.snackbar(
+//                holder.itemView.findViewById(R.id.followers_root_layout),
+//                holder.itemView.findViewById(R.id.anchor_rc_followers_tv),
+//                message = "In Progress"
+//            )
         }
     }
 

@@ -5,6 +5,7 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -18,13 +19,14 @@ import com.example.twitturin.viewmodel.manager.SessionManager
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
 
-class PostAdapter(private val parentLifecycleOwner: LifecycleOwner) : RecyclerView.Adapter<PostAdapter.ViewHolder>() {
+class PostAdapter (
+    private val parentLifecycleOwner: LifecycleOwner
+) : RecyclerView.Adapter<PostAdapter.ViewHolder>() {
 
     private var list = emptyList<Tweet>()
-    @Inject lateinit var sessionManager: SessionManager
-    @Inject lateinit var snackbarHelper: SnackbarHelper
+    private lateinit var sessionManager: SessionManager
+    private lateinit var snackbarHelper: SnackbarHelper
     private lateinit var viewModel: LikeViewModel
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -41,6 +43,10 @@ class PostAdapter(private val parentLifecycleOwner: LifecycleOwner) : RecyclerVi
         val item = list[position]
         val baseUrl = "https://twitturin.onrender.com/tweets"
         val context = holder.itemView.context
+
+        sessionManager = SessionManager(context)
+        snackbarHelper = SnackbarHelper(context.resources)
+
 //        var likeCount: Int? = item.likes
 //        var isLiked: Boolean = false
 
@@ -91,11 +97,12 @@ class PostAdapter(private val parentLifecycleOwner: LifecycleOwner) : RecyclerVi
                 }
 
                 postIconHeart.setOnClickListener {
-                    snackbarHelper.snackbar(
-                        holder.itemView.findViewById(R.id.home_root_layout),
-                        holder.itemView.findViewById(R.id.home_root_layout),
-                        message = "In Progress"
-                    )
+                    Toast.makeText(context, "In Progress", Toast.LENGTH_SHORT).show()
+//                    snackbarHelper.snackbar(
+//                        holder.itemView.findViewById(R.id.home_root_layout),
+//                        holder.itemView.findViewById(R.id.add_post),
+//                        message = "In Progress"
+//                    )
                 }
 
                 holder.itemView.setOnClickListener {
