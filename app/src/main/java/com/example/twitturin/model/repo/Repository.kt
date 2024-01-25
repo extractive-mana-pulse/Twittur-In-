@@ -11,6 +11,10 @@ class Repository {
         // TODO
 //    }
 
+    suspend fun getAllUsers(): Response<List<User>> {
+        return RetrofitInstance.api.getAllUsers()
+    }
+
     suspend fun getTweets() : Response<List<Tweet>> {
         return RetrofitInstance.api.getTweet()
     }

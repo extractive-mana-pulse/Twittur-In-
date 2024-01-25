@@ -1,7 +1,6 @@
 package com.example.twitturin.ui.fragments
 
 import android.app.Activity
-import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -10,7 +9,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -23,9 +21,9 @@ import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.ui.adapters.ColorAdapter
 import com.example.twitturin.ui.decoration.GridSpacingItemDecoration
 import com.example.twitturin.ui.sealeds.EditUserResult
-import com.example.twitturin.ui.sealeds.HttpResponses
 import com.example.twitturin.viewmodel.ProfileViewModel
 import com.example.twitturin.viewmodel.manager.SessionManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -36,6 +34,7 @@ class EditProfileFragment : Fragment() {
     @Inject lateinit var sessionManager: SessionManager
 //    private val calendar: Calendar = Calendar.getInstance()
     private lateinit var binding : FragmentEditProfileBinding
+    private lateinit var profileViewModel : ProfileViewModel
 
     private val PICK_PHOTO_REQUEST_CODE = 1
 
@@ -58,10 +57,7 @@ class EditProfileFragment : Fragment() {
         val token = sessionManager.getToken()
         val userId = sessionManager.getUserId()
 
-        Log.d("token",token.toString())
-        Log.d("userId",userId.toString())
-
-        val profileViewModel = ViewModelProvider(this)[ProfileViewModel::class.java]
+        profileViewModel = ViewModelProvider(this)[ProfileViewModel::class.java]
 //        TODO. this code should be modified under edit text. so in this page in edit text fields should be default value of user credentials
 //         or if it's empty field should be empty.
 
@@ -92,7 +88,6 @@ class EditProfileFragment : Fragment() {
                     }
 
                     is EditUserResult.Error -> {
-//                        val x = HttpResponses.Error(statusCode = result.errorMessage)
                         snackbarHelper.snackbarError(
                             view.findViewById<ConstraintLayout>(R.id.edit_profile_root_layout),
                             binding.testTv,
@@ -162,10 +157,10 @@ class EditProfileFragment : Fragment() {
             addItemDecoration(GridSpacingItemDecoration(numColumns, spacing, true))
         }
 
-        val colorPickerDialog = AlertDialog.Builder(requireContext(), R.style.CustomAlertDialogTheme)
-            .setTitle("Choose a color")
+        val colorPickerDialog = MaterialAlertDialogBuilder(requireContext(), R.style.ThemeOverlay_App_MaterialAlertDialog)
+            .setTitle(resources.getString(R.string.get_color))
             .setView(recyclerView)
-            .setNegativeButton("Cancel") { dialog, _ ->
+            .setNegativeButton(resources.getString(R.string.cancel)) { dialog, _ ->
                 dialog.dismiss()
             }
             .create()

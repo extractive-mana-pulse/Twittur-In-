@@ -42,7 +42,7 @@
             android:visibility="visible"
             app:layout_constraintWidth_percent="0.4"
             app:layout_constraintDimensionRatio="1.1"
-            app:lottie_fileName="empty_tweets_list.json"
+            app:lottie_rawRes="@raw/empty_tweets_list"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"/>

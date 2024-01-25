@@ -96,15 +96,6 @@ class PostAdapter (
                     createdAtTv.text = "Invalid date"
                 }
 
-                postIconHeart.setOnClickListener {
-                    Toast.makeText(context, "In Progress", Toast.LENGTH_SHORT).show()
-//                    snackbarHelper.snackbar(
-//                        holder.itemView.findViewById(R.id.home_root_layout),
-//                        holder.itemView.findViewById(R.id.add_post),
-//                        message = "In Progress"
-//                    )
-                }
-
                 holder.itemView.setOnClickListener {
                     val intent = Intent(context, DetailActivity::class.java)
 
@@ -118,6 +109,32 @@ class PostAdapter (
                     intent.putExtra("userAvatar", author?.profilePicture ?: R.drawable.ic_launcher_foreground)
 
                     context.startActivity(intent)
+                }
+
+                postIconComments.setOnClickListener {
+                    // TODO { when user press this button. user should navigate to detail article page and edit text have to be active and open keyboard }
+                    val intent = Intent(context, DetailActivity::class.java)
+
+                    intent.putExtra("fullname", author?.fullName ?: "Twittur User")
+                    intent.putExtra("username", author?.username)
+                    intent.putExtra("post_description", content)
+                    intent.putExtra("createdAt", createdAt)
+                    intent.putExtra("likes", likes.toString())
+                    intent.putExtra("id",id)
+                    intent.putExtra("userId",author?.id)
+                    intent.putExtra("userAvatar", author?.profilePicture ?: R.drawable.ic_launcher_foreground)
+                    intent.putExtra("activateEditText", true)
+
+                    context.startActivity(intent)
+                }
+
+                postIconHeart.setOnClickListener {
+                    Toast.makeText(context, "In Progress", Toast.LENGTH_SHORT).show()
+//                    snackbarHelper.snackbar(
+//                        holder.itemView.findViewById(R.id.home_root_layout),
+//                        holder.itemView.findViewById(R.id.add_post),
+//                        message = "In Progress"
+//                    )
                 }
 
                 postIconShare.setOnClickListener {

@@ -22,6 +22,7 @@ import com.example.twitturin.ui.sealeds.DeleteResult
 import com.example.twitturin.ui.sealeds.UserCredentialsResult
 import com.example.twitturin.viewmodel.ProfileViewModel
 import com.example.twitturin.viewmodel.manager.SessionManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -33,6 +34,7 @@ class ProfileFragment : Fragment() {
     @Inject lateinit var sessionManager: SessionManager
     @Inject lateinit var snackbarHelper: SnackbarHelper
     private lateinit var binding: FragmentProfileBinding
+    private lateinit var profileViewModel: ProfileViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentProfileBinding.inflate(layoutInflater)
@@ -45,7 +47,7 @@ class ProfileFragment : Fragment() {
         binding.profileFragment = this
 
 
-        val profileViewModel = ViewModelProvider(this)[ProfileViewModel::class.java]
+        profileViewModel = ViewModelProvider(this)[ProfileViewModel::class.java]
         val userId = sessionManager.getUserId()
         val token = sessionManager.getToken()
 
@@ -75,12 +77,20 @@ class ProfileFragment : Fragment() {
                     binding.profileKindTv.text = result.user.kind
                     binding.profileDescription.text = result.user.bio ?: "This user does not appear to have any biography."
 
-                    binding.locationImg.visibility = if (binding.locationTv.text.isEmpty()) {
-                        View.GONE
+                    if (binding.locationTv.text.isEmpty()) {
+                        binding.locationImg.visibility = View.INVISIBLE
+                        binding.locationTv.visibility = View.INVISIBLE
                     } else {
-                        binding.locationTv.text = result.user.country
-                        View.VISIBLE
+                        binding.locationImg.visibility = View.VISIBLE
+                        binding.locationTv.visibility = View.VISIBLE
                     }
+
+//                    binding.locationImg.visibility = if (binding.locationTv.text.isEmpty()) {
+//                        View.GONE
+//                    } else {
+//                        binding.locationTv.text = result.user.country
+//                        View.VISIBLE
+//                    }
 
                     binding.emailImg.visibility = if (binding.emailTv.text.isEmpty()) {
                         View.GONE
@@ -134,58 +144,21 @@ class ProfileFragment : Fragment() {
                     }
 
                     R.id.logout -> {
-                        val alertDialogBuilder = AlertDialog.Builder(requireActivity())
-                        alertDialogBuilder.setTitle("Logout")
-                        alertDialogBuilder.setMessage("Are you sure you want to log out?")
-                        alertDialogBuilder.setPositiveButton("Yes") { _, _ ->
-                            val pref = requireActivity().getSharedPreferences("checkbox", MODE_PRIVATE)
-                            val editor = pref.edit()
-                            editor.remove("remember")
-                            editor.clear()
-                            editor.apply()
-                            sessionManager.clearToken()
-                            findNavController().navigate(R.id.action_profileFragment_to_signInFragment)
-                        }
-
-                        alertDialogBuilder.setNegativeButton("No") { dialog, _ ->
-                            dialog.dismiss()
-                        }
-
-                        alertDialogBuilder.setCancelable(false)
-                        val alertDialog = alertDialogBuilder.create()
-                        alertDialog.show()
+                        logoutDialog()
                         true
                     }
 
                     R.id.delete_account -> {
-                        val sharedPreferences = requireActivity().getSharedPreferences("my_shared_prefs", MODE_PRIVATE)
-                        val username = sharedPreferences.getString("username", "")
 
-                        val alertDialogBuilder = AlertDialog.Builder(requireActivity())
-                        alertDialogBuilder.setTitle("${username?.uppercase()}: Are you sure you want to delete account?")
-                        alertDialogBuilder.setMessage("Please note that once an account is deleted, it cannot be restored and all activity will be deleted")
-                        alertDialogBuilder.setPositiveButton("Yes") { _, _ ->
-                            profileViewModel.deleteUser(userId, "Bearer $token")
-                        }
-
-                        alertDialogBuilder.setNegativeButton("No") { dialog, _ ->
-                            dialog.dismiss()
-                        }
-
-                        alertDialogBuilder.setCancelable(true)
-                        val alertDialog = alertDialogBuilder.create()
-                        alertDialog.show()
+                        deleteDialog()
 
                         profileViewModel.deleteResult.observe(viewLifecycleOwner) { result ->
                             when (result) {
+
                                 is DeleteResult.Success -> {
                                     findNavController().navigate(R.id.action_profileFragment_to_signInFragment)
-                                    snackbarHelper.snackbar(
-                                        requireActivity().findViewById(R.id.profile_root_layout),
-                                        requireActivity().findViewById(R.id.profile_root_layout),
-                                        message = "Deleted"
-                                    )
                                 }
+
                                 is DeleteResult.Error -> {
                                     snackbarHelper.snackbarError(
                                         view.findViewById(R.id.profile_root_layout),
@@ -197,6 +170,7 @@ class ProfileFragment : Fragment() {
                         }
                         true
                     }
+
                     else -> false
                 }
             }
@@ -222,19 +196,55 @@ class ProfileFragment : Fragment() {
         TabLayoutMediator(binding.tb, binding.vp2) { tab, pos ->
             when (pos) {
                 0 -> {
-                    tab.text = "Tweets"
+                    tab.text = resources.getString(R.string.tweets)
                 }
                 1 -> {
-                    tab.text = "Likes"
+                    tab.text = resources.getString(R.string.likes)
                 }
             }
         }.attach()
     }
 
-    fun goBack(){
-        binding.back.setOnClickListener {
-            requireActivity().onBackPressed()
+    private fun deleteDialog(){
+        val sharedPreferences = requireActivity().getSharedPreferences("my_shared_prefs", MODE_PRIVATE)
+        val username = sharedPreferences.getString("username", "")
+
+        val alertDialogBuilder = MaterialAlertDialogBuilder(requireActivity())
+        alertDialogBuilder.setTitle("${username?.uppercase()}: + ${resources.getString(R.string.delete_title)}")
+        alertDialogBuilder.setMessage(resources.getString(R.string.delete_message))
+        alertDialogBuilder.setPositiveButton(resources.getString(R.string.yes)) { _, _ ->
+            profileViewModel.deleteUser(sessionManager.getUserId()!!, "Bearer ${sessionManager.getToken()}")
         }
+
+        alertDialogBuilder.setNegativeButton(resources.getString(R.string.no)) { dialog, _ ->
+            dialog.dismiss()
+        }
+
+        alertDialogBuilder.setCancelable(true)
+        val alertDialog = alertDialogBuilder.create()
+        alertDialog.show()
+    }
+
+    private fun logoutDialog() {
+        val alertDialogBuilder = MaterialAlertDialogBuilder(requireActivity(), R.style.ThemeOverlay_App_MaterialAlertDialog)
+        alertDialogBuilder.setTitle(resources.getString(R.string.logout))
+        alertDialogBuilder.setMessage(resources.getString(R.string.logout_message))
+        alertDialogBuilder.setPositiveButton(resources.getString(R.string.yes)) { _, _ ->
+            sessionManager.clearToken()
+            findNavController().navigate(R.id.action_profileFragment_to_signInFragment)
+        }
+
+        alertDialogBuilder.setNegativeButton(resources.getString(R.string.no)) { dialog, _ ->
+            dialog.dismiss()
+        }
+
+        alertDialogBuilder.setCancelable(true)
+        val alertDialog = alertDialogBuilder.create()
+        alertDialog.show()
+    }
+
+    fun goBack() {
+        findNavController().navigate(R.id.action_profileFragment_to_homeFragment)
     }
 
     companion object {

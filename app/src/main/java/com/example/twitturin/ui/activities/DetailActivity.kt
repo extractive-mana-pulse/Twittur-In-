@@ -7,7 +7,10 @@ import android.graphics.Bitmap
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
+import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
@@ -17,7 +20,10 @@ import com.bumptech.glide.Glide
 import com.example.twitturin.R
 import com.example.twitturin.databinding.ActivityDetailBinding
 import com.example.twitturin.helper.SnackbarHelper
+import com.example.twitturin.model.data.ListOfFollowing
 import com.example.twitturin.model.data.tweets.Tweet
+import com.example.twitturin.model.data.users.User
+import com.example.twitturin.model.network.RetrofitInstance
 import com.example.twitturin.model.repo.Repository
 import com.example.twitturin.ui.adapters.PostAdapter
 import com.example.twitturin.ui.fragments.bottom_sheets.MoreSettingsDetailFragment
@@ -25,6 +31,7 @@ import com.example.twitturin.ui.sealeds.FollowResult
 import com.example.twitturin.ui.sealeds.PostReply
 import com.example.twitturin.viewmodel.FollowUserViewModel
 import com.example.twitturin.viewmodel.MainViewModel
+import com.example.twitturin.viewmodel.UsersResult
 import com.example.twitturin.viewmodel.ViewModelFactory
 import com.example.twitturin.viewmodel.manager.SessionManager
 import dagger.hilt.android.AndroidEntryPoint
@@ -39,125 +46,136 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class DetailActivity : AppCompatActivity() {
 
+    private lateinit var viewModel: MainViewModel
+    private val allUsers = mutableListOf<String>()
+    @Inject lateinit var snackbarHelper: SnackbarHelper
+    @Inject lateinit var sessionManager: SessionManager
+    private val followedUsersList = mutableListOf<String>()
+    private lateinit var followViewModel: FollowUserViewModel
     private val binding by lazy { ActivityDetailBinding.inflate(layoutInflater) }
     private val postAdapter by lazy { PostAdapter(this@DetailActivity) }
-    private lateinit var followViewModel: FollowUserViewModel
-    private lateinit var viewModel: MainViewModel
-    @Inject lateinit var sessionManager: SessionManager
-    @Inject lateinit var snackbarHelper: SnackbarHelper
 
     @SuppressLint("SetTextI18n", "PrivateResource", "NotifyDataSetChanged", "ResourceAsColor")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        val userImage = intent.getStringExtra("userAvatar")
-        val fullname = intent.getStringExtra("fullname")
-        val username = intent.getStringExtra("username")
-        val description = intent.getStringExtra("post_description")
-        val createdTime = intent.getStringExtra("createdAt")
-        val likes = intent.getStringExtra("likes")
-        val id = intent.getStringExtra("id")
-        val userId = intent.getStringExtra("userId")
-
-        val sharedPreferences = getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
-        sharedPreferences.edit().putString("userImage", userImage).apply()
-        sharedPreferences.edit().putString("username", username).apply()
-        sharedPreferences.edit().putString("fullname", fullname).apply()
-        sharedPreferences.edit().putString("userId", userId).apply()
-        sharedPreferences.edit().putString("id", id).apply()
-
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.getDefault())
-        dateFormat.timeZone = TimeZone.getTimeZone("UTC")
-
-        val repository = Repository()
-        val viewModelFactory = ViewModelFactory(repository)
-        followViewModel = ViewModelProvider(this@DetailActivity)[FollowUserViewModel::class.java]
-        viewModel = ViewModelProvider(this@DetailActivity, viewModelFactory)[MainViewModel::class.java]
-
-        updateRecyclerView()
-
-        val token = sessionManager.getToken()
-        val userId2 = sessionManager.getUserId()
-
-        if (userId == userId2) {
-            binding.followBtn.visibility = View.GONE
-        } else {
-            binding.followBtn.visibility = View.VISIBLE
-        }
-
-        binding.sentReply.isEnabled = false
-
-        binding.sentReply.setOnClickListener {
-            val reply = binding.replyEt.text?.toString()?.trim()
-            viewModel.postReply(reply!!, id!!, "Bearer $token")
-            binding.sentReply.isEnabled = false
-        }
-
-        val textWatcher1 = object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                // Not used
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                binding.sentReply.isEnabled = !binding.replyEt.text.isNullOrBlank()
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                // Not used
-            }
-        }
-        binding.replyEt.addTextChangedListener(textWatcher1)
-
-        viewModel.postReplyResult.observe(this@DetailActivity) { result ->
-
-            when (result) {
-                is PostReply.Success -> {
-                    binding.replyEt.text?.clear()
-                    viewModel.getRepliesOfPost(id!!)
-                    postAdapter.notifyDataSetChanged()
-                    binding.replyEt.addTextChangedListener(textWatcher1)
-                }
-
-                is PostReply.Error -> {
-                    snackbarHelper.snackbarError(
-                        findViewById(R.id.detail_root_layout),
-                        findViewById(R.id.detail_root_layout),
-                        result.message,
-                        ""){}
-                    binding.replyEt.addTextChangedListener(textWatcher1)
-                }
-            }
-        }
-
-        try {
-            val date = dateFormat.parse(createdTime.toString())
-            val currentTime = System.currentTimeMillis()
-
-            val durationMillis = currentTime - date!!.time
-
-            val seconds = TimeUnit.MILLISECONDS.toSeconds(durationMillis)
-            val minutes = TimeUnit.MILLISECONDS.toMinutes(durationMillis)
-            val hours = TimeUnit.MILLISECONDS.toHours(durationMillis)
-            val days = TimeUnit.MILLISECONDS.toDays(durationMillis)
-            val weeks = days / 7
-
-            val durationString = when {
-                weeks > 0 -> "$weeks weeks ago"
-                days > 0 -> "$days days ago"
-                hours > 0 -> "$hours hours ago"
-                minutes > 0 -> "$minutes minutes ago"
-                else -> "$seconds seconds ago"
-            }
-
-            println("Post created $durationString")
-            binding.whenCreated.text = durationString
-        } catch (e: Exception) {
-            println("Invalid date")
-            binding.whenCreated.text = "Invalid date"
-        }
+//        checkFollowedUsersStatus()
 
         binding.apply {
+            val userImage = intent.getStringExtra("userAvatar")
+            val fullname = intent.getStringExtra("fullname")
+            val username = intent.getStringExtra("username")
+            val description = intent.getStringExtra("post_description")
+            val createdTime = intent.getStringExtra("createdAt")
+            val likes = intent.getStringExtra("likes")
+            val id = intent.getStringExtra("id")
+            val userId = intent.getStringExtra("userId")
+
+            val sharedPreferences = getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
+            sharedPreferences.edit().putString("userImage", userImage).apply()
+            sharedPreferences.edit().putString("username", username).apply()
+            sharedPreferences.edit().putString("fullname", fullname).apply()
+            sharedPreferences.edit().putString("userId", userId).apply()
+            sharedPreferences.edit().putString("id", id).apply()
+
+            val activateEditText = intent.getBooleanExtra("activateEditText", false)
+            if (activateEditText) {
+                replyEt.post {
+                    replyEt.requestFocus()
+                    val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm.showSoftInput(replyEt, InputMethodManager.SHOW_IMPLICIT)
+                }
+            }
+
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.getDefault())
+            dateFormat.timeZone = TimeZone.getTimeZone("UTC")
+
+            val repository = Repository()
+            val viewModelFactory = ViewModelFactory(repository)
+            followViewModel = ViewModelProvider(this@DetailActivity)[FollowUserViewModel::class.java]
+            viewModel = ViewModelProvider(this@DetailActivity, viewModelFactory)[MainViewModel::class.java]
+
+            val token = sessionManager.getToken()
+            val userId2 = sessionManager.getUserId()
+
+            if (userId == userId2) {
+                followBtn.visibility = View.GONE
+            } else {
+                followBtn.visibility = View.VISIBLE
+            }
+
+            sentReply.isEnabled = false
+
+            sentReply.setOnClickListener {
+                val reply = replyEt.text?.toString()?.trim()
+                viewModel.postReply(reply!!, id!!, "Bearer $token")
+                sentReply.isEnabled = false
+            }
+
+            val textWatcher1 = object : TextWatcher {
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                    // Not used
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    sentReply.isEnabled = !replyEt.text.isNullOrBlank()
+                }
+
+                override fun afterTextChanged(s: Editable?) {
+                    // Not used
+                }
+            }
+            replyEt.addTextChangedListener(textWatcher1)
+
+            viewModel.postReplyResult.observe(this@DetailActivity) { result ->
+
+                when (result) {
+                    is PostReply.Success -> {
+                        replyEt.text?.clear()
+                        viewModel.getRepliesOfPost(id!!)
+                        postAdapter.notifyDataSetChanged()
+                        replyEt.addTextChangedListener(textWatcher1)
+                    }
+
+                    is PostReply.Error -> {
+                        snackbarHelper.snackbarError(
+                            findViewById(R.id.detail_root_layout),
+                            findViewById(R.id.reply_layout),
+                            result.message,
+                            ""
+                        ) {}
+                        replyEt.addTextChangedListener(textWatcher1)
+                    }
+                }
+            }
+
+            try {
+                val date = dateFormat.parse(createdTime.toString())
+                val currentTime = System.currentTimeMillis()
+
+                val durationMillis = currentTime - date!!.time
+
+                val seconds = TimeUnit.MILLISECONDS.toSeconds(durationMillis)
+                val minutes = TimeUnit.MILLISECONDS.toMinutes(durationMillis)
+                val hours = TimeUnit.MILLISECONDS.toHours(durationMillis)
+                val days = TimeUnit.MILLISECONDS.toDays(durationMillis)
+                val weeks = days / 7
+
+                val durationString = when {
+                    weeks > 0 -> "$weeks weeks ago"
+                    days > 0 -> "$days days ago"
+                    hours > 0 -> "$hours hours ago"
+                    minutes > 0 -> "$minutes minutes ago"
+                    else -> "$seconds seconds ago"
+                }
+
+                println("Post created $durationString")
+                binding.whenCreated.text = durationString
+            } catch (e: Exception) {
+                println("Invalid date")
+                binding.whenCreated.text = "Invalid date"
+            }
 
             authorAvatar.setOnLongClickListener {
                 authorAvatar.buildDrawingCache()
@@ -182,25 +200,39 @@ class DetailActivity : AppCompatActivity() {
             postDescription.text = description
             articlePageLikesCounter.text = likes
 
-            val followedUsernames: MutableLiveData<MutableList<String>> = MutableLiveData()
+            // TODO so when follow button pressed. add user's username to "followedList" after check list like below that do logic
+            // TODO also use getAll Users endpoint to do that !
+
+            viewModel.getAllUsers()
+
+            viewModel.usersResult.observe(this@DetailActivity) { result ->
+                when (result) {
+                    is UsersResult.Success -> {
+                        val users = result.users
+                        allUsers.add(users.toString())
+                        Log.d("test", allUsers.toString())
+                    }
+                    is UsersResult.Error -> {
+                        val errorMessage = result.errorMessage
+                        Toast.makeText(this@DetailActivity, errorMessage, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
 
             followBtn.setOnClickListener {
                 followViewModel.followUsers(userId!!, "Bearer $token")
             }
 
-
             followViewModel.followResult.observe(this@DetailActivity) { result ->
                 when (result) {
                     is FollowResult.Success -> {
-                        val followingUserName = result.username.username
-                        val currentFollowedUsernames = followedUsernames.value ?: mutableListOf()
-                        currentFollowedUsernames.add(followingUserName.toString())
-
                         snackbarHelper.snackbar(
                             findViewById(R.id.detail_root_layout),
                             findViewById(R.id.reply_layout),
-                            message = "now you follow ${username?.uppercase()}"
+                            message = "now you follow: ${username?.uppercase()}"
                         )
+                        followedUsersList.add(username.toString())
+                        Log.d("followed users list", followedUsersList.toString())
                     }
 
                     is FollowResult.Error -> {
@@ -208,7 +240,8 @@ class DetailActivity : AppCompatActivity() {
                             findViewById(R.id.detail_root_layout),
                             findViewById(R.id.reply_layout),
                             result.message,
-                            ""){}
+                            ""
+                        ) {}
                     }
                 }
             }
@@ -245,6 +278,7 @@ class DetailActivity : AppCompatActivity() {
                 )
             }
         }
+        updateRecyclerView()
     }
 
     private fun shareData() {
@@ -259,9 +293,19 @@ class DetailActivity : AppCompatActivity() {
         intent.putExtra(Intent.EXTRA_TEXT, link)
         intent.type = "text/plain"
 
-        startActivity(Intent.createChooser(intent,"Choose app:"))
+        startActivity(Intent.createChooser(intent, "Choose app:"))
     }
 
+    private fun checkFollowedUsersStatus() {
+        val username = intent.getStringExtra("username")
+        if (followedUsersList.contains(username)) {
+            binding.unfollowBtn.visibility = View.VISIBLE
+            binding.followBtn.visibility = View.INVISIBLE
+        } else {
+            binding.unfollowBtn.visibility = View.INVISIBLE
+            binding.followBtn.visibility = View.VISIBLE
+        }
+    }
 
     @SuppressLint("NotifyDataSetChanged")
     private fun updateRecyclerView() {

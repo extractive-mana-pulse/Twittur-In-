@@ -28,6 +28,8 @@
         <item name="colorOnSurfaceInverse">@color/md_theme_light_inverseOnSurface</item>
         <item name="colorPrimaryInverse">@color/md_theme_light_inversePrimary</item>
 
+        <item name="materialAlertDialogTheme">@style/ThemeOverlay.App.MaterialAlertDialog</item>
+
 <!--        Status Bar Color        -->
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:statusBarColor">?attr/colorSurfaceContainer</item>
@@ -38,6 +40,7 @@
         <item name="android:textColor">@color/md_theme_light_onErrorContainer</item>
     </style>
 
+<!--    fab        -->
     <style name="fab_3_rounded">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item>
@@ -45,14 +48,33 @@
     </style>
 
     <!-- AlertDialog Theme -->
-    <style name="CustomAlertDialogTheme" parent="Theme.MaterialComponents.Light.Dialog.Alert">
+    <style name="ThemeOverlay.App.MaterialAlertDialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
         <item name="colorPrimary">@color/md_theme_light_primary</item>
-        <item name="colorPrimaryDark">@color/md_theme_light_primaryContainer</item>
-        <item name="colorAccent">@color/md_theme_light_surface</item>
-        <item name="android:background">@color/md_theme_light_primaryContainer</item>
-        <item name="android:textColor">@android:color/white</item>
-        <item name="android:textColorPrimary">@android:color/white</item>
-        <item name="buttonBarNegativeButtonStyle">@android:color/white</item>
+        <item name="colorSecondary">@color/md_theme_light_secondary</item>
+        <item name="colorSurface">@color/md_theme_light_surface</item>
+        <item name="colorOnSurface">@color/md_theme_light_onSurface</item>
+        <item name="alertDialogStyle">@style/MaterialAlertDialog.App</item>
+        <item name="materialAlertDialogTitleTextStyle">@style/MaterialAlertDialog.App.Title.Text</item>
+        <item name="buttonBarPositiveButtonStyle">@style/Widget.App.Button</item>
+        <item name="buttonBarNegativeButtonStyle">@style/Widget.App.Button</item>
+    </style>
+
+    <style name="MaterialAlertDialog.App" parent="MaterialAlertDialog.Material3">
+        <item name="shapeAppearance">@style/ShapeAppearance.App.MediumComponent</item>
+        <item name="shapeAppearanceOverlay">@null</item>
+    </style>
+
+    <style name="MaterialAlertDialog.App.Title.Text" parent="MaterialAlertDialog.Material3.Title.Text">
+        <item name="android:textColor">@color/md_theme_light_onSurface</item>
+    </style>
+
+    <style name="Widget.App.Button" parent="Widget.Material3.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/md_theme_light_onSurface</item>
+    </style>
+
+    <style name="ShapeAppearance.App.MediumComponent" parent="ShapeAppearance.Material3.MediumComponent">
+        <item name="cornerFamily">cut</item>
+        <item name="cornerSize">8dp</item>
     </style>
 
 </resources>

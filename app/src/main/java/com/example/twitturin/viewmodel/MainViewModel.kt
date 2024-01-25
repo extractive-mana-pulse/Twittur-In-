@@ -96,6 +96,25 @@ class MainViewModel (private val repository: Repository): ViewModel() {
         })
     }
 
+
+    private val _usersResult = MutableLiveData<UsersResult>()
+    val usersResult: LiveData<UsersResult> get() = _usersResult
+
+    fun getAllUsers() {
+        viewModelScope.launch {
+            try {
+                val response = repository.getAllUsers()
+                if (response.isSuccessful) {
+                    _usersResult.value = UsersResult.Success(response.body() ?: emptyList())
+                } else {
+                    _usersResult.value = UsersResult.Error("Error fetching users: ${response.code()}")
+                }
+            } catch (e: Exception) {
+                _usersResult.value = UsersResult.Error("Exception: ${e.message}")
+            }
+        }
+    }
+
     var responseTweets: MutableLiveData<Response<List<Tweet>>> = MutableLiveData()
     fun getTweet() {
         viewModelScope.launch {

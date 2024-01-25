@@ -57,14 +57,14 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/rc_view_divider"
                 app:layout_constraintTop_toBottomOf="@id/toolbar"
-                app:layout_constraintBottom_toTopOf="@id/header_of_post_layout"
+                app:layout_constraintBottom_toTopOf="@id/post_layout_header"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 tools:ignore="ContentDescription" />
 
             <!--    Header    -->
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/header_of_post_layout"
+                android:id="@+id/post_layout_header"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -79,8 +79,7 @@
                     android:src="@drawable/username_person"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    />
+                    app:layout_constraintBottom_toBottomOf="parent"/>
 
                 <TextView
                     android:id="@+id/author_fullname"
@@ -118,6 +117,17 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/more_settings"/>
 
+                <Button
+                    android:id="@+id/unfollow_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:text="@string/unfollow"
+                    android:visibility="invisible"
+                    android:layout_marginEnd="14dp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/more_settings"/>
+
                 <ImageButton
                     android:id="@+id/more_settings"
                     android:layout_width="wrap_content"
@@ -141,7 +151,7 @@
                 android:layout_marginHorizontal="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/header_of_post_layout"/>
+                app:layout_constraintTop_toBottomOf="@id/post_layout_header"/>
 
             <TextView
                 android:id="@+id/when_created"
@@ -150,6 +160,7 @@
                 android:text="createdAt"
                 android:layout_marginStart="16dp"
                 android:layout_marginVertical="8dp"
+                app:layout_constraintBottom_toTopOf="@id/divider2"
                 app:layout_constraintTop_toBottomOf="@id/post_description"
                 app:layout_constraintStart_toStartOf="parent"/>
 
@@ -170,7 +181,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                app:layout_constraintTop_toBottomOf="@id/when_created"
+                app:layout_constraintTop_toBottomOf="@id/divider2"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginHorizontal="16dp">
@@ -179,7 +190,7 @@
                     android:id="@+id/article_page_likes_counter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="803"
+                    android:text="999"
                     android:layout_gravity="center"
                     android:textStyle="bold"
                     android:layout_marginVertical="8dp"/>
@@ -220,6 +231,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 tools:ignore="ContentDescription"/>
 
+<!--            Icons Layout        -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/layout_article_icons"
                 android:layout_width="match_parent"
@@ -235,12 +247,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginVertical="8dp"
-                    android:background="@android:color/transparent"
                     android:src="@drawable/comments"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
+                    android:background="@android:color/transparent"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:ignore="ContentDescription" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    tools:ignore="ContentDescription"/>
 
                 <ImageButton
                     android:id="@+id/article_page_heart_icon"
@@ -283,6 +295,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 tools:ignore="ContentDescription"/>
 
+<!--            RecyclerView Layout         -->
             <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
                 android:id="@+id/swipe_to_refresh_article"
                 android:layout_width="match_parent"
@@ -301,10 +314,20 @@
 
             </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
+            <ImageView
+                android:id="@+id/last_divider_for_reply_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rc_view_divider"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/reply_layout"
+                tools:ignore="ContentDescription"/>
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/reply_layout"
                 android:layout_width="match_parent"
-                android:layout_height="55dp"
+                android:layout_height="65dp"
                 android:background="@drawable/reply_bg"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -315,22 +338,24 @@
                     android:layout_width="0dp"
                     android:layout_height="45dp"
                     android:hint="Reply..."
-                    android:layout_marginHorizontal="16dp"
-                    android:background="@android:color/transparent"
-                    app:layout_constraintTop_toTopOf="parent"
+                    android:paddingStart="16dp"
                     android:imeOptions="actionDone"
+                    android:textAlignment="textStart"
+                    android:background="@drawable/reply_et_bg"
+                    android:layout_marginHorizontal="16dp"
+                    app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/sent_reply"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    tools:ignore="Autofill,TextFields"/>
+                    app:layout_constraintEnd_toStartOf="@id/sent_reply"
+                    tools:ignore="Autofill,RtlSymmetry,TextFields"/>
 
                 <ImageButton
                     android:id="@+id/sent_reply"
                     android:layout_width="45dp"
                     android:layout_height="45dp"
+                    android:layout_marginEnd="16dp"
                     android:src="@drawable/send_filled"
-
-                    android:background="@android:color/transparent"
+                    android:background="@drawable/reply_btn_bg"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"

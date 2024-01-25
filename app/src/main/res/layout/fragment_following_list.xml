@@ -9,7 +9,7 @@
 
     <!--        Toolbar         -->
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/toolbar"
+        android:id="@+id/following_layout_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorSurfaceContainer"
@@ -52,11 +52,11 @@
         android:visibility="visible"
         app:layout_constraintWidth_percent="0.4"
         app:layout_constraintDimensionRatio="1.1"
-        app:lottie_fileName="empty_tweets_list.json"
+        app:lottie_rawRes="@raw/empty_tweets_list"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"/>
+        app:layout_constraintTop_toBottomOf="@id/following_layout_toolbar"/>
 
     <TextView
         android:id="@+id/empty_following_tv"
@@ -81,7 +81,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar">
+        app:layout_constraintTop_toBottomOf="@id/following_layout_toolbar">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rc_view_following"

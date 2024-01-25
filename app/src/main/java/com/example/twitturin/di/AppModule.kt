@@ -1,16 +1,10 @@
 package com.example.twitturin.di
 
 import android.app.Application
-import android.content.Context
 import android.content.res.Resources
-import androidx.lifecycle.LifecycleOwner
 import com.example.twitturin.BuildConfig
-import com.example.twitturin.domain.repository.MyRepository
 import com.example.twitturin.helper.SnackbarHelper
-import com.example.twitturin.model.network.Api
 import com.example.twitturin.model.network.FollowApi
-import com.example.twitturin.model.repo.Repository
-import com.example.twitturin.ui.activities.MainActivity
 import com.example.twitturin.viewmodel.manager.SessionManager
 import dagger.Module
 import dagger.Provides
@@ -26,7 +20,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideSessionManager(app : Application): SessionManager {
+    fun provideSessionManager(app: Application): SessionManager {
         return SessionManager(app)
     }
 
@@ -45,10 +39,8 @@ object AppModule {
     @Provides
     @Singleton
     fun provideRetrofit(): Retrofit {
-        return Retrofit.Builder()
-            .baseUrl(BuildConfig.BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
+        return Retrofit.Builder().baseUrl(BuildConfig.BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create()).build()
     }
 
     @Provides

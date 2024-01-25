@@ -25,6 +25,9 @@ import retrofit2.http.Query
 
 interface Api  {
 
+    @GET("users")
+    suspend fun getAllUsers() : Response<List<User>>
+
     /** delete account **/
     @DELETE("users/{id}")
     suspend fun deleteUser(@Path("id") userId: String, @Header("Authorization") token: String): Response<Unit>

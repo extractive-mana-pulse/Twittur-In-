@@ -58,6 +58,15 @@
     <string name="publish">Publish</string>
     <string name="publication_context">What\'s going on ?</string>
 
+    <string name="tweets">Tweets</string>
+    <string name="likes">Likes</string>
+    <string name="logout_message">Are you sure you want to log out?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="delete_title">Are you sure you want to delete account?</string>
+    <string name="delete_message">Please note that once an account is deleted, it cannot be restored and all activity will be deleted</string>
+    <string name="get_color">Choose a color</string>
+
     <string-array name="major_array">
         <item>SE</item>
         <item>BM</item>

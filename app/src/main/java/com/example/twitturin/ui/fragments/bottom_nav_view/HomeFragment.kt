@@ -3,6 +3,7 @@ package com.example.twitturin.ui.fragments.bottom_nav_view
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -87,11 +88,19 @@ class HomeFragment : Fragment() {
 
                     val profileImage = "${result.user.profilePicture}"
 
+                    Log.d("profile image test", profileImage)
+
                     Glide.with(requireContext())
                         .load(profileImage)
                         .error(R.drawable.not_found)
                         .placeholder(R.drawable.username_person)
                         .into(imageView)
+
+                    Glide.with(requireContext())
+                        .load(profileImage)
+                        .error(R.drawable.not_found)
+                        .placeholder(R.drawable.username_person)
+                        .into(binding.accountImage)
 
                     fullName.text = result.user.fullName ?: "Twittur User"
 
