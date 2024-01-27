@@ -152,7 +152,7 @@ class HomeFragment : Fragment() {
         binding.rcView.adapter = postAdapter
         binding.rcView.addItemDecoration(DividerItemDecoration(binding.rcView.context, DividerItemDecoration.VERTICAL))
         binding.rcView.layoutManager = LinearLayoutManager(requireContext())
-        viewModel.getTweet()
+        viewModel.getTweet(binding.shimmerLayout)
         viewModel.responseTweets.observe(requireActivity()) { response ->
             if (response.isSuccessful) {
                 response.body()?.let { tweets ->
@@ -162,6 +162,7 @@ class HomeFragment : Fragment() {
                         val freshList = tweetList.sortedByDescending { it.createdAt }
                         tweetList.clear()
                         tweetList.addAll(freshList)
+                        viewModel.getTweet(binding.shimmerLayout)
                         postAdapter.notifyDataSetChanged()
                         binding.swipeToRefreshLayout.isRefreshing = false
                     }

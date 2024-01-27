@@ -1,11 +1,13 @@
 package com.example.twitturin.viewmodel
 
 import android.util.Log
+import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.twitturin.BuildConfig
+import com.example.twitturin.R
 import com.example.twitturin.model.data.publicTweet.TweetContent
 import com.example.twitturin.model.data.replyToTweet.ReplyContent
 import com.example.twitturin.model.data.tweets.Tweet
@@ -17,6 +19,7 @@ import com.example.twitturin.ui.sealeds.PostReply
 import com.example.twitturin.ui.sealeds.PostTweet
 import com.example.twitturin.ui.sealeds.SearchResource
 import com.example.twitturin.viewmodel.event.SingleLiveEvent
+import com.facebook.shimmer.ShimmerFrameLayout
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
@@ -116,10 +119,17 @@ class MainViewModel (private val repository: Repository): ViewModel() {
     }
 
     var responseTweets: MutableLiveData<Response<List<Tweet>>> = MutableLiveData()
-    fun getTweet() {
+    fun getTweet(shimmerLayout: ShimmerFrameLayout) {
+        // Start shimmer effect
+        shimmerLayout.startShimmer()
+
         viewModelScope.launch {
             val response = repository.getTweets()
             responseTweets.value = response
+
+            // Stop shimmer effect after data is loaded
+            shimmerLayout.stopShimmer()
+            shimmerLayout.visibility = View.GONE
         }
     }
 

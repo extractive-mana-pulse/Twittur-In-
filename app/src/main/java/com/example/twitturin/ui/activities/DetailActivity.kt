@@ -12,7 +12,6 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,10 +19,7 @@ import com.bumptech.glide.Glide
 import com.example.twitturin.R
 import com.example.twitturin.databinding.ActivityDetailBinding
 import com.example.twitturin.helper.SnackbarHelper
-import com.example.twitturin.model.data.ListOfFollowing
 import com.example.twitturin.model.data.tweets.Tweet
-import com.example.twitturin.model.data.users.User
-import com.example.twitturin.model.network.RetrofitInstance
 import com.example.twitturin.model.repo.Repository
 import com.example.twitturin.ui.adapters.PostAdapter
 import com.example.twitturin.ui.fragments.bottom_sheets.MoreSettingsDetailFragment

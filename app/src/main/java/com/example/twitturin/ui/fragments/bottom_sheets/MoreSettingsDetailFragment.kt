@@ -3,6 +3,7 @@ package com.example.twitturin.ui.fragments.bottom_sheets
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +15,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
 import com.example.twitturin.helper.SnackbarHelper
+import com.example.twitturin.ui.activities.DetailActivity
+import com.example.twitturin.ui.activities.MainActivity
 import com.example.twitturin.ui.sealeds.DeleteResult
 import com.example.twitturin.ui.sealeds.FollowResult
 import com.example.twitturin.viewmodel.FollowUserViewModel
@@ -22,6 +25,7 @@ import com.example.twitturin.viewmodel.manager.SessionManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -92,11 +96,13 @@ class MoreSettingsDetailFragment : BottomSheetDialogFragment() {
 
         deleteLayout.setOnClickListener {
 
-            val alertDialogBuilder = AlertDialog.Builder(requireActivity())
+            val alertDialogBuilder = MaterialAlertDialogBuilder(requireActivity(), R.style.ThemeOverlay_App_MaterialAlertDialog)
             alertDialogBuilder.setTitle("Are you sure you want to delete the post?")
             alertDialogBuilder.setMessage("Please note that once you delete a publication it cannot be restored")
             alertDialogBuilder.setPositiveButton("Yes") { _, _ ->
-                profileViewModel.deleteTweet( tweetId!!,"Bearer $token")
+                profileViewModel.deleteTweet(tweetId!!, "Bearer $token")
+                requireActivity().finish()
+                dismiss()
             }
 
             alertDialogBuilder.setNegativeButton("No") { _, _ ->
@@ -111,10 +117,10 @@ class MoreSettingsDetailFragment : BottomSheetDialogFragment() {
                     is DeleteResult.Success -> {
                         snackbarHelper.snackbar(
                             requireActivity().findViewById(R.id.bottom_sheet_root_layout),
-                            requireActivity().findViewById(R.id.bottom_sheet_root_layout),
+                            requireActivity().findViewById(R.id.add_post),
                             message = "Deleted"
                         )
-                        findNavController().navigate(R.id.homeFragment)
+
                     }
                     is  DeleteResult.Error -> {
                         snackbarHelper.snackbarError(
@@ -129,10 +135,11 @@ class MoreSettingsDetailFragment : BottomSheetDialogFragment() {
 
         reportLayout.setOnClickListener {
             snackbarHelper.snackbar(
-                requireActivity().findViewById(R.id.bottom_sheet_root_layout),
-                requireActivity().findViewById(R.id.bottom_sheet_root_layout),
+                view.findViewById(R.id.bottom_sheet_root_layout),
+                view.findViewById(R.id.bottom_sheet_root_layout),
                 message = "In Progress"
             )
+
 //            TODO { when report a post end point is ready activate this code }
 //            val intent = Intent(requireActivity(), ReportActivity::class.java)
 //            startActivity(intent)

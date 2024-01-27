@@ -22,6 +22,10 @@ class WebViewFragment : Fragment() {
 
         binding.webView.loadUrl("https://ttpu.edupage.org/timetable/")
         binding.webView.settings.javaScriptEnabled = true
+        binding.webView.settings.setSupportZoom(true)
+        binding.webView.settings.builtInZoomControls = true
+        binding.webView.settings.displayZoomControls = false
+
     }
 
     companion object {

@@ -59,22 +59,28 @@
             app:layout_constraintEnd_toEndOf="parent"
             tools:ignore="ContentDescription" />
 
-        <EditText
-            android:id="@+id/content_et"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayout1"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:hint="@string/publication_context"
-            android:inputType="text"
-            android:gravity="start"
-            android:padding="16dp"
-            android:clickable="true"
+            android:backgroundTint="?attr/colorPrimary"
             android:background="@android:color/transparent"
-            app:layout_constraintTop_toBottomOf="@id/public_post_divider"
-            app:layout_constraintStart_toStartOf="parent"
+            app:hintTextColor="?attr/colorOnPrimaryContainer"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:autofillHints="name"
-            android:focusable="true" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/public_post_divider"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/content_et"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="start"
+                android:background="@android:color/transparent"
+                android:gravity="start"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

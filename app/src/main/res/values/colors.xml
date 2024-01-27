@@ -5,6 +5,7 @@
     <color name="black">#000000</color>
     <color name="gray">#1F1F1F</color>
     <color name="seed">#008bcf</color>
+    <color name="shimmerColor">#B3DFE0FF</color>
     <color name="md_theme_light_primary">#006496</color>
     <color name="md_theme_light_onPrimary">#FFFFFF</color>
     <color name="md_theme_light_primaryContainer">#CCE5FF</color>
