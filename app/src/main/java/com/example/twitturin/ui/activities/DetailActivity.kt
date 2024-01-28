@@ -64,6 +64,7 @@ class DetailActivity : AppCompatActivity() {
             val username = intent.getStringExtra("username")
             val description = intent.getStringExtra("post_description")
             val createdTime = intent.getStringExtra("createdAt")
+            val updatedTime = intent.getStringExtra("updatedAt")
             val likes = intent.getStringExtra("likes")
             val id = intent.getStringExtra("id")
             val userId = intent.getStringExtra("userId")
@@ -172,6 +173,9 @@ class DetailActivity : AppCompatActivity() {
                 println("Invalid date")
                 binding.whenCreated.text = "Invalid date"
             }
+
+            val dateConverter = convertDateFormat(updatedTime.toString())
+            whenUpdated.text = dateConverter
 
             authorAvatar.setOnLongClickListener {
                 authorAvatar.buildDrawingCache()
@@ -334,5 +338,13 @@ class DetailActivity : AppCompatActivity() {
                     ""){}
             }
         }
+    }
+
+    fun convertDateFormat(dateString: String): String {
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.getDefault())
+        val outputFormat = SimpleDateFormat("dd.MM.yyyy, HH:mm:ss", Locale.getDefault())
+
+        val date = inputFormat.parse(dateString)
+        return outputFormat.format(date)
     }
 }

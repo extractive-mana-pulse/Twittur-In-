@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,7 +16,9 @@ import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.model.data.tweets.Tweet
 import com.example.twitturin.model.repo.Repository
 import com.example.twitturin.ui.adapters.UserPostAdapter
+import com.example.twitturin.viewmodel.FollowUserViewModel
 import com.example.twitturin.viewmodel.MainViewModel
+import com.example.twitturin.viewmodel.ProfileViewModel
 import com.example.twitturin.viewmodel.ViewModelFactory
 import com.example.twitturin.viewmodel.manager.SessionManager
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,7 +32,8 @@ class TweetsFragment : Fragment() {
     @Inject lateinit var snackbarHelper: SnackbarHelper
     @Inject lateinit var sessionManager: SessionManager
     private lateinit var binding: FragmentTweetsBinding
-    private val userPostAdapter by lazy { UserPostAdapter(viewLifecycleOwner) }
+    private val fViewModel: ProfileViewModel by viewModels()
+    private val userPostAdapter by lazy { UserPostAdapter(fViewModel,viewLifecycleOwner) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentTweetsBinding.inflate(layoutInflater)

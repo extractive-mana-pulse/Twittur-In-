@@ -88,11 +88,9 @@ class PostAdapter (
                         minutes > 0 -> "$minutes m."
                         else -> "$seconds s."
                     }
-                    println("Post created $durationString")
                     createdAtTv.text = durationString
 
                 } catch (e: Exception) {
-                    println("Invalid date")
                     createdAtTv.text = "Invalid date"
                 }
 
@@ -103,6 +101,7 @@ class PostAdapter (
                     intent.putExtra("username", author?.username)
                     intent.putExtra("post_description", content)
                     intent.putExtra("createdAt", createdAt)
+                    intent.putExtra("updatedAt", updatedAt)
                     intent.putExtra("likes", likes.toString())
                     intent.putExtra("id",id)
                     intent.putExtra("userId",author?.id)
@@ -119,6 +118,7 @@ class PostAdapter (
                     intent.putExtra("username", author?.username)
                     intent.putExtra("post_description", content)
                     intent.putExtra("createdAt", createdAt)
+                    intent.putExtra("updatedAt", updatedAt)
                     intent.putExtra("likes", likes.toString())
                     intent.putExtra("id",id)
                     intent.putExtra("userId",author?.id)

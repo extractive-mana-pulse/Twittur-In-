@@ -18,15 +18,14 @@
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/tech_work_an_view"
             android:layout_width="282dp"
-            android:layout_height="282dp"
-            app:lottie_loop="false"
+            android:layout_height="222dp"
+            app:lottie_loop="true"
             app:lottie_autoPlay="true"
-            app:lottie_rawRes="@id/tech_work_an_view"
+            android:layout_marginStart="-145dp"
+            app:lottie_rawRes="@raw/gear_search"
             app:layout_constraintWidth_percent="0.4"
             app:layout_constraintDimensionRatio="1.1"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"/>
 
         <TextView
@@ -38,10 +37,40 @@
             android:paddingHorizontal="16dp"
             android:textSize="26sp"
             android:textStyle="bold"
+            android:textColor="?attr/colorPrimary"
             android:textAlignment="textStart"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tech_work_an_view"/>
+            app:layout_constraintTop_toBottomOf="@id/tech_work_an_view_2"/>
+
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/tech_work_an_view_2"
+            android:layout_width="262dp"
+            android:layout_height="222dp"
+            app:lottie_loop="true"
+            app:lottie_autoPlay="true"
+            android:layout_marginEnd="-130dp"
+            android:layout_marginTop="156dp"
+            app:lottie_rawRes="@raw/gear_search"
+            app:layout_constraintWidth_percent="0.4"
+            app:layout_constraintDimensionRatio="1.1"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/tech_work_an_view_3"
+            android:layout_width="282dp"
+            android:layout_height="222dp"
+            app:lottie_loop="true"
+            app:lottie_autoPlay="true"
+            android:layout_marginTop="185dp"
+            android:layout_marginStart="-145dp"
+            app:lottie_rawRes="@raw/gear_search"
+            app:layout_constraintWidth_percent="0.4"
+            app:layout_constraintDimensionRatio="1.1"
+            app:layout_constraintTop_toBottomOf="@id/tech_work_an_view"
+            app:layout_constraintStart_toStartOf="parent"/>
 
         <!--        Toolbar         -->
 <!--        <androidx.constraintlayout.widget.ConstraintLayout-->

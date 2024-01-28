@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.res.Resources
 import com.example.twitturin.BuildConfig
 import com.example.twitturin.helper.SnackbarHelper
+import com.example.twitturin.model.network.Api
 import com.example.twitturin.model.network.FollowApi
 import com.example.twitturin.viewmodel.manager.SessionManager
 import dagger.Module
@@ -47,5 +48,11 @@ object AppModule {
     @Singleton
     fun provideFollowApi(retrofit: Retrofit): FollowApi {
         return retrofit.create(FollowApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideApi(retrofit: Retrofit): Api {
+        return retrofit.create(Api::class.java)
     }
 }

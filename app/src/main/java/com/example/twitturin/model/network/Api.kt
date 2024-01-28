@@ -75,6 +75,13 @@ interface Api  {
         @Header("Authorization") token: String
     ): Call<EditProfile>
 
+    @PUT("tweets/{id}")
+    fun editTweet(
+        @Body tweetContent : TweetContent,
+        @Path("id") tweetId : String,
+        @Header("Authorization") token: String
+    ): Call<TweetContent>
+
     @FormUrlEncoded
     @PATCH("users/{id}")
     fun updateUserUsername(@Path("id") userId: String, @Header("Authorization") token: String) : Call<EditProfile>

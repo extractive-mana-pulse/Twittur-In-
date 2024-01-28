@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.twitturin.R
@@ -36,23 +37,20 @@ class SearchFragment : Fragment() {
         viewModel = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
 
         binding.techWorkAnView.setFailureListener { t ->
-            snackbarHelper.snackbarError(
-                requireActivity().findViewById(R.id.search_root_layout),
-                requireActivity().findViewById(R.id.search_root_layout),
-                t.message.toString(),
-                ""){}
+            Toast.makeText(requireContext(), t.message, Toast.LENGTH_SHORT).show()
         }
-        binding.techWorkAnView.setAnimation(R.raw.tech_work)
+        binding.techWorkAnView.setAnimation(R.raw.gear_search)
+
+        binding.techWorkAnView2.setFailureListener { t ->
+            Toast.makeText(requireContext(), t.message, Toast.LENGTH_SHORT).show()
+        }
+        binding.techWorkAnView2.setAnimation(R.raw.gear_search)
+
+        binding.techWorkAnView3.setFailureListener { t ->
+            Toast.makeText(requireContext(), t.message, Toast.LENGTH_SHORT).show()
+        }
+        binding.techWorkAnView3.setAnimation(R.raw.gear_search)
     }
-
-//    private fun showProgressBar() {
-//        binding.paginationProgressBar.visibility = View.VISIBLE
-//    }
-//
-//    private fun hideProgressBar(){
-//        binding.paginationProgressBar.visibility = View.INVISIBLE
-//    }
-
 
     companion object {
         @JvmStatic

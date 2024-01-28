@@ -1,15 +1,19 @@
 package com.example.twitturin.ui.adapters
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.twitturin.R
@@ -17,22 +21,27 @@ import com.example.twitturin.databinding.RcViewUserTweetsBinding
 import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.model.data.tweets.Tweet
 import com.example.twitturin.ui.activities.DetailActivity
+import com.example.twitturin.ui.activities.EditTweetActivity
+import com.example.twitturin.ui.fragments.bottom_sheets.EditTweetFragment
 import com.example.twitturin.ui.sealeds.DeleteResult
 import com.example.twitturin.viewmodel.LikeViewModel
 import com.example.twitturin.viewmodel.ProfileViewModel
 import com.example.twitturin.viewmodel.manager.SessionManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class UserPostAdapter(private val parentLifecycleOwner: LifecycleOwner) : RecyclerView.Adapter<UserPostAdapter.ViewHolder>() {
+class UserPostAdapter @Inject constructor(
+    private val profileViewModel: ProfileViewModel,
+    private val parentLifecycleOwner: LifecycleOwner
+) : RecyclerView.Adapter<UserPostAdapter.ViewHolder>() {
 
     private var list = emptyList<Tweet>()
     private lateinit var likeViewModel: LikeViewModel
     @Inject lateinit var sessionManager: SessionManager
     @Inject lateinit var snackbarHelper: SnackbarHelper
-    private lateinit var profileViewModel: ProfileViewModel
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val binding = RcViewUserTweetsBinding.bind(itemView)
@@ -99,12 +108,14 @@ class UserPostAdapter(private val parentLifecycleOwner: LifecycleOwner) : Recycl
                 }
 
                 holder.itemView.setOnClickListener {
+
                     val intent = Intent(context, DetailActivity::class.java)
 
                     intent.putExtra("fullname", author?.fullName)
                     intent.putExtra("username", author?.username)
                     intent.putExtra("post_description", content)
                     intent.putExtra("createdAt", createdAt)
+                    intent.putExtra("updatedAt", updatedAt)
                     intent.putExtra("likes", likes.toString())
                     intent.putExtra("id", id)
                     intent.putExtra("userId", author?.id)
@@ -128,13 +139,35 @@ class UserPostAdapter(private val parentLifecycleOwner: LifecycleOwner) : Recycl
                     val popupMenu = PopupMenu(context, moreSettingsUserOwnTweet)
 
                     popupMenu.setOnMenuItemClickListener { item ->
-                        when (item.itemId){
+                        when (item.itemId) {
+
+                            R.id.edit_user_own_tweet -> {
+                                val intent = Intent(context, EditTweetActivity::class.java)
+
+                                intent.putExtra("post_description", content)
+                                intent.putExtra("id", id)
+
+                                context.startActivity(intent)
+                                true
+                            }
 
                             R.id.delete_user_own_tweet -> {
 
-                                val token = sessionManager.getToken()
-                                profileViewModel = ViewModelProvider(context as ViewModelStoreOwner)[ProfileViewModel::class.java]
-                                profileViewModel.deleteTweet(/* this id == tweetId */ id,"Bearer $token")
+                                val alertDialogBuilder = MaterialAlertDialogBuilder(context, R.style.ThemeOverlay_App_MaterialAlertDialog)
+                                alertDialogBuilder.setTitle(context.resources.getString(R.string.delete_title))
+                                alertDialogBuilder.setMessage(context.resources.getString(R.string.delete_message))
+                                alertDialogBuilder.setPositiveButton(context.resources.getString(R.string.yes)) { dialog, _ ->
+                                    val token = sessionManager.getToken()
+                                    profileViewModel.deleteTweet(/* this id == tweetId */ id,"Bearer $token")
+                                    dialog.dismiss()
+                                }
+
+                                alertDialogBuilder.setNegativeButton(context.resources.getString(R.string.no)) { dialog, _ ->
+                                    dialog.dismiss()
+                                }
+
+                                val alertDialog = alertDialogBuilder.create()
+                                alertDialog.show()
 
                                 profileViewModel.deleteTweetResult.observe(parentLifecycleOwner){ result ->
                                     when(result){

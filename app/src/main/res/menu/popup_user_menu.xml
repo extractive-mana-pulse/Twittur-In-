@@ -7,4 +7,10 @@
         android:icon="@drawable/delete"
         android:title="Delete post"
         tools:ignore="MenuTitle"/>
+
+    <item
+        android:id="@+id/edit_user_own_tweet"
+        android:icon="@drawable/edit"
+        android:title="Edit post"
+        tools:ignore="MenuTitle"/>
 </menu>
