@@ -37,13 +37,16 @@ class EditTweetActivity : AppCompatActivity() {
         val token = sessionManager.getToken()
 
         val description = intent.getStringExtra("post_description")
+        val desc = intent.getStringExtra("description")
         val tweetId = intent.getStringExtra("id")
 
         binding.editTweetContent.setText(description)
+        binding.editTweetContent.setText(desc)
 
         binding.editTweetCancelBtn.setOnClickListener {
             finish()
         }
+
         binding.editTweetPublishBtn.setOnClickListener {
             binding.editTweetPublishBtn.isEnabled = false
             val content = binding.editTweetContent.text.toString()

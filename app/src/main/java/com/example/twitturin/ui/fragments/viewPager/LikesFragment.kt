@@ -46,7 +46,6 @@ class LikesFragment : Fragment() {
                 ""){}
 
         }
-        binding.anView.setAnimation(R.raw.empty_likes_list)
 
         val repository = Repository()
         val viewModelFactory = ViewModelFactory(repository)
@@ -75,7 +74,7 @@ class LikesFragment : Fragment() {
                         binding.anView.visibility = View.GONE
                         binding.lottieInfoTv.visibility = View.GONE
                         postAdapter.setData(tweetList)
-                        postAdapter.notifyDataSetChanged()
+                        viewModel.getLikedPosts(userId)
                     }
                 }
             } else {

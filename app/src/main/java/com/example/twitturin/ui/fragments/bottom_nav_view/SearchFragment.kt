@@ -39,17 +39,14 @@ class SearchFragment : Fragment() {
         binding.techWorkAnView.setFailureListener { t ->
             Toast.makeText(requireContext(), t.message, Toast.LENGTH_SHORT).show()
         }
-        binding.techWorkAnView.setAnimation(R.raw.gear_search)
 
         binding.techWorkAnView2.setFailureListener { t ->
             Toast.makeText(requireContext(), t.message, Toast.LENGTH_SHORT).show()
         }
-        binding.techWorkAnView2.setAnimation(R.raw.gear_search)
 
         binding.techWorkAnView3.setFailureListener { t ->
             Toast.makeText(requireContext(), t.message, Toast.LENGTH_SHORT).show()
         }
-        binding.techWorkAnView3.setAnimation(R.raw.gear_search)
     }
 
     companion object {

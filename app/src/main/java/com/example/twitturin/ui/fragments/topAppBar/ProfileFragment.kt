@@ -9,7 +9,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
+import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
@@ -34,7 +36,7 @@ class ProfileFragment : Fragment() {
     @Inject lateinit var sessionManager: SessionManager
     @Inject lateinit var snackbarHelper: SnackbarHelper
     private lateinit var binding: FragmentProfileBinding
-    private lateinit var profileViewModel: ProfileViewModel
+    private val profileViewModel: ProfileViewModel by viewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentProfileBinding.inflate(layoutInflater)
@@ -46,11 +48,7 @@ class ProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.profileFragment = this
 
-
-        profileViewModel = ViewModelProvider(this)[ProfileViewModel::class.java]
         val userId = sessionManager.getUserId()
-        val token = sessionManager.getToken()
-
 
         binding.followersTv.setOnClickListener {
             findNavController().navigate(R.id.action_profileFragment_to_followersListFragment)
@@ -62,52 +60,60 @@ class ProfileFragment : Fragment() {
 
         profileViewModel.getUserCredentials(userId!!)
         profileViewModel.getUserCredentials.observe(viewLifecycleOwner) { result ->
+            binding.profileShimmerLayout.startShimmer()
             when (result) {
                 is UserCredentialsResult.Success -> {
-
+                    binding.profileShimmerLayout.stopShimmer()
+                    binding.profileShimmerLayout.visibility = View.GONE
                     val profileImage = "${result.user.profilePicture ?: R.drawable.username_person}"
                     Glide.with(requireContext())
                         .load(profileImage)
                         .error(R.drawable.not_found)
                         .into(binding.profileImage)
 
-                    binding.profileName.text = result.user.fullName ?: "Twittur User"
-
-                    binding.customName.text = "@" + result.user.username
+                    binding.profileFullName.text = result.user.fullName ?: "Twittur User"
+                    binding.profileUsername.text = "@" + result.user.username
                     binding.profileKindTv.text = result.user.kind
-                    binding.profileDescription.text = result.user.bio ?: "This user does not appear to have any biography."
-
-                    if (binding.locationTv.text.isEmpty()) {
-                        binding.locationImg.visibility = View.INVISIBLE
-                        binding.locationTv.visibility = View.INVISIBLE
-                    } else {
-                        binding.locationImg.visibility = View.VISIBLE
-                        binding.locationTv.visibility = View.VISIBLE
-                    }
-
-//                    binding.locationImg.visibility = if (binding.locationTv.text.isEmpty()) {
-//                        View.GONE
-//                    } else {
-//                        binding.locationTv.text = result.user.country
-//                        View.VISIBLE
-//                    }
-
-                    binding.emailImg.visibility = if (binding.emailTv.text.isEmpty()) {
-                        View.GONE
-                    } else {
-                        binding.emailTv.text = result.user.country
-                        View.VISIBLE
-                    }
+                    binding.profileBiography.text = result.user.bio ?: "This user does not appear to have any biography."
                     binding.followingCounterTv.text = result.user.followingCount.toString()
                     binding.followersCounterTv.text = result.user.followersCount.toString()
+
+                     // location
+                    if (result.user.country?.isEmpty()!!) {
+                        binding.locationImg.visibility = View.GONE
+                        binding.locationTv.visibility = View.GONE
+                    } else {
+                        binding.locationImg.visibility = View.VISIBLE
+                        binding.locationTv.text = result.user.country.toString()
+                    }
+
+//                    // following
+//                    if (result.user.followingCount?.equals(0)!!){
+//                        binding.followingCounterTv.text = "0"
+//                        binding.followingTv.text = resources.getString(R.string.following)
+//                    } else {
+//                        binding.followingCounterTv.text = result.user.followingCount.toString()
+//                        binding.followingTv.text = resources.getString(R.string.following)
+//                    }
+//
+//                    // followers
+//                    if (result.user.followersCount?.equals(0)!!){
+//                        binding.followersCounterTv.text = "0"
+//                        binding.followersTv.text = resources.getString(R.string.followers)
+//                    } else {
+//                        binding.followersCounterTv.text = result.user.followersCount.toString()
+//                        binding.followersTv.text = resources.getString(R.string.followers)
+//                    }
                 }
 
                 is UserCredentialsResult.Error -> {
+
                     snackbarHelper.snackbarError(
                         requireActivity().findViewById(R.id.profile_root_layout),
                         requireActivity().findViewById(R.id.profile_root_layout),
                         error = result.message,
-                        ""){}
+                        ""
+                    ){}
                 }
             }
         }

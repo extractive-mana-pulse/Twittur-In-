@@ -143,6 +143,7 @@ class MainViewModel (private val repository: Repository): ViewModel() {
 
     var followersList: MutableLiveData<Response<List<User>>> = MutableLiveData()
     fun getFollowers(userId : String) {
+
         viewModelScope.launch {
             val response = repository.getFollowersList(userId)
             followersList.value = response
@@ -154,6 +155,7 @@ class MainViewModel (private val repository: Repository): ViewModel() {
         viewModelScope.launch {
             val response = repository.getFollowingList(userId)
             followingList.value = response
+
         }
     }
 

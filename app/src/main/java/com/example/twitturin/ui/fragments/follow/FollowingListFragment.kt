@@ -46,13 +46,7 @@ class FollowingListFragment : Fragment() {
 
         binding.anViewFollowing.setFailureListener { t ->
             Toast.makeText(requireContext(), t.message, Toast.LENGTH_SHORT).show()
-//            snackbarHelper.snackbarError(
-//                requireActivity().findViewById(R.id.following_root_layout1),
-//                requireActivity().findViewById(R.id.following_root_layout1),
-//                error = t.message.toString(),
-//                ""){}
         }
-        binding.anViewFollowing.setAnimation(R.raw.empty_tweets_list)
 
         val repository = Repository()
         val viewModelFactory = ViewModelFactory(repository)

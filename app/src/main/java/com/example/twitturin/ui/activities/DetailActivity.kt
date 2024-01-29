@@ -70,6 +70,7 @@ class DetailActivity : AppCompatActivity() {
             val userId = intent.getStringExtra("userId")
 
             val sharedPreferences = getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
+            sharedPreferences.edit().putString("post_description", description).apply()
             sharedPreferences.edit().putString("userImage", userImage).apply()
             sharedPreferences.edit().putString("username", username).apply()
             sharedPreferences.edit().putString("fullname", fullname).apply()

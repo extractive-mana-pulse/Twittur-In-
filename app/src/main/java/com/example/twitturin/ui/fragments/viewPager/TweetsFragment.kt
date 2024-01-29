@@ -33,7 +33,7 @@ class TweetsFragment : Fragment() {
     @Inject lateinit var sessionManager: SessionManager
     private lateinit var binding: FragmentTweetsBinding
     private val fViewModel: ProfileViewModel by viewModels()
-    private val userPostAdapter by lazy { UserPostAdapter(fViewModel,viewLifecycleOwner) }
+    private val userPostAdapter by lazy { UserPostAdapter(fViewModel, viewLifecycleOwner) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentTweetsBinding.inflate(layoutInflater)
@@ -52,7 +52,6 @@ class TweetsFragment : Fragment() {
                 ""){}
 
         }
-        binding.anView.setAnimation(R.raw.empty_tweets_list)
 
         val repository = Repository()
         val viewModelFactory = ViewModelFactory(repository)

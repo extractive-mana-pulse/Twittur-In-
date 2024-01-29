@@ -53,8 +53,6 @@ class FollowersListFragment : Fragment() {
                 ""){}
         }
 
-        binding.anViewFollowers.setAnimation(R.raw.empty_tweets_list)
-
         val repository = Repository()
         val viewModelFactory = ViewModelFactory(repository)
         viewModel = ViewModelProvider(this,viewModelFactory)[MainViewModel::class.java]
@@ -81,7 +79,7 @@ class FollowersListFragment : Fragment() {
                     binding.swipeToRefreshLayoutFollowersList.setOnRefreshListener {
 
                         tweetList.shuffle(Random(System.currentTimeMillis()))
-                        viewModel.getFollowing(userId)
+                        viewModel.getFollowers(userId)
                         binding.swipeToRefreshLayoutFollowersList.isRefreshing = false
 
                     }

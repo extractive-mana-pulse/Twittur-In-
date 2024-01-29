@@ -16,6 +16,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
 import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.ui.activities.DetailActivity
+import com.example.twitturin.ui.activities.EditTweetActivity
 import com.example.twitturin.ui.activities.MainActivity
 import com.example.twitturin.ui.sealeds.DeleteResult
 import com.example.twitturin.ui.sealeds.FollowResult
@@ -47,25 +48,25 @@ class MoreSettingsDetailFragment : BottomSheetDialogFragment() {
         val usernameTv = view.findViewById<TextView>(R.id.b_username_tv)
         val followLayout = view.findViewById<LinearLayout>(R.id.follow_layout)
         val deleteLayout = view.findViewById<LinearLayout>(R.id.delete_layout)
+        val editLayout = view.findViewById<LinearLayout>(R.id.edit_layout)
         val reportLayout = view.findViewById<LinearLayout>(R.id.report_post_layout)
         profileViewModel = ViewModelProvider(requireActivity())[ProfileViewModel::class.java]
         followViewModel = ViewModelProvider(requireActivity())[FollowUserViewModel::class.java]
 
         val sharedPreferences = requireActivity().getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
+        val description = sharedPreferences.getString("post_description", "")
         val username = sharedPreferences.getString("username", "")
         val userId = sharedPreferences.getString("userId", "")
         val tweetId = sharedPreferences.getString("id", "")
 
         if (userId == userId2) {
             followLayout.visibility = View.GONE
-            followLayout.visibility = View.GONE
-            deleteLayout.visibility = View.VISIBLE
+            editLayout.visibility = View.VISIBLE
             deleteLayout.visibility = View.VISIBLE
         } else {
             followLayout.visibility = View.VISIBLE
-            followLayout.visibility = View.VISIBLE
             deleteLayout.visibility = View.GONE
-            deleteLayout.visibility = View.GONE
+            editLayout.visibility = View.GONE
         }
 
         usernameTv.text = "@$username"
@@ -97,15 +98,15 @@ class MoreSettingsDetailFragment : BottomSheetDialogFragment() {
         deleteLayout.setOnClickListener {
 
             val alertDialogBuilder = MaterialAlertDialogBuilder(requireActivity(), R.style.ThemeOverlay_App_MaterialAlertDialog)
-            alertDialogBuilder.setTitle("Are you sure you want to delete the post?")
-            alertDialogBuilder.setMessage("Please note that once you delete a publication it cannot be restored")
-            alertDialogBuilder.setPositiveButton("Yes") { _, _ ->
+            alertDialogBuilder.setTitle(resources.getString(R.string.delete_title))
+            alertDialogBuilder.setMessage(resources.getString(R.string.delete_message))
+            alertDialogBuilder.setPositiveButton(resources.getString(R.string.yes)) { _, _ ->
                 profileViewModel.deleteTweet(tweetId!!, "Bearer $token")
                 requireActivity().finish()
                 dismiss()
             }
 
-            alertDialogBuilder.setNegativeButton("No") { _, _ ->
+            alertDialogBuilder.setNegativeButton(resources.getString(R.string.no)) { _, _ ->
                 dismiss()
             }
 
@@ -145,6 +146,13 @@ class MoreSettingsDetailFragment : BottomSheetDialogFragment() {
 //            startActivity(intent)
 //            dismiss()
 
+        }
+
+        editLayout.setOnClickListener {
+            val intent = Intent(requireActivity(), EditTweetActivity::class.java)
+            intent.putExtra("description", description)
+            startActivity(intent)
+            dismiss()
         }
 
         dialog?.setOnShowListener {

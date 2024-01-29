@@ -12,6 +12,7 @@ import android.widget.TextView
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -29,6 +30,8 @@ import com.example.twitturin.viewmodel.MainViewModel
 import com.example.twitturin.viewmodel.ProfileViewModel
 import com.example.twitturin.viewmodel.ViewModelFactory
 import com.example.twitturin.viewmodel.manager.SessionManager
+import com.facebook.shimmer.Shimmer
+import com.facebook.shimmer.ShimmerFrameLayout
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -40,6 +43,7 @@ class HomeFragment : Fragment() {
     private lateinit var binding : FragmentHomeBinding
     @Inject lateinit var sessionManager: SessionManager
     @Inject lateinit var snackbarHelper: SnackbarHelper
+    private val profileViewModel: ProfileViewModel by viewModels()
     private val postAdapter by lazy { PostAdapter(viewLifecycleOwner) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,13 +76,17 @@ class HomeFragment : Fragment() {
         headerView.setOnClickListener { findNavController().navigate(R.id.action_homeFragment_to_profileFragment) }
 
         val userId = sessionManager.getUserId()
-        val profileViewModel = ViewModelProvider(this)[ProfileViewModel::class.java]
+
+        val layout: ShimmerFrameLayout = headerView.findViewById(R.id.navigation_drawer_shimmer)
 
         profileViewModel.getUserCredentials(userId!!)
         profileViewModel.getUserCredentials.observe(viewLifecycleOwner) { result ->
-
+            layout.startShimmer()
             when (result) {
                 is UserCredentialsResult.Success -> {
+
+                    layout.stopShimmer()
+                    layout.visibility = View.GONE
 
                     val imageView: ImageView = headerView.findViewById(R.id.nav_avatar)
                     val fullName: TextView = headerView.findViewById(R.id.nav_full_name_tv)
@@ -103,9 +111,7 @@ class HomeFragment : Fragment() {
                         .into(binding.accountImage)
 
                     fullName.text = result.user.fullName ?: "Twittur User"
-
                     userName.text = "@" + result.user.username
-
                     followingTv.text = result.user.followingCount.toString()
                     followersTv.text = result.user.followersCount.toString()
 
@@ -117,7 +123,8 @@ class HomeFragment : Fragment() {
                         view.findViewById<DrawerLayout>(R.id.drawer_layout),
                         view.findViewById(R.id.bottom_nav_view),
                         result.message,
-                        ""){}
+                        ""
+                    ){}
                 }
             }
         }
