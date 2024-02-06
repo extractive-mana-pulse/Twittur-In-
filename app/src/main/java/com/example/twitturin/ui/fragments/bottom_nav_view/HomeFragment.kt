@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
@@ -26,6 +27,7 @@ import com.example.twitturin.model.repo.Repository
 import com.example.twitturin.ui.activities.PhotoPickerActivity
 import com.example.twitturin.ui.adapters.PostAdapter
 import com.example.twitturin.ui.sealeds.UserCredentialsResult
+import com.example.twitturin.viewmodel.LikeViewModel
 import com.example.twitturin.viewmodel.MainViewModel
 import com.example.twitturin.viewmodel.ProfileViewModel
 import com.example.twitturin.viewmodel.ViewModelFactory
@@ -44,7 +46,8 @@ class HomeFragment : Fragment() {
     @Inject lateinit var sessionManager: SessionManager
     @Inject lateinit var snackbarHelper: SnackbarHelper
     private val profileViewModel: ProfileViewModel by viewModels()
-    private val postAdapter by lazy { PostAdapter(viewLifecycleOwner) }
+    private val lViewModel: LikeViewModel by viewModels()
+    private val postAdapter by lazy { PostAdapter(lViewModel, viewLifecycleOwner) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

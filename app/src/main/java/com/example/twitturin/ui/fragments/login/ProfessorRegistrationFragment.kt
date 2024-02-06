@@ -81,10 +81,10 @@ class ProfessorRegistrationFragment : Fragment() {
                 val inputText = s?.toString()
 
                 if (inputText != null && inputText.contains(" ")) {
-                    binding.textInputLayout1.error = "No spaces allowed"
+                    binding.profUsernameInputLayout.error = "No spaces allowed"
                     binding.signUpProf.isEnabled = false
                 } else {
-                    binding.textInputLayout1.error = null
+                    binding.profUsernameInputLayout.error = null
                     binding.signUpProf.isEnabled = true
                 }
             }

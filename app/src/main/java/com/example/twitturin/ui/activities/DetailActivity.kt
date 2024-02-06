@@ -11,7 +11,9 @@ import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,6 +28,7 @@ import com.example.twitturin.ui.fragments.bottom_sheets.MoreSettingsDetailFragme
 import com.example.twitturin.ui.sealeds.FollowResult
 import com.example.twitturin.ui.sealeds.PostReply
 import com.example.twitturin.viewmodel.FollowUserViewModel
+import com.example.twitturin.viewmodel.LikeViewModel
 import com.example.twitturin.viewmodel.MainViewModel
 import com.example.twitturin.viewmodel.UsersResult
 import com.example.twitturin.viewmodel.ViewModelFactory
@@ -43,20 +46,19 @@ import javax.inject.Inject
 class DetailActivity : AppCompatActivity() {
 
     private lateinit var viewModel: MainViewModel
+    private val lViewModel: LikeViewModel by viewModels()
     private val allUsers = mutableListOf<String>()
     @Inject lateinit var snackbarHelper: SnackbarHelper
     @Inject lateinit var sessionManager: SessionManager
     private val followedUsersList = mutableListOf<String>()
     private lateinit var followViewModel: FollowUserViewModel
     private val binding by lazy { ActivityDetailBinding.inflate(layoutInflater) }
-    private val postAdapter by lazy { PostAdapter(this@DetailActivity) }
+    private val postAdapter by lazy { PostAdapter(lViewModel,this@DetailActivity) }
 
     @SuppressLint("SetTextI18n", "PrivateResource", "NotifyDataSetChanged", "ResourceAsColor")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-
-//        checkFollowedUsersStatus()
 
         binding.apply {
             val userImage = intent.getStringExtra("userAvatar")

@@ -30,13 +30,13 @@
                     android:id="@+id/back_btn_prof"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
-                    android:src="@drawable/keyboard_backspace"
-                    android:layout_marginTop="24dp"
                     android:layout_marginStart="16dp"
+                    android:layout_marginTop="24dp"
                     android:background="@android:color/transparent"
-                    app:layout_constraintTop_toTopOf="parent"
+                    android:src="@drawable/keyboard_backspace"
                     app:layout_constraintStart_toStartOf="parent"
-                    tools:ignore="ContentDescription"/>
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="ContentDescription,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
                 <TextView
                     android:id="@+id/login_tv"
@@ -64,8 +64,8 @@
                 app:layout_constraintTop_toBottomOf="@id/header_layout">
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/textInputLayout"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:id="@+id/prof_fullname_input_layout"
+                    style="?attr/textInputFilledStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="16dp"
@@ -84,29 +84,29 @@
                         android:id="@+id/prof_fullname_et"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:background="@android:color/transparent"
                         android:hint="@string/full_name"
                         android:imeOptions="actionNext"
                         android:inputType="text"
-                        android:background="@android:color/transparent"
-                        />
+                        tools:ignore="TextContrastCheck" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/textInputLayout1"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:id="@+id/prof_username_input_layout"
+                    style="?attr/textInputFilledStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="16dp"
-                    android:layout_marginTop="15dp"
-                    android:background="@drawable/edit_text_bg_ui"
-                    app:hintTextColor="?attr/colorOnPrimaryContainer"
                     app:endIconCheckable="true"
                     app:endIconMode="clear_text"
                     app:startIconCheckable="true"
-                    app:startIconDrawable="@drawable/username_person"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginHorizontal="16dp"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/textInputLayout"
-                    app:layout_constraintStart_toStartOf="parent">
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:background="@drawable/edit_text_bg_ui"
+                    app:hintTextColor="?attr/colorOnPrimaryContainer"
+                    app:startIconDrawable="@drawable/username_person"
+                    app:layout_constraintTop_toBottomOf="@id/prof_fullname_input_layout">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/prof_username_et"
@@ -115,13 +115,13 @@
                         android:hint="@string/username"
                         android:imeOptions="actionNext"
                         android:inputType="text"
-                        android:background="@android:color/transparent"
-                        />
+                        android:background="@android:color/transparent"/>
+
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/textInputLayout2"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:id="@+id/prof_subject_input_layout"
+                    style="?attr/textInputFilledStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="16dp"
@@ -133,23 +133,24 @@
                     app:endIconMode="clear_text"
                     app:startIconDrawable="@drawable/subject"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/textInputLayout1"
+                    app:layout_constraintTop_toBottomOf="@id/prof_username_input_layout"
                     app:layout_constraintStart_toStartOf="parent">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/prof_subject_et"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:background="@android:color/transparent"
                         android:hint="@string/subject"
                         android:imeOptions="actionNext"
                         android:inputType="text"
-                        android:background="@android:color/transparent"/>
+                        tools:ignore="TextContrastCheck" />
                 </com.google.android.material.textfield.TextInputLayout>
 
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/textInputLayout5"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:id="@+id/prof_password_input_layout"
+                    style="?attr/textInputFilledStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="16dp"
@@ -161,7 +162,7 @@
                     app:endIconMode="password_toggle"
                     app:startIconCheckable="true"
                     app:startIconDrawable="@drawable/lock"
-                    app:layout_constraintTop_toBottomOf="@id/textInputLayout2"
+                    app:layout_constraintTop_toBottomOf="@id/prof_subject_input_layout"
                     app:layout_constraintStart_toStartOf="parent">
 
                     <com.google.android.material.textfield.TextInputEditText

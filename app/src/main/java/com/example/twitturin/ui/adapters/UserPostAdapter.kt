@@ -3,6 +3,8 @@ package com.example.twitturin.ui.adapters
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -132,6 +134,24 @@ class UserPostAdapter @Inject constructor(
                     intent.type = "text/plain"
 
                     context.startActivity(Intent.createChooser(intent,"Choose app:"))
+                }
+
+                postIconCommentsUserOwnTweet.setOnClickListener {
+
+                    val intent = Intent(context, DetailActivity::class.java)
+
+                    intent.putExtra("fullname", author?.fullName)
+                    intent.putExtra("username", author?.username)
+                    intent.putExtra("post_description", content)
+                    intent.putExtra("createdAt", createdAt)
+                    intent.putExtra("updatedAt", updatedAt)
+                    intent.putExtra("likes", likes.toString())
+                    intent.putExtra("id", id)
+                    intent.putExtra("userId", author?.id)
+                    intent.putExtra("userAvatar", author?.profilePicture)
+                    intent.putExtra("activateEditText", true)
+
+                    context.startActivity(intent)
                 }
 
                 moreSettingsUserOwnTweet.setOnClickListener {

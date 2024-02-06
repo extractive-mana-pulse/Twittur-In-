@@ -21,13 +21,10 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class EditTweetActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityEditTweetBinding
-
-    private val profileViewModel: ProfileViewModel by viewModels()
-
     @Inject lateinit var snackbarHelper: SnackbarHelper
-
     @Inject lateinit var sessionManager : SessionManager
+    private lateinit var binding: ActivityEditTweetBinding
+    private val profileViewModel: ProfileViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

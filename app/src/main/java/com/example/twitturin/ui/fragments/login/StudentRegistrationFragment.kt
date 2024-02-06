@@ -40,18 +40,18 @@ class StudentRegistrationFragment : Fragment() {
 
         viewModel = ViewModelProvider(this)[SignUpViewModel::class.java]
 
-        binding.signUp.setOnClickListener {
+        binding.studentSignUpBtn.setOnClickListener {
             val fullname = binding.fullNameEt.text.toString().trim()
             val username = binding.userNameEt.text.toString().trim()
             val studentId = binding.studentIdEt.text.toString().trim()
             val major = binding.planetsSpinner.selectedItem.toString()
-            val password = binding.passwordEt.text.toString().trim()
+            val password = binding.studentPasswordEt.text.toString().trim()
             viewModel.signUp(fullname, username, studentId, major, password, "student")
         }
 
         editTextList.add(binding.userNameEt)
         editTextList.add(binding.studentIdEt)
-        editTextList.add(binding.passwordEt)
+        editTextList.add(binding.studentPasswordEt)
 
         editTextList.forEach { editText ->
             editText.addTextChangedListener(object : TextWatcher {
@@ -93,11 +93,11 @@ class StudentRegistrationFragment : Fragment() {
                 val inputText = s?.toString()
 
                 if (inputText != null && inputText.contains(" ")) {
-                    binding.textInputLayout.error = "No spaces allowed"
-                    binding.signUp.isEnabled = false
+                    binding.studentUsernameInputLayout.error = "No spaces allowed"
+                    binding.studentSignUpBtn.isEnabled = false
                 } else {
-                    binding.textInputLayout.error = null
-                    binding.signUp.isEnabled = true
+                    binding.studentUsernameInputLayout.error = null
+                    binding.studentSignUpBtn.isEnabled = true
                 }
             }
         })
@@ -127,7 +127,7 @@ class StudentRegistrationFragment : Fragment() {
         val allFieldsFilled = editTextList.all { editText ->
             editText.text.isNotEmpty()
         }
-        binding.signUp.isVisible = allFieldsFilled
+        binding.studentSignUpBtn.isVisible = allFieldsFilled
     }
 
     companion object {

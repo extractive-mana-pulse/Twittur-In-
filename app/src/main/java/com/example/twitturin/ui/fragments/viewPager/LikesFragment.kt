@@ -5,7 +5,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,6 +17,7 @@ import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.model.data.tweets.Tweet
 import com.example.twitturin.model.repo.Repository
 import com.example.twitturin.ui.adapters.PostAdapter
+import com.example.twitturin.viewmodel.LikeViewModel
 import com.example.twitturin.viewmodel.MainViewModel
 import com.example.twitturin.viewmodel.ViewModelFactory
 import com.example.twitturin.viewmodel.manager.SessionManager
@@ -28,7 +31,8 @@ class LikesFragment : Fragment() {
     private lateinit var binding : FragmentLikesBinding
     @Inject lateinit var sessionManager: SessionManager
     @Inject lateinit var snackbarHelper: SnackbarHelper
-    private val postAdapter by lazy { PostAdapter(viewLifecycleOwner) }
+    private val lViewModel: LikeViewModel by viewModels()
+    private val postAdapter by lazy { PostAdapter(lViewModel, viewLifecycleOwner) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentLikesBinding.inflate(layoutInflater)

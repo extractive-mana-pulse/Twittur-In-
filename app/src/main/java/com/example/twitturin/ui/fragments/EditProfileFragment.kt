@@ -1,5 +1,6 @@
 package com.example.twitturin.ui.fragments
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
@@ -15,12 +16,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.twitturin.R
 import com.example.twitturin.databinding.FragmentEditProfileBinding
 import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.ui.adapters.ColorAdapter
 import com.example.twitturin.ui.decoration.GridSpacingItemDecoration
 import com.example.twitturin.ui.sealeds.EditUserResult
+import com.example.twitturin.ui.sealeds.UserCredentialsResult
 import com.example.twitturin.viewmodel.ProfileViewModel
 import com.example.twitturin.viewmodel.manager.SessionManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -43,10 +46,11 @@ class EditProfileFragment : Fragment() {
         return binding.root
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.back.setOnClickListener {
+        binding.editProfileBackBtn.setOnClickListener {
             findNavController().navigate(R.id.action_editProfileFragment_to_profileFragment)
         }
 
@@ -54,30 +58,60 @@ class EditProfileFragment : Fragment() {
             pickPhoto()
         }
 
+
         val token = sessionManager.getToken()
         val userId = sessionManager.getUserId()
 
         profileViewModel = ViewModelProvider(this)[ProfileViewModel::class.java]
 //        TODO. this code should be modified under edit text. so in this page in edit text fields should be default value of user credentials
 //         or if it's empty field should be empty.
+        profileViewModel.getUserCredentials(userId!!)
+
+        profileViewModel.getUserCredentials.observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is UserCredentialsResult.Success -> {
+                    val profileImage = "${result.user.profilePicture ?: R.drawable.username_person}"
+                    Glide.with(requireContext())
+                        .load(profileImage)
+                        .error(R.drawable.not_found)
+                        .into(binding.profileImage)
+
+                    binding.editProfileFullnameEt.setText(result.user.fullName ?: "Twittur User")
+                    binding.editProfileUsernameEt.setText(result.user.username)
+                    binding.editProfileBioEt.setText(result.user.bio ?: "This user does not appear to have any biography.")
+                    binding.editProfileEmailEt.setText(result.user.email)
+                    binding.editProfileBirthdayEt.setText(result.user.birthday)
+                }
+
+                is UserCredentialsResult.Error -> {
+
+                    snackbarHelper.snackbarError(
+                        requireActivity().findViewById(R.id.profile_root_layout),
+                        requireActivity().findViewById(R.id.profile_root_layout),
+                        error = result.message,
+                        ""
+                    ){}
+                }
+            }
+        }
 
         binding.save.setOnClickListener {
 
-            val fullName = binding.fullnameEt.text.toString()
-            val username = binding.usernameEt.text.toString()
-            val bio = binding.bioEt.text.toString()
-            val email = binding.emailEt.text.toString()
+            val fullName = binding.editProfileFullnameEt.text.toString()
+            val username = binding.editProfileUsernameEt.text.toString()
+            val bio = binding.editProfileBioEt.text.toString()
+            val email = binding.editProfileEmailEt.text.toString()
             val country = binding.countryEt.selectedCountryName
-            val birthday = binding.birthdayEt.text.toString()
+            val birthday = binding.editProfileBirthdayEt.text.toString()
 
             profileViewModel.editUser(
                 fullName,
                 username,
                 email,
                 bio,
-                country,
+                country.toString(),
                 birthday,
-                userId!!,
+                userId,
                 "Bearer $token"
             )
 

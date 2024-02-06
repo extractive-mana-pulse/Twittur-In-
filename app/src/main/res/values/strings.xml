@@ -48,6 +48,7 @@
     <string name="report_desc_tv">Please describe why you want to report this tweet</string>
     <string name="next">Next</string>
     <string name="profile">Profile</string>
+    <string name="in_progress" tools:ignore="PrivateResource">In Progress</string>
     <string name="language">Language</string>
     <string name="open">open</string>
     <string name="close">close</string>
@@ -66,6 +67,9 @@
     <string name="delete_title">Are you sure you want to delete account?</string>
     <string name="delete_message">Please note that once an account is deleted, it cannot be restored and all activity will be deleted</string>
     <string name="get_color">Choose a color</string>
+    <string name="student">Student</string>
+    <string name="professor">Professor</string>
+    <string name="kind_picker_tv">What kind are you ?</string>
 
     <string-array name="major_array">
         <item>SE</item>

@@ -5,7 +5,11 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.findFragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -16,18 +20,20 @@ import com.example.twitturin.model.data.tweets.Tweet
 import com.example.twitturin.ui.activities.DetailActivity
 import com.example.twitturin.viewmodel.LikeViewModel
 import com.example.twitturin.viewmodel.manager.SessionManager
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
-class PostAdapter (
+class PostAdapter @Inject constructor(
+    private val lViewModel: LikeViewModel,
     private val parentLifecycleOwner: LifecycleOwner
 ) : RecyclerView.Adapter<PostAdapter.ViewHolder>() {
 
     private var list = emptyList<Tweet>()
-    private lateinit var sessionManager: SessionManager
+    @Inject lateinit var sessionManager: SessionManager
     private lateinit var snackbarHelper: SnackbarHelper
-    private lateinit var viewModel: LikeViewModel
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val binding = RcViewBinding.bind(itemView)
@@ -44,7 +50,6 @@ class PostAdapter (
         val baseUrl = "https://twitturin.onrender.com/tweets"
         val context = holder.itemView.context
 
-        sessionManager = SessionManager(context)
         snackbarHelper = SnackbarHelper(context.resources)
 
 //        var likeCount: Int? = item.likes
@@ -105,13 +110,12 @@ class PostAdapter (
                     intent.putExtra("likes", likes.toString())
                     intent.putExtra("id",id)
                     intent.putExtra("userId",author?.id)
-                    intent.putExtra("userAvatar", author?.profilePicture ?: R.drawable.ic_launcher_foreground)
+                    intent.putExtra("userAvatar", author?.profilePicture)
 
                     context.startActivity(intent)
                 }
 
                 postIconComments.setOnClickListener {
-                    // TODO { when user press this button. user should navigate to detail article page and edit text have to be active and open keyboard }
                     val intent = Intent(context, DetailActivity::class.java)
 
                     intent.putExtra("fullname", author?.fullName ?: "Twittur User")
@@ -122,19 +126,14 @@ class PostAdapter (
                     intent.putExtra("likes", likes.toString())
                     intent.putExtra("id",id)
                     intent.putExtra("userId",author?.id)
-                    intent.putExtra("userAvatar", author?.profilePicture ?: R.drawable.ic_launcher_foreground)
+                    intent.putExtra("userAvatar", author?.profilePicture)
                     intent.putExtra("activateEditText", true)
 
                     context.startActivity(intent)
                 }
 
                 postIconHeart.setOnClickListener {
-                    Toast.makeText(context, "In Progress", Toast.LENGTH_SHORT).show()
-//                    snackbarHelper.snackbar(
-//                        holder.itemView.findViewById(R.id.home_root_layout),
-//                        holder.itemView.findViewById(R.id.add_post),
-//                        message = "In Progress"
-//                    )
+                    Toast.makeText(context, context.resources.getString(R.string.in_progress), Toast.LENGTH_SHORT).show()
                 }
 
                 postIconShare.setOnClickListener {

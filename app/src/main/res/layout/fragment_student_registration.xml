@@ -42,7 +42,7 @@
                     android:src="@drawable/keyboard_backspace"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:ignore="ContentDescription" />
+                    tools:ignore="ContentDescription,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
                 <TextView
                     android:id="@+id/login_tv"
@@ -70,8 +70,8 @@
                 app:layout_constraintTop_toBottomOf="@id/header_layout">
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/full_name_et_layout"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:id="@+id/student_fullname_input_layout"
+                    style="?attr/textInputFilledStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="16dp"
@@ -93,13 +93,14 @@
                         android:background="@android:color/transparent"
                         android:hint="@string/full_name"
                         android:imeOptions="actionNext"
-                        android:inputType="text"/>
+                        android:inputType="text"
+                        tools:ignore="TextContrastCheck" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/textInputLayout"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:id="@+id/student_username_input_layout"
+                    style="?attr/textInputFilledStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
@@ -112,7 +113,7 @@
                     app:startIconDrawable="@drawable/username_person"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/full_name_et_layout">
+                    app:layout_constraintTop_toBottomOf="@id/student_fullname_input_layout">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/user_name_et"
@@ -127,8 +128,8 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/textInputLayout1"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:id="@+id/student_id_input_layout"
+                    style="?attr/textInputFilledStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="16dp"
@@ -139,7 +140,7 @@
                     app:hintTextColor="?attr/colorOnPrimaryContainer"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/textInputLayout"
+                    app:layout_constraintTop_toBottomOf="@id/student_username_input_layout"
                     app:startIconCheckable="true"
                     app:startIconDrawable="@drawable/id_icon">
 
@@ -151,12 +152,13 @@
                         android:hint="@string/student_id"
                         android:imeOptions="actionNext"
                         android:inputType="text"
-                        android:maxLength="7"/>
+                        android:maxLength="7"
+                        tools:ignore="TextContrastCheck" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/textInputLayout2"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:id="@+id/student_major_input_layout"
+                    style="?attr/textInputFilledStyle"
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
                     android:layout_marginHorizontal="16dp"
@@ -167,7 +169,7 @@
                     android:hint="@string/major"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/textInputLayout1">
+                    app:layout_constraintTop_toBottomOf="@id/student_id_input_layout">
 
                     <Spinner
                         android:id="@+id/planets_spinner"
@@ -180,8 +182,8 @@
 
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/textInputLayout5"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:id="@+id/student_password_input_layout"
+                    style="?attr/textInputFilledStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="16dp"
@@ -192,33 +194,32 @@
                     app:hintTextColor="?attr/colorOnPrimaryContainer"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/textInputLayout2"
+                    app:layout_constraintTop_toBottomOf="@id/student_major_input_layout"
                     app:startIconCheckable="true"
                     app:startIconDrawable="@drawable/lock">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/password_et"
+                        android:id="@+id/student_password_et"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@android:color/transparent"
                         android:hint="@string/password"
                         android:imeOptions="actionDone"
-                        android:inputType="textPassword" />
+                        android:inputType="textPassword"/>
 
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <Button
-                    android:id="@+id/sign_up"
+                    android:id="@+id/student_sign_up_btn"
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
-                    android:layout_marginHorizontal="24dp"
                     android:layout_marginBottom="24dp"
+                    android:layout_marginHorizontal="24dp"
                     android:text="@string/sign_up"
                     android:visibility="invisible"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    />
+                    app:layout_constraintBottom_toBottomOf="parent"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

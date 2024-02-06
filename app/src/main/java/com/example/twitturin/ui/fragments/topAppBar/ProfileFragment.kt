@@ -78,32 +78,15 @@ class ProfileFragment : Fragment() {
                     binding.followingCounterTv.text = result.user.followingCount.toString()
                     binding.followersCounterTv.text = result.user.followersCount.toString()
 
-                     // location
-                    if (result.user.country?.isEmpty()!!) {
-                        binding.locationImg.visibility = View.GONE
-                        binding.locationTv.visibility = View.GONE
+                    // location
+                    if (result.user.country.isNullOrEmpty()) {
+                        binding.profileLocationImg.visibility = View.INVISIBLE
+                        binding.profileLocationTv.visibility = View.GONE
                     } else {
-                        binding.locationImg.visibility = View.VISIBLE
-                        binding.locationTv.text = result.user.country.toString()
+                        binding.profileLocationImg.visibility = View.VISIBLE
+                        binding.profileLocationTv.text = result.user.country
                     }
 
-//                    // following
-//                    if (result.user.followingCount?.equals(0)!!){
-//                        binding.followingCounterTv.text = "0"
-//                        binding.followingTv.text = resources.getString(R.string.following)
-//                    } else {
-//                        binding.followingCounterTv.text = result.user.followingCount.toString()
-//                        binding.followingTv.text = resources.getString(R.string.following)
-//                    }
-//
-//                    // followers
-//                    if (result.user.followersCount?.equals(0)!!){
-//                        binding.followersCounterTv.text = "0"
-//                        binding.followersTv.text = resources.getString(R.string.followers)
-//                    } else {
-//                        binding.followersCounterTv.text = result.user.followersCount.toString()
-//                        binding.followersTv.text = resources.getString(R.string.followers)
-//                    }
                 }
 
                 is UserCredentialsResult.Error -> {
