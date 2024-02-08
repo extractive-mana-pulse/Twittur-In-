@@ -195,12 +195,9 @@ class ProfileFragment : Fragment() {
     }
 
     private fun deleteDialog(){
-        val sharedPreferences = requireActivity().getSharedPreferences("my_shared_prefs", MODE_PRIVATE)
-        val username = sharedPreferences.getString("username", "")
-
-        val alertDialogBuilder = MaterialAlertDialogBuilder(requireActivity())
-        alertDialogBuilder.setTitle("${username?.uppercase()}: + ${resources.getString(R.string.delete_title)}")
-        alertDialogBuilder.setMessage(resources.getString(R.string.delete_message))
+        val alertDialogBuilder = MaterialAlertDialogBuilder(requireActivity(), R.style.ThemeOverlay_App_MaterialAlertDialog)
+        alertDialogBuilder.setTitle(resources.getString(R.string.delete_account_title))
+        alertDialogBuilder.setMessage(resources.getString(R.string.delete_account_message))
         alertDialogBuilder.setPositiveButton(resources.getString(R.string.yes)) { _, _ ->
             profileViewModel.deleteUser(sessionManager.getUserId()!!, "Bearer ${sessionManager.getToken()}")
         }

@@ -1,7 +1,6 @@
 package com.example.twitturin.ui.fragments.bottom_sheets
 
 import android.annotation.SuppressLint
-import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -12,12 +11,10 @@ import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
 import com.example.twitturin.helper.SnackbarHelper
-import com.example.twitturin.ui.activities.DetailActivity
+import com.example.twitturin.model.data.tweets.Tweet
 import com.example.twitturin.ui.activities.EditTweetActivity
-import com.example.twitturin.ui.activities.MainActivity
 import com.example.twitturin.ui.sealeds.DeleteResult
 import com.example.twitturin.ui.sealeds.FollowResult
 import com.example.twitturin.viewmodel.FollowUserViewModel
@@ -38,6 +35,8 @@ class MoreSettingsDetailFragment : BottomSheetDialogFragment() {
     @Inject lateinit var sessionManager: SessionManager
     @Inject lateinit var snackbarHelper: SnackbarHelper
 
+
+    /** If i want to leave a comment as a doc. I need to write this type of doc outside override methods */
     @SuppressLint("SetTextI18n", "MissingInflatedId")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.bottom_sheet_layout, container, false)
@@ -98,8 +97,8 @@ class MoreSettingsDetailFragment : BottomSheetDialogFragment() {
         deleteLayout.setOnClickListener {
 
             val alertDialogBuilder = MaterialAlertDialogBuilder(requireActivity(), R.style.ThemeOverlay_App_MaterialAlertDialog)
-            alertDialogBuilder.setTitle(resources.getString(R.string.delete_title))
-            alertDialogBuilder.setMessage(resources.getString(R.string.delete_message))
+            alertDialogBuilder.setTitle(resources.getString(R.string.delete_tweet_title))
+            alertDialogBuilder.setMessage(resources.getString(R.string.delete_tweet_message))
             alertDialogBuilder.setPositiveButton(resources.getString(R.string.yes)) { _, _ ->
                 profileViewModel.deleteTweet(tweetId!!, "Bearer $token")
                 requireActivity().finish()
@@ -119,7 +118,7 @@ class MoreSettingsDetailFragment : BottomSheetDialogFragment() {
                         snackbarHelper.snackbar(
                             requireActivity().findViewById(R.id.bottom_sheet_root_layout),
                             requireActivity().findViewById(R.id.add_post),
-                            message = "Deleted"
+                            message = requireContext().resources.getString(R.string.deleted)
                         )
 
                     }
@@ -138,10 +137,9 @@ class MoreSettingsDetailFragment : BottomSheetDialogFragment() {
             snackbarHelper.snackbar(
                 view.findViewById(R.id.bottom_sheet_root_layout),
                 view.findViewById(R.id.bottom_sheet_root_layout),
-                message = "In Progress"
+                message = requireContext().resources.getString(R.string.in_progress)
             )
 
-//            TODO { when report a post end point is ready activate this code }
 //            val intent = Intent(requireActivity(), ReportActivity::class.java)
 //            startActivity(intent)
 //            dismiss()
@@ -149,11 +147,14 @@ class MoreSettingsDetailFragment : BottomSheetDialogFragment() {
         }
 
         editLayout.setOnClickListener {
-            val intent = Intent(requireActivity(), EditTweetActivity::class.java)
-            intent.putExtra("description", description)
-            startActivity(intent)
+            with(sharedPreferences.edit()) {
+                putString("description", description)
+                apply() // Use apply() for immediate non-blocking writes
+            }
+            startActivity(Intent(requireActivity(), EditTweetActivity::class.java))
             dismiss()
         }
+
 
         dialog?.setOnShowListener {
             val bottomSheetDialog = dialog as BottomSheetDialog?

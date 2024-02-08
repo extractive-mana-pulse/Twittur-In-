@@ -69,7 +69,8 @@
     </style>
 
     <style name="Widget.App.Button" parent="Widget.Material3.Button.TextButton.Dialog">
-        <item name="android:textColor">@color/md_theme_light_onSurface</item>
+        <item name="android:negativeButtonText">@color/md_theme_light_onSurface</item>
+        <item name="android:positiveButtonText">@color/md_theme_light_error</item>
     </style>
 
     <style name="ShapeAppearance.App.MediumComponent" parent="ShapeAppearance.Material3.MediumComponent">

@@ -253,7 +253,7 @@ class DetailActivity : AppCompatActivity() {
                 snackbarHelper.snackbar(
                     findViewById(R.id.detail_root_layout),
                     findViewById(R.id.reply_layout),
-                    message = "In Progress"
+                    message = resources.getString(R.string.in_progress)
                 )
             }
 
@@ -261,7 +261,7 @@ class DetailActivity : AppCompatActivity() {
                 snackbarHelper.snackbar(
                     findViewById(R.id.detail_root_layout),
                     findViewById(R.id.reply_layout),
-                    message = "In Progress"
+                    message = resources.getString(R.string.in_progress)
                 )
             }
 

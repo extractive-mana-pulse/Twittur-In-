@@ -1,7 +1,9 @@
 package com.example.twitturin.ui.activities
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -31,14 +33,13 @@ class EditTweetActivity : AppCompatActivity() {
         binding = ActivityEditTweetBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val token = sessionManager.getToken()
+        val sharedPreferences = getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
+        val description = sharedPreferences.getString("description", "")
 
-        val description = intent.getStringExtra("post_description")
-        val desc = intent.getStringExtra("description")
+        val token = sessionManager.getToken()
         val tweetId = intent.getStringExtra("id")
 
         binding.editTweetContent.setText(description)
-        binding.editTweetContent.setText(desc)
 
         binding.editTweetCancelBtn.setOnClickListener {
             finish()
@@ -54,7 +55,6 @@ class EditTweetActivity : AppCompatActivity() {
             when (result) {
                 is EditTweetResult.Success -> {
                     finish()
-                    Toast.makeText(this, "Succeed", Toast.LENGTH_SHORT).show()
                 }
 
                 is EditTweetResult.Error -> {

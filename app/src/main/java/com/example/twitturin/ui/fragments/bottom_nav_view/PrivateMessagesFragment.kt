@@ -24,8 +24,10 @@ class PrivateMessagesFragment : Fragment() {
         binding.privateMessagesFragment = this
     }
 
+    /** This comment for function back(). This is using data binding and implemented inside xml file. Note: this is my first comment ) */
+
     fun back(){
-        findNavController().navigate(R.id.action_privateMessagesFragment_to_homeFragment)
+        requireActivity().onBackPressed()
     }
 
     fun goToProfile(){

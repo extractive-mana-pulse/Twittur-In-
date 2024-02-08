@@ -2,6 +2,7 @@ package com.example.twitturin.ui.adapters
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
@@ -43,7 +44,7 @@ class UserPostAdapter @Inject constructor(
     private var list = emptyList<Tweet>()
     private lateinit var likeViewModel: LikeViewModel
     @Inject lateinit var sessionManager: SessionManager
-    @Inject lateinit var snackbarHelper: SnackbarHelper
+    private lateinit var snackbarHelper: SnackbarHelper
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val binding = RcViewUserTweetsBinding.bind(itemView)
@@ -59,8 +60,11 @@ class UserPostAdapter @Inject constructor(
         val item = list[position]
         val context = holder.itemView.context
         val baseUrl = "https://twitturin.onrender.com/tweets"
+
 //        var likeCount: Int? = item.likes
 //        var isLiked: Boolean = false
+
+        snackbarHelper = SnackbarHelper(context.resources)
 
         holder.binding.apply {
             item.apply {
@@ -126,16 +130,6 @@ class UserPostAdapter @Inject constructor(
                     context.startActivity(intent)
                 }
 
-                postIconShareUserOwnTweet.setOnClickListener {
-                    val intent = Intent(Intent.ACTION_SEND)
-                    val link = baseUrl+"/"+item.id
-
-                    intent.putExtra(Intent.EXTRA_TEXT, link)
-                    intent.type = "text/plain"
-
-                    context.startActivity(Intent.createChooser(intent,"Choose app:"))
-                }
-
                 postIconCommentsUserOwnTweet.setOnClickListener {
 
                     val intent = Intent(context, DetailActivity::class.java)
@@ -154,6 +148,24 @@ class UserPostAdapter @Inject constructor(
                     context.startActivity(intent)
                 }
 
+                postIconHeartUserOwnTweet.setOnClickListener {
+                    snackbarHelper.snackbar(
+                        holder.itemView.findViewById(R.id.test_user_tv),
+                        holder.itemView.findViewById(R.id.test_user_tv),
+                        message = context.resources.getString(R.string.in_progress)
+                    )
+                }
+
+                postIconShareUserOwnTweet.setOnClickListener {
+                    val intent = Intent(Intent.ACTION_SEND)
+                    val link = baseUrl+"/"+item.id
+
+                    intent.putExtra(Intent.EXTRA_TEXT, link)
+                    intent.type = "text/plain"
+
+                    context.startActivity(Intent.createChooser(intent,"Choose app:"))
+                }
+
                 moreSettingsUserOwnTweet.setOnClickListener {
 
                     val popupMenu = PopupMenu(context, moreSettingsUserOwnTweet)
@@ -163,8 +175,8 @@ class UserPostAdapter @Inject constructor(
 
                             R.id.edit_user_own_tweet -> {
                                 val intent = Intent(context, EditTweetActivity::class.java)
-
-                                intent.putExtra("post_description", content)
+                                val sharedPreferences = context.getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
+                                sharedPreferences.edit().putString("description", content).apply()
                                 intent.putExtra("id", id)
 
                                 context.startActivity(intent)
@@ -174,8 +186,8 @@ class UserPostAdapter @Inject constructor(
                             R.id.delete_user_own_tweet -> {
 
                                 val alertDialogBuilder = MaterialAlertDialogBuilder(context, R.style.ThemeOverlay_App_MaterialAlertDialog)
-                                alertDialogBuilder.setTitle(context.resources.getString(R.string.delete_title))
-                                alertDialogBuilder.setMessage(context.resources.getString(R.string.delete_message))
+                                alertDialogBuilder.setTitle(context.resources.getString(R.string.delete_tweet_title))
+                                alertDialogBuilder.setMessage(context.resources.getString(R.string.delete_tweet_message))
                                 alertDialogBuilder.setPositiveButton(context.resources.getString(R.string.yes)) { dialog, _ ->
                                     val token = sessionManager.getToken()
                                     profileViewModel.deleteTweet(/* this id == tweetId */ id,"Bearer $token")
@@ -195,7 +207,7 @@ class UserPostAdapter @Inject constructor(
                                             snackbarHelper.snackbar(
                                                 holder.itemView.findViewById(R.id.user_own_root_layout),
                                                 holder.itemView.findViewById(R.id.user_own_root_layout),
-                                                message = "Deleted"
+                                                message = context.resources.getString(R.string.deleted)
                                             ) }
                                         is  DeleteResult.Error -> {
                                             snackbarHelper.snackbarError(
