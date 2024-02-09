@@ -14,7 +14,7 @@ class ColorAdapter(
     private val context: Context,
     private val colors: List<Int>,
     private val onItemClick: (Int) -> Unit
-) : RecyclerView.Adapter<ColorAdapter.ColorViewHolder>() {
+) : RecyclerView.Adapter<ColorAdapter.ColorViewHolder>(){
 
     inner class ColorViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val colorView: View = itemView.findViewById(R.id.colorView)

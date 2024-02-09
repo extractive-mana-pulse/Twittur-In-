@@ -239,26 +239,28 @@
         </LinearLayout>
 
         <!--    Custom TabLayout    -->
+
+        <!--    ViewPager2    -->
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tb"
             android:layout_width="0dp"
             android:layout_height="45dp"
-            android:layout_marginTop="3dp"
-            app:tabMode="fixed"
-            app:tabTextColor="?attr/colorOnSurface"
-            app:tabIndicatorAnimationMode="linear"
-            app:tabSelectedTextColor="?attr/colorPrimary"
-            app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget"
+            android:layout_marginTop="4dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/foll_info_layout"
             app:tabBackground="@drawable/tab_bg"
+            app:tabIndicatorAnimationMode="linear"
+            app:tabIndicatorColor="?attr/colorPrimary"
             app:tabIndicatorHeight="4.5dp"
             app:tabMaxWidth="0dp"
-            app:tabIndicatorColor="?attr/colorPrimary"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/foll_info_layout"/>
+            app:tabMode="fixed"
+            app:tabSelectedTextColor="?attr/colorPrimary"
+            app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget"
+            app:tabTextColor="?attr/colorOnSurface" />
 
-            <!--    ViewPager2    -->
-            <androidx.viewpager2.widget.ViewPager2
+        <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/vp2"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
