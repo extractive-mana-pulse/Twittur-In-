@@ -1,10 +1,12 @@
 package com.example.twitturin.ui.adapters
 
 import android.annotation.SuppressLint
+import android.content.res.Resources
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -13,19 +15,18 @@ import com.example.twitturin.databinding.RcViewFollowersBinding
 import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.model.data.users.User
 import com.example.twitturin.ui.sealeds.FollowResult
-import com.example.twitturin.viewmodel.FollowUserViewModel
-import com.example.twitturin.viewmodel.manager.SessionManager
+import com.example.twitturin.viewmodel.FollowingViewModel
+import com.example.twitturin.manager.SessionManager
 import java.util.*
 import javax.inject.Inject
 
 class FollowersAdapter @Inject constructor(
     private val lifecycleOwner : LifecycleOwner,
-    private val followViewModel: FollowUserViewModel
+    private val followViewModel: FollowingViewModel
 ) : RecyclerView.Adapter<FollowersAdapter.ViewHolder>() {
 
     private var list = emptyList<User>()
     private lateinit var sessionManager: SessionManager
-//    private lateinit var snackbarHelper: SnackbarHelper
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val binding = RcViewFollowersBinding.bind(itemView)
@@ -41,28 +42,29 @@ class FollowersAdapter @Inject constructor(
         val item = list[position]
 
         val context = holder.itemView.context
-
         sessionManager = SessionManager(context)
-//        snackbarHelper = SnackbarHelper(context.resources)
-
-        holder.binding.apply {
-
-            val profileImage = item.profilePicture
-
-            Glide.with(context)
-                .load(profileImage)
-                .error(R.drawable.not_found)
-                .into(userFollowerAvatar)
-
-            fullNameFollowerTv.text = item.fullName ?: "Twittur User"
-            usernameFollowerTv.text = "@" + item.username
-            postDescription.text = item.bio ?: "This user does not appear to have any biography."
-        }
-
         val token = sessionManager.getToken()
 
-        holder.binding.followBtn.setOnClickListener {
-            followViewModel.followUsers(item.id!!,"Bearer $token")
+        item.apply {
+            holder.binding.apply {
+                val profileImage = item.profilePicture
+
+                Glide.with(context)
+                    .load(profileImage)
+                    .error(R.drawable.not_found)
+                    .into(userFollowerAvatar)
+
+                fullNameFollowerTv.text = item.fullName ?: "Twittur User"
+                usernameFollowerTv.text = "@" + item.username
+                postDescription.text = item.bio ?: "This user does not appear to have any biography."
+
+                followBtn.setOnClickListener {
+                    followViewModel.followUsers(item.id!!,"Bearer $token")
+                }
+                /** write code here ! */
+                // . . .
+                /** write code here ! */
+            }
         }
 
         followViewModel.followResult.observe(lifecycleOwner) { result ->
@@ -70,33 +72,14 @@ class FollowersAdapter @Inject constructor(
             when (result) {
 
                 is FollowResult.Success -> {
-                    Toast.makeText(context, "now you follow: ${item.username?.uppercase()}", Toast.LENGTH_SHORT).show()
-//                    snackbarHelper.snackbar(
-//                        holder.itemView.findViewById(R.id.followers_rc_root_layout),
-//                        holder.itemView.findViewById(R.id.anchor_rc_followers_tv),
-//                        message = "now you follow: ${item.username?.uppercase()}"
-//                    )
+                    Toast.makeText(context, "you follow ${result.user.username}", Toast.LENGTH_SHORT).show()
                 }
 
-                is FollowResult.Error -> {
-                    Toast.makeText(context, result.message, Toast.LENGTH_SHORT).show()
-//                    snackbarHelper.snackbarError(
-//                        holder.itemView.findViewById(R.id.followers_rc_root_layout),
-//                        holder.itemView.findViewById(R.id.anchor_rc_followers_tv),
-//                        result.message,
-//                        ""){}
-                }
+                is FollowResult.Error -> {  }
             }
         }
 
-        holder.itemView.setOnClickListener {
-            Toast.makeText(context, "In Progress", Toast.LENGTH_SHORT).show()
-//            snackbarHelper.snackbar(
-//                holder.itemView.findViewById(R.id.followers_root_layout),
-//                holder.itemView.findViewById(R.id.anchor_rc_followers_tv),
-//                message = "In Progress"
-//            )
-        }
+        holder.itemView.setOnClickListener {  }
     }
 
     override fun getItemCount(): Int {

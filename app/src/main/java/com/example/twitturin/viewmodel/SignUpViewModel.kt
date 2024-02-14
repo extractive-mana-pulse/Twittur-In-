@@ -10,6 +10,7 @@ import com.example.twitturin.model.data.registration.SignUpStudent
 import com.example.twitturin.ui.sealeds.SignUpProfResult
 import com.example.twitturin.ui.sealeds.SignUpStudentResult
 import com.example.twitturin.viewmodel.event.SingleLiveEvent
+import dagger.hilt.android.lifecycle.HiltViewModel
 import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Callback
@@ -17,29 +18,18 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
-class SignUpViewModel : ViewModel() {
+@HiltViewModel
+class SignUpViewModel @Inject constructor(private val api : Api) : ViewModel() {
 
-    private val client = OkHttpClient.Builder()
-        .connectTimeout(180, TimeUnit.SECONDS)
-        .writeTimeout(180, TimeUnit.SECONDS)
-        .readTimeout(180, TimeUnit.SECONDS)
-        .build()
-
-    private val retrofit = Retrofit.Builder()
-        .baseUrl(BuildConfig.BASE_URL)
-        .addConverterFactory(GsonConverterFactory.create())
-        .client(client)
-        .build()
-
-    private val profReg: Api = retrofit.create(Api::class.java)
     private val _profRegResult = SingleLiveEvent<SignUpProfResult>()
     val profRegResult: LiveData<SignUpProfResult> = _profRegResult
 
     fun signUpProf(fullName: String, username: String, subject: String, password: String, kind: String) {
         val request = SignUpProf(fullName, username, subject, password, kind)
 
-        profReg.signUpProf(request).enqueue(object : Callback<SignUpProf> {
+        api.signUpProf(request).enqueue(object : Callback<SignUpProf> {
             override fun onResponse(call: Call<SignUpProf>, response: Response<SignUpProf>) {
 
                 if (response.isSuccessful) {
@@ -61,7 +51,7 @@ class SignUpViewModel : ViewModel() {
 
     fun signUp(fullName: String, username: String, studentId: String, major: String, password: String, kind: String) {
         val request = SignUpStudent(fullName, username, studentId, major, password, kind)
-        profReg.signUpStudent(request).enqueue(object : Callback<SignUpStudent> {
+        api.signUpStudent(request).enqueue(object : Callback<SignUpStudent> {
             override fun onResponse(call: Call<SignUpStudent>, response: Response<SignUpStudent>) {
                 if (response.isSuccessful) {
                     val signUpResponse = response.body()

@@ -13,13 +13,12 @@ import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
 import com.example.twitturin.R
 import com.example.twitturin.helper.SnackbarHelper
-import com.example.twitturin.model.data.tweets.Tweet
 import com.example.twitturin.ui.activities.EditTweetActivity
 import com.example.twitturin.ui.sealeds.DeleteResult
 import com.example.twitturin.ui.sealeds.FollowResult
-import com.example.twitturin.viewmodel.FollowUserViewModel
+import com.example.twitturin.viewmodel.FollowingViewModel
 import com.example.twitturin.viewmodel.ProfileViewModel
-import com.example.twitturin.viewmodel.manager.SessionManager
+import com.example.twitturin.manager.SessionManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -30,7 +29,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MoreSettingsDetailFragment : BottomSheetDialogFragment() {
 
-    private lateinit var followViewModel: FollowUserViewModel
+    private lateinit var followViewModel: FollowingViewModel
     private lateinit var profileViewModel: ProfileViewModel
     @Inject lateinit var sessionManager: SessionManager
     @Inject lateinit var snackbarHelper: SnackbarHelper
@@ -50,7 +49,7 @@ class MoreSettingsDetailFragment : BottomSheetDialogFragment() {
         val editLayout = view.findViewById<LinearLayout>(R.id.edit_layout)
         val reportLayout = view.findViewById<LinearLayout>(R.id.report_post_layout)
         profileViewModel = ViewModelProvider(requireActivity())[ProfileViewModel::class.java]
-        followViewModel = ViewModelProvider(requireActivity())[FollowUserViewModel::class.java]
+        followViewModel = ViewModelProvider(requireActivity())[FollowingViewModel::class.java]
 
         val sharedPreferences = requireActivity().getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
         val description = sharedPreferences.getString("post_description", "")

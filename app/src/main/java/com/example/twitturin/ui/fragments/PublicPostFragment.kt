@@ -14,7 +14,7 @@ import com.example.twitturin.model.repo.Repository
 import com.example.twitturin.ui.sealeds.PostTweet
 import com.example.twitturin.viewmodel.MainViewModel
 import com.example.twitturin.viewmodel.ViewModelFactory
-import com.example.twitturin.viewmodel.manager.SessionManager
+import com.example.twitturin.manager.SessionManager
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

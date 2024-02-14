@@ -9,20 +9,16 @@ import com.example.twitturin.model.network.Api
 import com.example.twitturin.model.data.registration.Login
 import com.example.twitturin.model.data.users.User
 import com.example.twitturin.ui.sealeds.SignInResult
+import dagger.hilt.android.lifecycle.HiltViewModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Inject
 
-class SignInViewModel : ViewModel() {
-
-    private val retrofit = Retrofit.Builder()
-        .baseUrl(BuildConfig.BASE_URL)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-
-    private val signInApi: Api = retrofit.create(Api::class.java)
+@HiltViewModel
+class SignInViewModel @Inject constructor(private val api : Api) : ViewModel() {
 
     private val _signInResult = SingleLiveEvent<SignInResult>()
     val signInResult: SingleLiveEvent<SignInResult> = _signInResult
@@ -37,7 +33,7 @@ class SignInViewModel : ViewModel() {
 
         val request = Login(username, password)
 
-        signInApi.signInUser(request).enqueue(object : Callback<User> {
+        api.signInUser(request).enqueue(object : Callback<User> {
 
             override fun onResponse(call: Call<User>, response: Response<User>) {
 

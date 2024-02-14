@@ -22,6 +22,9 @@ import javax.inject.Inject
 @HiltViewModel
 class ProfileViewModel @Inject constructor(private val api: Api): ViewModel() {
 
+
+    /** this code is all about delete user's account. */
+
     private val _deleteResult = SingleLiveEvent<DeleteResult>()
     val deleteResult: LiveData<DeleteResult> = _deleteResult
 

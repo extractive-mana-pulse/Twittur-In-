@@ -6,21 +6,19 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelStoreOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.twitturin.R
 import com.example.twitturin.databinding.RcViewFollowingBinding
 import com.example.twitturin.model.data.users.User
 import com.example.twitturin.ui.sealeds.DeleteFollow
-import com.example.twitturin.viewmodel.FollowUserViewModel
-import com.example.twitturin.viewmodel.manager.SessionManager
+import com.example.twitturin.viewmodel.FollowingViewModel
+import com.example.twitturin.manager.SessionManager
 import javax.inject.Inject
 
 class FollowingAdapter @Inject constructor(
     private val lifecycleOwner : LifecycleOwner,
-    private val followViewModel: FollowUserViewModel
+    private val followViewModel: FollowingViewModel
 ) : RecyclerView.Adapter<FollowingAdapter.ViewHolder>() {
 
     private var list = emptyList<User>()

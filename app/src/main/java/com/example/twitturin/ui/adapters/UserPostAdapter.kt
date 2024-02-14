@@ -1,22 +1,14 @@
 package com.example.twitturin.ui.adapters
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
-import android.graphics.drawable.GradientDrawable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelStoreOwner
-import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.twitturin.R
@@ -25,11 +17,10 @@ import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.model.data.tweets.Tweet
 import com.example.twitturin.ui.activities.DetailActivity
 import com.example.twitturin.ui.activities.EditTweetActivity
-import com.example.twitturin.ui.fragments.bottom_sheets.EditTweetFragment
 import com.example.twitturin.ui.sealeds.DeleteResult
 import com.example.twitturin.viewmodel.LikeViewModel
 import com.example.twitturin.viewmodel.ProfileViewModel
-import com.example.twitturin.viewmodel.manager.SessionManager
+import com.example.twitturin.manager.SessionManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.text.SimpleDateFormat
 import java.util.*

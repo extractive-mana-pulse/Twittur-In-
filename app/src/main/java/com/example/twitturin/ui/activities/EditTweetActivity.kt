@@ -3,20 +3,14 @@ package com.example.twitturin.ui.activities
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
 import com.example.twitturin.databinding.ActivityEditTweetBinding
-import com.example.twitturin.databinding.FragmentEditTweetBinding
 import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.ui.sealeds.EditTweetResult
-import com.example.twitturin.ui.sealeds.EditUserResult
 import com.example.twitturin.viewmodel.ProfileViewModel
-import com.example.twitturin.viewmodel.manager.SessionManager
+import com.example.twitturin.manager.SessionManager
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

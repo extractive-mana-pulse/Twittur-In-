@@ -15,7 +15,7 @@ import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.model.data.tweets.Tweet
 import com.example.twitturin.ui.activities.DetailActivity
 import com.example.twitturin.viewmodel.LikeViewModel
-import com.example.twitturin.viewmodel.manager.SessionManager
+import com.example.twitturin.manager.SessionManager
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -103,8 +103,8 @@ class PostAdapter @Inject constructor(
                     intent.putExtra("createdAt", createdAt)
                     intent.putExtra("updatedAt", updatedAt)
                     intent.putExtra("likes", likes.toString())
-                    intent.putExtra("id",id)
-                    intent.putExtra("userId",author?.id)
+                    intent.putExtra("id", id)
+                    intent.putExtra("userId", author?.id)
                     intent.putExtra("userAvatar", author?.profilePicture)
 
                     context.startActivity(intent)

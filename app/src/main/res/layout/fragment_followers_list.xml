@@ -5,7 +5,7 @@
     android:id="@+id/followers_root_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.fragments.follow.FollowersListFragment">
+    tools:context=".ui.fragments.follow.FollowersFragment">
 
     <!--        Toolbar         -->
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -32,7 +32,7 @@
             android:id="@+id/readers_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/readers"
+            android:text="@string/followers"
             android:textColor="?attr/colorOnSecondaryContainer"
             android:textSize="24sp"
             android:textStyle="bold"
@@ -63,7 +63,7 @@
         android:id="@+id/empty_followers_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Your subscriber list is empty"
+        android:text="You have no subscribers !"
         android:textStyle="italic"
         android:textSize="18sp"
         android:visibility="visible"
@@ -77,7 +77,6 @@
         android:id="@+id/swipe_to_refresh_layout_followers_list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginVertical="20dp"
         android:layout_marginHorizontal="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -1,26 +1,23 @@
 package com.example.twitturin.viewmodel
 
-import android.util.Log
 import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.twitturin.BuildConfig
-import com.example.twitturin.R
 import com.example.twitturin.model.data.publicTweet.TweetContent
 import com.example.twitturin.model.data.replyToTweet.ReplyContent
 import com.example.twitturin.model.data.tweets.Tweet
 import com.example.twitturin.model.data.users.User
 import com.example.twitturin.model.network.Api
 import com.example.twitturin.model.repo.Repository
-import com.example.twitturin.ui.sealeds.DeleteResult
 import com.example.twitturin.ui.sealeds.PostReply
 import com.example.twitturin.ui.sealeds.PostTweet
 import com.example.twitturin.ui.sealeds.SearchResource
+import com.example.twitturin.ui.sealeds.UsersResult
 import com.example.twitturin.viewmodel.event.SingleLiveEvent
 import com.facebook.shimmer.ShimmerFrameLayout
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 import retrofit2.Call
@@ -29,7 +26,6 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
 
 //@HiltViewModel
 class MainViewModel (private val repository: Repository): ViewModel() {
@@ -86,10 +82,6 @@ class MainViewModel (private val repository: Repository): ViewModel() {
                     _postReply.value = postReply?.let { PostReply.Success(it) }
                 } else {
                     _postReply.value = PostReply.Error(response.code().toString())
-                    Log.d("body", response.body().toString())
-                    Log.d("error body", response.errorBody().toString())
-                    Log.d("message", response.message().toString())
-                    Log.d("code", response.code().toString())
                 }
             }
 

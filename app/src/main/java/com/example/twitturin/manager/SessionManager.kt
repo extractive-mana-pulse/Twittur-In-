@@ -1,4 +1,4 @@
-package com.example.twitturin.viewmodel.manager
+package com.example.twitturin.manager
 
 import android.content.Context
 import android.content.SharedPreferences

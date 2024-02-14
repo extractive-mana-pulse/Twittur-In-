@@ -13,7 +13,6 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -27,12 +26,12 @@ import com.example.twitturin.ui.adapters.PostAdapter
 import com.example.twitturin.ui.fragments.bottom_sheets.MoreSettingsDetailFragment
 import com.example.twitturin.ui.sealeds.FollowResult
 import com.example.twitturin.ui.sealeds.PostReply
-import com.example.twitturin.viewmodel.FollowUserViewModel
+import com.example.twitturin.viewmodel.FollowingViewModel
 import com.example.twitturin.viewmodel.LikeViewModel
 import com.example.twitturin.viewmodel.MainViewModel
-import com.example.twitturin.viewmodel.UsersResult
+import com.example.twitturin.ui.sealeds.UsersResult
 import com.example.twitturin.viewmodel.ViewModelFactory
-import com.example.twitturin.viewmodel.manager.SessionManager
+import com.example.twitturin.manager.SessionManager
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -51,7 +50,7 @@ class DetailActivity : AppCompatActivity() {
     @Inject lateinit var snackbarHelper: SnackbarHelper
     @Inject lateinit var sessionManager: SessionManager
     private val followedUsersList = mutableListOf<String>()
-    private lateinit var followViewModel: FollowUserViewModel
+    private lateinit var followViewModel: FollowingViewModel
     private val binding by lazy { ActivityDetailBinding.inflate(layoutInflater) }
     private val postAdapter by lazy { PostAdapter(lViewModel,this@DetailActivity) }
 
@@ -93,7 +92,7 @@ class DetailActivity : AppCompatActivity() {
 
             val repository = Repository()
             val viewModelFactory = ViewModelFactory(repository)
-            followViewModel = ViewModelProvider(this@DetailActivity)[FollowUserViewModel::class.java]
+            followViewModel = ViewModelProvider(this@DetailActivity)[FollowingViewModel::class.java]
             viewModel = ViewModelProvider(this@DetailActivity, viewModelFactory)[MainViewModel::class.java]
 
             val token = sessionManager.getToken()

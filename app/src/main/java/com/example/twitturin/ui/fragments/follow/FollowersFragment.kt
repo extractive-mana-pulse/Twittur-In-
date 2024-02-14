@@ -16,29 +16,29 @@ import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.model.data.users.User
 import com.example.twitturin.model.repo.Repository
 import com.example.twitturin.ui.adapters.FollowersAdapter
-import com.example.twitturin.viewmodel.FollowUserViewModel
+import com.example.twitturin.viewmodel.FollowingViewModel
 import com.example.twitturin.viewmodel.MainViewModel
 import com.example.twitturin.viewmodel.ViewModelFactory
-import com.example.twitturin.viewmodel.manager.SessionManager
+import com.example.twitturin.manager.SessionManager
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Random
 import javax.inject.Inject
 
 @Suppress("DEPRECATION")
 @AndroidEntryPoint
-class FollowersListFragment : Fragment() {
+class FollowersFragment : Fragment() {
 
     private lateinit var viewModel : MainViewModel
     @Inject lateinit var sessionManager : SessionManager
     @Inject lateinit var snackbarHelper: SnackbarHelper
-    private lateinit var followViewModel: FollowUserViewModel
+    private lateinit var followViewModel: FollowingViewModel
     private lateinit var binding : FragmentFollowersListBinding
-    private val fViewModel: FollowUserViewModel by viewModels()
+    private val fViewModel: FollowingViewModel by viewModels()
     private val followersAdapter by lazy { FollowersAdapter(viewLifecycleOwner, fViewModel) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentFollowersListBinding.inflate(layoutInflater)
-        followViewModel = ViewModelProvider(this)[FollowUserViewModel::class.java]
+        followViewModel = ViewModelProvider(this)[FollowingViewModel::class.java]
         return binding.root
     }
 
@@ -110,6 +110,6 @@ class FollowersListFragment : Fragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance() = FollowersListFragment()
+        fun newInstance() = FollowersFragment()
     }
 }

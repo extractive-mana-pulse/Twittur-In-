@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:id="@+id/following_root_layout1"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.fragments.follow.FollowingListFragment">
+    tools:context=".ui.fragments.follow.FollowingFragment">
 
     <!--        Toolbar         -->
     <androidx.constraintlayout.widget.ConstraintLayout

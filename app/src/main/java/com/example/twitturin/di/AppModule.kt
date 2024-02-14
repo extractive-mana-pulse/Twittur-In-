@@ -6,7 +6,7 @@ import com.example.twitturin.BuildConfig
 import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.model.network.Api
 import com.example.twitturin.model.network.FollowApi
-import com.example.twitturin.viewmodel.manager.SessionManager
+import com.example.twitturin.manager.SessionManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

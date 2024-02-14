@@ -15,7 +15,7 @@ import com.example.twitturin.databinding.FragmentSignInBinding
 import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.ui.sealeds.SignInResult
 import com.example.twitturin.viewmodel.SignInViewModel
-import com.example.twitturin.viewmodel.manager.SessionManager
+import com.example.twitturin.manager.SessionManager
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

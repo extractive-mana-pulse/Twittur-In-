@@ -1,4 +1,4 @@
-package com.example.twitturin.viewmodel
+package com.example.twitturin.ui.sealeds
 
 import com.example.twitturin.model.data.users.User
 
