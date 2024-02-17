@@ -75,6 +75,9 @@
     <string name="kind_picker_tv">What kind are you ?</string>
     <string name="messages">Messages</string>
     <string name="notifications">Notifications</string>
+    <string name="deleting_account_activity_context">Note: When you delete your account all activities such as: likes, replies, comments, chats, tweets will be also deleted, without the possibility of restoring them! \n</string>
+    <string name="deleting_account_password_input_context">Please enter your email so we can send you confirmation code to your email!</string>
+    <string name="delete">Delete</string>
 
     <string-array name="major_array">
         <item>SE</item>

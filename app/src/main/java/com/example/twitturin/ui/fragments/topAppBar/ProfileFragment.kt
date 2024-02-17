@@ -1,12 +1,22 @@
 package com.example.twitturin.ui.fragments.topAppBar
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.EditText
+import android.widget.ImageButton
+import android.widget.LinearLayout
 import android.widget.PopupMenu
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -190,12 +200,65 @@ class ProfileFragment : Fragment() {
         }.attach()
     }
 
+    @SuppressLint("ResourceAsColor")
     private fun deleteDialog(){
         val alertDialogBuilder = MaterialAlertDialogBuilder(requireActivity(), R.style.ThemeOverlay_App_MaterialAlertDialog)
         alertDialogBuilder.setTitle(resources.getString(R.string.delete_account_title))
         alertDialogBuilder.setMessage(resources.getString(R.string.delete_account_message))
         alertDialogBuilder.setPositiveButton(resources.getString(R.string.yes)) { _, _ ->
-            profileViewModel.deleteUser(sessionManager.getUserId()!!, "Bearer ${sessionManager.getToken()}")
+
+            val builder = MaterialAlertDialogBuilder(requireActivity(), R.style.ThemeOverlay_App_MaterialAlertDialog)
+            val inflater = layoutInflater
+            val dialogView = inflater.inflate(R.layout.custom_dialog, null)
+            builder.setView(dialogView)
+            val alertDialog = builder.create()
+
+            val emailEt = dialogView.findViewById<EditText>(R.id.email_confirm_et)
+            val codeEt = dialogView.findViewById<EditText>(R.id.code_sent_from_email_et)
+            val cancelBtn = dialogView.findViewById<LinearLayout>(R.id.cancel_btn)
+            val deleteBtn = dialogView.findViewById<LinearLayout>(R.id.delete_btn)
+            val emailConfirmBtn = dialogView.findViewById<ImageButton>(R.id.email_confirm_btn)
+
+            emailConfirmBtn.isEnabled = false
+            val emailTextWatcher = object : TextWatcher {
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                    //
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    emailConfirmBtn.isEnabled = !emailEt.text.isNullOrBlank()
+                }
+
+                override fun afterTextChanged(s: Editable?) {
+                    //
+                }
+            }
+            emailEt.addTextChangedListener(emailTextWatcher)
+
+            val codeTextWatcher = object : TextWatcher {
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                    //
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    deleteBtn.isEnabled = !codeEt.text.isNullOrBlank()
+                }
+
+                override fun afterTextChanged(s: Editable?) {
+                    //
+                }
+            }
+            codeEt.addTextChangedListener(codeTextWatcher)
+
+            cancelBtn.setOnClickListener {
+                alertDialog.dismiss()
+            }
+
+            deleteBtn.setOnClickListener {
+                profileViewModel.deleteUser(sessionManager.getUserId()!!, "Bearer ${sessionManager.getToken()}")
+                alertDialog.dismiss()
+            }
+            alertDialog.show()
         }
 
         alertDialogBuilder.setNegativeButton(resources.getString(R.string.no)) { dialog, _ ->

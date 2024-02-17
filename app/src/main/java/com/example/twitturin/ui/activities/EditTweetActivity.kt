@@ -54,7 +54,7 @@ class EditTweetActivity : AppCompatActivity() {
                 is EditTweetResult.Error -> {
                     snackbarHelper.snackbarError(
                         findViewById<ConstraintLayout>(R.id.edit_tweet_root_layout),
-                        binding.forSnackbar,
+                        binding.editTweetTvForSnackbar,
                         error = result.error,
                         ""){}
                     binding.editTweetPublishBtn.isEnabled = true

@@ -42,6 +42,7 @@ class MainActivity : AppCompatActivity() {
             R.id.profileFragment,
             R.id.followersListFragment,
             R.id.followingListFragment,
+            R.id.publicPostFragment,
 
         )
 

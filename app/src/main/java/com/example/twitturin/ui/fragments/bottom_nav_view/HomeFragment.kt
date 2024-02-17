@@ -7,8 +7,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.Switch
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.app.ActivityCompat.recreate
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
@@ -57,7 +62,7 @@ class HomeFragment : Fragment() {
         return binding.root
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint("SetTextI18n", "UseSwitchCompatOrMaterialCode")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.homeFragment = this
@@ -74,6 +79,42 @@ class HomeFragment : Fragment() {
         /* this block of code for testing purpose only */
 
         val headerView: View = binding.navigationView.getHeaderView(0)
+        val themeButton : ImageButton = headerView.findViewById(R.id.light_mode_dark_mode)
+
+        var isDarkTheme = false
+
+        themeButton.setOnClickListener {
+            isDarkTheme = !isDarkTheme
+
+            if (isDarkTheme) {
+//                activity?.setTheme(R.style.AppTheme_Dark)
+                AppCompatDelegate.MODE_NIGHT_YES
+                themeButton.setImageResource(R.drawable.dark_mode)
+            } else {
+//                activity?.setTheme(R.style.AppTheme)
+                AppCompatDelegate.MODE_NIGHT_NO
+                themeButton.setImageResource(R.drawable.light_mode)
+            }
+            activity?.recreate()
+        }
+
+        val themeSwitcher : Switch = headerView.findViewById(R.id.switchTheme)
+
+        themeSwitcher.setOnCheckedChangeListener { _, isChecked ->
+            AppCompatDelegate.setDefaultNightMode(
+                if (isChecked) AppCompatDelegate.MODE_NIGHT_YES
+                else AppCompatDelegate.MODE_NIGHT_NO
+            )
+        }
+
+        val darkModeBtn : Button = headerView.findViewById(R.id.dark_mode)
+
+        val lightModeBtn : Button = headerView.findViewById(R.id.light_mode)
+
+        darkModeBtn.setOnClickListener { AppCompatDelegate.MODE_NIGHT_YES }
+
+        lightModeBtn.setOnClickListener { AppCompatDelegate.MODE_NIGHT_NO }
+
         headerView.setOnClickListener { findNavController().navigate(R.id.action_homeFragment_to_profileFragment) }
 
         val userId = sessionManager.getUserId()
@@ -81,9 +122,13 @@ class HomeFragment : Fragment() {
         val layout: ShimmerFrameLayout = headerView.findViewById(R.id.navigation_drawer_shimmer)
 
         profileViewModel.getUserCredentials(userId!!)
+
         profileViewModel.getUserCredentials.observe(viewLifecycleOwner) { result ->
+
             layout.startShimmer()
+
             when (result) {
+
                 is UserCredentialsResult.Success -> {
 
                     layout.stopShimmer()
@@ -96,8 +141,6 @@ class HomeFragment : Fragment() {
                     val followersTv: TextView = headerView.findViewById(R.id.nav_followers_counter_tv)
 
                     val profileImage = "${result.user.profilePicture}"
-
-                    Log.d("profile image test", profileImage)
 
                     Glide.with(requireContext())
                         .load(profileImage)
@@ -144,7 +187,7 @@ class HomeFragment : Fragment() {
                 R.id.language_item ->  snackbarHelper.snackbar(
                     requireActivity().findViewById(R.id.drawer_layout),
                     requireActivity().findViewById(R.id.add_post),
-                    message = "In Progress"
+                    message = resources.getString(R.string.in_progress)
                 ) /*LanguageFragment().show(requireActivity().supportFragmentManager, "LanguageFragment")*/
                 R.id.time_table -> findNavController().navigate(R.id.action_homeFragment_to_webViewFragment)
             }
@@ -152,8 +195,11 @@ class HomeFragment : Fragment() {
             binding.drawerLayout.close()
             true
         }
+
         updateRecyclerView()
     }
+
+    /** This method implement advanced recyclerview setting like a divider and swipe to refresh layout ! */
 
     @SuppressLint("NotifyDataSetChanged")
     private fun updateRecyclerView() {
@@ -184,6 +230,8 @@ class HomeFragment : Fragment() {
             }
         }
     }
+
+    /**this method use data binding to handle navigation !*/
 
     fun goToPublicPost(){
         findNavController().navigate(R.id.action_homeFragment_to_publicPostFragment)

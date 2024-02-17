@@ -123,6 +123,9 @@
         <action
             android:id="@+id/action_profileFragment_to_followingListFragment"
             app:destination="@id/followingListFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_deletingConfirmationFragment"
+            app:destination="@id/deletingConfirmationFragment" />
 
     </fragment>
 
@@ -323,7 +326,7 @@
         android:id="@+id/followersListFragment"
         android:name="com.example.twitturin.ui.fragments.follow.FollowersFragment"
         android:label="fragment_followers_list"
-        tools:layout="@layout/fragment_followers_list" >
+        tools:layout="@layout/fragment_followers" >
         <action
             android:id="@+id/action_followersListFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
@@ -333,7 +336,7 @@
         android:id="@+id/followingListFragment"
         android:name="com.example.twitturin.ui.fragments.follow.FollowingFragment"
         android:label="fragment_following_list"
-        tools:layout="@layout/fragment_following_list" >
+        tools:layout="@layout/fragment_following" >
         <action
             android:id="@+id/action_followingListFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
@@ -345,5 +348,14 @@
         android:label="MyBottomSheetDialogFragment" >
         
     </dialog>
+    <fragment
+        android:id="@+id/deletingConfirmationFragment"
+        android:name="com.example.twitturin.ui.fragments.DeletingConfirmationFragment"
+        android:label="fragment_deleting_confirmation"
+        tools:layout="@layout/fragment_deleting_confirmation" >
+        <action
+            android:id="@+id/action_deletingConfirmationFragment_to_signInFragment"
+            app:destination="@id/signInFragment" />
+    </fragment>
 
 </navigation>

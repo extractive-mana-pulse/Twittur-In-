@@ -11,15 +11,15 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.twitturin.R
-import com.example.twitturin.databinding.FragmentFollowersListBinding
+import com.example.twitturin.databinding.FragmentFollowersBinding
 import com.example.twitturin.helper.SnackbarHelper
+import com.example.twitturin.manager.SessionManager
 import com.example.twitturin.model.data.users.User
 import com.example.twitturin.model.repo.Repository
 import com.example.twitturin.ui.adapters.FollowersAdapter
 import com.example.twitturin.viewmodel.FollowingViewModel
 import com.example.twitturin.viewmodel.MainViewModel
 import com.example.twitturin.viewmodel.ViewModelFactory
-import com.example.twitturin.manager.SessionManager
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Random
 import javax.inject.Inject
@@ -32,12 +32,12 @@ class FollowersFragment : Fragment() {
     @Inject lateinit var sessionManager : SessionManager
     @Inject lateinit var snackbarHelper: SnackbarHelper
     private lateinit var followViewModel: FollowingViewModel
-    private lateinit var binding : FragmentFollowersListBinding
+    private lateinit var binding : FragmentFollowersBinding
     private val fViewModel: FollowingViewModel by viewModels()
     private val followersAdapter by lazy { FollowersAdapter(viewLifecycleOwner, fViewModel) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        binding = FragmentFollowersListBinding.inflate(layoutInflater)
+        binding = FragmentFollowersBinding.inflate(layoutInflater)
         followViewModel = ViewModelProvider(this)[FollowingViewModel::class.java]
         return binding.root
     }
