@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.activities.ReportActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.fragments.ReportFragment">
 
-<!--  Toolbar  -->
+    <!--  Toolbar  -->
     <LinearLayout
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -63,7 +63,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/report_desc_tv"/>
 
-<!--  Layout of Radio Buttons  -->
+    <!--  Layout of Radio Buttons  -->
     <LinearLayout
         android:id="@+id/list_of_reports_layout"
         android:layout_width="wrap_content"
@@ -82,7 +82,7 @@
             tools:ignore="UselessParent"
             android:layout_marginHorizontal="16dp">
 
-<!--      SPAM      -->
+            <!--      SPAM      -->
             <RadioButton
                 android:id="@+id/radio_spam"
                 android:layout_width="wrap_content"
@@ -97,7 +97,7 @@
                 android:text="@string/scam_desc"
                 android:textAlignment="textStart"/>
 
-<!--      PRIVACY      -->
+            <!--      PRIVACY      -->
             <RadioButton
                 android:id="@+id/radio_privacy"
                 android:layout_width="wrap_content"
@@ -111,7 +111,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/privacy_desc"/>
 
-<!--      ABUSE      -->
+            <!--      ABUSE      -->
             <RadioButton
                 android:id="@+id/radio_abuse"
                 android:layout_width="wrap_content"
@@ -149,5 +149,6 @@
         app:layout_constraintBottom_toTopOf="@id/report_next_btn"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.twitturin.databinding.FragmentFullScreenImageBinding
 
 @Suppress("DEPRECATION")
@@ -25,7 +26,7 @@ class FullScreenImageFragment : Fragment() {
         val bmp = extras?.getParcelable<Bitmap>("image")
 
         binding.btnClose.setOnClickListener {
-            requireActivity().onBackPressed()
+            findNavController().popBackStack()
         }
 
         binding.imageFullScreen.setImageBitmap(bmp)

@@ -33,6 +33,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         val fragmentsToHideBottomNav = setOf(
+            R.id.detailFragment,
             R.id.signInFragment,
             R.id.studentRegistrationFragment,
             R.id.professorRegistrationFragment,
@@ -43,6 +44,8 @@ class MainActivity : AppCompatActivity() {
             R.id.followersListFragment,
             R.id.followingListFragment,
             R.id.publicPostFragment,
+            R.id.fullScreenImageFragment,
+            R.id.reportFragment,
 
         )
 

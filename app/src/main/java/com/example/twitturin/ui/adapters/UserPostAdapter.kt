@@ -3,24 +3,25 @@ package com.example.twitturin.ui.adapters
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
 import androidx.lifecycle.LifecycleOwner
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.twitturin.R
 import com.example.twitturin.databinding.RcViewUserTweetsBinding
 import com.example.twitturin.helper.SnackbarHelper
+import com.example.twitturin.manager.SessionManager
 import com.example.twitturin.model.data.tweets.Tweet
-import com.example.twitturin.ui.activities.DetailActivity
 import com.example.twitturin.ui.activities.EditTweetActivity
 import com.example.twitturin.ui.sealeds.DeleteResult
 import com.example.twitturin.viewmodel.LikeViewModel
 import com.example.twitturin.viewmodel.ProfileViewModel
-import com.example.twitturin.manager.SessionManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.text.SimpleDateFormat
 import java.util.*
@@ -34,7 +35,7 @@ class UserPostAdapter @Inject constructor(
 
     private var list = emptyList<Tweet>()
     private lateinit var likeViewModel: LikeViewModel
-    @Inject lateinit var sessionManager: SessionManager
+    private lateinit var sessionManager: SessionManager
     private lateinit var snackbarHelper: SnackbarHelper
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -55,6 +56,7 @@ class UserPostAdapter @Inject constructor(
 //        var likeCount: Int? = item.likes
 //        var isLiked: Boolean = false
 
+        sessionManager = SessionManager(context)
         snackbarHelper = SnackbarHelper(context.resources)
 
         holder.binding.apply {
@@ -106,37 +108,39 @@ class UserPostAdapter @Inject constructor(
 
                 holder.itemView.setOnClickListener {
 
-                    val intent = Intent(context, DetailActivity::class.java)
+                    val bundle = Bundle().apply {
+                        putString("fullname", author?.fullName ?: "Twittur User")
+                        putString("username", author?.username)
+                        putString("post_description", content)
+                        putString("createdAt", createdAt)
+                        putString("updatedAt", updatedAt)
+                        putString("likes", likes.toString())
+                        putString("id", id)
+                        putString("userId", author?.id)
+                        putString("userAvatar", author?.profilePicture)
+                    }
 
-                    intent.putExtra("fullname", author?.fullName)
-                    intent.putExtra("username", author?.username)
-                    intent.putExtra("post_description", content)
-                    intent.putExtra("createdAt", createdAt)
-                    intent.putExtra("updatedAt", updatedAt)
-                    intent.putExtra("likes", likes.toString())
-                    intent.putExtra("id", id)
-                    intent.putExtra("userId", author?.id)
-                    intent.putExtra("userAvatar", author?.profilePicture)
-
-                    context.startActivity(intent)
+                    val navController = Navigation.findNavController(holder.itemView)
+                    navController.navigate(R.id.detailFragment, bundle)
                 }
 
                 postIconCommentsUserOwnTweet.setOnClickListener {
 
-                    val intent = Intent(context, DetailActivity::class.java)
+                    val bundle = Bundle().apply {
+                        putString("fullname", author?.fullName ?: "Twittur User")
+                        putString("username", author?.username)
+                        putString("post_description", content)
+                        putString("createdAt", createdAt)
+                        putString("updatedAt", updatedAt)
+                        putString("likes", likes.toString())
+                        putString("id", id)
+                        putString("userId", author?.id)
+                        putString("userAvatar", author?.profilePicture)
+                        putBoolean("activateEditText", true)
+                    }
 
-                    intent.putExtra("fullname", author?.fullName)
-                    intent.putExtra("username", author?.username)
-                    intent.putExtra("post_description", content)
-                    intent.putExtra("createdAt", createdAt)
-                    intent.putExtra("updatedAt", updatedAt)
-                    intent.putExtra("likes", likes.toString())
-                    intent.putExtra("id", id)
-                    intent.putExtra("userId", author?.id)
-                    intent.putExtra("userAvatar", author?.profilePicture)
-                    intent.putExtra("activateEditText", true)
-
-                    context.startActivity(intent)
+                    val navController = Navigation.findNavController(holder.itemView)
+                    navController.navigate(R.id.detailFragment, bundle)
                 }
 
                 postIconHeartUserOwnTweet.setOnClickListener {
@@ -179,10 +183,9 @@ class UserPostAdapter @Inject constructor(
                                 val alertDialogBuilder = MaterialAlertDialogBuilder(context, R.style.ThemeOverlay_App_MaterialAlertDialog)
                                 alertDialogBuilder.setTitle(context.resources.getString(R.string.delete_tweet_title))
                                 alertDialogBuilder.setMessage(context.resources.getString(R.string.delete_tweet_message))
-                                alertDialogBuilder.setPositiveButton(context.resources.getString(R.string.yes)) { dialog, _ ->
+                                alertDialogBuilder.setPositiveButton(context.resources.getString(R.string.yes)) { _, _ ->
                                     val token = sessionManager.getToken()
-                                    profileViewModel.deleteTweet(/* this id == tweetId */ id,"Bearer $token")
-                                    dialog.dismiss()
+                                    profileViewModel.deleteTweet(/** this id is tweetId */ id,"Bearer $token")
                                 }
 
                                 alertDialogBuilder.setNegativeButton(context.resources.getString(R.string.no)) { dialog, _ ->
@@ -192,15 +195,19 @@ class UserPostAdapter @Inject constructor(
                                 val alertDialog = alertDialogBuilder.create()
                                 alertDialog.show()
 
-                                profileViewModel.deleteTweetResult.observe(parentLifecycleOwner){ result ->
+                                profileViewModel.deleteTweetResult.observe(parentLifecycleOwner) { result ->
+
                                     when(result){
                                         is DeleteResult.Success -> {
+                                            alertDialog.dismiss()
                                             snackbarHelper.snackbar(
                                                 holder.itemView.findViewById(R.id.user_own_root_layout),
                                                 holder.itemView.findViewById(R.id.user_own_root_layout),
                                                 message = context.resources.getString(R.string.deleted)
-                                            ) }
+                                            )
+                                        }
                                         is  DeleteResult.Error -> {
+                                            alertDialog.dismiss()
                                             snackbarHelper.snackbarError(
                                                 holder.itemView.findViewById(R.id.user_own_root_layout),
                                                 holder.itemView.findViewById(R.id.user_own_root_layout),
@@ -209,10 +216,8 @@ class UserPostAdapter @Inject constructor(
                                         }
                                     }
                                 }
-
                                 true
                             }
-
                             else -> false
                         }
                     }

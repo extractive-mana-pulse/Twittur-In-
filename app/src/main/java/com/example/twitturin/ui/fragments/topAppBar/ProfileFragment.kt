@@ -107,6 +107,9 @@ class ProfileFragment : Fragment() {
             }
         }
 
+        /**
+         * This code build to implement listener when user press on profile image open it in full screen size!
+         * */
         binding.profileImage.setOnClickListener {
             val fullScreenImageFragment = FullScreenImageFragment()
 
@@ -146,7 +149,6 @@ class ProfileFragment : Fragment() {
                     R.id.delete_account -> {
 
                         deleteDialog()
-
                         profileViewModel.deleteResult.observe(viewLifecycleOwner) { result ->
                             when (result) {
 
@@ -235,6 +237,7 @@ class ProfileFragment : Fragment() {
             }
             emailEt.addTextChangedListener(emailTextWatcher)
 
+            deleteBtn.isEnabled = false
             val codeTextWatcher = object : TextWatcher {
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                     //
@@ -258,6 +261,7 @@ class ProfileFragment : Fragment() {
                 profileViewModel.deleteUser(sessionManager.getUserId()!!, "Bearer ${sessionManager.getToken()}")
                 alertDialog.dismiss()
             }
+
             alertDialog.show()
         }
 

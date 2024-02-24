@@ -98,23 +98,6 @@ class HomeFragment : Fragment() {
             activity?.recreate()
         }
 
-        val themeSwitcher : Switch = headerView.findViewById(R.id.switchTheme)
-
-        themeSwitcher.setOnCheckedChangeListener { _, isChecked ->
-            AppCompatDelegate.setDefaultNightMode(
-                if (isChecked) AppCompatDelegate.MODE_NIGHT_YES
-                else AppCompatDelegate.MODE_NIGHT_NO
-            )
-        }
-
-        val darkModeBtn : Button = headerView.findViewById(R.id.dark_mode)
-
-        val lightModeBtn : Button = headerView.findViewById(R.id.light_mode)
-
-        darkModeBtn.setOnClickListener { AppCompatDelegate.MODE_NIGHT_YES }
-
-        lightModeBtn.setOnClickListener { AppCompatDelegate.MODE_NIGHT_NO }
-
         headerView.setOnClickListener { findNavController().navigate(R.id.action_homeFragment_to_profileFragment) }
 
         val userId = sessionManager.getUserId()

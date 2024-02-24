@@ -65,8 +65,8 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="deleted">Deleted</string>
-    <string name="delete_tweet_title">Are you suer you want to delete this tweet ?</string>
-    <string name="delete_tweet_message">Note that all your tweet activities such as replies, likes and shares will be deleted also !</string>
+    <string name="delete_tweet_title">Are you sure you want to delete this tweet?</string>
+    <string name="delete_tweet_message">Note that all your tweet activities such as replies, likes and shares will be deleted also!</string>
     <string name="delete_account_title">Are you sure you want to delete account?</string>
     <string name="delete_account_message">Please note that once an account is deleted, it cannot be restored and all activity will be deleted</string>
     <string name="get_color">Choose a color</string>

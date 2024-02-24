@@ -1,37 +1,41 @@
-package com.example.twitturin.ui.activities
+package com.example.twitturin.ui.fragments
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
-import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.twitturin.R
-import com.example.twitturin.databinding.ActivityDetailBinding
+import com.example.twitturin.databinding.FragmentDetailBinding
 import com.example.twitturin.helper.SnackbarHelper
+import com.example.twitturin.manager.SessionManager
 import com.example.twitturin.model.data.tweets.Tweet
 import com.example.twitturin.model.repo.Repository
 import com.example.twitturin.ui.adapters.PostAdapter
 import com.example.twitturin.ui.fragments.bottom_sheets.MoreSettingsDetailFragment
 import com.example.twitturin.ui.sealeds.FollowResult
 import com.example.twitturin.ui.sealeds.PostReply
+import com.example.twitturin.ui.sealeds.UsersResult
 import com.example.twitturin.viewmodel.FollowingViewModel
 import com.example.twitturin.viewmodel.LikeViewModel
 import com.example.twitturin.viewmodel.MainViewModel
-import com.example.twitturin.ui.sealeds.UsersResult
 import com.example.twitturin.viewmodel.ViewModelFactory
-import com.example.twitturin.manager.SessionManager
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -40,49 +44,51 @@ import java.util.TimeZone
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-@Suppress("DEPRECATION")
 @AndroidEntryPoint
-class DetailActivity : AppCompatActivity() {
+class DetailFragment : Fragment() {
 
     private lateinit var viewModel: MainViewModel
-    private val lViewModel: LikeViewModel by viewModels()
     private val allUsers = mutableListOf<String>()
-    @Inject lateinit var snackbarHelper: SnackbarHelper
     @Inject lateinit var sessionManager: SessionManager
+    @Inject lateinit var snackbarHelper: SnackbarHelper
+    private val lViewModel: LikeViewModel by viewModels()
     private val followedUsersList = mutableListOf<String>()
     private lateinit var followViewModel: FollowingViewModel
-    private val binding by lazy { ActivityDetailBinding.inflate(layoutInflater) }
-    private val postAdapter by lazy { PostAdapter(lViewModel,this@DetailActivity) }
+    private val binding  by lazy { FragmentDetailBinding.inflate(layoutInflater) }
+    private val postAdapter by lazy { PostAdapter(lViewModel, viewLifecycleOwner) }
 
-    @SuppressLint("SetTextI18n", "PrivateResource", "NotifyDataSetChanged", "ResourceAsColor")
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(binding.root)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return binding.root
+    }
 
+    @SuppressLint("SetTextI18n", "NotifyDataSetChanged")
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         binding.apply {
-            val userImage = intent.getStringExtra("userAvatar")
-            val fullname = intent.getStringExtra("fullname")
-            val username = intent.getStringExtra("username")
-            val description = intent.getStringExtra("post_description")
-            val createdTime = intent.getStringExtra("createdAt")
-            val updatedTime = intent.getStringExtra("updatedAt")
-            val likes = intent.getStringExtra("likes")
-            val id = intent.getStringExtra("id")
-            val userId = intent.getStringExtra("userId")
 
-            val sharedPreferences = getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
-            sharedPreferences.edit().putString("post_description", description).apply()
-            sharedPreferences.edit().putString("userImage", userImage).apply()
+            val profileImage = arguments?.getString("userAvatar")
+            val userFullname = arguments?.getString("fullname")
+            val username = arguments?.getString("username")
+            val postDescription = arguments?.getString("post_description")
+            val createdAt = arguments?.getString("createdAt")
+            val updatedAt = arguments?.getString("updatedAt")
+            val likes = arguments?.getString("likes")
+            val id = arguments?.getString("id")
+            val userId = arguments?.getString("userId")
+
+            val sharedPreferences = requireActivity().getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
+            sharedPreferences.edit().putString("post_description", postDescription).apply()
+            sharedPreferences.edit().putString("userImage", profileImage).apply()
             sharedPreferences.edit().putString("username", username).apply()
-            sharedPreferences.edit().putString("fullname", fullname).apply()
+            sharedPreferences.edit().putString("fullname", userFullname).apply()
             sharedPreferences.edit().putString("userId", userId).apply()
             sharedPreferences.edit().putString("id", id).apply()
 
-            val activateEditText = intent.getBooleanExtra("activateEditText", false)
-            if (activateEditText) {
+            val activateEditText = arguments?.getBoolean("activateEditText", false)
+            if (activateEditText!!) {
                 replyEt.post {
                     replyEt.requestFocus()
-                    val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                    val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                     imm.showSoftInput(replyEt, InputMethodManager.SHOW_IMPLICIT)
                 }
             }
@@ -92,8 +98,8 @@ class DetailActivity : AppCompatActivity() {
 
             val repository = Repository()
             val viewModelFactory = ViewModelFactory(repository)
-            followViewModel = ViewModelProvider(this@DetailActivity)[FollowingViewModel::class.java]
-            viewModel = ViewModelProvider(this@DetailActivity, viewModelFactory)[MainViewModel::class.java]
+            followViewModel = ViewModelProvider(requireActivity())[FollowingViewModel::class.java]
+            viewModel = ViewModelProvider(requireActivity(), viewModelFactory)[MainViewModel::class.java]
 
             val token = sessionManager.getToken()
             val userId2 = sessionManager.getUserId()
@@ -127,7 +133,7 @@ class DetailActivity : AppCompatActivity() {
             }
             replyEt.addTextChangedListener(textWatcher1)
 
-            viewModel.postReplyResult.observe(this@DetailActivity) { result ->
+            viewModel.postReplyResult.observe(viewLifecycleOwner) { result ->
 
                 when (result) {
                     is PostReply.Success -> {
@@ -139,8 +145,8 @@ class DetailActivity : AppCompatActivity() {
 
                     is PostReply.Error -> {
                         snackbarHelper.snackbarError(
-                            findViewById(R.id.detail_root_layout),
-                            findViewById(R.id.reply_layout),
+                            requireActivity().findViewById(R.id.detail_root_layout),
+                            requireActivity().findViewById(R.id.reply_layout),
                             result.message,
                             ""
                         ) {}
@@ -150,7 +156,7 @@ class DetailActivity : AppCompatActivity() {
             }
 
             try {
-                val date = dateFormat.parse(createdTime.toString())
+                val date = dateFormat.parse(createdAt.toString())
                 val currentTime = System.currentTimeMillis()
 
                 val durationMillis = currentTime - date!!.time
@@ -176,30 +182,30 @@ class DetailActivity : AppCompatActivity() {
                 binding.whenCreated.text = "Invalid date"
             }
 
-            val dateConverter = convertDateFormat(updatedTime.toString())
+            val dateConverter = convertDateFormat(updatedAt.toString())
             whenUpdated.text = dateConverter
 
             authorAvatar.setOnLongClickListener {
-                authorAvatar.buildDrawingCache()
-                val originalBitmap: Bitmap = authorAvatar.drawingCache
+                binding.authorAvatar.buildDrawingCache()
+                val originalBitmap = binding.authorAvatar.drawingCache
                 val image = originalBitmap.copy(originalBitmap.config, true)
 
-                val intent = Intent(this@DetailActivity, FullScreenImageActivity::class.java)
-                intent.putExtra("image", image)
-                startActivity(intent)
+                val extras = bundleOf("image" to image)
+                val navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_container)
+                navController.navigate(R.id.fullScreenImageFragment, extras)
                 true
             }
 
-            val profileImageUrl = "$userImage"
-            Glide.with(this@DetailActivity)
+            val profileImageUrl = "$profileImage"
+            Glide.with(requireContext())
                 .load(profileImageUrl)
                 .error(R.drawable.not_found)
                 .centerCrop()
                 .into(authorAvatar)
 
-            authorFullname.text = fullname ?: "Twittur User"
+            authorFullname.text = userFullname ?: "Twittur User"
             authorUsername.text = "@$username"
-            postDescription.text = description
+            detailPostDescription.text = postDescription
             articlePageLikesCounter.text = likes
 
             // TODO so when follow button pressed. add user's username to "followedList" after check list like below that do logic
@@ -207,7 +213,7 @@ class DetailActivity : AppCompatActivity() {
 
             viewModel.getAllUsers()
 
-            viewModel.usersResult.observe(this@DetailActivity) { result ->
+            viewModel.usersResult.observe(viewLifecycleOwner) { result ->
                 when (result) {
                     is UsersResult.Success -> {
                         val users = result.users
@@ -216,7 +222,7 @@ class DetailActivity : AppCompatActivity() {
                     }
                     is UsersResult.Error -> {
                         val errorMessage = result.errorMessage
-                        Toast.makeText(this@DetailActivity, errorMessage, Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
                     }
                 }
             }
@@ -225,12 +231,12 @@ class DetailActivity : AppCompatActivity() {
                 followViewModel.followUsers(userId!!, "Bearer $token")
             }
 
-            followViewModel.followResult.observe(this@DetailActivity) { result ->
+            followViewModel.followResult.observe(viewLifecycleOwner) { result ->
                 when (result) {
                     is FollowResult.Success -> {
                         snackbarHelper.snackbar(
-                            findViewById(R.id.detail_root_layout),
-                            findViewById(R.id.reply_layout),
+                            requireActivity().findViewById(R.id.detail_root_layout),
+                            requireActivity().findViewById(R.id.reply_layout),
                             message = "now you follow: ${username?.uppercase()}"
                         )
                         followedUsersList.add(username.toString())
@@ -239,8 +245,8 @@ class DetailActivity : AppCompatActivity() {
 
                     is FollowResult.Error -> {
                         snackbarHelper.snackbarError(
-                            findViewById(R.id.detail_root_layout),
-                            findViewById(R.id.reply_layout),
+                            requireActivity().findViewById(R.id.detail_root_layout),
+                            requireActivity().findViewById(R.id.reply_layout),
                             result.message,
                             ""
                         ) {}
@@ -250,16 +256,16 @@ class DetailActivity : AppCompatActivity() {
 
             articlePageCommentsIcon.setOnClickListener {
                 snackbarHelper.snackbar(
-                    findViewById(R.id.detail_root_layout),
-                    findViewById(R.id.reply_layout),
+                    requireActivity().findViewById(R.id.detail_root_layout),
+                    requireActivity().findViewById(R.id.reply_layout),
                     message = resources.getString(R.string.in_progress)
                 )
             }
 
             articlePageHeartIcon.setOnClickListener {
                 snackbarHelper.snackbar(
-                    findViewById(R.id.detail_root_layout),
-                    findViewById(R.id.reply_layout),
+                    requireActivity().findViewById(R.id.detail_root_layout),
+                    requireActivity().findViewById(R.id.reply_layout),
                     message = resources.getString(R.string.in_progress)
                 )
             }
@@ -267,15 +273,14 @@ class DetailActivity : AppCompatActivity() {
             articlePageShareIcon.setOnClickListener {
                 shareData()
             }
-
             goBackBtn.setOnClickListener {
-                onBackPressed()
+                findNavController().popBackStack()
             }
 
             moreSettings.setOnClickListener {
                 val bottomSheetDialogFragment = MoreSettingsDetailFragment()
                 bottomSheetDialogFragment.show(
-                    supportFragmentManager,
+                    requireActivity().supportFragmentManager,
                     "MyBottomSheetDialogFragment"
                 )
             }
@@ -285,7 +290,7 @@ class DetailActivity : AppCompatActivity() {
 
     private fun shareData() {
 
-        val sharedPreferences = getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
+        val sharedPreferences = requireActivity().getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
         val id = sharedPreferences.getString("id", null)
 
         val intent = Intent(Intent.ACTION_SEND)
@@ -299,7 +304,7 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private fun checkFollowedUsersStatus() {
-        val username = intent.getStringExtra("username")
+        val username = arguments?.getString("username")
         if (followedUsersList.contains(username)) {
             binding.unfollowBtn.visibility = View.VISIBLE
             binding.followBtn.visibility = View.INVISIBLE
@@ -311,16 +316,16 @@ class DetailActivity : AppCompatActivity() {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun updateRecyclerView() {
-        val sharedPreferences = getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
+        val sharedPreferences = requireActivity().getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
         val tweetId = sharedPreferences.getString("id", null)
 
         binding.articleRcView.adapter = postAdapter
-        binding.articleRcView.layoutManager = LinearLayoutManager(this)
+        binding.articleRcView.layoutManager = LinearLayoutManager(requireContext())
         binding.articleRcView.addItemDecoration(DividerItemDecoration(binding.articleRcView.context, DividerItemDecoration.VERTICAL))
 
         viewModel.getRepliesOfPost(tweetId!!)
 
-        viewModel.repliesOfPosts.observe(this) { response ->
+        viewModel.repliesOfPosts.observe(viewLifecycleOwner) { response ->
             if (response.isSuccessful) {
                 response.body()?.let { tweets ->
                     val tweetList: MutableList<Tweet> = tweets.toMutableList()
@@ -334,8 +339,8 @@ class DetailActivity : AppCompatActivity() {
                 }
             } else {
                 snackbarHelper.snackbarError(
-                    findViewById(R.id.detail_root_layout),
-                    findViewById(R.id.reply_layout),
+                    requireActivity().findViewById(R.id.detail_root_layout),
+                    requireActivity().findViewById(R.id.reply_layout),
                     response.message().toString(),
                     ""){}
             }
@@ -348,5 +353,10 @@ class DetailActivity : AppCompatActivity() {
 
         val date = inputFormat.parse(dateString)
         return outputFormat.format(date)
+    }
+
+    companion object {
+        @JvmStatic
+        fun newInstance() = DetailFragment()
     }
 }

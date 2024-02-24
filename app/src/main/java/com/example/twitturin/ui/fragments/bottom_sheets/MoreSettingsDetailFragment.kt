@@ -11,6 +11,7 @@ import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
 import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.ui.activities.EditTweetActivity
@@ -138,11 +139,8 @@ class MoreSettingsDetailFragment : BottomSheetDialogFragment() {
                 view.findViewById(R.id.bottom_sheet_root_layout),
                 message = requireContext().resources.getString(R.string.in_progress)
             )
-
-//            val intent = Intent(requireActivity(), ReportActivity::class.java)
-//            startActivity(intent)
-//            dismiss()
-
+            findNavController().navigate(R.id.reportFragment)
+            dismiss()
         }
 
         editLayout.setOnClickListener {
@@ -153,7 +151,6 @@ class MoreSettingsDetailFragment : BottomSheetDialogFragment() {
             startActivity(Intent(requireActivity(), EditTweetActivity::class.java))
             dismiss()
         }
-
 
         dialog?.setOnShowListener {
             val bottomSheetDialog = dialog as BottomSheetDialog?

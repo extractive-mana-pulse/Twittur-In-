@@ -2,18 +2,19 @@ package com.example.twitturin.ui.adapters
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.LifecycleOwner
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.twitturin.R
 import com.example.twitturin.databinding.RcViewBinding
 import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.model.data.tweets.Tweet
-import com.example.twitturin.ui.activities.DetailActivity
 import com.example.twitturin.viewmodel.LikeViewModel
 import com.example.twitturin.manager.SessionManager
 import java.text.SimpleDateFormat
@@ -95,36 +96,40 @@ class PostAdapter @Inject constructor(
                 }
 
                 holder.itemView.setOnClickListener {
-                    val intent = Intent(context, DetailActivity::class.java)
 
-                    intent.putExtra("fullname", author?.fullName ?: "Twittur User")
-                    intent.putExtra("username", author?.username)
-                    intent.putExtra("post_description", content)
-                    intent.putExtra("createdAt", createdAt)
-                    intent.putExtra("updatedAt", updatedAt)
-                    intent.putExtra("likes", likes.toString())
-                    intent.putExtra("id", id)
-                    intent.putExtra("userId", author?.id)
-                    intent.putExtra("userAvatar", author?.profilePicture)
+                    val bundle = Bundle().apply {
+                        putString("fullname", author?.fullName ?: "Twittur User")
+                        putString("username", author?.username)
+                        putString("post_description", content)
+                        putString("createdAt", createdAt)
+                        putString("updatedAt", updatedAt)
+                        putString("likes", likes.toString())
+                        putString("id", id)
+                        putString("userId", author?.id)
+                        putString("userAvatar", author?.profilePicture)
+                    }
 
-                    context.startActivity(intent)
+                    val navController = Navigation.findNavController(holder.itemView)
+                    navController.navigate(R.id.detailFragment, bundle)
                 }
 
                 postIconComments.setOnClickListener {
-                    val intent = Intent(context, DetailActivity::class.java)
 
-                    intent.putExtra("fullname", author?.fullName ?: "Twittur User")
-                    intent.putExtra("username", author?.username)
-                    intent.putExtra("post_description", content)
-                    intent.putExtra("createdAt", createdAt)
-                    intent.putExtra("updatedAt", updatedAt)
-                    intent.putExtra("likes", likes.toString())
-                    intent.putExtra("id",id)
-                    intent.putExtra("userId",author?.id)
-                    intent.putExtra("userAvatar", author?.profilePicture)
-                    intent.putExtra("activateEditText", true)
+                    val bundle = Bundle().apply {
+                        putString("fullname", author?.fullName ?: "Twittur User")
+                        putString("username", author?.username)
+                        putString("post_description", content)
+                        putString("createdAt", createdAt)
+                        putString("updatedAt", updatedAt)
+                        putString("likes", likes.toString())
+                        putString("id",id)
+                        putString("userId",author?.id)
+                        putString("userAvatar", author?.profilePicture)
+                        putBoolean("activateEditText", true)
+                    }
 
-                    context.startActivity(intent)
+                    val navController = Navigation.findNavController(holder.itemView)
+                    navController.navigate(R.id.detailFragment, bundle)
                 }
 
                 postIconHeart.setOnClickListener {

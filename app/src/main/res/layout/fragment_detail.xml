@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".ui.activities.DetailActivity">
-
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.fragments.DetailFragment">
+    
     <data>
         <variable
-            name="detailActivity"
-            type="com.example.twitturin.ui.activities.DetailActivity"/>
+            name="detailFragment"
+            type="com.example.twitturin.ui.fragments.DetailFragment"/>
     </data>
 
     <ScrollView
@@ -143,7 +143,7 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
-                android:id="@+id/post_description"
+                android:id="@+id/detail_post_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/test_description"
@@ -161,7 +161,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginVertical="8dp"
                 app:layout_constraintBottom_toTopOf="@id/divider2"
-                app:layout_constraintTop_toBottomOf="@id/post_description"
+                app:layout_constraintTop_toBottomOf="@id/detail_post_description"
                 app:layout_constraintStart_toStartOf="parent"/>
 
             <TextView
@@ -172,7 +172,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginVertical="8dp"
                 app:layout_constraintBottom_toTopOf="@id/divider2"
-                app:layout_constraintTop_toBottomOf="@id/post_description"
+                app:layout_constraintTop_toBottomOf="@id/detail_post_description"
                 app:layout_constraintStart_toEndOf="@id/when_created"/>
 
             <ImageView
@@ -214,20 +214,20 @@
                     android:layout_marginVertical="8dp"
                     android:layout_marginStart="8dp"/>
 
-<!--                <TextView-->
-<!--                    android:id="@+id/article_page_saves_counter"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="193"-->
-<!--                    android:layout_marginVertical="8dp"-->
-<!--                    android:layout_marginStart="26dp"/>-->
+                <!--                <TextView-->
+                <!--                    android:id="@+id/article_page_saves_counter"-->
+                <!--                    android:layout_width="wrap_content"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:text="193"-->
+                <!--                    android:layout_marginVertical="8dp"-->
+                <!--                    android:layout_marginStart="26dp"/>-->
 
-<!--                <TextView-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="@string/bookmarks"-->
-<!--                    android:layout_marginVertical="8dp"-->
-<!--                    android:layout_marginStart="8dp"/>-->
+                <!--                <TextView-->
+                <!--                    android:layout_width="wrap_content"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:text="@string/bookmarks"-->
+                <!--                    android:layout_marginVertical="8dp"-->
+                <!--                    android:layout_marginStart="8dp"/>-->
 
             </LinearLayout>
 
@@ -242,7 +242,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 tools:ignore="ContentDescription"/>
 
-<!--            Icons Layout        -->
+            <!--            Icons Layout        -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/layout_article_icons"
                 android:layout_width="match_parent"
@@ -306,7 +306,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 tools:ignore="ContentDescription"/>
 
-<!--            RecyclerView Layout         -->
+            <!--            RecyclerView Layout         -->
             <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
                 android:id="@+id/swipe_to_refresh_article"
                 android:layout_width="match_parent"
@@ -377,5 +377,6 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>
+
 
 </layout>

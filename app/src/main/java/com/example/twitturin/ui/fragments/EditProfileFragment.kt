@@ -54,7 +54,7 @@ class EditProfileFragment : Fragment() {
         }
 
         binding.profileImage.setOnClickListener {
-            pickPhoto()
+//            pickPhoto()
         }
 
 
@@ -132,7 +132,7 @@ class EditProfileFragment : Fragment() {
         }
 
         binding.headerLayout.setOnClickListener {
-            showColorPickerDialog()
+//            showColorPickerDialog()
         }
     }
 
@@ -153,61 +153,61 @@ class EditProfileFragment : Fragment() {
 //        binding.birthdayEt.setText(formattedDate).toString()
 //    }
 
-    private fun showColorPickerDialog() {
+//    private fun showColorPickerDialog() {
+//
+//        val colors = listOf(
+//            Color.CYAN,
+//            Color.MAGENTA,
+//            Color.YELLOW,
+//            Color.GREEN,
+//            Color.BLUE,
+//            Color.RED,
+//            Color.rgb(255, 165, 0),
+//            Color.rgb(205, 92, 92),
+//            Color.rgb(72, 61, 139),
+//            Color.rgb(244, 164, 96),
+//            Color.rgb(169, 169, 169),
+//            Color.rgb(245, 245, 220),
+//            Color.rgb(255, 228, 181),
+//            Color.rgb(102, 205, 170),
+//            Color.rgb(179, 157, 219)
+//        )
+//
+//        val numColumns = 5 // Desired number of columns
+//        val padding = dpToPx(15) // Convert 15 dp to pixels
+//        val spacing = dpToPx(15) // Set the spacing between items in dp
+//
+//        val recyclerView = RecyclerView(requireContext()).apply {
+//            layoutParams = ViewGroup.LayoutParams(
+//                ViewGroup.LayoutParams.MATCH_PARENT,
+//                ViewGroup.LayoutParams.MATCH_PARENT
+//            )
+//            layoutManager = GridLayoutManager(requireActivity(), numColumns)
+//            setPadding(padding, dpToPx(20), padding, padding) // Convert padding to pixels
+//            adapter = ColorAdapter(requireActivity(), colors) { selectedColor ->
+//                binding.headerLayout.setBackgroundColor(selectedColor)
+//            }
+//            addItemDecoration(GridSpacingItemDecoration(numColumns, spacing, true))
+//        }
+//
+//        val colorPickerDialog = MaterialAlertDialogBuilder(requireContext(), R.style.ThemeOverlay_App_MaterialAlertDialog)
+//            .setTitle(resources.getString(R.string.get_color))
+//            .setView(recyclerView)
+//            .setNegativeButton(resources.getString(R.string.cancel)) { dialog, _ ->
+//                dialog.dismiss()
+//            }
+//            .create()
+//        colorPickerDialog.show()
+//    }
 
-        val colors = listOf(
-            Color.CYAN,
-            Color.MAGENTA,
-            Color.YELLOW,
-            Color.GREEN,
-            Color.BLUE,
-            Color.RED,
-            Color.rgb(255, 165, 0),
-            Color.rgb(205, 92, 92),
-            Color.rgb(72, 61, 139),
-            Color.rgb(244, 164, 96),
-            Color.rgb(169, 169, 169),
-            Color.rgb(245, 245, 220),
-            Color.rgb(255, 228, 181),
-            Color.rgb(102, 205, 170),
-            Color.rgb(179, 157, 219)
-        )
+//    private fun dpToPx(dp: Int): Int {
+//        return (dp * resources.displayMetrics.density).toInt()
+//    }
 
-        val numColumns = 5 // Desired number of columns
-        val padding = dpToPx(15) // Convert 15 dp to pixels
-        val spacing = dpToPx(15) // Set the spacing between items in dp
-
-        val recyclerView = RecyclerView(requireContext()).apply {
-            layoutParams = ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT
-            )
-            layoutManager = GridLayoutManager(requireActivity(), numColumns)
-            setPadding(padding, dpToPx(20), padding, padding) // Convert padding to pixels
-            adapter = ColorAdapter(requireActivity(), colors) { selectedColor ->
-                binding.headerLayout.setBackgroundColor(selectedColor)
-            }
-            addItemDecoration(GridSpacingItemDecoration(numColumns, spacing, true))
-        }
-
-        val colorPickerDialog = MaterialAlertDialogBuilder(requireContext(), R.style.ThemeOverlay_App_MaterialAlertDialog)
-            .setTitle(resources.getString(R.string.get_color))
-            .setView(recyclerView)
-            .setNegativeButton(resources.getString(R.string.cancel)) { dialog, _ ->
-                dialog.dismiss()
-            }
-            .create()
-        colorPickerDialog.show()
-    }
-
-    private fun dpToPx(dp: Int): Int {
-        return (dp * resources.displayMetrics.density).toInt()
-    }
-
-    private fun pickPhoto() {
-        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-        startActivityForResult(intent, PICK_PHOTO_REQUEST_CODE)
-    }
+//    private fun pickPhoto() {
+//        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+//        startActivityForResult(intent, PICK_PHOTO_REQUEST_CODE)
+//    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
