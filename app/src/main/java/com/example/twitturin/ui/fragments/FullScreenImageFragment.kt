@@ -1,6 +1,9 @@
 package com.example.twitturin.ui.fragments
 
 import android.graphics.Bitmap
+import android.graphics.RenderEffect
+import android.graphics.Shader
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,23 +15,28 @@ import com.example.twitturin.databinding.FragmentFullScreenImageBinding
 @Suppress("DEPRECATION")
 class FullScreenImageFragment : Fragment() {
 
-    private lateinit var binding : FragmentFullScreenImageBinding
+    private val binding by lazy { FragmentFullScreenImageBinding.inflate(layoutInflater) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        binding = FragmentFullScreenImageBinding.inflate(layoutInflater)
-        return  binding.root
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val extras = arguments
-        val bmp = extras?.getParcelable<Bitmap>("image")
+        binding.apply {
+            val extras = arguments
+            val bmp = extras?.getParcelable<Bitmap>("image")
 
-        binding.btnClose.setOnClickListener {
-            findNavController().popBackStack()
+            btnClose.setOnClickListener {
+                findNavController().popBackStack()
+            }
+
+            imageFullScreen.setImageBitmap(bmp)
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                testLayout.setRenderEffect(RenderEffect.createBlurEffect(50F, 50F, Shader.TileMode.CLAMP))
+            }
         }
-
-        binding.imageFullScreen.setImageBitmap(bmp)
     }
 }

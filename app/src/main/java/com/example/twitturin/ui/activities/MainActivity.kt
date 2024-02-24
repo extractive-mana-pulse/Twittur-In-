@@ -46,6 +46,7 @@ class MainActivity : AppCompatActivity() {
             R.id.publicPostFragment,
             R.id.fullScreenImageFragment,
             R.id.reportFragment,
+            R.id.editTweetFragment,
 
         )
 

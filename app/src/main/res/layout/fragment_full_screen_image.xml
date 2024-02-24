@@ -4,8 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/full_screen_layout"
     android:background="@android:color/transparent"
     tools:context=".ui.fragments.FullScreenImageFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/test_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
     <ImageView
         android:id="@+id/image_full_screen"

@@ -2,7 +2,6 @@ package com.example.twitturin.ui.fragments.bottom_sheets
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,7 +13,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
 import com.example.twitturin.helper.SnackbarHelper
-import com.example.twitturin.ui.activities.EditTweetActivity
 import com.example.twitturin.ui.sealeds.DeleteResult
 import com.example.twitturin.ui.sealeds.FollowResult
 import com.example.twitturin.viewmodel.FollowingViewModel
@@ -148,7 +146,9 @@ class MoreSettingsDetailFragment : BottomSheetDialogFragment() {
                 putString("description", description)
                 apply() // Use apply() for immediate non-blocking writes
             }
-            startActivity(Intent(requireActivity(), EditTweetActivity::class.java))
+
+            findNavController().navigate(R.id.editTweetFragment)
+
             dismiss()
         }
 

@@ -1,7 +1,6 @@
 package com.example.twitturin.ui.adapters
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -18,7 +17,6 @@ import com.example.twitturin.databinding.RcViewUserTweetsBinding
 import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.manager.SessionManager
 import com.example.twitturin.model.data.tweets.Tweet
-import com.example.twitturin.ui.activities.EditTweetActivity
 import com.example.twitturin.ui.sealeds.DeleteResult
 import com.example.twitturin.viewmodel.LikeViewModel
 import com.example.twitturin.viewmodel.ProfileViewModel
@@ -169,12 +167,8 @@ class UserPostAdapter @Inject constructor(
                         when (item.itemId) {
 
                             R.id.edit_user_own_tweet -> {
-                                val intent = Intent(context, EditTweetActivity::class.java)
-                                val sharedPreferences = context.getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
-                                sharedPreferences.edit().putString("description", content).apply()
-                                intent.putExtra("id", id)
-
-                                context.startActivity(intent)
+                                val navController = Navigation.findNavController(holder.itemView)
+                                navController.navigate(R.id.editTweetFragment)
                                 true
                             }
 
