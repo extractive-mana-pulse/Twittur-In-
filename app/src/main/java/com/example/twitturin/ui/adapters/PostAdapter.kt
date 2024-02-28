@@ -43,7 +43,7 @@ class PostAdapter @Inject constructor(
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = list[position]
-        val baseUrl = "https://twitturin.onrender.com/tweets"
+        val baseTweetsUrl = "https://twitturin.onrender.com/tweets"
         val context = holder.itemView.context
 
         snackbarHelper = SnackbarHelper(context.resources)
@@ -138,7 +138,7 @@ class PostAdapter @Inject constructor(
 
                 postIconShare.setOnClickListener {
                     val intent = Intent(Intent.ACTION_SEND)
-                    val link = "$baseUrl/$id"
+                    val link = "$baseTweetsUrl/$id"
 
                     intent.putExtra(Intent.EXTRA_TEXT, link)
                     intent.type = "text/plain"

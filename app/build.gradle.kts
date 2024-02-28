@@ -127,4 +127,7 @@ dependencies {
 
     // shimmer
     implementation ("com.facebook.shimmer:shimmer:0.5.0")
+
+    // preference
+    implementation ("androidx.preference:preference-ktx:1.2.1")
 }

@@ -1,19 +1,19 @@
 package com.example.twitturin.ui.fragments.bottom_nav_view
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
+import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageButton
 import android.widget.ImageView
-import android.widget.Switch
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.app.ActivityCompat.recreate
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
@@ -23,9 +23,11 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.example.twitturin.MyPreferences
 import com.example.twitturin.R
 import com.example.twitturin.databinding.FragmentHomeBinding
 import com.example.twitturin.helper.SnackbarHelper
+import com.example.twitturin.manager.SessionManager
 import com.example.twitturin.model.data.tweets.Tweet
 import com.example.twitturin.model.repo.Repository
 import com.example.twitturin.ui.activities.PhotoPickerActivity
@@ -35,9 +37,10 @@ import com.example.twitturin.viewmodel.LikeViewModel
 import com.example.twitturin.viewmodel.MainViewModel
 import com.example.twitturin.viewmodel.ProfileViewModel
 import com.example.twitturin.viewmodel.ViewModelFactory
-import com.example.twitturin.manager.SessionManager
 import com.facebook.shimmer.ShimmerFrameLayout
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.Locale
 import javax.inject.Inject
 
 @Suppress("DEPRECATION")
@@ -69,6 +72,10 @@ class HomeFragment : Fragment() {
 
         /* this block of code for testing purpose only */
 
+        binding.apply {
+            testMode.setOnClickListener { appLanguage() }
+        }
+
         binding.testImage.setOnClickListener {
             activity?.let {
                 val intent = Intent(it, PhotoPickerActivity::class.java)
@@ -79,24 +86,6 @@ class HomeFragment : Fragment() {
         /* this block of code for testing purpose only */
 
         val headerView: View = binding.navigationView.getHeaderView(0)
-        val themeButton : ImageButton = headerView.findViewById(R.id.light_mode_dark_mode)
-
-        var isDarkTheme = false
-
-        themeButton.setOnClickListener {
-            isDarkTheme = !isDarkTheme
-
-            if (isDarkTheme) {
-//                activity?.setTheme(R.style.AppTheme_Dark)
-                AppCompatDelegate.MODE_NIGHT_YES
-                themeButton.setImageResource(R.drawable.dark_mode)
-            } else {
-//                activity?.setTheme(R.style.AppTheme)
-                AppCompatDelegate.MODE_NIGHT_NO
-                themeButton.setImageResource(R.drawable.light_mode)
-            }
-            activity?.recreate()
-        }
 
         headerView.setOnClickListener { findNavController().navigate(R.id.action_homeFragment_to_profileFragment) }
 
@@ -173,6 +162,7 @@ class HomeFragment : Fragment() {
                     message = resources.getString(R.string.in_progress)
                 ) /*LanguageFragment().show(requireActivity().supportFragmentManager, "LanguageFragment")*/
                 R.id.time_table -> findNavController().navigate(R.id.action_homeFragment_to_webViewFragment)
+                R.id.change_mode -> appThemeDialog()
             }
             menuItem.isChecked = true
             binding.drawerLayout.close()
@@ -218,6 +208,75 @@ class HomeFragment : Fragment() {
 
     fun goToPublicPost(){
         findNavController().navigate(R.id.action_homeFragment_to_publicPostFragment)
+    }
+
+    private fun appThemeDialog() {
+
+        val builder = MaterialAlertDialogBuilder(requireActivity(), R.style.ThemeOverlay_App_MaterialAlertDialog)
+        builder.setTitle("Hello World")
+        val styles = arrayOf("Light", "Dark", "System default")
+        val checkedItem = MyPreferences(requireContext()).darkMode
+
+        builder.setSingleChoiceItems(styles, checkedItem) { dialog, which ->
+
+            when (which) {
+                0 -> {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                    MyPreferences(requireContext()).darkMode = 0
+                    dialog.dismiss()
+                }
+                1 -> {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                    MyPreferences(requireContext()).darkMode = 1
+                    dialog.dismiss()
+                }
+                2 -> {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+                    MyPreferences(requireContext()).darkMode = 2
+                    dialog.dismiss()
+                }
+            }
+        }
+
+        val dialog = builder.create()
+        dialog.show()
+    }
+
+    private fun appLanguage() {
+        val builder = MaterialAlertDialogBuilder(requireActivity(), R.style.ThemeOverlay_App_MaterialAlertDialog)
+        builder.setTitle("Hello World")
+        val styles = arrayOf("en", "it", "ру","uz")
+        builder.setSingleChoiceItems(styles, -1) { dialog, which ->
+            if (which==0) {
+                setLocale("en")
+                requireActivity().recreate()
+            } else if (which==1) {
+                setLocale("it")
+                requireActivity().recreate()
+            } else if (which==2) {
+                setLocale("ру")
+                requireActivity().recreate()
+            } else if (which==3) {
+                setLocale("uz")
+                requireActivity().recreate()
+            }
+            dialog.dismiss()
+        }
+        val dialog = builder.create()
+        dialog.show()
+    }
+
+    @SuppressLint("CommitPrefEdits")
+    private fun setLocale(lang : String) {
+        val locale = Locale(lang)
+        Locale.setDefault(locale)
+        val config = Configuration()
+        config.setLocale(locale)
+        requireActivity().baseContext.resources.updateConfiguration(config, requireActivity().baseContext.resources.displayMetrics)
+
+        val editor = requireActivity().getSharedPreferences("Settings", Context.MODE_PRIVATE).edit()
+        editor.putString("lang", lang)
+        editor.apply()
     }
 
     companion object {

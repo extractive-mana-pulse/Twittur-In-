@@ -23,6 +23,11 @@
             android:icon="@drawable/calendar_month"
             android:title="@string/time_table"/>
 
+        <item
+            android:id="@+id/change_mode"
+            android:icon="@drawable/light_mode"
+            android:title="Change Theme"/>
+
     </group>
 
 </menu>

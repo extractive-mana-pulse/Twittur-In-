@@ -25,7 +25,8 @@ class EditTweetFragment : Fragment() {
     @Inject lateinit var sessionManager : SessionManager
     private val profileViewModel: ProfileViewModel by viewModels()
     private val binding by lazy { FragmentEditTweetBinding.inflate(layoutInflater) }
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return binding.root
     }
 
@@ -44,7 +45,7 @@ class EditTweetFragment : Fragment() {
             binding.editTweetContent.setText(description)
 
             binding.editTweetCancelBtn.setOnClickListener {
-                requireActivity().finish()
+                findNavController().popBackStack()
             }
 
             binding.editTweetPublishBtn.setOnClickListener {

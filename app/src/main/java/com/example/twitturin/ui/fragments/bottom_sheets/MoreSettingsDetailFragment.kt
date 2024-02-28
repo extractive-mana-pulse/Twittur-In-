@@ -28,10 +28,10 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MoreSettingsDetailFragment : BottomSheetDialogFragment() {
 
-    private lateinit var followViewModel: FollowingViewModel
-    private lateinit var profileViewModel: ProfileViewModel
-    @Inject lateinit var sessionManager: SessionManager
     @Inject lateinit var snackbarHelper: SnackbarHelper
+    @Inject lateinit var sessionManager: SessionManager
+    private lateinit var profileViewModel: ProfileViewModel
+    private lateinit var followViewModel: FollowingViewModel
 
 
     /** If i want to leave a comment as a doc. I need to write this type of doc outside override methods */
@@ -56,6 +56,9 @@ class MoreSettingsDetailFragment : BottomSheetDialogFragment() {
         val userId = sharedPreferences.getString("userId", "")
         val tweetId = sharedPreferences.getString("id", "")
 
+
+        // this code written in purpose to manipulate with ui elements
+        // of more settings of detail page!
         if (userId == userId2) {
             followLayout.visibility = View.GONE
             editLayout.visibility = View.VISIBLE
@@ -99,7 +102,7 @@ class MoreSettingsDetailFragment : BottomSheetDialogFragment() {
             alertDialogBuilder.setMessage(resources.getString(R.string.delete_tweet_message))
             alertDialogBuilder.setPositiveButton(resources.getString(R.string.yes)) { _, _ ->
                 profileViewModel.deleteTweet(tweetId!!, "Bearer $token")
-                requireActivity().finish()
+                findNavController().popBackStack()
                 dismiss()
             }
 
@@ -137,8 +140,8 @@ class MoreSettingsDetailFragment : BottomSheetDialogFragment() {
                 view.findViewById(R.id.bottom_sheet_root_layout),
                 message = requireContext().resources.getString(R.string.in_progress)
             )
-            findNavController().navigate(R.id.reportFragment)
-            dismiss()
+//            findNavController().navigate(R.id.reportFragment)
+//            dismiss()
         }
 
         editLayout.setOnClickListener {

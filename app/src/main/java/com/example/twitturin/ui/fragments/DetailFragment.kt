@@ -332,9 +332,10 @@ class DetailFragment : Fragment() {
                     postAdapter.setData(tweetList)
                     binding.swipeToRefreshArticle.setOnRefreshListener {
                         postAdapter.notifyDataSetChanged()
-                        viewModel.getRepliesOfPost(tweetId)
+                        val freshList = tweetList.sortedByDescending { it.createdAt }
+                        tweetList.clear()
+                        tweetList.addAll(freshList)
                         binding.swipeToRefreshArticle.isRefreshing = false
-                        tweetList.shuffle(Random(System.currentTimeMillis()))
                     }
                 }
             } else {

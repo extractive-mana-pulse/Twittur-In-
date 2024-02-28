@@ -42,7 +42,7 @@
                     tools:ignore="ContentDescription"/>
 
                 <TextView
-                    android:id="@+id/logo"
+                    android:id="@+id/logo_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/app_name"
@@ -65,6 +65,18 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
                     tools:ignore="ContentDescription"/>
+
+                <ImageButton
+                    android:id="@+id/test_mode"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_marginEnd="16dp"
+                    tools:ignore="ContentDescription"
+                    android:src="@drawable/ic_launcher_foreground"
+                    android:background="@android:color/transparent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/test_image"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -38,7 +38,7 @@ class EditProfileFragment : Fragment() {
     private lateinit var binding : FragmentEditProfileBinding
     private lateinit var profileViewModel : ProfileViewModel
 
-    private val PICK_PHOTO_REQUEST_CODE = 1
+//    private val PICK_PHOTO_REQUEST_CODE = 1
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentEditProfileBinding.inflate(layoutInflater)
@@ -62,8 +62,6 @@ class EditProfileFragment : Fragment() {
         val userId = sessionManager.getUserId()
 
         profileViewModel = ViewModelProvider(this)[ProfileViewModel::class.java]
-//        TODO. this code should be modified under edit text. so in this page in edit text fields should be default value of user credentials
-//         or if it's empty field should be empty.
         profileViewModel.getUserCredentials(userId!!)
 
         profileViewModel.getUserCredentials.observe(viewLifecycleOwner) { result ->
@@ -209,14 +207,14 @@ class EditProfileFragment : Fragment() {
 //        startActivityForResult(intent, PICK_PHOTO_REQUEST_CODE)
 //    }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == PICK_PHOTO_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            val selectedImageUri = data?.data
-            // Handle the selected image URI
-        }
-    }
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        super.onActivityResult(requestCode, resultCode, data)
+//
+//        if (requestCode == PICK_PHOTO_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+//            val selectedImageUri = data?.data
+//            // Handle the selected image URI
+//        }
+//    }
 
     companion object {
         @JvmStatic
