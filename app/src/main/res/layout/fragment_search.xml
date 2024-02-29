@@ -32,7 +32,7 @@
             android:id="@+id/technical_work_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="The page is not available due to technical work."
+            android:text="@string/page_not_available"
             android:layout_marginTop="8dp"
             android:paddingHorizontal="16dp"
             android:textSize="26sp"

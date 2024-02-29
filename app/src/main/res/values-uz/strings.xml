@@ -77,4 +77,22 @@
     <string name="deleting_account_activity_context">Eslatma: Hisobingizni oʻchirib tashlaganingizda, yoqtirishlar, javoblar, sharhlar, chatlar, tvitlar kabi barcha amallar ham oʻchiriladi, ularni qayta tiklash imkoniyatisiz!</string>
     <string name="deleting_account_password_input_context">E-pochtangizga tasdiqlash kodini yuborishimiz uchun elektron pochtangizni kiriting!</string>
     <string name="delete">Oʻchirish</string>
+    <string name="reply">Javob qoldiring…</string>
+    <string name="createdat">yaratilgan</string>
+    <string name="updatedat">yangilangan</string>
+    <string name="integer_string">999</string>
+    <string name="post_description">Post tavsifi bu yerda koʻrsatiladi!</string>
+    <string name="profile_page_tweet_info">Sizda Tvitlar yoʻq</string>
+    <string name="page_not_available">Texnik ish tufayli sahifa mavjud emas.</string>
+    <string name="page_unavailable">Bu sahifa hozirda mavjud emas!</string>
+    <string name="profile_page_liked_tweets">Siz tvitlarni yoqtirmagansiz</string>
+    <string name="user_following_information">Siz hech kimga ergashmaysiz</string>
+    <string name="user_does_not_have_subscribers">Sizda obunachilar yoʻq!</string>
+    <string name="update_post">Postni yangilash</string>
+    <string name="fragment">parcha</string>
+    <string name="code">Kod</string>
+    <string name="delete_post">Postni oʻchirish</string>
+    <string name="edit_post">Xabarni tahrirlash</string>
+    <string name="choose_picture">rasmni tanlang</string>
+    <string name="change_theme">Rejimni oʻzgartirish</string>
 </resources>

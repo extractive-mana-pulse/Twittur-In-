@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
     <string name="app_name">Twittur(In)</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -48,7 +48,7 @@
     <string name="report_desc_tv">Please describe why you want to report this tweet</string>
     <string name="next">Next</string>
     <string name="profile">Profile</string>
-    <string name="in_progress" tools:ignore="PrivateResource">In Progress</string>
+    <string name="in_progress">In Progress</string>
     <string name="language">Language</string>
     <string name="open">open</string>
     <string name="close">close</string>
@@ -58,7 +58,6 @@
     <string name="cancel">Cancel</string>
     <string name="publish">Publish</string>
     <string name="publication_context">What\'s going on ?</string>
-
     <string name="tweets">Tweets</string>
     <string name="likes">Likes</string>
     <string name="logout_message">Are you sure you want to log out?</string>
@@ -72,12 +71,30 @@
     <string name="get_color">Choose a color</string>
     <string name="student">Student</string>
     <string name="professor">Professor</string>
-    <string name="kind_picker_tv">What kind are you ?</string>
+    <string name="kind_picker_tv">What kind are you?</string>
     <string name="messages">Messages</string>
     <string name="notifications">Notifications</string>
     <string name="deleting_account_activity_context">Note: When you delete your account all activities such as: likes, replies, comments, chats, tweets will be also deleted, without the possibility of restoring them! \n</string>
     <string name="deleting_account_password_input_context">Please enter your email so we can send you confirmation code to your email!</string>
     <string name="delete">Delete</string>
+    <string name="reply">Reply…</string>
+    <string name="createdat">createdAt</string>
+    <string name="updatedat">updatedAt</string>
+    <string name="integer_string">999</string>
+    <string name="post_description">Post description will be shown here!</string>
+    <string name="profile_page_tweet_info">You Don\'t Have Tweets</string>
+    <string name="page_not_available">The page is not available due to technical work.</string>
+    <string name="page_unavailable">This Page Currently Unavailable!</string>
+    <string name="profile_page_liked_tweets">You Don\'t Have Liked Tweets</string>
+    <string name="user_following_information">You are not following anyone</string>
+    <string name="user_does_not_have_subscribers">You have no subscribers!</string>
+    <string name="update_post">Update Post</string>
+    <string name="fragment">fragment</string>
+    <string name="code">Code</string>
+    <string name="delete_post">Delete post</string>
+    <string name="edit_post">Edit post</string>
+    <string name="choose_picture">choose picture</string>
+    <string name="change_theme">Change Mode</string>
 
     <string-array name="major_array">
         <item>SE</item>

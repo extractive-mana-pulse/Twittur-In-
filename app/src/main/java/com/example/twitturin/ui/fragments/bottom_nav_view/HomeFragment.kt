@@ -76,12 +76,12 @@ class HomeFragment : Fragment() {
             testMode.setOnClickListener { appLanguage() }
         }
 
-        binding.testImage.setOnClickListener {
-            activity?.let {
-                val intent = Intent(it, PhotoPickerActivity::class.java)
-                startActivity(intent)
-            }
-        }
+//        binding.testImage.setOnClickListener {
+//            activity?.let {
+//                val intent = Intent(it, PhotoPickerActivity::class.java)
+//                startActivity(intent)
+//            }
+//        }
 
         /* this block of code for testing purpose only */
 
@@ -245,7 +245,7 @@ class HomeFragment : Fragment() {
     private fun appLanguage() {
         val builder = MaterialAlertDialogBuilder(requireActivity(), R.style.ThemeOverlay_App_MaterialAlertDialog)
         builder.setTitle("Hello World")
-        val styles = arrayOf("en", "it", "ру","uz")
+        val styles = arrayOf("en", "it", "ru","uz")
         builder.setSingleChoiceItems(styles, -1) { dialog, which ->
             if (which==0) {
                 setLocale("en")
@@ -254,7 +254,7 @@ class HomeFragment : Fragment() {
                 setLocale("it")
                 requireActivity().recreate()
             } else if (which==2) {
-                setLocale("ру")
+                setLocale("ru")
                 requireActivity().recreate()
             } else if (which==3) {
                 setLocale("uz")

@@ -36,7 +36,7 @@
                     android:src="@drawable/keyboard_backspace"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:ignore="ContentDescription,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+                    tools:ignore="ContentDescription,SpeakableTextPresentCheck,TouchTargetSizeCheck"/>
 
                 <TextView
                     android:id="@+id/login_tv"
@@ -88,7 +88,7 @@
                         android:hint="@string/full_name"
                         android:imeOptions="actionNext"
                         android:inputType="text"
-                        tools:ignore="TextContrastCheck" />
+                        tools:ignore="TextContrastCheck"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -144,7 +144,7 @@
                         android:hint="@string/subject"
                         android:imeOptions="actionNext"
                         android:inputType="text"
-                        tools:ignore="TextContrastCheck" />
+                        tools:ignore="TextContrastCheck"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
 

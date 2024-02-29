@@ -5,12 +5,12 @@
     <item
         android:id="@+id/delete_user_own_tweet"
         android:icon="@drawable/delete"
-        android:title="Delete post"
+        android:title="@string/delete_post"
         tools:ignore="MenuTitle"/>
 
     <item
         android:id="@+id/edit_user_own_tweet"
         android:icon="@drawable/edit"
-        android:title="Edit post"
+        android:title="@string/edit_post"
         tools:ignore="MenuTitle"/>
 </menu>

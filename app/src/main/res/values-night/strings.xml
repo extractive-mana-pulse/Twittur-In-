@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="reply">Reply…</string>
+    <string name="createdat">createdAt</string>
+    <string name="updatedat">updatedAt</string>
+    <string name="profile_page_tweet_info">You Don\'t Have Tweets</string>
+    <string name="page_not_available">The page is not available due to technical work.</string>
+    <string name="profile_page_liked_tweets">You Don\'t Have Liked Tweets</string>
+    <string name="update_post">Update Post</string>
+    <string name="fragment">fragment</string>
+    <string name="code">Code</string>
+    <string name="delete_post">Delete post</string>
+    <string name="edit_post">Edit post</string>
+    <string name="choose_picture">choose picture</string>
+    <string name="change_theme">Change Theme</string>
+</resources>

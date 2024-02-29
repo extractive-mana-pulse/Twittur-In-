@@ -42,7 +42,7 @@
             android:id="@+id/lottie_infoTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="You Don't Have Liked Tweets"
+            android:text="@string/profile_page_liked_tweets"
             android:textStyle="italic"
             android:textSize="18sp"
             android:textColor="?attr/colorOnErrorContainer"

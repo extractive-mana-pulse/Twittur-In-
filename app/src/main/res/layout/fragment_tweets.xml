@@ -51,7 +51,7 @@
             android:id="@+id/lottie_infoTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="You Don't Have Tweets"
+            android:text="@string/profile_page_tweet_info"
             android:textStyle="italic"
             android:textSize="18sp"
             android:visibility="visible"

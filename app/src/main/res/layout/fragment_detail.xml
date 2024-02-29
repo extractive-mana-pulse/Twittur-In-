@@ -85,7 +85,7 @@
                     android:id="@+id/author_fullname"
                     android:layout_width="170dp"
                     android:layout_height="wrap_content"
-                    android:text=""
+                    android:text="@string/full_name"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:ellipsize="end"
@@ -93,19 +93,17 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="10dp"
                     app:layout_constraintStart_toEndOf="@id/author_avatar"
-                    app:layout_constraintTop_toTopOf="parent"
-                    />
+                    app:layout_constraintTop_toTopOf="parent"/>
 
                 <TextView
                     android:id="@+id/author_username"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="\@username"
+                    android:text="@string/username"
                     android:layout_marginStart="8dp"
                     android:layout_marginBottom="10dp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/author_avatar"
-                    />
+                    app:layout_constraintStart_toEndOf="@id/author_avatar"/>
 
                 <Button
                     android:id="@+id/follow_btn"
@@ -157,7 +155,7 @@
                 android:id="@+id/when_created"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="createdAt"
+                android:text="@string/createdat"
                 android:layout_marginStart="16dp"
                 android:layout_marginVertical="8dp"
                 app:layout_constraintBottom_toTopOf="@id/divider2"
@@ -168,7 +166,7 @@
                 android:id="@+id/when_updated"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="updatedAt"
+                android:text="@string/updatedat"
                 android:layout_marginStart="16dp"
                 android:layout_marginVertical="8dp"
                 app:layout_constraintBottom_toTopOf="@id/divider2"
@@ -201,7 +199,7 @@
                     android:id="@+id/article_page_likes_counter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="999"
+                    android:text="@string/integer_string"
                     android:layout_gravity="center"
                     android:textStyle="bold"
                     android:layout_marginVertical="8dp"/>
@@ -348,7 +346,7 @@
                     android:id="@+id/reply_et"
                     android:layout_width="0dp"
                     android:layout_height="45dp"
-                    android:hint="Reply..."
+                    android:hint="@string/reply"
                     android:paddingStart="16dp"
                     android:imeOptions="actionDone"
                     android:textAlignment="textStart"

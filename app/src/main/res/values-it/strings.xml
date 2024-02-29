@@ -75,6 +75,24 @@
     <string name="messages">Messaggi</string>
     <string name="notifications">Notifiche</string>
     <string name="deleting_account_activity_context">Nota: quando elimini il tuo account, verranno eliminate anche tutte le attività come: Mi piace, risposte, commenti, chat, tweet, senza possibilità di ripristinarle!</string>
-    <string name="deleting_account_password_input_context">Inserisci la tua email così possiamo inviarti il ​​codice di conferma alla tua email!</string>
+    <string name="deleting_account_password_input_context">Inserisci la tua email così possiamo inviarti il codice di conferma alla tua email!</string>
     <string name="delete">Eliminare</string>
+    <string name="reply">Rispondere…</string>
+    <string name="createdat">creatoAt</string>
+    <string name="updatedat">aggiornatoAt</string>
+    <string name="integer_string">999</string>
+    <string name="post_description">La descrizione del post verrà mostrata qui!</string>
+    <string name="profile_page_tweet_info">Non hai tweet</string>
+    <string name="page_not_available">La pagina non è disponibile per lavori tecnici.</string>
+    <string name="page_unavailable">Questa pagina attualmente non disponibile!</string>
+    <string name="profile_page_liked_tweets">Non ti sono piaciuti i tweet</string>
+    <string name="user_following_information">Tu non stai seguendo nessuno</string>
+    <string name="user_does_not_have_subscribers">Non hai iscritti!</string>
+    <string name="update_post">Aggiorna messaggio</string>
+    <string name="fragment">frammento</string>
+    <string name="code">Codice</string>
+    <string name="delete_post">Elimina messaggio</string>
+    <string name="edit_post">Modifica post</string>
+    <string name="choose_picture">scegli lʻimmagine</string>
+    <string name="change_theme">Cambia modalità</string>
 </resources>
