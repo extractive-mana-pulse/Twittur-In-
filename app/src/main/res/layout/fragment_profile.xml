@@ -29,7 +29,7 @@
                 android:id="@+id/back"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
-                android:onClick="@{ () -> profileFragment.goBack() }"
+                android:onClick="@{ () -> profileFragment.fragmentManager.popBackStack() }"
                 android:layout_marginTop="24dp"
                 android:layout_marginStart="16dp"
                 android:background="@drawable/back_btn_bg"
@@ -103,8 +103,7 @@
             app:layout_constraintTop_toBottomOf="@id/profile_header_layout"
             app:layout_constraintStart_toEndOf="@id/profile_image"
             android:layout_marginStart="3dp"
-            android:layout_marginTop="9dp"/>
-
+            android:layout_marginTop="4dp"/>
 
         <TextView
             android:id="@+id/profile_full_name"
@@ -161,27 +160,6 @@
             android:layout_marginTop="13dp"
             app:layout_constraintStart_toEndOf="@id/profile_location_img"
             app:layout_constraintTop_toBottomOf="@id/profile_biography"/>
-
-<!--        <ImageView-->
-<!--            android:id="@+id/email_img"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:src="@drawable/mail"-->
-<!--            android:layout_marginTop="8dp"-->
-<!--            android:layout_marginStart="30dp"-->
-<!--            app:layout_constraintStart_toEndOf="@id/location_tv"-->
-<!--            app:layout_constraintTop_toBottomOf="@id/profile_biography"-->
-<!--            tools:ignore="ContentDescription"/>-->
-
-<!--        <TextView-->
-<!--            android:id="@+id/email_tv"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="example@gmail.com"-->
-<!--            android:layout_marginStart="3dp"-->
-<!--            android:layout_marginTop="10dp"-->
-<!--            app:layout_constraintStart_toEndOf="@id/email_img"-->
-<!--            app:layout_constraintTop_toBottomOf="@id/profile_biography"/>-->
 
         <LinearLayout
             android:id="@+id/foll_info_layout"

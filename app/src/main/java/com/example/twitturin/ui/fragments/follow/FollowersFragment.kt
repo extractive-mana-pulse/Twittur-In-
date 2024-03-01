@@ -24,26 +24,23 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.util.Random
 import javax.inject.Inject
 
-@Suppress("DEPRECATION")
 @AndroidEntryPoint
 class FollowersFragment : Fragment() {
 
     private lateinit var viewModel : MainViewModel
     @Inject lateinit var sessionManager : SessionManager
     @Inject lateinit var snackbarHelper: SnackbarHelper
-    private lateinit var followViewModel: FollowingViewModel
-    private lateinit var binding : FragmentFollowersBinding
-    private val fViewModel: FollowingViewModel by viewModels()
-    private val followersAdapter by lazy { FollowersAdapter(viewLifecycleOwner, fViewModel) }
+    private val followersVM: FollowingViewModel by viewModels()
+    private val binding by lazy { FragmentFollowersBinding.inflate(layoutInflater) }
+    private val followersAdapter by lazy { FollowersAdapter(viewLifecycleOwner, followersVM) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        binding = FragmentFollowersBinding.inflate(layoutInflater)
-        followViewModel = ViewModelProvider(this)[FollowingViewModel::class.java]
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.followersFragment = this
 
         binding.anViewFollowers.setFailureListener { t ->
             snackbarHelper.snackbarError(
@@ -57,9 +54,6 @@ class FollowersFragment : Fragment() {
         val viewModelFactory = ViewModelFactory(repository)
         viewModel = ViewModelProvider(this,viewModelFactory)[MainViewModel::class.java]
 
-        binding.backBtnFollowersList.setOnClickListener {
-            requireActivity().onBackPressed()
-        }
         updateRecyclerView()
     }
 

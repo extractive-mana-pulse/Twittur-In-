@@ -48,20 +48,14 @@ import javax.inject.Inject
 class HomeFragment : Fragment() {
 
     private lateinit var viewModel: MainViewModel
-    private lateinit var binding : FragmentHomeBinding
-    @Inject lateinit var sessionManager: SessionManager
     @Inject lateinit var snackbarHelper: SnackbarHelper
-    private val profileViewModel: ProfileViewModel by viewModels()
+    @Inject lateinit var sessionManager: SessionManager
     private val lViewModel: LikeViewModel by viewModels()
+    private val profileViewModel: ProfileViewModel by viewModels()
+    private val binding by lazy { FragmentHomeBinding.inflate(layoutInflater) }
     private val postAdapter by lazy { PostAdapter(lViewModel, viewLifecycleOwner) }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        binding = FragmentHomeBinding.inflate(layoutInflater)
         return binding.root
     }
 
@@ -73,7 +67,7 @@ class HomeFragment : Fragment() {
         /* this block of code for testing purpose only */
 
         binding.apply {
-            testMode.setOnClickListener { appLanguage() }
+//            testMode.setOnClickListener { appLanguage() }
         }
 
 //        binding.testImage.setOnClickListener {
@@ -87,7 +81,7 @@ class HomeFragment : Fragment() {
 
         val headerView: View = binding.navigationView.getHeaderView(0)
 
-        headerView.setOnClickListener { findNavController().navigate(R.id.action_homeFragment_to_profileFragment) }
+//        headerView.setOnClickListener { findNavController().navigate(R.id.action_homeFragment_to_profileFragment) }
 
         val userId = sessionManager.getUserId()
 
@@ -156,11 +150,7 @@ class HomeFragment : Fragment() {
         binding.navigationView.setNavigationItemSelectedListener {menuItem ->
             when(menuItem.itemId){
                 R.id.profile_item -> findNavController().navigate(R.id.action_homeFragment_to_profileFragment)
-                R.id.language_item ->  snackbarHelper.snackbar(
-                    requireActivity().findViewById(R.id.drawer_layout),
-                    requireActivity().findViewById(R.id.add_post),
-                    message = resources.getString(R.string.in_progress)
-                ) /*LanguageFragment().show(requireActivity().supportFragmentManager, "LanguageFragment")*/
+                R.id.language_item ->  appLanguage()
                 R.id.time_table -> findNavController().navigate(R.id.action_homeFragment_to_webViewFragment)
                 R.id.change_mode -> appThemeDialog()
             }
@@ -213,7 +203,7 @@ class HomeFragment : Fragment() {
     private fun appThemeDialog() {
 
         val builder = MaterialAlertDialogBuilder(requireActivity(), R.style.ThemeOverlay_App_MaterialAlertDialog)
-        builder.setTitle("Hello World")
+        builder.setTitle(resources.getString(R.string.change_theme))
         val styles = arrayOf("Light", "Dark", "System default")
         val checkedItem = MyPreferences(requireContext()).darkMode
 
@@ -244,7 +234,7 @@ class HomeFragment : Fragment() {
 
     private fun appLanguage() {
         val builder = MaterialAlertDialogBuilder(requireActivity(), R.style.ThemeOverlay_App_MaterialAlertDialog)
-        builder.setTitle("Hello World")
+        builder.setTitle(resources.getString(R.string.choose_language))
         val styles = arrayOf("en", "it", "ru","uz")
         builder.setSingleChoiceItems(styles, -1) { dialog, which ->
             if (which==0) {

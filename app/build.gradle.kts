@@ -8,6 +8,7 @@ plugins {
     id ("kotlin-parcelize")
     id("androidx.navigation.safeargs.kotlin")
     id ("dagger.hilt.android.plugin")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -130,4 +131,7 @@ dependencies {
 
     // preference
     implementation ("androidx.preference:preference-ktx:1.2.1")
+
+    // FCM
+    implementation("com.google.firebase:firebase-messaging:23.4.1")
 }

@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
@@ -36,7 +37,9 @@ class EditProfileFragment : Fragment() {
     @Inject lateinit var sessionManager: SessionManager
 //    private val calendar: Calendar = Calendar.getInstance()
     private lateinit var binding : FragmentEditProfileBinding
-    private lateinit var profileViewModel : ProfileViewModel
+//    private lateinit var profileViewModel : ProfileViewModel
+
+    private val profileViewModel : ProfileViewModel by viewModels()
 
 //    private val PICK_PHOTO_REQUEST_CODE = 1
 
@@ -48,20 +51,15 @@ class EditProfileFragment : Fragment() {
     @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        binding.editProfileBackBtn.setOnClickListener {
-            findNavController().navigate(R.id.action_editProfileFragment_to_profileFragment)
-        }
+        binding.editProfileFragment = this
 
         binding.profileImage.setOnClickListener {
 //            pickPhoto()
         }
 
-
         val token = sessionManager.getToken()
         val userId = sessionManager.getUserId()
 
-        profileViewModel = ViewModelProvider(this)[ProfileViewModel::class.java]
         profileViewModel.getUserCredentials(userId!!)
 
         profileViewModel.getUserCredentials.observe(viewLifecycleOwner) { result ->
@@ -92,45 +90,47 @@ class EditProfileFragment : Fragment() {
             }
         }
 
-        binding.save.setOnClickListener {
-
-            val fullName = binding.editProfileFullnameEt.text.toString()
-            val username = binding.editProfileUsernameEt.text.toString()
-            val bio = binding.editProfileBioEt.text.toString()
-            val email = binding.editProfileEmailEt.text.toString()
-            val country = binding.countryEt.selectedCountryName
-            val birthday = binding.editProfileBirthdayEt.text.toString()
-
-            profileViewModel.editUser(
-                fullName,
-                username,
-                email,
-                bio,
-                country.toString(),
-                birthday,
-                userId,
-                "Bearer $token"
-            )
-
-            profileViewModel.editUserResult.observe(viewLifecycleOwner) { result ->
-                when (result) {
-                    is EditUserResult.Success -> {
-                        findNavController().navigate(R.id.action_editProfileFragment_to_profileFragment)
-                    }
-
-                    is EditUserResult.Error -> {
-                        snackbarHelper.snackbarError(
-                            view.findViewById<ConstraintLayout>(R.id.edit_profile_root_layout),
-                            binding.testTv,
-                            error = result.error,
-                            ""){}
-                    }
-                }
-            }
-        }
-
         binding.headerLayout.setOnClickListener {
 //            showColorPickerDialog()
+        }
+    }
+
+    fun save() {
+        val token = sessionManager.getToken()
+        val userId = sessionManager.getUserId()
+
+        val fullName = binding.editProfileFullnameEt.text.toString()
+        val username = binding.editProfileUsernameEt.text.toString()
+        val bio = binding.editProfileBioEt.text.toString()
+        val email = binding.editProfileEmailEt.text.toString()
+        val country = binding.countryEt.selectedCountryName
+        val birthday = binding.editProfileBirthdayEt.text.toString()
+
+        profileViewModel.editUser(
+            fullName,
+            username,
+            email,
+            bio,
+            country.toString(),
+            birthday,
+            userId!!,
+            "Bearer $token"
+        )
+
+        profileViewModel.editUserResult.observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is EditUserResult.Success -> {
+                    findNavController().navigate(R.id.action_editProfileFragment_to_profileFragment)
+                }
+
+                is EditUserResult.Error -> {
+                    snackbarHelper.snackbarError(
+                        requireView().findViewById<ConstraintLayout>(R.id.edit_profile_root_layout),
+                        binding.testTv,
+                        error = result.error,
+                        ""){}
+                }
+            }
         }
     }
 

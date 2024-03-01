@@ -32,17 +32,17 @@ class FollowingFragment : Fragment() {
     private lateinit var viewModel : MainViewModel
     @Inject lateinit var sessionManager: SessionManager
     @Inject lateinit var snackbarHelper: SnackbarHelper
-    private lateinit var binding : FragmentFollowingBinding
     private val fViewModel: FollowingViewModel by viewModels()
+    private val binding by lazy { FragmentFollowingBinding.inflate(layoutInflater)}
     private val followingAdapter by lazy { FollowingAdapter(viewLifecycleOwner, fViewModel) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        binding = FragmentFollowingBinding.inflate(layoutInflater)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.followingFragment = this
 
         binding.anViewFollowing.setFailureListener { t ->
             Toast.makeText(requireContext(), t.message, Toast.LENGTH_SHORT).show()
@@ -52,9 +52,6 @@ class FollowingFragment : Fragment() {
         val viewModelFactory = ViewModelFactory(repository)
         viewModel = ViewModelProvider(this,viewModelFactory)[MainViewModel::class.java]
 
-        binding.backBtnFollowingList.setOnClickListener {
-            requireActivity().onBackPressed()
-        }
         updateRecyclerView()
     }
 
@@ -90,8 +87,8 @@ class FollowingFragment : Fragment() {
                 }
             } else {
                 snackbarHelper.snackbarError(
-                    requireActivity().findViewById(R.id.following_root_layout1),
-                    requireActivity().findViewById(R.id.following_root_layout1),
+                    requireActivity().findViewById(R.id.following_root_layout),
+                    requireActivity().findViewById(R.id.following_root_layout),
                     error = response.body().toString(),
                     ""){}
             }

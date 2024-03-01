@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.example.twitturin" />
+                  <option name="mobileSdkAppId" value="1:922509135392:android:325c2e670824d467fe7645" />
+                  <option name="projectId" value="twittur-in" />
+                  <option name="projectNumber" value="922509135392" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

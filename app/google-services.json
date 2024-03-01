@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "922509135392",
+    "project_id": "twittur-in",
+    "storage_bucket": "twittur-in.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:922509135392:android:325c2e670824d467fe7645",
+        "android_client_info": {
+          "package_name": "com.example.twitturin"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCS35c9pkFyU4zDx893rrYrfUXIfXdEEZM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

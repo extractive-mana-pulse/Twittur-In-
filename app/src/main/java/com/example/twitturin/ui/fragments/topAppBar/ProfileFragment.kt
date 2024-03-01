@@ -121,11 +121,7 @@ class ProfileFragment : Fragment() {
             extras.putParcelable("image", image)
             fullScreenImageFragment.arguments = extras
 
-            val fragmentManager = requireActivity().supportFragmentManager
-            val fragmentTransaction = fragmentManager.beginTransaction()
-            fragmentTransaction.replace(R.id.nav_host_fragment_container, fullScreenImageFragment)
-            fragmentTransaction.addToBackStack(null)
-            fragmentTransaction.commit()
+            fullScreenImageFragment.show(requireActivity().supportFragmentManager, "FullScreenImageFragment")
         }
 
 
@@ -290,10 +286,6 @@ class ProfileFragment : Fragment() {
         alertDialogBuilder.setCancelable(true)
         val alertDialog = alertDialogBuilder.create()
         alertDialog.show()
-    }
-
-    fun goBack() {
-        findNavController().navigate(R.id.action_profileFragment_to_homeFragment)
     }
 
     companion object {

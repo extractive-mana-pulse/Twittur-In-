@@ -186,13 +186,18 @@ class DetailFragment : Fragment() {
             whenUpdated.text = dateConverter
 
             authorAvatar.setOnLongClickListener {
+
+                val fullScreenImageFragment = FullScreenImageFragment()
+
                 binding.authorAvatar.buildDrawingCache()
                 val originalBitmap = binding.authorAvatar.drawingCache
                 val image = originalBitmap.copy(originalBitmap.config, true)
 
-                val extras = bundleOf("image" to image)
-                val navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_container)
-                navController.navigate(R.id.fullScreenImageFragment, extras)
+                val extras = Bundle()
+                extras.putParcelable("image", image)
+                fullScreenImageFragment.arguments = extras
+
+                fullScreenImageFragment.show(requireActivity().supportFragmentManager, "FullScreenImageFragment")
                 true
             }
 
