@@ -5,6 +5,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 import com.example.twitturin.BuildConfig
+import com.example.twitturin.follow.model.network.FollowApi
 
 object RetrofitInstance {
 

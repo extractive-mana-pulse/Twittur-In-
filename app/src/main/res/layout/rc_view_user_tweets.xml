@@ -95,7 +95,7 @@
             android:src="@drawable/comments"
             app:layout_constraintStart_toEndOf="@id/user_avatar_own_tweet"
             app:layout_constraintTop_toBottomOf="@id/post_description_user_own_tweet"
-            tools:ignore="ContentDescription"/>
+            tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
 
         <TextView
             android:id="@+id/post_comments_counter"

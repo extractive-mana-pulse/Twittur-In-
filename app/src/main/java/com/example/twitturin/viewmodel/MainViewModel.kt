@@ -15,7 +15,7 @@ import com.example.twitturin.model.repo.Repository
 import com.example.twitturin.ui.sealeds.PostReply
 import com.example.twitturin.ui.sealeds.PostTweet
 import com.example.twitturin.ui.sealeds.SearchResource
-import com.example.twitturin.ui.sealeds.UsersResult
+import com.example.twitturin.profile.sealed.UsersResult
 import com.example.twitturin.viewmodel.event.SingleLiveEvent
 import com.facebook.shimmer.ShimmerFrameLayout
 import kotlinx.coroutines.launch

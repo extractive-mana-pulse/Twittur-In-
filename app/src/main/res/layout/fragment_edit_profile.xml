@@ -3,12 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/edit_profile_root_layout"
-    tools:context=".ui.fragments.EditProfileFragment">
+    tools:context=".profile.presentation.fragments.EditProfileFragment">
 
     <data>
         <variable
             name="editProfileFragment"
-            type="com.example.twitturin.ui.fragments.EditProfileFragment"/>
+            type="com.example.twitturin.profile.presentation.fragments.EditProfileFragment"/>
     </data>
 
     <ScrollView

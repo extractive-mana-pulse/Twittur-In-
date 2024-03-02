@@ -83,7 +83,7 @@
 <!--  profileFragment  -->
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.example.twitturin.ui.fragments.topAppBar.ProfileFragment"
+        android:name="com.example.twitturin.profile.presentation.fragments.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile">
 
@@ -179,7 +179,7 @@
 <!--  tweetsFragment  -->
     <fragment
         android:id="@+id/tweetsFragment"
-        android:name="com.example.twitturin.ui.fragments.viewPager.TweetsFragment"
+        android:name="com.example.twitturin.tweet.presentation.fragments.TweetsFragment"
         android:label="fragment_tweets"
         tools:layout="@layout/fragment_tweets">
 
@@ -208,7 +208,7 @@
 <!--  signInFragment  -->
     <fragment
         android:id="@+id/signInFragment"
-        android:name="com.example.twitturin.ui.fragments.login.SignInFragment"
+        android:name="com.example.twitturin.auth.presentation.fragments.SignInFragment"
         android:label="fragment_sign_in"
         tools:layout="@layout/fragment_sign_in">
 
@@ -229,7 +229,7 @@
     <!--  editProfileFragment  -->
     <fragment
         android:id="@+id/editProfileFragment"
-        android:name="com.example.twitturin.ui.fragments.EditProfileFragment"
+        android:name="com.example.twitturin.profile.presentation.fragments.EditProfileFragment"
         android:label="fragment_edit_profile"
         tools:layout="@layout/fragment_edit_profile">
 
@@ -244,7 +244,7 @@
 <!--    kind fragment    -->
     <fragment
         android:id="@+id/kindFragment"
-        android:name="com.example.twitturin.ui.fragments.login.KindFragment"
+        android:name="com.example.twitturin.auth.presentation.fragments.KindFragment"
         android:label="fragment_kind"
         tools:layout="@layout/fragment_kind">
 
@@ -271,7 +271,7 @@
 <!--    professor registration fragment    -->
     <fragment
         android:id="@+id/professorRegistrationFragment"
-        android:name="com.example.twitturin.ui.fragments.login.ProfessorRegistrationFragment"
+        android:name="com.example.twitturin.auth.presentation.fragments.ProfessorRegistrationFragment"
         android:label="fragment_professor_registration"
         tools:layout="@layout/fragment_professor_registration">
 
@@ -290,7 +290,7 @@
 <!--    student registration fragment    -->
     <fragment
         android:id="@+id/studentRegistrationFragment"
-        android:name="com.example.twitturin.ui.fragments.login.StudentRegistrationFragment"
+        android:name="com.example.twitturin.auth.presentation.fragments.StudentRegistrationFragment"
         android:label="fragment_student_registration"
         tools:layout="@layout/fragment_student_registration">
 
@@ -323,7 +323,7 @@
 
     <fragment
         android:id="@+id/followersListFragment"
-        android:name="com.example.twitturin.ui.fragments.follow.FollowersFragment"
+        android:name="com.example.twitturin.follow.presentation.fragments.FollowersFragment"
         android:label="fragment_followers_list"
         tools:layout="@layout/fragment_followers" >
         <action
@@ -333,7 +333,7 @@
 
     <fragment
         android:id="@+id/followingListFragment"
-        android:name="com.example.twitturin.ui.fragments.follow.FollowingFragment"
+        android:name="com.example.twitturin.follow.presentation.fragments.FollowingFragment"
         android:label="fragment_following_list"
         tools:layout="@layout/fragment_following" >
         <action
@@ -371,7 +371,7 @@
     </fragment>
     <fragment
         android:id="@+id/editTweetFragment"
-        android:name="com.example.twitturin.ui.fragments.EditTweetFragment"
+        android:name="com.example.twitturin.tweet.presentation.fragments.EditTweetFragment"
         android:label="fragment_edit_tweet"
         tools:layout="@layout/fragment_edit_tweet" />
     <fragment

@@ -5,7 +5,7 @@ import android.content.res.Resources
 import com.example.twitturin.BuildConfig
 import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.model.network.Api
-import com.example.twitturin.model.network.FollowApi
+import com.example.twitturin.follow.model.network.FollowApi
 import com.example.twitturin.manager.SessionManager
 import dagger.Module
 import dagger.Provides
@@ -42,12 +42,6 @@ object AppModule {
     fun provideRetrofit(): Retrofit {
         return Retrofit.Builder().baseUrl(BuildConfig.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create()).build()
-    }
-
-    @Provides
-    @Singleton
-    fun provideFollowApi(retrofit: Retrofit): FollowApi {
-        return retrofit.create(FollowApi::class.java)
     }
 
     @Provides

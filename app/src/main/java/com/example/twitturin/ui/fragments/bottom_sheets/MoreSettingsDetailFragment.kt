@@ -14,9 +14,9 @@ import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
 import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.ui.sealeds.DeleteResult
-import com.example.twitturin.ui.sealeds.FollowResult
-import com.example.twitturin.viewmodel.FollowingViewModel
-import com.example.twitturin.viewmodel.ProfileViewModel
+import com.example.twitturin.follow.sealed.FollowResult
+import com.example.twitturin.follow.vm.FollowingViewModel
+import com.example.twitturin.profile.vm.ProfileViewModel
 import com.example.twitturin.manager.SessionManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog

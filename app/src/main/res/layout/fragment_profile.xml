@@ -2,12 +2,12 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.fragments.topAppBar.ProfileFragment">
+    tools:context=".profile.presentation.fragments.ProfileFragment">
 
     <data>
         <variable
             name="profileFragment"
-            type="com.example.twitturin.ui.fragments.topAppBar.ProfileFragment"/>
+            type="com.example.twitturin.profile.presentation.fragments.ProfileFragment"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

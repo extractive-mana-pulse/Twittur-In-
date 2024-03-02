@@ -1,18 +1,14 @@
 package com.example.twitturin.ui.fragments.bottom_nav_view
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.content.res.Configuration
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -30,12 +26,11 @@ import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.manager.SessionManager
 import com.example.twitturin.model.data.tweets.Tweet
 import com.example.twitturin.model.repo.Repository
-import com.example.twitturin.ui.activities.PhotoPickerActivity
 import com.example.twitturin.ui.adapters.PostAdapter
-import com.example.twitturin.ui.sealeds.UserCredentialsResult
+import com.example.twitturin.profile.sealed.UserCredentialsResult
 import com.example.twitturin.viewmodel.LikeViewModel
 import com.example.twitturin.viewmodel.MainViewModel
-import com.example.twitturin.viewmodel.ProfileViewModel
+import com.example.twitturin.profile.vm.ProfileViewModel
 import com.example.twitturin.viewmodel.ViewModelFactory
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.dialog.MaterialAlertDialogBuilder

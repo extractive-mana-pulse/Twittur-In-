@@ -4,9 +4,9 @@ import com.example.twitturin.model.data.ImageResource
 import com.example.twitturin.model.data.editUser.EditProfile
 import com.example.twitturin.model.data.likeTweet.LikeTweet
 import com.example.twitturin.model.data.publicTweet.TweetContent
-import com.example.twitturin.model.data.registration.Login
-import com.example.twitturin.model.data.registration.SignUpProf
-import com.example.twitturin.model.data.registration.SignUpStudent
+import com.example.twitturin.auth.data.Login
+import com.example.twitturin.auth.data.SignUpProf
+import com.example.twitturin.auth.data.SignUpStudent
 import com.example.twitturin.model.data.replyToTweet.ReplyContent
 import com.example.twitturin.model.data.tweets.Tweet
 import com.example.twitturin.model.data.users.User
@@ -27,13 +27,6 @@ interface Api  {
 
     @GET("users")
     suspend fun getAllUsers() : Response<List<User>>
-
-    /** delete account **/
-    @DELETE("users/{id}")
-    suspend fun deleteUser(@Path("id") userId: String, @Header("Authorization") token: String): Response<Unit>
-
-    @DELETE("tweets/{id}")
-    suspend fun deleteTweet(@Path("id") tweetId: String, @Header("Authorization") token: String): Response<Unit>
 
     /** publish user like too  **/
     @POST("tweets/{id}/likes")
@@ -62,25 +55,6 @@ interface Api  {
     @GET("users/{id}/tweets")
     suspend fun getPostsByUser(@Path("id") userId: String): Response<List<Tweet>>
 
-
-    /** In this API call we are getting the user credentials! **/
-    @GET("users/{id}")
-    suspend fun getLoggedInUserData(@Path("id") userId : String) : Response<User>
-
-    /** In this API call we are update the user credentials! **/
-    @PUT("users/{id}")
-    fun editUser(
-        @Body editProfile: EditProfile,
-        @Path("id") userId: String,
-        @Header("Authorization") token: String
-    ): Call<EditProfile>
-
-    @PUT("tweets/{id}")
-    fun editTweet(
-        @Body tweetContent : TweetContent,
-        @Path("id") tweetId : String,
-        @Header("Authorization") token: String
-    ): Call<TweetContent>
 
     @FormUrlEncoded
     @PATCH("users/{id}")
