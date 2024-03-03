@@ -1,10 +1,13 @@
 package com.example.twitturin.tweet.model.domain.repository
 
+import com.example.twitturin.model.data.likeTweet.LikeTweet
 import com.example.twitturin.model.data.publicTweet.TweetContent
 import com.example.twitturin.model.data.replyToTweet.ReplyContent
 import com.example.twitturin.tweet.model.data.Tweet
 import retrofit2.Call
 import retrofit2.Response
+
+/** Note: this TweetRepository interface has all information regarding to the tweet. Like, comment, reply, share and other! */
 
 interface TweetRepository {
 
@@ -14,6 +17,10 @@ interface TweetRepository {
         tweet: TweetContent,
         token: String
     ): Call<TweetContent>
+
+    suspend fun getPostsByUser(userId: String): Response<List<Tweet>>
+
+    suspend fun getRepliesOfPost(tweetId : String) : Response<List<Tweet>>
 
     fun postReply(
         reply: ReplyContent,
@@ -31,5 +38,19 @@ interface TweetRepository {
         tweetId: String,
         token: String
     ): Response<Unit>
+
+    suspend fun getListOfLikedPosts(userId : String) : Response<List<Tweet>>
+
+    fun like(
+        tweet : LikeTweet,
+        userId : String,
+        token: String
+    ) : Call<LikeTweet>
+
+    fun unLike(
+        tweet: LikeTweet,
+        userId: String,
+        token: String
+    ) : Call<LikeTweet>
 
 }

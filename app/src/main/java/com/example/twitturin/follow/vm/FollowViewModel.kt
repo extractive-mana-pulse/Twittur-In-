@@ -2,21 +2,43 @@ package com.example.twitturin.follow.vm
 
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.twitturin.follow.model.domain.repository.FollowRepository
 import com.example.twitturin.model.data.users.User
-import com.example.twitturin.follow.model.network.FollowApi
 import com.example.twitturin.follow.sealed.DeleteFollow
 import com.example.twitturin.follow.sealed.FollowResult
 import com.example.twitturin.viewmodel.event.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import javax.inject.Inject
 
 @HiltViewModel
-class FollowingViewModel @Inject constructor(private val followApi: FollowApi) : ViewModel() {
+class FollowViewModel @Inject constructor(
+    private val repository: FollowRepository
+) : ViewModel() {
 
+    var followersList: MutableLiveData<Response<List<User>>> = MutableLiveData()
+    fun getFollowers(userId : String) {
+
+        viewModelScope.launch {
+            val response = repository.getListOfFollowers(userId)
+            followersList.value = response
+        }
+    }
+
+    var followingList: MutableLiveData<Response<List<User>>> = MutableLiveData()
+    fun getFollowing(userId : String) {
+        viewModelScope.launch {
+            val response = repository.getListOfFollowing(userId)
+            followingList.value = response
+
+        }
+    }
 
     /** use SingeLiveEvent instead MutableLiveData. cause in case when you use 2nd option you will receive a message toast or whatever
      * you have there multiple times. Single Live Event show this message only one time*/
@@ -24,7 +46,7 @@ class FollowingViewModel @Inject constructor(private val followApi: FollowApi) :
     val followResult: LiveData<FollowResult> = _followResult
 
     fun followUsers(id : String, token: String) {
-        followApi.followUser(id, token).enqueue(object : Callback<User> {
+        repository.followUser(id, token).enqueue(object : Callback<User> {
             override fun onResponse(call: Call<User>, response: Response<User>) {
                 if (response.isSuccessful) {
                     val responseBody = response.body()
@@ -47,7 +69,7 @@ class FollowingViewModel @Inject constructor(private val followApi: FollowApi) :
     val deleteFollowResult: LiveData<DeleteFollow> = _deleteFollow
 
     fun deleteFollow(id : String, token: String) {
-        followApi.deleteFollow(id, token).enqueue(object : Callback<User> {
+        repository.deleteFollow(id, token).enqueue(object : Callback<User> {
             override fun onResponse(call: Call<User>, response: Response<User>) {
                 if (response.isSuccessful) {
                     _deleteFollow.value = DeleteFollow.Success

@@ -29,7 +29,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/cancel"
                 android:textColor="#13BCA9"
-                android:onClick="@{() -> publicPostFragment.cancelBtn()}"
+                android:onClick="@{() -> publicPostFragment.fragmentManager.popBackStack()}"
                 android:layout_marginStart="16dp"
                 android:background="@android:color/transparent"
                 app:layout_constraintTop_toTopOf="parent"

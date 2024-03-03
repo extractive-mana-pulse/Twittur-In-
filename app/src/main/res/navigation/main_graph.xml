@@ -17,7 +17,7 @@
             app:destination="@id/privateMessagesFragment"/>
 
         <action
-            android:id="@+id/action_homeFragment_to_notificationsFragment"
+            android:id="@+id/action_homeFragment_to_notificationFragment"
             app:destination="@id/notificationsFragment"/>
 
         <action
@@ -59,7 +59,7 @@
 <!--  chatFragment  -->
     <fragment
         android:id="@+id/chatFragment"
-        android:name="com.example.twitturin.ui.fragments.ChatFragment"
+        android:name="com.example.twitturin.chat.presentation.fragments.ChatFragment"
         android:label="fragment_chat"
         tools:layout="@layout/fragment_chat">
 
@@ -374,10 +374,5 @@
         android:name="com.example.twitturin.tweet.presentation.fragments.EditTweetFragment"
         android:label="fragment_edit_tweet"
         tools:layout="@layout/fragment_edit_tweet" />
-    <fragment
-        android:id="@+id/blankFragment"
-        android:name="com.example.twitturin.BlankFragment"
-        android:label="fragment_blank"
-        tools:layout="@layout/fragment_blank" />
 
 </navigation>

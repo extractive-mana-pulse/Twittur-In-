@@ -1,31 +1,28 @@
-package com.example.twitturin.viewmodel
+package com.example.twitturin.tweet.vm
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import com.example.twitturin.BuildConfig
-import com.example.twitturin.viewmodel.event.SingleLiveEvent
-import com.example.twitturin.model.network.Api
 import com.example.twitturin.model.data.likeTweet.LikeTweet
+import com.example.twitturin.tweet.model.domain.repository.TweetRepository
 import com.example.twitturin.ui.sealeds.PostLikeResult
+import com.example.twitturin.viewmodel.event.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Inject
 
-
 @HiltViewModel
-class LikeViewModel @Inject constructor(private val api : Api): ViewModel() {
+class LikeViewModel @Inject constructor(
+    private val repository : TweetRepository
+): ViewModel() {
 
     private val _likePostResult = SingleLiveEvent<PostLikeResult>()
     val likePostResult: LiveData<PostLikeResult> = _likePostResult
 
     fun likePost(count: String, userId: String, token: String) {
         val request = LikeTweet(count)
-        api.postLike(request, userId,"Bearer $token").enqueue(object : Callback<LikeTweet> {
+        repository.like(request, userId,"Bearer $token").enqueue(object : Callback<LikeTweet> {
 
             override fun onResponse(call: Call<LikeTweet>, response: Response<LikeTweet>) {
                 if (response.isSuccessful) {
@@ -45,9 +42,9 @@ class LikeViewModel @Inject constructor(private val api : Api): ViewModel() {
     private val _likeDeleteResult = SingleLiveEvent<PostLikeResult>()
     val likeDeleteResult: LiveData<PostLikeResult> = _likeDeleteResult
 
-    fun likeDelete(count: String, userId: String, token: String) {
+    fun unLikePost(count: String, userId: String, token: String) {
         val request = LikeTweet(count)
-        api.postLike(request, userId,"Bearer $token").enqueue(object : Callback<LikeTweet> {
+        repository.unLike(request, userId,"Bearer $token").enqueue(object : Callback<LikeTweet> {
 
             override fun onResponse(call: Call<LikeTweet>, response: Response<LikeTweet>) {
                 if (response.isSuccessful) {
@@ -55,8 +52,6 @@ class LikeViewModel @Inject constructor(private val api : Api): ViewModel() {
                     _likeDeleteResult.value = likePostResponse?.let { PostLikeResult.Success(it) }
                 } else {
                     _likeDeleteResult.value = PostLikeResult.Error(response.code().toString())
-                    Log.d("body",response.body().toString())
-                    Log.d("code",response.code().toString())
                 }
             }
 

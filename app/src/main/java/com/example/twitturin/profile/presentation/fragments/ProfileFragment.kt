@@ -48,6 +48,9 @@ class ProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.profileFragment = this
 
+        // this portion of code with viewPager2 added, cause it cause an error: Fragment not found or no longer exist!
+        binding.vp2.isSaveEnabled = false
+
         val userId = sessionManager.getUserId()
 
         binding.followersTv.setOnClickListener {

@@ -5,31 +5,26 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
 import com.example.twitturin.databinding.FragmentPublicPostBinding
 import com.example.twitturin.helper.SnackbarHelper
-import com.example.twitturin.model.repo.Repository
-import com.example.twitturin.tweet.sealed.PostTweet
-import com.example.twitturin.viewmodel.MainViewModel
-import com.example.twitturin.viewmodel.ViewModelFactory
 import com.example.twitturin.manager.SessionManager
+import com.example.twitturin.tweet.sealed.PostTweet
+import com.example.twitturin.tweet.vm.TweetViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
-
-@Suppress("DEPRECATION")
 @AndroidEntryPoint
 class PublicPostFragment : Fragment() {
 
-    private lateinit var viewModel: MainViewModel
     @Inject lateinit var sessionManager: SessionManager
     @Inject lateinit var snackbarHelper: SnackbarHelper
-    private lateinit var binding : FragmentPublicPostBinding
+    private val tweetViewModel : TweetViewModel by viewModels()
+    private val binding by lazy { FragmentPublicPostBinding.inflate(layoutInflater) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        binding = FragmentPublicPostBinding.inflate(layoutInflater)
         return binding.root
     }
 
@@ -39,17 +34,13 @@ class PublicPostFragment : Fragment() {
 
         val token = sessionManager.getToken()
 
-        val repository = Repository()
-        val viewModelFactory = ViewModelFactory(repository)
-        viewModel = ViewModelProvider(requireActivity(), viewModelFactory)[MainViewModel::class.java]
-
         binding.btnTweet.setOnClickListener {
                 binding.btnTweet.isEnabled = false
                 val tweetContent = binding.contentEt.text.toString()
-                viewModel.postTheTweet(tweetContent, "Bearer $token")
+            tweetViewModel.postTheTweet(tweetContent, "Bearer $token")
         }
 
-        viewModel.postTweetResult.observe(viewLifecycleOwner) { result ->
+        tweetViewModel.postTweetResult.observe(viewLifecycleOwner) { result ->
 
             when (result) {
                 is PostTweet.Success -> {
@@ -66,14 +57,5 @@ class PublicPostFragment : Fragment() {
                 }
             }
         }
-    }
-
-    fun cancelBtn(){
-        requireActivity().onBackPressed()
-    }
-
-    companion object {
-        @JvmStatic
-        fun newInstance() = PublicPostFragment()
     }
 }

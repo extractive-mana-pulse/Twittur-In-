@@ -13,23 +13,14 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class NotificationsFragment : Fragment() {
 
-    private lateinit var binding : FragmentNotificationsBinding
+    private val binding by lazy { FragmentNotificationsBinding.inflate(layoutInflater) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        binding = FragmentNotificationsBinding.inflate(layoutInflater)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.notificationsFragment = this
-    }
-
-    fun goToProfile(){
-        findNavController().navigate(R.id.profileFragment)
-    }
-    companion object {
-        @JvmStatic
-        fun newInstance() = NotificationsFragment()
     }
 }

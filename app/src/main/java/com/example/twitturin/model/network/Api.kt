@@ -21,22 +21,9 @@ interface Api  {
     @GET("users")
     suspend fun getAllUsers() : Response<List<User>>
 
-    /** publish user like too  **/
-    @POST("tweets/{id}/likes")
-    fun postLike(@Body tweet: LikeTweet, @Path("id") userId: String, @Header("Authorization") token: String): Call<LikeTweet>
-
-    @GET("users/{id}/tweets")
-    suspend fun getPostsByUser(@Path("id") userId: String): Response<List<Tweet>>
-
-    @FormUrlEncoded
-    @PATCH("users/{id}")
-    fun updateUserUsername(@Path("id") userId: String, @Header("Authorization") token: String) : Call<EditProfile>
-
-    @GET("users/{id}/likes")
-    suspend fun getListOfLikedPosts(@Path("id")userId : String) : Response<List<Tweet>>
-
-    @GET("tweets/{id}/replies")
-    suspend fun getRepliesOfPost(@Path("id")tweetId : String) : Response<List<Tweet>>
+//    @FormUrlEncoded
+//    @PATCH("users/{id}")
+//    fun updateUserUsername(@Path("id") userId: String, @Header("Authorization") token: String) : Call<EditProfile>
 
     @GET("search")
     suspend fun searchNews(@Query("keyword") keyword: Tweet) : Response<Tweet>

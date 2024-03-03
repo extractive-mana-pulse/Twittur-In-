@@ -15,7 +15,6 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
@@ -30,8 +29,9 @@ import com.example.twitturin.ui.fragments.bottom_sheets.MoreSettingsDetailFragme
 import com.example.twitturin.follow.sealed.FollowResult
 import com.example.twitturin.tweet.sealed.PostReply
 import com.example.twitturin.profile.sealed.UsersResult
-import com.example.twitturin.follow.vm.FollowingViewModel
-import com.example.twitturin.viewmodel.LikeViewModel
+import com.example.twitturin.follow.vm.FollowViewModel
+import com.example.twitturin.tweet.vm.TweetViewModel
+import com.example.twitturin.tweet.vm.LikeViewModel
 import com.example.twitturin.viewmodel.MainViewModel
 import com.example.twitturin.viewmodel.ViewModelFactory
 import dagger.hilt.android.AndroidEntryPoint
@@ -44,15 +44,16 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class DetailFragment : Fragment() {
 
-    private lateinit var viewModel: MainViewModel
     private val allUsers = mutableListOf<String>()
-    @Inject lateinit var sessionManager: SessionManager
-    @Inject lateinit var snackbarHelper: SnackbarHelper
-    private val lViewModel: LikeViewModel by viewModels()
+    private lateinit var mainViewModel : MainViewModel
+    @Inject lateinit var sessionManager : SessionManager
+    @Inject lateinit var snackbarHelper : SnackbarHelper
     private val followedUsersList = mutableListOf<String>()
-    private lateinit var followViewModel: FollowingViewModel
+    private val likeViewModel : LikeViewModel by viewModels()
+    private val tweetViewModel : TweetViewModel by viewModels()
+    private val followingViewModel : FollowViewModel by viewModels()
     private val binding  by lazy { FragmentDetailBinding.inflate(layoutInflater) }
-    private val postAdapter by lazy { PostAdapter(lViewModel, viewLifecycleOwner) }
+    private val postAdapter by lazy { PostAdapter(likeViewModel, viewLifecycleOwner) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return binding.root
@@ -61,6 +62,7 @@ class DetailFragment : Fragment() {
     @SuppressLint("SetTextI18n", "NotifyDataSetChanged")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.detailFragment = this
         binding.apply {
 
             val profileImage = arguments?.getString("userAvatar")
@@ -95,8 +97,7 @@ class DetailFragment : Fragment() {
 
             val repository = Repository()
             val viewModelFactory = ViewModelFactory(repository)
-            followViewModel = ViewModelProvider(requireActivity())[FollowingViewModel::class.java]
-            viewModel = ViewModelProvider(requireActivity(), viewModelFactory)[MainViewModel::class.java]
+            mainViewModel = ViewModelProvider(requireActivity(), viewModelFactory)[MainViewModel::class.java]
 
             val token = sessionManager.getToken()
             val userId2 = sessionManager.getUserId()
@@ -111,7 +112,7 @@ class DetailFragment : Fragment() {
 
             sentReply.setOnClickListener {
                 val reply = replyEt.text?.toString()?.trim()
-                viewModel.postReply(reply!!, id!!, "Bearer $token")
+                tweetViewModel.postReply(reply!!, id!!, "Bearer $token")
                 sentReply.isEnabled = false
             }
 
@@ -130,12 +131,12 @@ class DetailFragment : Fragment() {
             }
             replyEt.addTextChangedListener(textWatcher1)
 
-            viewModel.postReplyResult.observe(viewLifecycleOwner) { result ->
+            tweetViewModel.postReplyResult.observe(viewLifecycleOwner) { result ->
 
                 when (result) {
                     is PostReply.Success -> {
                         replyEt.text?.clear()
-                        viewModel.getRepliesOfPost(id!!)
+                        tweetViewModel.getRepliesOfPost(id!!)
                         postAdapter.notifyDataSetChanged()
                         replyEt.addTextChangedListener(textWatcher1)
                     }
@@ -213,9 +214,9 @@ class DetailFragment : Fragment() {
             // TODO so when follow button pressed. add user's username to "followedList" after check list like below that do logic
             // TODO also use getAll Users endpoint to do that !
 
-            viewModel.getAllUsers()
+            mainViewModel.getAllUsers()
 
-            viewModel.usersResult.observe(viewLifecycleOwner) { result ->
+            mainViewModel.usersResult.observe(viewLifecycleOwner) { result ->
                 when (result) {
                     is UsersResult.Success -> {
                         val users = result.users
@@ -230,10 +231,10 @@ class DetailFragment : Fragment() {
             }
 
             followBtn.setOnClickListener {
-                followViewModel.followUsers(userId!!, "Bearer $token")
+                followingViewModel.followUsers(userId!!, "Bearer $token")
             }
 
-            followViewModel.followResult.observe(viewLifecycleOwner) { result ->
+            followingViewModel.followResult.observe(viewLifecycleOwner) { result ->
                 when (result) {
                     is FollowResult.Success -> {
                         snackbarHelper.snackbar(
@@ -256,12 +257,15 @@ class DetailFragment : Fragment() {
                 }
             }
 
-            articlePageCommentsIcon.setOnClickListener {
-                snackbarHelper.snackbar(
-                    requireActivity().findViewById(R.id.detail_root_layout),
-                    requireActivity().findViewById(R.id.reply_layout),
-                    message = resources.getString(R.string.in_progress)
-                )
+            detailPageCommentsIcon.setOnClickListener {
+                val activateEditText1 = arguments?.getBoolean("activateEditText", true)
+                if (activateEditText1 == true) {
+                    replyEt.post {
+                        replyEt.requestFocus()
+                        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                        imm.showSoftInput(replyEt, InputMethodManager.SHOW_IMPLICIT)
+                    }
+                }
             }
 
             articlePageHeartIcon.setOnClickListener {
@@ -274,9 +278,6 @@ class DetailFragment : Fragment() {
 
             articlePageShareIcon.setOnClickListener {
                 shareData()
-            }
-            goBackBtn.setOnClickListener {
-                findNavController().popBackStack()
             }
 
             moreSettings.setOnClickListener {
@@ -325,9 +326,9 @@ class DetailFragment : Fragment() {
         binding.articleRcView.layoutManager = LinearLayoutManager(requireContext())
         binding.articleRcView.addItemDecoration(DividerItemDecoration(binding.articleRcView.context, DividerItemDecoration.VERTICAL))
 
-        viewModel.getRepliesOfPost(tweetId!!)
+        tweetViewModel.getRepliesOfPost(tweetId!!)
 
-        viewModel.repliesOfPosts.observe(viewLifecycleOwner) { response ->
+        tweetViewModel.repliesOfPosts.observe(viewLifecycleOwner) { response ->
             if (response.isSuccessful) {
                 response.body()?.let { tweets ->
                     val tweetList: MutableList<Tweet> = tweets.toMutableList()

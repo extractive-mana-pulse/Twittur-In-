@@ -20,9 +20,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <!--    Action Bar    -->
+            <!--    toolbar    -->
             <LinearLayout
-                android:id="@+id/toolbar"
+                android:id="@+id/detail_page_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:orientation="horizontal"
@@ -37,6 +37,7 @@
                     android:layout_height="wrap_content"
                     android:src="@drawable/keyboard_backspace"
                     android:background="@android:color/transparent"
+                    android:onClick="@{()-> detailFragment.fragmentManager.popBackStack()}"
                     android:layout_gravity="center"
                     android:layout_marginStart="16dp"
                     tools:ignore="ContentDescription"/>
@@ -57,7 +58,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/rc_view_divider"
-                app:layout_constraintTop_toBottomOf="@id/toolbar"
+                app:layout_constraintTop_toBottomOf="@id/detail_page_toolbar"
                 app:layout_constraintBottom_toTopOf="@id/post_layout_header"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -70,7 +71,7 @@
                 android:layout_height="?attr/actionBarSize"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/toolbar">
+                app:layout_constraintTop_toBottomOf="@id/detail_page_toolbar">
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/author_avatar"
@@ -253,7 +254,7 @@
                 app:layout_constraintTop_toBottomOf="@id/layout_likes_views_counter">
 
                 <ImageButton
-                    android:id="@+id/article_page_comments_icon"
+                    android:id="@+id/detail_page_comments_icon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginVertical="8dp"

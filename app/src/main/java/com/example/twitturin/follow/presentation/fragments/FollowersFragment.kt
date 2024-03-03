@@ -17,7 +17,7 @@ import com.example.twitturin.manager.SessionManager
 import com.example.twitturin.model.data.users.User
 import com.example.twitturin.model.repo.Repository
 import com.example.twitturin.follow.presentation.adapters.FollowersAdapter
-import com.example.twitturin.follow.vm.FollowingViewModel
+import com.example.twitturin.follow.vm.FollowViewModel
 import com.example.twitturin.viewmodel.MainViewModel
 import com.example.twitturin.viewmodel.ViewModelFactory
 import dagger.hilt.android.AndroidEntryPoint
@@ -27,12 +27,11 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class FollowersFragment : Fragment() {
 
-    private lateinit var viewModel : MainViewModel
     @Inject lateinit var sessionManager : SessionManager
     @Inject lateinit var snackbarHelper: SnackbarHelper
-    private val followersVM: FollowingViewModel by viewModels()
+    private val followViewModel: FollowViewModel by viewModels()
     private val binding by lazy { FragmentFollowersBinding.inflate(layoutInflater) }
-    private val followersAdapter by lazy { FollowersAdapter(viewLifecycleOwner, followersVM) }
+    private val followersAdapter by lazy { FollowersAdapter(viewLifecycleOwner, followViewModel) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return binding.root
@@ -50,10 +49,6 @@ class FollowersFragment : Fragment() {
                 ""){}
         }
 
-        val repository = Repository()
-        val viewModelFactory = ViewModelFactory(repository)
-        viewModel = ViewModelProvider(this,viewModelFactory)[MainViewModel::class.java]
-
         updateRecyclerView()
     }
 
@@ -64,8 +59,8 @@ class FollowersFragment : Fragment() {
         binding.rcViewFollowers.addItemDecoration(DividerItemDecoration(binding.rcViewFollowers.context, DividerItemDecoration.VERTICAL))
         binding.rcViewFollowers.layoutManager = LinearLayoutManager(requireContext())
         val userId = sessionManager.getUserId()
-        viewModel.getFollowers(userId!!)
-        viewModel.followersList.observe(requireActivity()) { response ->
+        followViewModel.getFollowers(userId!!)
+        followViewModel.followersList.observe(requireActivity()) { response ->
             if (response.isSuccessful) {
                 response.body()?.let { tweets ->
                     val tweetList: MutableList<User> = tweets.toMutableList()
@@ -73,7 +68,7 @@ class FollowersFragment : Fragment() {
                     binding.swipeToRefreshLayoutFollowersList.setOnRefreshListener {
 
                         tweetList.shuffle(Random(System.currentTimeMillis()))
-                        viewModel.getFollowers(userId)
+                        followViewModel.getFollowers(userId)
                         binding.swipeToRefreshLayoutFollowersList.isRefreshing = false
 
                     }

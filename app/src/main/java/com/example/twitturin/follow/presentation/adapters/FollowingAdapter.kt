@@ -12,13 +12,13 @@ import com.example.twitturin.R
 import com.example.twitturin.databinding.RcViewFollowingBinding
 import com.example.twitturin.model.data.users.User
 import com.example.twitturin.follow.sealed.DeleteFollow
-import com.example.twitturin.follow.vm.FollowingViewModel
+import com.example.twitturin.follow.vm.FollowViewModel
 import com.example.twitturin.manager.SessionManager
 import javax.inject.Inject
 
 class FollowingAdapter @Inject constructor(
     private val lifecycleOwner : LifecycleOwner,
-    private val followViewModel: FollowingViewModel
+    private val followViewModel: FollowViewModel
 ) : RecyclerView.Adapter<FollowingAdapter.ViewHolder>() {
 
     private var list = emptyList<User>()

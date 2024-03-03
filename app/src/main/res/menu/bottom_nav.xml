@@ -3,23 +3,23 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/home"
+        android:id="@+id/homeFragment"
         tools:ignore="MenuTitle"
-        android:icon="@drawable/home"/>
+        android:icon="@drawable/home_selector"/>
 
     <item
-        android:id="@+id/search"
+        android:id="@+id/searchFragment"
         tools:ignore="MenuTitle"
         android:icon="@drawable/search"/>
 
     <item
-        android:id="@+id/notification"
+        android:id="@+id/notificationsFragment"
         tools:ignore="MenuTitle"
-        android:icon="@drawable/notifications"/>
+        android:icon="@drawable/notification_selector"/>
 
     <item
-        android:id="@+id/messages"
+        android:id="@+id/privateMessagesFragment"
         tools:ignore="MenuTitle"
-        android:icon="@drawable/mail"/>
+        android:icon="@drawable/mail_selector"/>
 
 </menu>

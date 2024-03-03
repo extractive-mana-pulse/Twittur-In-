@@ -28,9 +28,10 @@ import com.example.twitturin.tweet.model.data.Tweet
 import com.example.twitturin.model.repo.Repository
 import com.example.twitturin.ui.adapters.PostAdapter
 import com.example.twitturin.profile.sealed.UserCredentials
-import com.example.twitturin.viewmodel.LikeViewModel
+import com.example.twitturin.tweet.vm.LikeViewModel
 import com.example.twitturin.viewmodel.MainViewModel
 import com.example.twitturin.profile.vm.ProfileViewModel
+import com.example.twitturin.tweet.vm.TweetViewModel
 import com.example.twitturin.viewmodel.ViewModelFactory
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -45,10 +46,11 @@ class HomeFragment : Fragment() {
     private lateinit var viewModel: MainViewModel
     @Inject lateinit var snackbarHelper: SnackbarHelper
     @Inject lateinit var sessionManager: SessionManager
-    private val lViewModel: LikeViewModel by viewModels()
+    private val likeViewModel: LikeViewModel by viewModels()
+    private val tweetViewModel : TweetViewModel by viewModels()
     private val profileViewModel: ProfileViewModel by viewModels()
     private val binding by lazy { FragmentHomeBinding.inflate(layoutInflater) }
-    private val postAdapter by lazy { PostAdapter(lViewModel, viewLifecycleOwner) }
+    private val postAdapter by lazy { PostAdapter(likeViewModel, viewLifecycleOwner) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return binding.root
@@ -164,8 +166,8 @@ class HomeFragment : Fragment() {
         binding.rcView.adapter = postAdapter
         binding.rcView.addItemDecoration(DividerItemDecoration(binding.rcView.context, DividerItemDecoration.VERTICAL))
         binding.rcView.layoutManager = LinearLayoutManager(requireContext())
-        viewModel.getTweet(binding.shimmerLayout)
-        viewModel.responseTweets.observe(requireActivity()) { response ->
+        tweetViewModel.getTweet(binding.shimmerLayout)
+        tweetViewModel.responseTweets.observe(requireActivity()) { response ->
             if (response.isSuccessful) {
                 response.body()?.let { tweets ->
                     val tweetList: MutableList<Tweet> = tweets.toMutableList()
@@ -174,7 +176,7 @@ class HomeFragment : Fragment() {
                         val freshList = tweetList.sortedByDescending { it.createdAt }
                         tweetList.clear()
                         tweetList.addAll(freshList)
-                        viewModel.getTweet(binding.shimmerLayout)
+                        tweetViewModel.getTweet(binding.shimmerLayout)
                         postAdapter.notifyDataSetChanged()
                         binding.swipeToRefreshLayout.isRefreshing = false
                     }

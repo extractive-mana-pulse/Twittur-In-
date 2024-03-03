@@ -18,23 +18,21 @@ import com.example.twitturin.manager.SessionManager
 import com.example.twitturin.model.data.users.User
 import com.example.twitturin.model.repo.Repository
 import com.example.twitturin.follow.presentation.adapters.FollowingAdapter
-import com.example.twitturin.follow.vm.FollowingViewModel
+import com.example.twitturin.follow.vm.FollowViewModel
 import com.example.twitturin.viewmodel.MainViewModel
 import com.example.twitturin.viewmodel.ViewModelFactory
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Random
 import javax.inject.Inject
 
-@Suppress("DEPRECATION")
 @AndroidEntryPoint
 class FollowingFragment : Fragment() {
 
-    private lateinit var viewModel : MainViewModel
     @Inject lateinit var sessionManager: SessionManager
     @Inject lateinit var snackbarHelper: SnackbarHelper
-    private val fViewModel: FollowingViewModel by viewModels()
+    private val followViewModel: FollowViewModel by viewModels()
     private val binding by lazy { FragmentFollowingBinding.inflate(layoutInflater)}
-    private val followingAdapter by lazy { FollowingAdapter(viewLifecycleOwner, fViewModel) }
+    private val followingAdapter by lazy { FollowingAdapter(viewLifecycleOwner, followViewModel) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return binding.root
@@ -48,10 +46,6 @@ class FollowingFragment : Fragment() {
             Toast.makeText(requireContext(), t.message, Toast.LENGTH_SHORT).show()
         }
 
-        val repository = Repository()
-        val viewModelFactory = ViewModelFactory(repository)
-        viewModel = ViewModelProvider(this,viewModelFactory)[MainViewModel::class.java]
-
         updateRecyclerView()
     }
 
@@ -61,15 +55,15 @@ class FollowingFragment : Fragment() {
         binding.rcViewFollowing.addItemDecoration(DividerItemDecoration(binding.rcViewFollowing.context, DividerItemDecoration.VERTICAL))
         binding.rcViewFollowing.layoutManager = LinearLayoutManager(requireContext())
         val userId = sessionManager.getUserId()
-        viewModel.getFollowing(userId!!)
-        viewModel.followingList.observe(requireActivity()) { response ->
+        followViewModel.getFollowing(userId!!)
+        followViewModel.followingList.observe(requireActivity()) { response ->
             if (response.isSuccessful) {
                 response.body()?.let { tweets ->
                     val tweetList: MutableList<User> = tweets.toMutableList()
                     followingAdapter.setData(tweetList)
                     binding.swipeToRefreshLayoutFollowingList.setOnRefreshListener {
                         tweetList.shuffle(Random(System.currentTimeMillis()))
-                        viewModel.getFollowing(userId)
+                        followViewModel.getFollowing(userId)
                         binding.swipeToRefreshLayoutFollowingList.isRefreshing = false
                     }
 

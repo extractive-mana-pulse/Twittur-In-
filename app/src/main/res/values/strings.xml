@@ -95,6 +95,7 @@
     <string name="edit_post">Edit post</string>
     <string name="choose_picture">choose picture</string>
     <string name="change_theme">Change Mode</string>
+    <string name="back">back</string>
 
     <string-array name="major_array">
         <item>SE</item>

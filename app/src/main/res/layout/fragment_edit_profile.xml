@@ -21,7 +21,7 @@
             android:layout_height="wrap_content">
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/toolbar"
+                android:id="@+id/edit_profile_page_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="?attr/colorSurfaceContainer"
@@ -56,7 +56,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"/>
 
                 <Button
-                    android:id="@+id/save"
+                    android:id="@+id/edit_profile_save_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
@@ -79,7 +79,7 @@
                 android:layout_height="105dp"
                 android:background="#044B76"
                 android:gravity="center_horizontal"
-                app:layout_constraintTop_toBottomOf="@id/toolbar"
+                app:layout_constraintTop_toBottomOf="@id/edit_profile_page_toolbar"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
 

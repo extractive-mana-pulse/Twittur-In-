@@ -13,4 +13,5 @@
     <string name="edit_post">Edit post</string>
     <string name="choose_picture">choose picture</string>
     <string name="change_theme">Change Theme</string>
+    <string name="back">back</string>
 </resources>

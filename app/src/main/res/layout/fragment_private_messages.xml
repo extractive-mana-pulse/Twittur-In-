@@ -16,7 +16,7 @@
 
         <!--        Toolbar         -->
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/toolbar"
+            android:id="@+id/private_messages_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorSurfaceContainer"
@@ -24,17 +24,18 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
-            <ImageView
+            <ImageButton
                 android:id="@+id/message_back_btn"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
-                android:onClick="@{ () -> privateMessagesFragment.back() }"
+                android:onClick="@{ () -> privateMessagesFragment.fragmentManager.popBackStack() }"
                 android:layout_marginStart="16dp"
                 android:src="@drawable/keyboard_backspace"
+                android:contentDescription="@string/back"
+                android:background="@android:color/transparent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                tools:ignore="ContentDescription"/>
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -52,7 +53,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/an_view"
+            android:id="@+id/private_messages_an_view"
             android:layout_width="285dp"
             android:layout_height="285dp"
             app:lottie_loop="true"
@@ -62,7 +63,7 @@
             app:lottie_rawRes="@raw/technical_works"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/toolbar"
+            app:layout_constraintTop_toBottomOf="@id/private_messages_toolbar"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
         <TextView
@@ -74,7 +75,7 @@
             android:textColor="?attr/colorOnSurfaceVariant"
             android:textSize="24sp"
             android:textAlignment="center"
-            app:layout_constraintTop_toBottomOf="@id/an_view"
+            app:layout_constraintTop_toBottomOf="@id/private_messages_an_view"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
 

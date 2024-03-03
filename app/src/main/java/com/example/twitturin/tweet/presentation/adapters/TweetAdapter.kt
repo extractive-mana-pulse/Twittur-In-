@@ -19,7 +19,7 @@ import com.example.twitturin.manager.SessionManager
 import com.example.twitturin.tweet.model.data.Tweet
 import com.example.twitturin.tweet.sealed.TweetDelete
 import com.example.twitturin.tweet.vm.TweetViewModel
-import com.example.twitturin.viewmodel.LikeViewModel
+import com.example.twitturin.tweet.vm.LikeViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.text.SimpleDateFormat
 import java.util.Locale

@@ -15,7 +15,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
 import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.follow.sealed.FollowResult
-import com.example.twitturin.follow.vm.FollowingViewModel
+import com.example.twitturin.follow.vm.FollowViewModel
 import com.example.twitturin.profile.vm.ProfileViewModel
 import com.example.twitturin.manager.SessionManager
 import com.example.twitturin.tweet.sealed.TweetDelete
@@ -33,7 +33,7 @@ class MoreSettingsDetailFragment : BottomSheetDialogFragment() {
     @Inject lateinit var snackbarHelper: SnackbarHelper
     @Inject lateinit var sessionManager: SessionManager
     private lateinit var profileViewModel: ProfileViewModel
-    private lateinit var followViewModel: FollowingViewModel
+    private lateinit var followViewModel: FollowViewModel
     private val tweetViewModel : TweetViewModel by viewModels()
 
 
@@ -51,7 +51,7 @@ class MoreSettingsDetailFragment : BottomSheetDialogFragment() {
         val editLayout = view.findViewById<LinearLayout>(R.id.edit_layout)
         val reportLayout = view.findViewById<LinearLayout>(R.id.report_post_layout)
         profileViewModel = ViewModelProvider(requireActivity())[ProfileViewModel::class.java]
-        followViewModel = ViewModelProvider(requireActivity())[FollowingViewModel::class.java]
+        followViewModel = ViewModelProvider(requireActivity())[FollowViewModel::class.java]
 
         val sharedPreferences = requireActivity().getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
         val description = sharedPreferences.getString("post_description", "")

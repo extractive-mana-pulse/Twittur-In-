@@ -33,16 +33,6 @@ class MainActivity : AppCompatActivity() {
 
         binding.bottomNavView.setupWithNavController(navController)
 
-        binding.bottomNavView.setOnItemSelectedListener {
-            when(it.itemId) {
-                R.id.home -> { navController.navigate(R.id.homeFragment) }
-                R.id.search -> { navController.navigate(R.id.searchFragment) }
-                R.id.notification -> { navController.navigate(R.id.notificationsFragment) }
-                R.id.messages -> { navController.navigate(R.id.privateMessagesFragment) }
-            }
-            true
-        }
-
         val fragmentsToHideBottomNav = setOf(
             R.id.detailFragment,
             R.id.signInFragment,

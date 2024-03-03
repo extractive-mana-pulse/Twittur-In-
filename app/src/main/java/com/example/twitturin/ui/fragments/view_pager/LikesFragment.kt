@@ -13,13 +13,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.twitturin.R
 import com.example.twitturin.databinding.FragmentLikesBinding
 import com.example.twitturin.helper.SnackbarHelper
-import com.example.twitturin.tweet.model.data.Tweet
+import com.example.twitturin.manager.SessionManager
 import com.example.twitturin.model.repo.Repository
+import com.example.twitturin.tweet.model.data.Tweet
+import com.example.twitturin.tweet.vm.TweetViewModel
 import com.example.twitturin.ui.adapters.PostAdapter
-import com.example.twitturin.viewmodel.LikeViewModel
+import com.example.twitturin.tweet.vm.LikeViewModel
 import com.example.twitturin.viewmodel.MainViewModel
 import com.example.twitturin.viewmodel.ViewModelFactory
-import com.example.twitturin.manager.SessionManager
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -31,6 +32,7 @@ class LikesFragment : Fragment() {
     @Inject lateinit var sessionManager: SessionManager
     @Inject lateinit var snackbarHelper: SnackbarHelper
     private val lViewModel: LikeViewModel by viewModels()
+    private val tweetViewModel : TweetViewModel by viewModels()
     private val postAdapter by lazy { PostAdapter(lViewModel, viewLifecycleOwner) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -41,7 +43,7 @@ class LikesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.anView.setFailureListener { t ->
+        binding.likesPageAnView.setFailureListener { t ->
             snackbarHelper.snackbarError(
                 requireActivity().findViewById(R.id.likes_root_layout),
                 requireActivity().findViewById(R.id.likes_root_layout),
@@ -63,21 +65,21 @@ class LikesFragment : Fragment() {
         binding.rcView.adapter = postAdapter
         binding.rcView.addItemDecoration(DividerItemDecoration(binding.rcView.context, DividerItemDecoration.VERTICAL))
         binding.rcView.layoutManager = LinearLayoutManager(requireContext())
-        viewModel.getLikedPosts(userId!!)
-        viewModel.likedPosts.observe(requireActivity()) { response ->
+        tweetViewModel.getLikedPosts(userId!!)
+        tweetViewModel.likedPosts.observe(requireActivity()) { response ->
             if (response.isSuccessful) {
                 response.body()?.let { tweets ->
                     val tweetList: MutableList<Tweet> = tweets.toMutableList()
                     if (tweetList.isEmpty()) {
                         binding.rcView.visibility = View.GONE
-                        binding.anView.visibility = View.VISIBLE
+                        binding.likesPageAnView.visibility = View.VISIBLE
                         binding.lottieInfoTv.visibility = View.VISIBLE
                     } else {
                         binding.rcView.visibility = View.VISIBLE
-                        binding.anView.visibility = View.GONE
+                        binding.likesPageAnView.visibility = View.GONE
                         binding.lottieInfoTv.visibility = View.GONE
                         postAdapter.setData(tweetList)
-                        viewModel.getLikedPosts(userId)
+                        tweetViewModel.getLikedPosts(userId)
                     }
                 }
             } else {
@@ -88,10 +90,5 @@ class LikesFragment : Fragment() {
                     ""){}
             }
         }
-    }
-
-    companion object {
-        @JvmStatic
-        fun newInstance() = LikesFragment()
     }
 }

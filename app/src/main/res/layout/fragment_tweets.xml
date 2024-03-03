@@ -34,7 +34,7 @@
 
 
         <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/anView"
+            android:id="@+id/tweets_page_an_view"
             android:layout_width="282dp"
             android:layout_height="282dp"
             app:lottie_loop="false"
@@ -58,7 +58,7 @@
             android:textColor="?attr/colorPrimaryInverse"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/anView"/>
+            app:layout_constraintTop_toBottomOf="@id/tweets_page_an_view"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
