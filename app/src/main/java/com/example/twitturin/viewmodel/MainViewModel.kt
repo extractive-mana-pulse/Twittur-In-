@@ -8,14 +8,14 @@ import androidx.lifecycle.viewModelScope
 import com.example.twitturin.BuildConfig
 import com.example.twitturin.model.data.publicTweet.TweetContent
 import com.example.twitturin.model.data.replyToTweet.ReplyContent
-import com.example.twitturin.model.data.tweets.Tweet
+import com.example.twitturin.tweet.model.data.Tweet
 import com.example.twitturin.model.data.users.User
-import com.example.twitturin.model.network.Api
 import com.example.twitturin.model.repo.Repository
-import com.example.twitturin.ui.sealeds.PostReply
-import com.example.twitturin.ui.sealeds.PostTweet
+import com.example.twitturin.tweet.sealed.PostReply
+import com.example.twitturin.tweet.sealed.PostTweet
 import com.example.twitturin.ui.sealeds.SearchResource
 import com.example.twitturin.profile.sealed.UsersResult
+import com.example.twitturin.tweet.model.network.TweetApi
 import com.example.twitturin.viewmodel.event.SingleLiveEvent
 import com.facebook.shimmer.ShimmerFrameLayout
 import kotlinx.coroutines.launch
@@ -42,7 +42,7 @@ class MainViewModel (private val repository: Repository): ViewModel() {
         .client(client)
         .build()
 
-    private val tweetApi: Api = retrofit.create(Api::class.java)
+    private val tweetApi: TweetApi = retrofit.create(TweetApi::class.java)
     private val _postTweet = SingleLiveEvent<PostTweet>()
     val postTweetResult: LiveData<PostTweet> = _postTweet
 

@@ -19,13 +19,12 @@ import com.bumptech.glide.Glide
 import com.example.twitturin.R
 import com.example.twitturin.databinding.FragmentProfileBinding
 import com.example.twitturin.helper.SnackbarHelper
-import com.example.twitturin.profile.presentation.adapters.ProfileViewPagerAdapter
-import com.example.twitturin.ui.fragments.FullScreenImageFragment
-import com.example.twitturin.ui.sealeds.DeleteResult
-import com.example.twitturin.profile.sealed.UserCredentialsResult
-import com.example.twitturin.profile.vm.ProfileViewModel
 import com.example.twitturin.manager.SessionManager
-import com.example.twitturin.tweet.vm.TweetViewModel
+import com.example.twitturin.profile.presentation.adapters.ProfileViewPagerAdapter
+import com.example.twitturin.profile.sealed.AccountDelete
+import com.example.twitturin.profile.sealed.UserCredentials
+import com.example.twitturin.profile.vm.ProfileViewModel
+import com.example.twitturin.ui.fragments.FullScreenImageFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
@@ -37,7 +36,6 @@ class ProfileFragment : Fragment() {
 
     @Inject lateinit var sessionManager: SessionManager
     @Inject lateinit var snackbarHelper: SnackbarHelper
-    private val tweetViewModel : TweetViewModel by viewModels()
     private val profileViewModel: ProfileViewModel by viewModels()
     private val binding by lazy { FragmentProfileBinding.inflate(layoutInflater) }
 
@@ -64,7 +62,7 @@ class ProfileFragment : Fragment() {
         profileViewModel.getUserCredentials.observe(viewLifecycleOwner) { result ->
             binding.profileShimmerLayout.startShimmer()
             when (result) {
-                is UserCredentialsResult.Success -> {
+                is UserCredentials.Success -> {
                     binding.profileShimmerLayout.stopShimmer()
                     binding.profileShimmerLayout.visibility = View.GONE
                     val profileImage = "${result.user.profilePicture ?: R.drawable.username_person}"
@@ -91,7 +89,7 @@ class ProfileFragment : Fragment() {
 
                 }
 
-                is UserCredentialsResult.Error -> {
+                is UserCredentials.Error -> {
 
                     snackbarHelper.snackbarError(
                         requireActivity().findViewById(R.id.profile_root_layout),
@@ -144,11 +142,11 @@ class ProfileFragment : Fragment() {
                         profileViewModel.deleteResult.observe(viewLifecycleOwner) { result ->
                             when (result) {
 
-                                is DeleteResult.Success -> {
+                                is AccountDelete.Success -> {
                                     findNavController().navigate(R.id.action_profileFragment_to_signInFragment)
                                 }
 
-                                is DeleteResult.Error -> {
+                                is AccountDelete.Error -> {
                                     snackbarHelper.snackbarError(
                                         view.findViewById(R.id.profile_root_layout),
                                         binding.profileRootLayout,
@@ -159,7 +157,6 @@ class ProfileFragment : Fragment() {
                         }
                         true
                     }
-
                     else -> false
                 }
             }

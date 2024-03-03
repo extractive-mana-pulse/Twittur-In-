@@ -2,11 +2,11 @@ package com.example.twitturin.auth.vm
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import com.example.twitturin.auth.model.data.SignUpProf
+import com.example.twitturin.auth.model.data.SignUpStudent
+import com.example.twitturin.auth.model.network.AuthApi
 import com.example.twitturin.auth.sealed.SignUpProfResult
 import com.example.twitturin.auth.sealed.SignUpStudentResult
-import com.example.twitturin.model.network.Api
-import com.example.twitturin.auth.data.SignUpProf
-import com.example.twitturin.auth.data.SignUpStudent
 import com.example.twitturin.viewmodel.event.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import retrofit2.Call
@@ -15,7 +15,7 @@ import retrofit2.Response
 import javax.inject.Inject
 
 @HiltViewModel
-class SignUpViewModel @Inject constructor(private val api : Api) : ViewModel() {
+class SignUpViewModel @Inject constructor(private val authApi: AuthApi) : ViewModel() {
 
     private val _profRegResult = SingleLiveEvent<SignUpProfResult>()
     val profRegResult: LiveData<SignUpProfResult> = _profRegResult
@@ -23,7 +23,7 @@ class SignUpViewModel @Inject constructor(private val api : Api) : ViewModel() {
     fun signUpProf(fullName: String, username: String, subject: String, password: String, kind: String) {
         val request = SignUpProf(fullName, username, subject, password, kind)
 
-        api.signUpProf(request).enqueue(object : Callback<SignUpProf> {
+        authApi.signUpProf(request).enqueue(object : Callback<SignUpProf> {
             override fun onResponse(call: Call<SignUpProf>, response: Response<SignUpProf>) {
 
                 if (response.isSuccessful) {
@@ -45,7 +45,7 @@ class SignUpViewModel @Inject constructor(private val api : Api) : ViewModel() {
 
     fun signUp(fullName: String, username: String, studentId: String, major: String, password: String, kind: String) {
         val request = SignUpStudent(fullName, username, studentId, major, password, kind)
-        api.signUpStudent(request).enqueue(object : Callback<SignUpStudent> {
+        authApi.signUpStudent(request).enqueue(object : Callback<SignUpStudent> {
             override fun onResponse(call: Call<SignUpStudent>, response: Response<SignUpStudent>) {
                 if (response.isSuccessful) {
                     val signUpResponse = response.body()

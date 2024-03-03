@@ -4,9 +4,8 @@ import android.app.Application
 import android.content.res.Resources
 import com.example.twitturin.BuildConfig
 import com.example.twitturin.helper.SnackbarHelper
-import com.example.twitturin.model.network.Api
-import com.example.twitturin.follow.model.network.FollowApi
 import com.example.twitturin.manager.SessionManager
+import com.example.twitturin.model.network.Api
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

@@ -166,7 +166,7 @@
 <!--  webViewFragment  -->
     <fragment
         android:id="@+id/webViewFragment"
-        android:name="com.example.twitturin.ui.fragments.topAppBar.WebViewFragment"
+        android:name="com.example.twitturin.ui.fragments.top_app_bar.WebViewFragment"
         android:label="fragment_web_view"
         tools:layout="@layout/fragment_web_view" >
 
@@ -195,7 +195,7 @@
 <!--  likesFragment  -->
     <fragment
         android:id="@+id/likesFragment"
-        android:name="com.example.twitturin.ui.fragments.viewPager.LikesFragment"
+        android:name="com.example.twitturin.ui.fragments.view_pager.LikesFragment"
         android:label="fragment_likes"
         tools:layout="@layout/fragment_likes" >
 

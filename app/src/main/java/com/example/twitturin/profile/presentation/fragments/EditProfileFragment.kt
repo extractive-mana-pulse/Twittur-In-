@@ -13,10 +13,10 @@ import com.bumptech.glide.Glide
 import com.example.twitturin.R
 import com.example.twitturin.databinding.FragmentEditProfileBinding
 import com.example.twitturin.helper.SnackbarHelper
-import com.example.twitturin.profile.sealed.EditUserResult
-import com.example.twitturin.profile.sealed.UserCredentialsResult
-import com.example.twitturin.profile.vm.ProfileViewModel
 import com.example.twitturin.manager.SessionManager
+import com.example.twitturin.profile.sealed.EditUser
+import com.example.twitturin.profile.sealed.UserCredentials
+import com.example.twitturin.profile.vm.ProfileViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -25,7 +25,6 @@ class EditProfileFragment : Fragment() {
 
 //    private val PICK_PHOTO_REQUEST_CODE = 1
 //    private val calendar: Calendar = Calendar.getInstance()
-//    private lateinit var profileViewModel : ProfileViewModel
     @Inject lateinit var snackbarHelper: SnackbarHelper
     @Inject lateinit var sessionManager: SessionManager
     private val profileViewModel : ProfileViewModel by viewModels()
@@ -44,14 +43,13 @@ class EditProfileFragment : Fragment() {
 //            pickPhoto()
         }
 
-        val token = sessionManager.getToken()
         val userId = sessionManager.getUserId()
 
         profileViewModel.getUserCredentials(userId!!)
 
         profileViewModel.getUserCredentials.observe(viewLifecycleOwner) { result ->
             when (result) {
-                is UserCredentialsResult.Success -> {
+                is UserCredentials.Success -> {
                     val profileImage = "${result.user.profilePicture ?: R.drawable.username_person}"
                     Glide.with(requireContext())
                         .load(profileImage)
@@ -65,7 +63,7 @@ class EditProfileFragment : Fragment() {
                     binding.editProfileBirthdayEt.setText(result.user.birthday)
                 }
 
-                is UserCredentialsResult.Error -> {
+                is UserCredentials.Error -> {
 
                     snackbarHelper.snackbarError(
                         requireActivity().findViewById(R.id.profile_root_layout),
@@ -106,11 +104,11 @@ class EditProfileFragment : Fragment() {
 
         profileViewModel.editUserResult.observe(viewLifecycleOwner) { result ->
             when (result) {
-                is EditUserResult.Success -> {
+                is EditUser.Success -> {
                     findNavController().navigate(R.id.action_editProfileFragment_to_profileFragment)
                 }
 
-                is EditUserResult.Error -> {
+                is EditUser.Error -> {
                     snackbarHelper.snackbarError(
                         requireView().findViewById<ConstraintLayout>(R.id.edit_profile_root_layout),
                         binding.testTv,

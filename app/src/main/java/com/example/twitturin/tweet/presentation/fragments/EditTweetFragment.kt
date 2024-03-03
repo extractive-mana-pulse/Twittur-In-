@@ -13,7 +13,7 @@ import com.example.twitturin.R
 import com.example.twitturin.databinding.FragmentEditTweetBinding
 import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.manager.SessionManager
-import com.example.twitturin.profile.sealed.EditTweetResult
+import com.example.twitturin.tweet.sealed.EditTweetResult
 import com.example.twitturin.tweet.vm.TweetViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject

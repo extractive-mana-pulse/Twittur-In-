@@ -1,4 +1,4 @@
-package com.example.twitturin.model.data.tweets
+package com.example.twitturin.tweet.model.data
 
 import com.example.twitturin.model.data.users.User
 import com.google.gson.annotations.SerializedName

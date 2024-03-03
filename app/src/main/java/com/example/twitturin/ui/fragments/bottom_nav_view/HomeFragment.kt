@@ -24,10 +24,10 @@ import com.example.twitturin.R
 import com.example.twitturin.databinding.FragmentHomeBinding
 import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.manager.SessionManager
-import com.example.twitturin.model.data.tweets.Tweet
+import com.example.twitturin.tweet.model.data.Tweet
 import com.example.twitturin.model.repo.Repository
 import com.example.twitturin.ui.adapters.PostAdapter
-import com.example.twitturin.profile.sealed.UserCredentialsResult
+import com.example.twitturin.profile.sealed.UserCredentials
 import com.example.twitturin.viewmodel.LikeViewModel
 import com.example.twitturin.viewmodel.MainViewModel
 import com.example.twitturin.profile.vm.ProfileViewModel
@@ -90,7 +90,7 @@ class HomeFragment : Fragment() {
 
             when (result) {
 
-                is UserCredentialsResult.Success -> {
+                is UserCredentials.Success -> {
 
                     layout.stopShimmer()
                     layout.visibility = View.GONE
@@ -122,7 +122,7 @@ class HomeFragment : Fragment() {
 
                 }
 
-                is UserCredentialsResult.Error -> {
+                is UserCredentials.Error -> {
 
                     snackbarHelper.snackbarError(
                         view.findViewById<DrawerLayout>(R.id.drawer_layout),

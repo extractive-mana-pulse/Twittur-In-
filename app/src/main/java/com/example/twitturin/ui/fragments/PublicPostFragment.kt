@@ -11,7 +11,7 @@ import com.example.twitturin.R
 import com.example.twitturin.databinding.FragmentPublicPostBinding
 import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.model.repo.Repository
-import com.example.twitturin.ui.sealeds.PostTweet
+import com.example.twitturin.tweet.sealed.PostTweet
 import com.example.twitturin.viewmodel.MainViewModel
 import com.example.twitturin.viewmodel.ViewModelFactory
 import com.example.twitturin.manager.SessionManager

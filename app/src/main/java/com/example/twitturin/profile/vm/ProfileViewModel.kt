@@ -5,13 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.twitturin.model.data.editUser.EditProfile
-import com.example.twitturin.model.data.publicTweet.TweetContent
-import com.example.twitturin.model.network.Api
-import com.example.twitturin.profile.model.network.ProfileApi
-import com.example.twitturin.ui.sealeds.DeleteResult
-import com.example.twitturin.profile.sealed.EditTweetResult
-import com.example.twitturin.profile.sealed.EditUserResult
-import com.example.twitturin.profile.sealed.UserCredentialsResult
+import com.example.twitturin.profile.model.domain.repository.ProfileRepository
+import com.example.twitturin.profile.sealed.AccountDelete
+import com.example.twitturin.profile.sealed.EditUser
+import com.example.twitturin.profile.sealed.UserCredentials
 import com.example.twitturin.viewmodel.event.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -21,50 +18,49 @@ import retrofit2.Response
 import javax.inject.Inject
 
 @HiltViewModel
-class ProfileViewModel @Inject constructor(private val profileApi: ProfileApi): ViewModel() {
+class ProfileViewModel @Inject constructor(
+    private val repository: ProfileRepository
+): ViewModel() {
 
-
-    /** this code is all about delete user's account. */
-
-    private val _deleteResult = SingleLiveEvent<DeleteResult>()
-    val deleteResult: LiveData<DeleteResult> = _deleteResult
+    private val _deleteResult = SingleLiveEvent<AccountDelete>()
+    val deleteResult: LiveData<AccountDelete> = _deleteResult
 
     fun deleteUser(userId: String, token : String) {
         viewModelScope.launch {
             try {
-                val response = profileApi.deleteUser(userId, token)
+                val response = repository.deleteUser(userId, token)
                 if (response.isSuccessful) {
-                    _deleteResult.value = DeleteResult.Success
+                    _deleteResult.value = AccountDelete.Success
                 } else {
-                    _deleteResult.value = DeleteResult.Error(response.code().toString())
+                    _deleteResult.value = AccountDelete.Error(response.code().toString())
                 }
             } catch (e: Exception) {
-                _deleteResult.value = DeleteResult.Error("An error occurred: ${e.message}")
+                _deleteResult.value = AccountDelete.Error("An error occurred: ${e.message}")
             }
         }
     }
 
-    private val _getUserCredentials = MutableLiveData<UserCredentialsResult>()
-    val getUserCredentials: LiveData<UserCredentialsResult> = _getUserCredentials
+    private val _getUserCredentials = SingleLiveEvent<UserCredentials>()
+    val getUserCredentials: LiveData<UserCredentials> = _getUserCredentials
 
     fun getUserCredentials(userId: String) {
         viewModelScope.launch {
             try {
-                val response = profileApi.getLoggedInUserData(userId)
+                val response = repository.getLoggedInUserData(userId)
                 if (response.isSuccessful) {
                     val user = response.body()
-                    _getUserCredentials.value = user?.let { UserCredentialsResult.Success(it) }
+                    _getUserCredentials.value = user?.let { UserCredentials.Success(it) }
                 } else {
-                    _getUserCredentials.value = UserCredentialsResult.Error(response.code().toString())
+                    _getUserCredentials.value = UserCredentials.Error(response.code().toString())
                 }
             } catch (e: Exception) {
-                _getUserCredentials.value = UserCredentialsResult.Error("An error occurred: ${e.message}")
+                _getUserCredentials.value = UserCredentials.Error("An error occurred: ${e.message}")
             }
         }
     }
 
-    private val _editUserResult = MutableLiveData<EditUserResult>()
-    val editUserResult: LiveData<EditUserResult> = _editUserResult
+    private val _editUserResult = MutableLiveData<EditUser>()
+    val editUserResult: LiveData<EditUser> = _editUserResult
 
     fun editUser(
         fullName: String,
@@ -77,21 +73,21 @@ class ProfileViewModel @Inject constructor(private val profileApi: ProfileApi): 
         token: String
     ) {
         val request =  EditProfile(fullName, username, email, bio, country, birthday)
-        val authRequest = profileApi.editUser(request, userId, token)
+        val authRequest = repository.editUser(request, userId, token)
         authRequest.enqueue(object : Callback<EditProfile> {
             override fun onResponse(call: Call<EditProfile>, response: Response<EditProfile>) {
                 if (response.isSuccessful) {
                     val editProfile = response.body()
                     if (editProfile != null) {
-                        _editUserResult.value = EditUserResult.Success(editProfile)
+                        _editUserResult.value = EditUser.Success(editProfile)
                     }
                 } else {
-                    _editUserResult.value = EditUserResult.Error(response.code())
+                    _editUserResult.value = EditUser.Error(response.code())
                 }
             }
 
             override fun onFailure(call: Call<EditProfile>, t: Throwable) {
-                _editUserResult.value = EditUserResult.Error(404)
+                _editUserResult.value = EditUser.Error(404)
             }
         })
     }

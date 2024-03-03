@@ -1,4 +1,4 @@
-package com.example.twitturin.ui.fragments.viewPager
+package com.example.twitturin.ui.fragments.view_pager
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.twitturin.R
 import com.example.twitturin.databinding.FragmentLikesBinding
 import com.example.twitturin.helper.SnackbarHelper
-import com.example.twitturin.model.data.tweets.Tweet
+import com.example.twitturin.tweet.model.data.Tweet
 import com.example.twitturin.model.repo.Repository
 import com.example.twitturin.ui.adapters.PostAdapter
 import com.example.twitturin.viewmodel.LikeViewModel

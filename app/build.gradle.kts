@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.ir.backend.js.compile
-
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -100,12 +98,12 @@ dependencies {
     implementation ("androidx.lifecycle:lifecycle-livedata-ktx:2.7.0")
 
     // Navigation
-    implementation ("androidx.navigation:navigation-fragment-ktx:2.7.6")
-    implementation ("androidx.navigation:navigation-ui-ktx:2.7.6")
+    implementation ("androidx.navigation:navigation-fragment-ktx:2.7.7")
+    implementation ("androidx.navigation:navigation-ui-ktx:2.7.7")
     implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
 
     // Data Binding
-    implementation ("androidx.databinding:databinding-runtime:8.2.0")
+    implementation ("androidx.databinding:databinding-runtime:8.3.0")
 
     // Scroll to Refresh Layout
     implementation ("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")

@@ -1,6 +1,6 @@
-package com.example.twitturin.follow.di
+package com.example.twitturin.auth.di
 
-import com.example.twitturin.follow.model.network.FollowApi
+import com.example.twitturin.auth.model.network.AuthApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -10,11 +10,11 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object FollowModule {
+object AuthModule {
 
     @Provides
     @Singleton
-    fun provideFollowApi(retrofit: Retrofit): FollowApi {
-        return retrofit.create(FollowApi::class.java)
+    fun provideApi(retrofit: Retrofit): AuthApi {
+        return retrofit.create(AuthApi::class.java)
     }
 }

@@ -1,6 +1,6 @@
 package com.example.twitturin.ui.sealeds
 
-import com.example.twitturin.model.data.tweets.Tweet
+import com.example.twitturin.tweet.model.data.Tweet
 
 sealed class SearchResource{
     data class Success(val data : Tweet): SearchResource()

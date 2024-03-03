@@ -1,4 +1,4 @@
-package com.example.twitturin.ui.sealeds
+package com.example.twitturin.auth.sealed
 
 import com.example.twitturin.model.data.users.User
 

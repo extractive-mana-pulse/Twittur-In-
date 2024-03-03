@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.example.twitturin.model.data.users.User
 import com.example.twitturin.follow.model.network.FollowApi
-import com.example.twitturin.ui.sealeds.DeleteFollow
+import com.example.twitturin.follow.sealed.DeleteFollow
 import com.example.twitturin.follow.sealed.FollowResult
 import com.example.twitturin.viewmodel.event.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel

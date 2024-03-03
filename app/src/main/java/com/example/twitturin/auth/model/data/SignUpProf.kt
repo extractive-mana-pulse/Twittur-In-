@@ -1,4 +1,4 @@
-package com.example.twitturin.auth.data
+package com.example.twitturin.auth.model.data
 
 data class SignUpProf(
 

@@ -1,6 +1,6 @@
 package com.example.twitturin.auth.sealed
 
-import com.example.twitturin.auth.data.SignUpProf
+import com.example.twitturin.auth.model.data.SignUpProf
 
 sealed class SignUpProfResult {
     data class Success(val response: SignUpProf) : SignUpProfResult()

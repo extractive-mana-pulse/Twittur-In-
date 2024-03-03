@@ -1,4 +1,4 @@
-package com.example.twitturin.ui.fragments.topAppBar
+package com.example.twitturin.ui.fragments.top_app_bar
 
 import android.annotation.SuppressLint
 import android.os.Bundle

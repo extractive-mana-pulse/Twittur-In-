@@ -23,12 +23,12 @@ import com.example.twitturin.R
 import com.example.twitturin.databinding.FragmentDetailBinding
 import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.manager.SessionManager
-import com.example.twitturin.model.data.tweets.Tweet
+import com.example.twitturin.tweet.model.data.Tweet
 import com.example.twitturin.model.repo.Repository
 import com.example.twitturin.ui.adapters.PostAdapter
 import com.example.twitturin.ui.fragments.bottom_sheets.MoreSettingsDetailFragment
 import com.example.twitturin.follow.sealed.FollowResult
-import com.example.twitturin.ui.sealeds.PostReply
+import com.example.twitturin.tweet.sealed.PostReply
 import com.example.twitturin.profile.sealed.UsersResult
 import com.example.twitturin.follow.vm.FollowingViewModel
 import com.example.twitturin.viewmodel.LikeViewModel

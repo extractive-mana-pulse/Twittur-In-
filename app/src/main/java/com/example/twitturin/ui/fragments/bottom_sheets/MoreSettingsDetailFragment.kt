@@ -9,15 +9,17 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
 import com.example.twitturin.helper.SnackbarHelper
-import com.example.twitturin.ui.sealeds.DeleteResult
 import com.example.twitturin.follow.sealed.FollowResult
 import com.example.twitturin.follow.vm.FollowingViewModel
 import com.example.twitturin.profile.vm.ProfileViewModel
 import com.example.twitturin.manager.SessionManager
+import com.example.twitturin.tweet.sealed.TweetDelete
+import com.example.twitturin.tweet.vm.TweetViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -32,6 +34,7 @@ class MoreSettingsDetailFragment : BottomSheetDialogFragment() {
     @Inject lateinit var sessionManager: SessionManager
     private lateinit var profileViewModel: ProfileViewModel
     private lateinit var followViewModel: FollowingViewModel
+    private val tweetViewModel : TweetViewModel by viewModels()
 
 
     /** If i want to leave a comment as a doc. I need to write this type of doc outside override methods */
@@ -101,7 +104,7 @@ class MoreSettingsDetailFragment : BottomSheetDialogFragment() {
             alertDialogBuilder.setTitle(resources.getString(R.string.delete_tweet_title))
             alertDialogBuilder.setMessage(resources.getString(R.string.delete_tweet_message))
             alertDialogBuilder.setPositiveButton(resources.getString(R.string.yes)) { _, _ ->
-                profileViewModel.deleteTweet(tweetId!!, "Bearer $token")
+                tweetViewModel.deleteTweet(tweetId!!, "Bearer $token")
                 findNavController().popBackStack()
                 dismiss()
             }
@@ -113,9 +116,9 @@ class MoreSettingsDetailFragment : BottomSheetDialogFragment() {
             val alertDialog = alertDialogBuilder.create()
             alertDialog.show()
 
-            profileViewModel.deleteTweetResult.observe(viewLifecycleOwner){ result ->
+            tweetViewModel.deleteTweetResult.observe(viewLifecycleOwner){ result ->
                 when(result){
-                    is DeleteResult.Success -> {
+                    is TweetDelete.Success -> {
                         snackbarHelper.snackbar(
                             requireActivity().findViewById(R.id.bottom_sheet_root_layout),
                             requireActivity().findViewById(R.id.add_post),
@@ -123,7 +126,7 @@ class MoreSettingsDetailFragment : BottomSheetDialogFragment() {
                         )
 
                     }
-                    is  DeleteResult.Error -> {
+                    is  TweetDelete.Error -> {
                         snackbarHelper.snackbarError(
                             requireActivity().findViewById(R.id.bottom_sheet_root_layout),
                             requireActivity().findViewById(R.id.bottom_sheet_root_layout),

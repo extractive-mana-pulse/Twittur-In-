@@ -6,6 +6,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 import com.example.twitturin.BuildConfig
 import com.example.twitturin.follow.model.network.FollowApi
+import com.example.twitturin.tweet.model.network.TweetApi
 
 object RetrofitInstance {
 
@@ -31,5 +32,14 @@ object RetrofitInstance {
             .client(client)
             .build()
             .create(FollowApi::class.java)
+    }
+
+    val tweetApi: TweetApi by lazy {
+        Retrofit.Builder()
+            .baseUrl(BuildConfig.BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(client)
+            .build()
+            .create(TweetApi::class.java)
     }
 }

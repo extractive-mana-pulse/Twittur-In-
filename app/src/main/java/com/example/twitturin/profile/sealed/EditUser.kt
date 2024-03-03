@@ -2,10 +2,10 @@ package com.example.twitturin.profile.sealed
 
 import com.example.twitturin.model.data.editUser.EditProfile
 
-sealed class EditUserResult {
+sealed class EditUser {
 
-    data class Success(val editUser : EditProfile) : EditUserResult()
-    data class Error(val statusCode: Int) : EditUserResult() {
+    data class Success(val editUser : EditProfile) : EditUser()
+    data class Error(val statusCode: Int) : EditUser() {
         val error: String
             get() = when (statusCode) {
                 400 -> "Bad Request"

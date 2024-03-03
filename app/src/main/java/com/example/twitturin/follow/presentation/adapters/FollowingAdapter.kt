@@ -11,7 +11,7 @@ import com.bumptech.glide.Glide
 import com.example.twitturin.R
 import com.example.twitturin.databinding.RcViewFollowingBinding
 import com.example.twitturin.model.data.users.User
-import com.example.twitturin.ui.sealeds.DeleteFollow
+import com.example.twitturin.follow.sealed.DeleteFollow
 import com.example.twitturin.follow.vm.FollowingViewModel
 import com.example.twitturin.manager.SessionManager
 import javax.inject.Inject

@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.twitturin.R
 import com.example.twitturin.databinding.FragmentTweetsBinding
 import com.example.twitturin.helper.SnackbarHelper
-import com.example.twitturin.model.data.tweets.Tweet
+import com.example.twitturin.tweet.model.data.Tweet
 import com.example.twitturin.model.repo.Repository
 import com.example.twitturin.tweet.presentation.adapters.TweetAdapter
 import com.example.twitturin.viewmodel.MainViewModel

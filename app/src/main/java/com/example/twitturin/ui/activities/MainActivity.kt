@@ -4,19 +4,19 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.res.Configuration
-import android.os.Build
 import android.os.Bundle
 import android.view.View
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
 import com.example.twitturin.MyPreferences
 import com.example.twitturin.R
 import com.example.twitturin.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Locale
 
+@Suppress("DEPRECATION")
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
@@ -31,6 +31,7 @@ class MainActivity : AppCompatActivity() {
         checkTheme()
         loadLocale()
 
+        binding.bottomNavView.setupWithNavController(navController)
 
         binding.bottomNavView.setOnItemSelectedListener {
             when(it.itemId) {

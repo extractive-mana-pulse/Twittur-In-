@@ -16,13 +16,14 @@ import com.example.twitturin.R
 import com.example.twitturin.databinding.RcViewUserTweetsBinding
 import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.manager.SessionManager
-import com.example.twitturin.model.data.tweets.Tweet
+import com.example.twitturin.tweet.model.data.Tweet
+import com.example.twitturin.tweet.sealed.TweetDelete
 import com.example.twitturin.tweet.vm.TweetViewModel
-import com.example.twitturin.ui.sealeds.DeleteResult
 import com.example.twitturin.viewmodel.LikeViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
+import java.util.TimeZone
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -192,7 +193,7 @@ class TweetAdapter @Inject constructor(
                                 tweetViewModel.deleteTweetResult.observe(parentLifecycleOwner) { result ->
 
                                     when(result){
-                                        is DeleteResult.Success -> {
+                                        is TweetDelete.Success -> {
                                             alertDialog.dismiss()
                                             snackbarHelper.snackbar(
                                                 holder.itemView.findViewById(R.id.user_own_root_layout),
@@ -200,7 +201,7 @@ class TweetAdapter @Inject constructor(
                                                 message = context.resources.getString(R.string.deleted)
                                             )
                                         }
-                                        is  DeleteResult.Error -> {
+                                        is  TweetDelete.Error -> {
                                             alertDialog.dismiss()
                                             snackbarHelper.snackbarError(
                                                 holder.itemView.findViewById(R.id.user_own_root_layout),

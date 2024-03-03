@@ -1,4 +1,4 @@
-package com.example.twitturin.ui.sealeds
+package com.example.twitturin.follow.sealed
 
 sealed class DeleteFollow {
     data object Success : DeleteFollow()
