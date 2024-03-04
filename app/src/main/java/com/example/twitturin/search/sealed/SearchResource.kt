@@ -1,4 +1,4 @@
-package com.example.twitturin.ui.sealeds
+package com.example.twitturin.search.sealed
 
 import com.example.twitturin.tweet.model.data.Tweet
 

@@ -1,4 +1,4 @@
-package com.example.twitturin.ui.fragments
+package com.example.twitturin.tweet.presentation.fragments
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -25,11 +25,11 @@ import com.example.twitturin.manager.SessionManager
 import com.example.twitturin.tweet.model.data.Tweet
 import com.example.twitturin.model.repo.Repository
 import com.example.twitturin.ui.adapters.PostAdapter
-import com.example.twitturin.ui.fragments.bottom_sheets.MoreSettingsDetailFragment
 import com.example.twitturin.follow.sealed.FollowResult
 import com.example.twitturin.tweet.sealed.PostReply
 import com.example.twitturin.profile.sealed.UsersResult
 import com.example.twitturin.follow.vm.FollowViewModel
+import com.example.twitturin.profile.presentation.fragments.FullScreenImageFragment
 import com.example.twitturin.tweet.vm.TweetViewModel
 import com.example.twitturin.tweet.vm.LikeViewModel
 import com.example.twitturin.viewmodel.MainViewModel

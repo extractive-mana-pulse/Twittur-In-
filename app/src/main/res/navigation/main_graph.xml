@@ -43,7 +43,7 @@
 <!--  privateMessagesFragment  -->
     <fragment
         android:id="@+id/privateMessagesFragment"
-        android:name="com.example.twitturin.ui.fragments.bottom_nav_view.PrivateMessagesFragment"
+        android:name="com.example.twitturin.chat.presentation.fragments.PrivateMessagesFragment"
         android:label="fragment_private_messages"
         tools:layout="@layout/fragment_private_messages">
 
@@ -71,7 +71,7 @@
 <!--  notificationsFragment  -->
     <fragment
         android:id="@+id/notificationsFragment"
-        android:name="com.example.twitturin.ui.fragments.bottom_nav_view.NotificationsFragment"
+        android:name="com.example.twitturin.notification.presentation.fragments.NotificationsFragment"
         android:label="fragment_notifications"
         tools:layout="@layout/fragment_notifications">
 
@@ -131,7 +131,7 @@
 <!--  publicPostFragment  -->
     <fragment
         android:id="@+id/publicPostFragment"
-        android:name="com.example.twitturin.ui.fragments.PublicPostFragment"
+        android:name="com.example.twitturin.tweet.presentation.fragments.PublicPostFragment"
         android:label="fragment_public_post"
         tools:layout="@layout/fragment_public_post" >
 
@@ -150,7 +150,7 @@
 <!--  searchFragment  -->
     <fragment
         android:id="@+id/searchFragment"
-        android:name="com.example.twitturin.ui.fragments.bottom_nav_view.SearchFragment"
+        android:name="com.example.twitturin.search.presentation.fragments.SearchFragment"
         android:label="fragment_search"
         tools:layout="@layout/fragment_search">
 
@@ -195,7 +195,7 @@
 <!--  likesFragment  -->
     <fragment
         android:id="@+id/likesFragment"
-        android:name="com.example.twitturin.ui.fragments.view_pager.LikesFragment"
+        android:name="com.example.twitturin.tweet.presentation.fragments.LikesFragment"
         android:label="fragment_likes"
         tools:layout="@layout/fragment_likes" >
 
@@ -308,7 +308,7 @@
 
     <fragment
         android:id="@+id/fullScreenImageFragment"
-        android:name="com.example.twitturin.ui.fragments.FullScreenImageFragment"
+        android:name="com.example.twitturin.profile.presentation.fragments.FullScreenImageFragment"
         android:label="fragment_full_screen_image">
 
         <argument
@@ -343,14 +343,14 @@
 
     <dialog
         android:id="@+id/myBottomSheetDialogFragment"
-        android:name="com.example.twitturin.ui.fragments.bottom_sheets.MoreSettingsDetailFragment"
+        android:name="com.example.twitturin.tweet.presentation.fragments.MoreSettingsDetailFragment"
         android:label="MyBottomSheetDialogFragment" >
         
     </dialog>
 
     <fragment
         android:id="@+id/detailFragment"
-        android:name="com.example.twitturin.ui.fragments.DetailFragment"
+        android:name="com.example.twitturin.tweet.presentation.fragments.DetailFragment"
         android:label="fragment_detail"
         tools:layout="@layout/fragment_detail" >
         <action
@@ -362,7 +362,7 @@
     </fragment>
     <fragment
         android:id="@+id/reportFragment"
-        android:name="com.example.twitturin.ui.fragments.ReportFragment"
+        android:name="com.example.twitturin.tweet.presentation.fragments.ReportFragment"
         android:label="fragment_report"
         tools:layout="@layout/fragment_report" >
         <action

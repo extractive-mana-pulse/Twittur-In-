@@ -1,4 +1,4 @@
-package com.example.twitturin.ui.fragments.bottom_sheets
+package com.example.twitturin.tweet.presentation.fragments
 
 import android.annotation.SuppressLint
 import android.content.Context

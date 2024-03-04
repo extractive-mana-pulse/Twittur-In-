@@ -1,4 +1,4 @@
-package com.example.twitturin.ui.fragments.view_pager
+package com.example.twitturin.tweet.presentation.fragments
 
 import android.annotation.SuppressLint
 import android.os.Bundle

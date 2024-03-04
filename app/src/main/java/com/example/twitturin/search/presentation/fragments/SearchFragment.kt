@@ -1,4 +1,4 @@
-package com.example.twitturin.ui.fragments.bottom_nav_view
+package com.example.twitturin.search.presentation.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.twitturin.R
 import com.example.twitturin.databinding.FragmentSearchBinding
 import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.model.repo.Repository

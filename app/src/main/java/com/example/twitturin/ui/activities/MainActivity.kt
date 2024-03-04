@@ -39,7 +39,6 @@ class MainActivity : AppCompatActivity() {
             R.id.studentRegistrationFragment,
             R.id.professorRegistrationFragment,
             R.id.editProfileFragment,
-            R.id.privateMessagesFragment,
             R.id.kindFragment,
             R.id.profileFragment,
             R.id.followersListFragment,

@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.twitturin.model.repo.Repository
 import com.example.twitturin.profile.sealed.UsersResult
 import com.example.twitturin.tweet.model.data.Tweet
-import com.example.twitturin.ui.sealeds.SearchResource
+import com.example.twitturin.search.sealed.SearchResource
 import kotlinx.coroutines.launch
 import retrofit2.Response
 
@@ -41,7 +41,7 @@ class MainViewModel (
         searchNews.postValue(handleSearchNews(response))
     }
 
-    private fun handleSearchNews(response: Response<Tweet>): SearchResource{
+    private fun handleSearchNews(response: Response<Tweet>): SearchResource {
         if(response.isSuccessful){
             response.body()?.let { resultResponse ->
                 return SearchResource.Success(resultResponse)

@@ -2,12 +2,12 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.fragments.bottom_nav_view.NotificationsFragment">
+    tools:context=".notification.presentation.fragments.NotificationsFragment">
 
     <data>
         <variable
             name="notificationsFragment"
-            type="com.example.twitturin.ui.fragments.bottom_nav_view.NotificationsFragment" />
+            type="com.example.twitturin.notification.presentation.fragments.NotificationsFragment" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

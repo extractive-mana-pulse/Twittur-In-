@@ -24,7 +24,6 @@ import com.example.twitturin.profile.presentation.adapters.ProfileViewPagerAdapt
 import com.example.twitturin.profile.sealed.AccountDelete
 import com.example.twitturin.profile.sealed.UserCredentials
 import com.example.twitturin.profile.vm.ProfileViewModel
-import com.example.twitturin.ui.fragments.FullScreenImageFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint

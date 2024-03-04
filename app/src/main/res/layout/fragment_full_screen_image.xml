@@ -5,7 +5,7 @@
     android:layout_width="0dp"
     android:layout_height="0dp"
     android:id="@+id/full_screen_layout"
-    tools:context=".ui.fragments.FullScreenImageFragment">
+    tools:context=".profile.presentation.fragments.FullScreenImageFragment">
 
     <ImageView
         android:id="@+id/image_full_screen"

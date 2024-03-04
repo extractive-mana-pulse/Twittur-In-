@@ -1,4 +1,4 @@
-package com.example.twitturin.ui.fragments.bottom_nav_view
+package com.example.twitturin.notification.presentation.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater

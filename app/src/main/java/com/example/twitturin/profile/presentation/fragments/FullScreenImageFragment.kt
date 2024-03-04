@@ -1,18 +1,13 @@
-package com.example.twitturin.ui.fragments
+package com.example.twitturin.profile.presentation.fragments
 
 import android.graphics.Bitmap
 import android.graphics.Color
-import android.graphics.RenderEffect
-import android.graphics.Shader
 import android.graphics.drawable.ColorDrawable
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import com.example.twitturin.databinding.FragmentFullScreenImageBinding
 
 @Suppress("DEPRECATION")
