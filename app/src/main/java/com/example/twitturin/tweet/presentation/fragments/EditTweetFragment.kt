@@ -13,7 +13,7 @@ import com.example.twitturin.R
 import com.example.twitturin.databinding.FragmentEditTweetBinding
 import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.manager.SessionManager
-import com.example.twitturin.tweet.sealed.EditTweetResult
+import com.example.twitturin.tweet.sealed.EditTweet
 import com.example.twitturin.tweet.vm.TweetViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -55,11 +55,11 @@ class EditTweetFragment : Fragment() {
 
             tweetViewModel.editTweetResult.observe(viewLifecycleOwner) { result ->
                 when (result) {
-                    is EditTweetResult.Success -> {
+                    is EditTweet.Success -> {
                         findNavController().popBackStack()
                     }
 
-                    is EditTweetResult.Error -> {
+                    is EditTweet.Error -> {
                         snackbarHelper.snackbarError(
                             requireActivity().findViewById<ConstraintLayout>(R.id.edit_tweet_tv_for_snackbar),
                             binding.editTweetTvForSnackbar,

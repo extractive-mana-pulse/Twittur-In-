@@ -1,8 +1,8 @@
 package com.example.twitturin.tweet.model.domain.repository
 
-import com.example.twitturin.model.data.likeTweet.LikeTweet
-import com.example.twitturin.model.data.publicTweet.TweetContent
-import com.example.twitturin.model.data.replyToTweet.ReplyContent
+import com.example.twitturin.tweet.model.data.LikeTweet
+import com.example.twitturin.tweet.model.data.TweetContent
+import com.example.twitturin.tweet.model.data.ReplyContent
 import com.example.twitturin.tweet.model.data.Tweet
 import retrofit2.Call
 import retrofit2.Response

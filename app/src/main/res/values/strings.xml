@@ -96,6 +96,8 @@
     <string name="choose_picture">choose picture</string>
     <string name="change_theme">Change Mode</string>
     <string name="back">back</string>
+    <string name="groups">Groups</string>
+    <string name="chat">Chat</string>
 
     <string-array name="major_array">
         <item>SE</item>

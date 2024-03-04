@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.twitturin.model.data.editUser.EditProfile
+import com.example.twitturin.profile.model.data.EditProfile
 import com.example.twitturin.profile.model.domain.repository.ProfileRepository
 import com.example.twitturin.profile.sealed.AccountDelete
 import com.example.twitturin.profile.sealed.EditUser

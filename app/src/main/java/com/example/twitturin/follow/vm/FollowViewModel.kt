@@ -6,8 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.twitturin.follow.model.domain.repository.FollowRepository
-import com.example.twitturin.model.data.users.User
-import com.example.twitturin.follow.sealed.DeleteFollow
+import com.example.twitturin.auth.model.data.User
+import com.example.twitturin.follow.sealed.UnFollow
 import com.example.twitturin.follow.sealed.FollowResult
 import com.example.twitturin.viewmodel.event.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -65,21 +65,22 @@ class FollowViewModel @Inject constructor(
 
     /** this code made for un follow single user when user press unfollow button.*/
 
-    private val _deleteFollow = SingleLiveEvent<DeleteFollow>()
-    val deleteFollowResult: LiveData<DeleteFollow> = _deleteFollow
+    private val _deleteFollow = SingleLiveEvent<UnFollow>()
+    val deleteFollowResult: LiveData<UnFollow> = _deleteFollow
 
-    fun deleteFollow(id : String, token: String) {
+    fun unFollow(id : String, token: String) {
         repository.deleteFollow(id, token).enqueue(object : Callback<User> {
             override fun onResponse(call: Call<User>, response: Response<User>) {
                 if (response.isSuccessful) {
-                    _deleteFollow.value = DeleteFollow.Success
+                    val responseBody = response.body()
+                    _deleteFollow.value = responseBody?.let { UnFollow.Success(it) }
                 } else {
-                    _deleteFollow.value = DeleteFollow.Error(response.code().toString())
+                    _deleteFollow.value = UnFollow.Error(response.code().toString())
                 }
             }
 
             override fun onFailure(call: Call<User>, t: Throwable) {
-                _deleteFollow.value = DeleteFollow.Error("Failed to unfollow user")
+                _deleteFollow.value = UnFollow.Error("Failed to unfollow user")
             }
         })
     }

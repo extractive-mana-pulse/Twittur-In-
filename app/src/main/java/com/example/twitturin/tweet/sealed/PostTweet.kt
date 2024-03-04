@@ -1,6 +1,6 @@
 package com.example.twitturin.tweet.sealed
 
-import com.example.twitturin.model.data.publicTweet.TweetContent
+import com.example.twitturin.tweet.model.data.TweetContent
 
 sealed class PostTweet{
     data class Success(val response: TweetContent) : PostTweet()

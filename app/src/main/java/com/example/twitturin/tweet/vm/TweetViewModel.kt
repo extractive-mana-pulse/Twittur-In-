@@ -5,11 +5,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.twitturin.model.data.publicTweet.TweetContent
-import com.example.twitturin.model.data.replyToTweet.ReplyContent
+import com.example.twitturin.tweet.model.data.TweetContent
+import com.example.twitturin.tweet.model.data.ReplyContent
 import com.example.twitturin.tweet.model.data.Tweet
 import com.example.twitturin.tweet.model.domain.repository.TweetRepository
-import com.example.twitturin.tweet.sealed.EditTweetResult
+import com.example.twitturin.tweet.sealed.EditTweet
 import com.example.twitturin.tweet.sealed.PostReply
 import com.example.twitturin.tweet.sealed.PostTweet
 import com.example.twitturin.tweet.sealed.TweetDelete
@@ -81,8 +81,8 @@ class TweetViewModel @Inject constructor(
         }
     }
 
-    private val _editTweetResult = MutableLiveData<EditTweetResult>()
-    val editTweetResult: LiveData<EditTweetResult> = _editTweetResult
+    private val _editTweetResult = MutableLiveData<EditTweet>()
+    val editTweetResult: LiveData<EditTweet> = _editTweetResult
 
     fun editTweet(content: String, tweetId: String, token: String) {
         val request = TweetContent(content)
@@ -92,15 +92,15 @@ class TweetViewModel @Inject constructor(
                 if (response.isSuccessful) {
                     val editTweet = response.body()
                     if (editTweet != null) {
-                        _editTweetResult.value = EditTweetResult.Success(request)
+                        _editTweetResult.value = EditTweet.Success(request)
                     }
                 } else {
-                    _editTweetResult.value = EditTweetResult.Error(response.code())
+                    _editTweetResult.value = EditTweet.Error(response.code())
                 }
             }
 
             override fun onFailure(call: Call<TweetContent>, t: Throwable) {
-                _editTweetResult.value = EditTweetResult.Error(404)
+                _editTweetResult.value = EditTweet.Error(404)
             }
         })
     }

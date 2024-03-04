@@ -1,7 +1,5 @@
 package com.example.twitturin.ui.sealeds
 
-import com.example.twitturin.model.data.editUser.EditProfile
-
 sealed class HttpResponses {
     data class Error(val statusCode: Int) : HttpResponses() {
         val errorMessage: String

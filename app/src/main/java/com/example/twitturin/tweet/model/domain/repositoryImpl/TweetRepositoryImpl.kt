@@ -1,8 +1,8 @@
 package com.example.twitturin.tweet.model.domain.repositoryImpl
 
-import com.example.twitturin.model.data.likeTweet.LikeTweet
-import com.example.twitturin.model.data.publicTweet.TweetContent
-import com.example.twitturin.model.data.replyToTweet.ReplyContent
+import com.example.twitturin.tweet.model.data.LikeTweet
+import com.example.twitturin.tweet.model.data.TweetContent
+import com.example.twitturin.tweet.model.data.ReplyContent
 import com.example.twitturin.tweet.model.data.Tweet
 import com.example.twitturin.tweet.model.domain.repository.TweetRepository
 import com.example.twitturin.tweet.model.network.TweetApi

@@ -96,4 +96,6 @@
     <string name="choose_picture">scegli lʻimmagine</string>
     <string name="change_theme">Cambia modalità</string>
     <string name="back">back</string>
+    <string name="groups">Groups</string>
+    <string name="chat">Chat</string>
 </resources>

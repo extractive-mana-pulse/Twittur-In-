@@ -9,13 +9,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
-import com.example.twitturin.databinding.FragmentSignInBinding
-import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.auth.sealed.SignInResult
 import com.example.twitturin.auth.vm.SignInViewModel
+import com.example.twitturin.databinding.FragmentSignInBinding
+import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.manager.SessionManager
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject

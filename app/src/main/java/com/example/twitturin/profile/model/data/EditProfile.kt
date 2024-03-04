@@ -1,4 +1,4 @@
-package com.example.twitturin.model.data.editUser
+package com.example.twitturin.profile.model.data
 
 import com.google.gson.annotations.SerializedName
 

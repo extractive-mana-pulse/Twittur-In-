@@ -2,7 +2,7 @@ package com.example.twitturin.follow.model.domain.repositoryImpl
 
 import com.example.twitturin.follow.model.domain.repository.FollowRepository
 import com.example.twitturin.follow.model.network.FollowApi
-import com.example.twitturin.model.data.users.User
+import com.example.twitturin.auth.model.data.User
 import retrofit2.Call
 import retrofit2.Response
 

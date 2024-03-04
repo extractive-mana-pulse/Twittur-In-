@@ -1,8 +1,7 @@
 package com.example.twitturin.profile.model.network
 
-import com.example.twitturin.model.data.editUser.EditProfile
-import com.example.twitturin.model.data.publicTweet.TweetContent
-import com.example.twitturin.model.data.users.User
+import com.example.twitturin.profile.model.data.EditProfile
+import com.example.twitturin.auth.model.data.User
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body

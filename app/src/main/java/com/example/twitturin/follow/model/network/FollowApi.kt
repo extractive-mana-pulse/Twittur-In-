@@ -1,6 +1,6 @@
 package com.example.twitturin.follow.model.network
 
-import com.example.twitturin.model.data.users.User
+import com.example.twitturin.auth.model.data.User
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.DELETE

@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter
 import android.widget.EditText
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
@@ -25,9 +26,9 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class StudentRegistrationFragment : Fragment() {
 
-    private lateinit var viewModel : SignUpViewModel
     @Inject lateinit var snackbarHelper: SnackbarHelper
     private val editTextList: MutableList<EditText> = mutableListOf()
+    private val signUpViewModel : SignUpViewModel by viewModels()
     private val binding by lazy { FragmentStudentRegistrationBinding.inflate(layoutInflater) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -37,15 +38,13 @@ class StudentRegistrationFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel = ViewModelProvider(this)[SignUpViewModel::class.java]
-
         binding.studentSignUpBtn.setOnClickListener {
             val fullname = binding.fullNameEt.text.toString().trim()
             val username = binding.userNameEt.text.toString().trim()
             val studentId = binding.studentIdEt.text.toString().trim()
             val major = binding.planetsSpinner.selectedItem.toString()
             val password = binding.studentPasswordEt.text.toString().trim()
-            viewModel.signUp(fullname, username, studentId, major, password, "student")
+            signUpViewModel.signUpStudent(fullname, username, studentId, major, password, "student")
         }
 
         editTextList.add(binding.userNameEt)
@@ -101,7 +100,7 @@ class StudentRegistrationFragment : Fragment() {
             }
         })
 
-        viewModel.signUpStudentResult.observe(viewLifecycleOwner) { result ->
+        signUpViewModel.signUpStudentResult.observe(viewLifecycleOwner) { result ->
             when (result) {
                 is SignUpStudentResult.Success -> {
                     findNavController().navigate(R.id.action_studentRegistrationFragment_to_signInFragment)

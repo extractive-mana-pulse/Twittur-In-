@@ -14,4 +14,6 @@
     <string name="choose_picture">choose picture</string>
     <string name="change_theme">Change Theme</string>
     <string name="back">back</string>
+    <string name="groups">Groups</string>
+    <string name="chat">Chat</string>
 </resources>

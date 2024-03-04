@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
@@ -23,9 +24,9 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class ProfessorRegistrationFragment : Fragment() {
 
-    private lateinit var viewModel : SignUpViewModel
     @Inject lateinit var snackbarHelper: SnackbarHelper
     private val profEditTextList: MutableList<EditText> = mutableListOf()
+    private val signUpViewModel : SignUpViewModel by viewModels()
     private val binding by lazy { FragmentProfessorRegistrationBinding.inflate(layoutInflater) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -35,14 +36,12 @@ class ProfessorRegistrationFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-        viewModel = ViewModelProvider(requireActivity())[SignUpViewModel::class.java]
         binding.signUpProf.setOnClickListener {
             val fullName = binding.profFullnameEt.text.toString().trim()
             val username = binding.profUsernameEt.text.toString().trim()
             val subject = binding.profSubjectEt.text.toString().trim()
             val password = binding.profPasswordEt.text.toString().trim()
-            viewModel.signUpProf(fullName, username, subject, password, "teacher")
+            signUpViewModel.signUpProf(fullName, username, subject, password, "teacher")
         }
 
         profEditTextList.add(binding.profFullnameEt)
@@ -90,7 +89,7 @@ class ProfessorRegistrationFragment : Fragment() {
             }
         })
 
-        viewModel.profRegResult.observe(viewLifecycleOwner) { result ->
+        signUpViewModel.profRegResult.observe(viewLifecycleOwner) { result ->
             when (result) {
                 is SignUpProfResult.Success -> {
                     findNavController().navigate(R.id.action_professorRegistrationFragment_to_signInFragment)

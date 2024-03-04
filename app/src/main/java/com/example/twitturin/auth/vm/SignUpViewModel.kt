@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.example.twitturin.auth.model.data.SignUpProf
 import com.example.twitturin.auth.model.data.SignUpStudent
-import com.example.twitturin.auth.model.network.AuthApi
+import com.example.twitturin.auth.model.domain.repository.AuthRepository
 import com.example.twitturin.auth.sealed.SignUpProfResult
 import com.example.twitturin.auth.sealed.SignUpStudentResult
 import com.example.twitturin.viewmodel.event.SingleLiveEvent
@@ -15,7 +15,9 @@ import retrofit2.Response
 import javax.inject.Inject
 
 @HiltViewModel
-class SignUpViewModel @Inject constructor(private val authApi: AuthApi) : ViewModel() {
+class SignUpViewModel @Inject constructor(
+    private val repository : AuthRepository
+) : ViewModel() {
 
     private val _profRegResult = SingleLiveEvent<SignUpProfResult>()
     val profRegResult: LiveData<SignUpProfResult> = _profRegResult
@@ -23,7 +25,7 @@ class SignUpViewModel @Inject constructor(private val authApi: AuthApi) : ViewMo
     fun signUpProf(fullName: String, username: String, subject: String, password: String, kind: String) {
         val request = SignUpProf(fullName, username, subject, password, kind)
 
-        authApi.signUpProf(request).enqueue(object : Callback<SignUpProf> {
+        repository.signUpProf(request).enqueue(object : Callback<SignUpProf> {
             override fun onResponse(call: Call<SignUpProf>, response: Response<SignUpProf>) {
 
                 if (response.isSuccessful) {
@@ -43,20 +45,17 @@ class SignUpViewModel @Inject constructor(private val authApi: AuthApi) : ViewMo
     private val _signUpStudentResult = SingleLiveEvent<SignUpStudentResult>()
     val signUpStudentResult: LiveData<SignUpStudentResult> = _signUpStudentResult
 
-    fun signUp(fullName: String, username: String, studentId: String, major: String, password: String, kind: String) {
+    fun signUpStudent(fullName: String, username: String, studentId: String, major: String, password: String, kind: String) {
         val request = SignUpStudent(fullName, username, studentId, major, password, kind)
-        authApi.signUpStudent(request).enqueue(object : Callback<SignUpStudent> {
+        repository.signUpStudent(request).enqueue(object : Callback<SignUpStudent> {
             override fun onResponse(call: Call<SignUpStudent>, response: Response<SignUpStudent>) {
                 if (response.isSuccessful) {
                     val signUpResponse = response.body()
                     _signUpStudentResult.value = signUpResponse?.let {
-                        SignUpStudentResult.Success(
-                            it
-                        )
+                        SignUpStudentResult.Success( it )
                     }
                 } else {
-                    _signUpStudentResult.value =
-                        SignUpStudentResult.Error(response.code().toString())
+                    _signUpStudentResult.value = SignUpStudentResult.Error(response.code().toString())
                 }
             }
 

@@ -1,6 +1,6 @@
 package com.example.twitturin.profile.sealed
 
-import com.example.twitturin.model.data.editUser.EditProfile
+import com.example.twitturin.profile.model.data.EditProfile
 
 sealed class EditUser {
 

@@ -1,6 +1,6 @@
 package com.example.twitturin.profile.sealed
 
-import com.example.twitturin.model.data.users.User
+import com.example.twitturin.auth.model.data.User
 
 sealed class UsersResult {
     data class Success(val users: List<User>) : UsersResult()

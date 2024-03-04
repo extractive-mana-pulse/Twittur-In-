@@ -1,11 +1,11 @@
 package com.example.twitturin.tweet.sealed
 
-import com.example.twitturin.model.data.publicTweet.TweetContent
+import com.example.twitturin.tweet.model.data.TweetContent
 
-sealed class EditTweetResult {
+sealed class EditTweet {
 
-    data class Success(val editUser : TweetContent) : EditTweetResult()
-    data class Error(val statusCode: Int) : EditTweetResult() {
+    data class Success(val editUser : TweetContent) : EditTweet()
+    data class Error(val statusCode: Int) : EditTweet() {
         val error: String
             get() = when (statusCode) {
                 400 -> "Bad Request"

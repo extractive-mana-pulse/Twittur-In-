@@ -52,32 +52,63 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/private_messages_an_view"
-            android:layout_width="285dp"
-            android:layout_height="285dp"
-            app:lottie_loop="true"
-            app:lottie_autoPlay="true"
-            app:layout_constraintWidth_percent="0.4"
-            app:layout_constraintDimensionRatio="1.1"
-            app:lottie_rawRes="@raw/technical_works"
+
+
+
+<!--        <com.airbnb.lottie.LottieAnimationView-->
+<!--            android:id="@+id/private_messages_an_view"-->
+<!--            android:layout_width="285dp"-->
+<!--            android:layout_height="285dp"-->
+<!--            app:lottie_loop="true"-->
+<!--            app:lottie_autoPlay="true"-->
+<!--            app:layout_constraintWidth_percent="0.4"-->
+<!--            app:layout_constraintDimensionRatio="1.1"-->
+<!--            app:lottie_rawRes="@raw/technical_works"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@id/private_messages_toolbar"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"/>-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/page_information_tv"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="@string/page_unavailable"-->
+<!--            android:textStyle="bold"-->
+<!--            android:textColor="?attr/colorOnSurfaceVariant"-->
+<!--            android:textSize="24sp"-->
+<!--            android:textAlignment="center"-->
+<!--            app:layout_constraintTop_toBottomOf="@id/private_messages_an_view"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"/>-->
+
+        <!--    ViewPager2    -->
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/private_messages_tab_layout"
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:layout_marginTop="4dp"
+            app:tabBackground="@drawable/tab_bg"
+            app:tabIndicatorAnimationMode="linear"
+            app:tabIndicatorColor="?attr/colorPrimary"
+            app:tabIndicatorHeight="4.5dp"
+            app:tabMaxWidth="0dp"
+            app:tabMode="fixed"
+            app:tabTextColor="?attr/colorOnSurface"
+            app:tabSelectedTextColor="?attr/colorPrimary"
+            app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/private_messages_toolbar"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintTop_toBottomOf="@id/private_messages_toolbar"/>
 
-        <TextView
-            android:id="@+id/page_information_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/page_unavailable"
-            android:textStyle="bold"
-            android:textColor="?attr/colorOnSurfaceVariant"
-            android:textSize="24sp"
-            android:textAlignment="center"
-            app:layout_constraintTop_toBottomOf="@id/private_messages_an_view"
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/private_messages_vp2"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintTop_toBottomOf="@id/private_messages_tab_layout"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

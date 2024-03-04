@@ -1,4 +1,4 @@
-package com.example.twitturin.model.data.publicTweet
+package com.example.twitturin.tweet.model.data
 
 data class TweetContent(
     val content : String

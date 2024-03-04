@@ -9,9 +9,9 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.twitturin.R
+import com.example.twitturin.auth.model.data.User
 import com.example.twitturin.databinding.RcViewFollowingBinding
-import com.example.twitturin.model.data.users.User
-import com.example.twitturin.follow.sealed.DeleteFollow
+import com.example.twitturin.follow.sealed.UnFollow
 import com.example.twitturin.follow.vm.FollowViewModel
 import com.example.twitturin.manager.SessionManager
 import javax.inject.Inject
@@ -36,8 +36,8 @@ class FollowingAdapter @Inject constructor(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = list[position]
         val context = holder.itemView.context
-
         sessionManager = SessionManager(context)
+        val token = sessionManager.getToken()
 
         holder.binding.apply {
 
@@ -51,29 +51,28 @@ class FollowingAdapter @Inject constructor(
             fullNameFollowerTv.text = item.fullName ?: "Twittur User"
             usernameFollowerTv.text = "@" + item.username
             postDescription.text = item.bio ?: "This user does not appear to have any biography."
-        }
 
-        val token = sessionManager.getToken()
+            unfollowBtn.setOnClickListener {
+                followViewModel.unFollow(item.id!!,"Bearer $token")
+            }
 
-        holder.binding.unfollowBtn.setOnClickListener {
-            followViewModel.deleteFollow(item.id!!,"Bearer $token")
-        }
+            followViewModel.deleteFollowResult.observe(lifecycleOwner) { result ->
 
-        followViewModel.deleteFollowResult.observe(lifecycleOwner) { result ->
-            when (result) {
+                when (result) {
 
-                is DeleteFollow.Success -> {
-                    Toast.makeText(context, "you unfollow: ${item.username?.uppercase()}", Toast.LENGTH_SHORT).show()
-                }
+                    is UnFollow.Success -> {
+                        Toast.makeText(context, "you unfollow: ${result.user.username}", Toast.LENGTH_SHORT).show()
+                    }
 
-                is DeleteFollow.Error -> {
-                    Toast.makeText(context, result.message, Toast.LENGTH_SHORT).show()
+                    is UnFollow.Error -> {
+                        Toast.makeText(context, result.message, Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         }
 
         holder.itemView.setOnClickListener {
-            Toast.makeText(context, "In Progress", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, context.resources.getString(R.string.in_progress), Toast.LENGTH_SHORT).show()
         }
     }
 

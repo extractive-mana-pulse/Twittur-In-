@@ -96,4 +96,6 @@
     <string name="choose_picture">rasmni tanlang</string>
     <string name="change_theme">Rejimni oʻzgartirish</string>
     <string name="back">back</string>
+    <string name="groups">Groups</string>
+    <string name="chat">Chat</string>
 </resources>
