@@ -8,7 +8,7 @@
 <!--  home Fragment  -->
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.twitturin.ui.fragments.bottom_nav_view.HomeFragment"
+        android:name="com.example.twitturin.ui.fragments.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home">
 
@@ -166,7 +166,7 @@
 <!--  webViewFragment  -->
     <fragment
         android:id="@+id/webViewFragment"
-        android:name="com.example.twitturin.ui.fragments.top_app_bar.WebViewFragment"
+        android:name="com.example.twitturin.ui.fragments.WebViewFragment"
         android:label="fragment_web_view"
         tools:layout="@layout/fragment_web_view" >
 

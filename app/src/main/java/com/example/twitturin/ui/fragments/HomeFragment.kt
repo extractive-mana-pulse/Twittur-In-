@@ -1,4 +1,4 @@
-package com.example.twitturin.ui.fragments.bottom_nav_view
+package com.example.twitturin.ui.fragments
 
 import android.annotation.SuppressLint
 import android.content.Context

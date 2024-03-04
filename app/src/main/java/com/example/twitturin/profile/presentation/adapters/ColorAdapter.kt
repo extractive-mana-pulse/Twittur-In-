@@ -1,4 +1,4 @@
-package com.example.twitturin.ui.adapters
+package com.example.twitturin.profile.presentation.adapters
 
 import android.content.Context
 import android.graphics.PorterDuff
