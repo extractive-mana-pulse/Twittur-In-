@@ -4,12 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.twitturin.event.SingleLiveEvent
+import com.example.twitturin.profile.domain.repository.ProfileRepository
 import com.example.twitturin.profile.model.data.EditProfile
-import com.example.twitturin.profile.model.domain.repository.ProfileRepository
 import com.example.twitturin.profile.sealed.AccountDelete
 import com.example.twitturin.profile.sealed.EditUser
 import com.example.twitturin.profile.sealed.UserCredentials
-import com.example.twitturin.viewmodel.event.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import retrofit2.Call
@@ -22,7 +22,8 @@ class ProfileViewModel @Inject constructor(
     private val repository: ProfileRepository
 ): ViewModel() {
 
-    private val _deleteResult = SingleLiveEvent<AccountDelete>()
+    private val _deleteResult =
+        SingleLiveEvent<AccountDelete>()
     val deleteResult: LiveData<AccountDelete> = _deleteResult
 
     fun deleteUser(userId: String, token : String) {
@@ -40,7 +41,8 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
-    private val _getUserCredentials = SingleLiveEvent<UserCredentials>()
+    private val _getUserCredentials =
+        SingleLiveEvent<UserCredentials>()
     val getUserCredentials: LiveData<UserCredentials> = _getUserCredentials
 
     fun getUserCredentials(userId: String) {

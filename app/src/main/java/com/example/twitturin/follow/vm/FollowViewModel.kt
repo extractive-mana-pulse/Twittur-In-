@@ -5,11 +5,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.twitturin.follow.model.domain.repository.FollowRepository
+import com.example.twitturin.follow.domain.repository.FollowRepository
 import com.example.twitturin.auth.model.data.User
 import com.example.twitturin.follow.sealed.UnFollow
 import com.example.twitturin.follow.sealed.FollowResult
-import com.example.twitturin.viewmodel.event.SingleLiveEvent
+import com.example.twitturin.event.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import retrofit2.Call
@@ -42,7 +42,8 @@ class FollowViewModel @Inject constructor(
 
     /** use SingeLiveEvent instead MutableLiveData. cause in case when you use 2nd option you will receive a message toast or whatever
      * you have there multiple times. Single Live Event show this message only one time*/
-    private val _followResult = SingleLiveEvent<FollowResult>()
+    private val _followResult =
+        SingleLiveEvent<FollowResult>()
     val followResult: LiveData<FollowResult> = _followResult
 
     fun followUsers(id : String, token: String) {
@@ -65,7 +66,8 @@ class FollowViewModel @Inject constructor(
 
     /** this code made for un follow single user when user press unfollow button.*/
 
-    private val _deleteFollow = SingleLiveEvent<UnFollow>()
+    private val _deleteFollow =
+        SingleLiveEvent<UnFollow>()
     val deleteFollowResult: LiveData<UnFollow> = _deleteFollow
 
     fun unFollow(id : String, token: String) {

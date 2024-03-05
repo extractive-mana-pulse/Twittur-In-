@@ -4,10 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.example.twitturin.auth.model.data.SignUpProf
 import com.example.twitturin.auth.model.data.SignUpStudent
-import com.example.twitturin.auth.model.domain.repository.AuthRepository
+import com.example.twitturin.auth.domain.repository.AuthRepository
 import com.example.twitturin.auth.sealed.SignUpProfResult
 import com.example.twitturin.auth.sealed.SignUpStudentResult
-import com.example.twitturin.viewmodel.event.SingleLiveEvent
+import com.example.twitturin.event.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import retrofit2.Call
 import retrofit2.Callback
@@ -19,7 +19,8 @@ class SignUpViewModel @Inject constructor(
     private val repository : AuthRepository
 ) : ViewModel() {
 
-    private val _profRegResult = SingleLiveEvent<SignUpProfResult>()
+    private val _profRegResult =
+        SingleLiveEvent<SignUpProfResult>()
     val profRegResult: LiveData<SignUpProfResult> = _profRegResult
 
     fun signUpProf(fullName: String, username: String, subject: String, password: String, kind: String) {
@@ -42,7 +43,8 @@ class SignUpViewModel @Inject constructor(
         })
     }
 
-    private val _signUpStudentResult = SingleLiveEvent<SignUpStudentResult>()
+    private val _signUpStudentResult =
+        SingleLiveEvent<SignUpStudentResult>()
     val signUpStudentResult: LiveData<SignUpStudentResult> = _signUpStudentResult
 
     fun signUpStudent(fullName: String, username: String, studentId: String, major: String, password: String, kind: String) {

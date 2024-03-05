@@ -10,7 +10,6 @@ import android.os.Build
 import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import com.example.twitturin.R
-import com.example.twitturin.databinding.NotificationBinding
 import com.example.twitturin.notification.Constants
 import com.example.twitturin.ui.activities.MainActivity
 import com.google.firebase.messaging.FirebaseMessagingService

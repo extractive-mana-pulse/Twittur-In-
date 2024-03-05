@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class PostAdapter @Inject constructor(
-    private val lViewModel: LikeViewModel,
+    private val likeViewModel: LikeViewModel,
     private val parentLifecycleOwner: LifecycleOwner
 ) : RecyclerView.Adapter<PostAdapter.ViewHolder>() {
 

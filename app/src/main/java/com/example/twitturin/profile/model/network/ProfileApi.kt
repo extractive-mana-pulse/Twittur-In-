@@ -2,12 +2,14 @@ package com.example.twitturin.profile.model.network
 
 import com.example.twitturin.profile.model.data.EditProfile
 import com.example.twitturin.auth.model.data.User
+import com.example.twitturin.profile.model.data.ImageResource
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
 
@@ -29,4 +31,10 @@ interface ProfileApi {
     @DELETE("users/{id}")
     suspend fun deleteUser(@Path("id") userId: String, @Header("Authorization") token: String): Response<Unit>
 
+    @POST("users/{id}/profilePicture")
+    fun loadImage(
+        @Body image : ImageResource,
+        @Path("id") userId : String,
+        @Header("Authorization") token : String
+    ) : Call<ImageResource>
 }

@@ -7,36 +7,30 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.twitturin.R
 import com.example.twitturin.databinding.FragmentLikesBinding
 import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.manager.SessionManager
-import com.example.twitturin.model.repo.Repository
 import com.example.twitturin.tweet.model.data.Tweet
+import com.example.twitturin.tweet.vm.LikeViewModel
 import com.example.twitturin.tweet.vm.TweetViewModel
 import com.example.twitturin.ui.adapters.PostAdapter
-import com.example.twitturin.tweet.vm.LikeViewModel
-import com.example.twitturin.viewmodel.MainViewModel
-import com.example.twitturin.viewmodel.ViewModelFactory
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class LikesFragment : Fragment() {
 
-    private lateinit var viewModel: MainViewModel
-    private lateinit var binding : FragmentLikesBinding
     @Inject lateinit var sessionManager: SessionManager
     @Inject lateinit var snackbarHelper: SnackbarHelper
     private val lViewModel: LikeViewModel by viewModels()
     private val tweetViewModel : TweetViewModel by viewModels()
+    private val binding by lazy { FragmentLikesBinding.inflate(layoutInflater) }
     private val postAdapter by lazy { PostAdapter(lViewModel, viewLifecycleOwner) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        binding = FragmentLikesBinding.inflate(layoutInflater)
         return binding.root
     }
 
@@ -51,12 +45,7 @@ class LikesFragment : Fragment() {
                 ""){}
 
         }
-
-        val repository = Repository()
-        val viewModelFactory = ViewModelFactory(repository)
-        viewModel = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
         updateRecyclerView()
-
     }
 
     @SuppressLint("NotifyDataSetChanged")

@@ -14,25 +14,21 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
-import com.example.twitturin.MyPreferences
+import com.example.twitturin.preferences.MyPreferences
 import com.example.twitturin.R
 import com.example.twitturin.databinding.FragmentHomeBinding
 import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.manager.SessionManager
-import com.example.twitturin.tweet.model.data.Tweet
-import com.example.twitturin.model.repo.Repository
-import com.example.twitturin.ui.adapters.PostAdapter
 import com.example.twitturin.profile.sealed.UserCredentials
-import com.example.twitturin.tweet.vm.LikeViewModel
-import com.example.twitturin.viewmodel.MainViewModel
 import com.example.twitturin.profile.vm.ProfileViewModel
+import com.example.twitturin.tweet.model.data.Tweet
+import com.example.twitturin.tweet.vm.LikeViewModel
 import com.example.twitturin.tweet.vm.TweetViewModel
-import com.example.twitturin.viewmodel.ViewModelFactory
+import com.example.twitturin.ui.adapters.PostAdapter
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
@@ -43,7 +39,6 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
 
-    private lateinit var viewModel: MainViewModel
     @Inject lateinit var snackbarHelper: SnackbarHelper
     @Inject lateinit var sessionManager: SessionManager
     private val likeViewModel: LikeViewModel by viewModels()
@@ -61,24 +56,7 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.homeFragment = this
 
-        /* this block of code for testing purpose only */
-
-        binding.apply {
-//            testMode.setOnClickListener { appLanguage() }
-        }
-
-//        binding.testImage.setOnClickListener {
-//            activity?.let {
-//                val intent = Intent(it, PhotoPickerActivity::class.java)
-//                startActivity(intent)
-//            }
-//        }
-
-        /* this block of code for testing purpose only */
-
         val headerView: View = binding.navigationView.getHeaderView(0)
-
-//        headerView.setOnClickListener { findNavController().navigate(R.id.action_homeFragment_to_profileFragment) }
 
         val userId = sessionManager.getUserId()
 
@@ -140,10 +118,6 @@ class HomeFragment : Fragment() {
             binding.drawerLayout.openDrawer(GravityCompat.START)
         }
 
-        val repository = Repository()
-        val viewModelFactory = ViewModelFactory(repository)
-        viewModel = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
-
         binding.navigationView.setNavigationItemSelectedListener {menuItem ->
             when(menuItem.itemId){
                 R.id.profile_item -> findNavController().navigate(R.id.action_homeFragment_to_profileFragment)
@@ -155,38 +129,39 @@ class HomeFragment : Fragment() {
             binding.drawerLayout.close()
             true
         }
-
         updateRecyclerView()
     }
 
-    /** This method implement advanced recyclerview setting like a divider and swipe to refresh layout ! */
 
     @SuppressLint("NotifyDataSetChanged")
     private fun updateRecyclerView() {
-        binding.rcView.adapter = postAdapter
-        binding.rcView.addItemDecoration(DividerItemDecoration(binding.rcView.context, DividerItemDecoration.VERTICAL))
-        binding.rcView.layoutManager = LinearLayoutManager(requireContext())
-        tweetViewModel.getTweet(binding.shimmerLayout)
-        tweetViewModel.responseTweets.observe(requireActivity()) { response ->
-            if (response.isSuccessful) {
-                response.body()?.let { tweets ->
-                    val tweetList: MutableList<Tweet> = tweets.toMutableList()
-                    postAdapter.setData(tweetList)
-                    binding.swipeToRefreshLayout.setOnRefreshListener {
-                        val freshList = tweetList.sortedByDescending { it.createdAt }
-                        tweetList.clear()
-                        tweetList.addAll(freshList)
-                        tweetViewModel.getTweet(binding.shimmerLayout)
-                        postAdapter.notifyDataSetChanged()
-                        binding.swipeToRefreshLayout.isRefreshing = false
+
+        binding.apply {
+            rcView.adapter = postAdapter
+            rcView.addItemDecoration(DividerItemDecoration(rcView.context, DividerItemDecoration.VERTICAL))
+            rcView.layoutManager = LinearLayoutManager(requireContext())
+            tweetViewModel.getTweet(shimmerLayout)
+            tweetViewModel.responseTweets.observe(requireActivity()) { response ->
+                if (response.isSuccessful) {
+                    response.body()?.let { tweets ->
+                        val tweetList: MutableList<Tweet> = tweets.toMutableList()
+                        postAdapter.setData(tweetList)
+                        swipeToRefreshLayout.setOnRefreshListener {
+                            val freshList = tweetList.sortedByDescending { it.createdAt }
+                            tweetList.clear()
+                            tweetList.addAll(freshList)
+                            tweetViewModel.getTweet(binding.shimmerLayout)
+                            postAdapter.notifyDataSetChanged()
+                            swipeToRefreshLayout.isRefreshing = false
+                        }
                     }
+                } else {
+                    snackbarHelper.snackbarError(
+                        requireActivity().findViewById(R.id.drawer_layout),
+                        requireActivity().findViewById(R.id.bottom_nav_view),
+                        response.message().toString(),
+                        ""){}
                 }
-            } else {
-                snackbarHelper.snackbarError(
-                    requireActivity().findViewById(R.id.drawer_layout),
-                    requireActivity().findViewById(R.id.bottom_nav_view),
-                    response.message().toString(),
-                    ""){}
             }
         }
     }
@@ -232,7 +207,7 @@ class HomeFragment : Fragment() {
     private fun appLanguage() {
         val builder = MaterialAlertDialogBuilder(requireActivity(), R.style.ThemeOverlay_App_MaterialAlertDialog)
         builder.setTitle(resources.getString(R.string.choose_language))
-        val styles = arrayOf("en", "it", "ru","uz")
+        val styles = arrayOf("en", "it", "ru", "uz")
         builder.setSingleChoiceItems(styles, -1) { dialog, which ->
             if (which==0) {
                 setLocale("en")
@@ -264,10 +239,5 @@ class HomeFragment : Fragment() {
         val editor = requireActivity().getSharedPreferences("Settings", Context.MODE_PRIVATE).edit()
         editor.putString("lang", lang)
         editor.apply()
-    }
-
-    companion object {
-        @JvmStatic
-        fun newInstance() = HomeFragment()
     }
 }

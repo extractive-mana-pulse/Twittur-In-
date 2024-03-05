@@ -3,9 +3,9 @@ package com.example.twitturin.tweet.vm
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.example.twitturin.tweet.model.data.LikeTweet
-import com.example.twitturin.tweet.model.domain.repository.TweetRepository
+import com.example.twitturin.tweet.domain.repository.TweetRepository
 import com.example.twitturin.tweet.sealed.PostLike
-import com.example.twitturin.viewmodel.event.SingleLiveEvent
+import com.example.twitturin.event.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import retrofit2.Call
 import retrofit2.Callback
@@ -17,7 +17,8 @@ class LikeViewModel @Inject constructor(
     private val repository : TweetRepository
 ): ViewModel() {
 
-    private val _likePostResult = SingleLiveEvent<PostLike>()
+    private val _likePostResult =
+        SingleLiveEvent<PostLike>()
     val likePostResult: LiveData<PostLike> = _likePostResult
 
     fun likePost(count: String, userId: String, token: String) {
@@ -39,7 +40,8 @@ class LikeViewModel @Inject constructor(
         })
     }
 
-    private val _likeDeleteResult = SingleLiveEvent<PostLike>()
+    private val _likeDeleteResult =
+        SingleLiveEvent<PostLike>()
     val likeDeleteResult: LiveData<PostLike> = _likeDeleteResult
 
     fun unLikePost(count: String, userId: String, token: String) {

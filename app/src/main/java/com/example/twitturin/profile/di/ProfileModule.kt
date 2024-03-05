@@ -1,7 +1,7 @@
 package com.example.twitturin.profile.di
 
-import com.example.twitturin.profile.model.domain.repository.ProfileRepository
-import com.example.twitturin.profile.model.domain.repositoryImpl.ProfileRepositoryImpl
+import com.example.twitturin.profile.domain.repository.ProfileRepository
+import com.example.twitturin.profile.domain.repositoryImpl.ProfileRepositoryImpl
 import com.example.twitturin.profile.model.network.ProfileApi
 import dagger.Module
 import dagger.Provides
@@ -16,7 +16,7 @@ object ProfileModule {
 
     @Provides
     @Singleton
-    fun provideApi(retrofit: Retrofit): ProfileApi {
+    fun provideProfileApi(retrofit: Retrofit): ProfileApi {
         return retrofit.create(ProfileApi::class.java)
     }
 

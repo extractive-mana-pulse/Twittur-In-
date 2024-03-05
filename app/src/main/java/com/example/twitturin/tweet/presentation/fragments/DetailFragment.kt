@@ -6,34 +6,27 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.twitturin.R
 import com.example.twitturin.databinding.FragmentDetailBinding
+import com.example.twitturin.follow.sealed.FollowResult
+import com.example.twitturin.follow.vm.FollowViewModel
 import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.manager.SessionManager
-import com.example.twitturin.tweet.model.data.Tweet
-import com.example.twitturin.model.repo.Repository
-import com.example.twitturin.ui.adapters.PostAdapter
-import com.example.twitturin.follow.sealed.FollowResult
-import com.example.twitturin.tweet.sealed.PostReply
-import com.example.twitturin.profile.sealed.UsersResult
-import com.example.twitturin.follow.vm.FollowViewModel
 import com.example.twitturin.profile.presentation.fragments.FullScreenImageFragment
-import com.example.twitturin.tweet.vm.TweetViewModel
+import com.example.twitturin.tweet.model.data.Tweet
+import com.example.twitturin.tweet.sealed.PostReply
 import com.example.twitturin.tweet.vm.LikeViewModel
-import com.example.twitturin.viewmodel.MainViewModel
-import com.example.twitturin.viewmodel.ViewModelFactory
+import com.example.twitturin.tweet.vm.TweetViewModel
+import com.example.twitturin.ui.adapters.PostAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -44,11 +37,8 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class DetailFragment : Fragment() {
 
-    private val allUsers = mutableListOf<String>()
-    private lateinit var mainViewModel : MainViewModel
     @Inject lateinit var sessionManager : SessionManager
     @Inject lateinit var snackbarHelper : SnackbarHelper
-    private val followedUsersList = mutableListOf<String>()
     private val likeViewModel : LikeViewModel by viewModels()
     private val tweetViewModel : TweetViewModel by viewModels()
     private val followingViewModel : FollowViewModel by viewModels()
@@ -94,10 +84,6 @@ class DetailFragment : Fragment() {
 
             val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.getDefault())
             dateFormat.timeZone = TimeZone.getTimeZone("UTC")
-
-            val repository = Repository()
-            val viewModelFactory = ViewModelFactory(repository)
-            mainViewModel = ViewModelProvider(requireActivity(), viewModelFactory)[MainViewModel::class.java]
 
             val token = sessionManager.getToken()
             val userId2 = sessionManager.getUserId()
@@ -214,22 +200,6 @@ class DetailFragment : Fragment() {
             // TODO so when follow button pressed. add user's username to "followedList" after check list like below that do logic
             // TODO also use getAll Users endpoint to do that !
 
-            mainViewModel.getAllUsers()
-
-            mainViewModel.usersResult.observe(viewLifecycleOwner) { result ->
-                when (result) {
-                    is UsersResult.Success -> {
-                        val users = result.users
-                        allUsers.add(users.toString())
-                        Log.d("test", allUsers.toString())
-                    }
-                    is UsersResult.Error -> {
-                        val errorMessage = result.errorMessage
-                        Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
-                    }
-                }
-            }
-
             followBtn.setOnClickListener {
                 followingViewModel.followUsers(userId!!, "Bearer $token")
             }
@@ -240,10 +210,8 @@ class DetailFragment : Fragment() {
                         snackbarHelper.snackbar(
                             requireActivity().findViewById(R.id.detail_root_layout),
                             requireActivity().findViewById(R.id.reply_layout),
-                            message = "now you follow: ${username?.uppercase()}"
+                            message = "now you follow: ${result.user.username}"
                         )
-                        followedUsersList.add(username.toString())
-                        Log.d("followed users list", followedUsersList.toString())
                     }
 
                     is FollowResult.Error -> {
@@ -304,17 +272,6 @@ class DetailFragment : Fragment() {
         intent.type = "text/plain"
 
         startActivity(Intent.createChooser(intent, "Choose app:"))
-    }
-
-    private fun checkFollowedUsersStatus() {
-        val username = arguments?.getString("username")
-        if (followedUsersList.contains(username)) {
-            binding.unfollowBtn.visibility = View.VISIBLE
-            binding.followBtn.visibility = View.INVISIBLE
-        } else {
-            binding.unfollowBtn.visibility = View.INVISIBLE
-            binding.followBtn.visibility = View.VISIBLE
-        }
     }
 
     @SuppressLint("NotifyDataSetChanged")

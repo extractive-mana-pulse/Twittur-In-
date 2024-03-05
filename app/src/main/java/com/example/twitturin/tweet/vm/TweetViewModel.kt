@@ -8,12 +8,12 @@ import androidx.lifecycle.viewModelScope
 import com.example.twitturin.tweet.model.data.TweetContent
 import com.example.twitturin.tweet.model.data.ReplyContent
 import com.example.twitturin.tweet.model.data.Tweet
-import com.example.twitturin.tweet.model.domain.repository.TweetRepository
+import com.example.twitturin.tweet.domain.repository.TweetRepository
 import com.example.twitturin.tweet.sealed.EditTweet
 import com.example.twitturin.tweet.sealed.PostReply
 import com.example.twitturin.tweet.sealed.PostTweet
 import com.example.twitturin.tweet.sealed.TweetDelete
-import com.example.twitturin.viewmodel.event.SingleLiveEvent
+import com.example.twitturin.event.SingleLiveEvent
 import com.facebook.shimmer.ShimmerFrameLayout
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -63,7 +63,8 @@ class TweetViewModel @Inject constructor(
         }
     }
 
-    private val _deleteTweetResult = SingleLiveEvent<TweetDelete>()
+    private val _deleteTweetResult =
+        SingleLiveEvent<TweetDelete>()
     val deleteTweetResult: LiveData<TweetDelete> = _deleteTweetResult
 
     fun deleteTweet(tweetId: String, token : String) {
@@ -105,7 +106,8 @@ class TweetViewModel @Inject constructor(
         })
     }
 
-    private val _postReply = SingleLiveEvent<PostReply>()
+    private val _postReply =
+        SingleLiveEvent<PostReply>()
     val postReplyResult: LiveData<PostReply> = _postReply
 
     fun postReply(content: String, tweetId: String, authToken: String) {
@@ -129,7 +131,8 @@ class TweetViewModel @Inject constructor(
         })
     }
 
-    private val _postTweet = SingleLiveEvent<PostTweet>()
+    private val _postTweet =
+        SingleLiveEvent<PostTweet>()
     val postTweetResult: LiveData<PostTweet> = _postTweet
 
     fun postTheTweet(content: String, authToken: String) {

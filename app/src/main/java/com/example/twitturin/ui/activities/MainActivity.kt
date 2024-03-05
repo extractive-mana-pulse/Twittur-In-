@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
-import com.example.twitturin.MyPreferences
+import com.example.twitturin.preferences.MyPreferences
 import com.example.twitturin.R
 import com.example.twitturin.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint

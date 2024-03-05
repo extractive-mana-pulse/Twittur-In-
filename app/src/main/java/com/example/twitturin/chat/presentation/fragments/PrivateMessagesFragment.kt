@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment
 import com.example.twitturin.R
 import com.example.twitturin.chat.presentation.adapters.PrivateMessagesViewPagerAdapter
 import com.example.twitturin.databinding.FragmentPrivateMessagesBinding
-import com.example.twitturin.profile.presentation.adapters.ProfileViewPagerAdapter
 import com.google.android.material.tabs.TabLayoutMediator
 
 class PrivateMessagesFragment : Fragment() {
@@ -28,12 +27,15 @@ class PrivateMessagesFragment : Fragment() {
         TabLayoutMediator(binding.privateMessagesTabLayout, binding.privateMessagesVp2) { tab, pos ->
             when (pos) {
                 0 -> {
-                    tab.text = resources.getString(R.string.chat)
+
                 }
                 1 -> {
-                    tab.text = resources.getString(R.string.groups)
+
                 }
             }
         }.attach()
+
+        binding.privateMessagesTabLayout.getTabAt(0)?.setIcon(R.drawable.chat)
+        binding.privateMessagesTabLayout.getTabAt(1)?.setIcon(R.drawable.groups)
     }
 }

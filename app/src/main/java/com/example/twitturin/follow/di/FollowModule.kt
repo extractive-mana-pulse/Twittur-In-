@@ -1,7 +1,7 @@
 package com.example.twitturin.follow.di
 
-import com.example.twitturin.follow.model.domain.repository.FollowRepository
-import com.example.twitturin.follow.model.domain.repositoryImpl.FollowRepositoryImpl
+import com.example.twitturin.follow.domain.repository.FollowRepository
+import com.example.twitturin.follow.domain.repositoryImpl.FollowRepositoryImpl
 import com.example.twitturin.follow.model.network.FollowApi
 import dagger.Module
 import dagger.Provides
