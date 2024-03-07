@@ -14,9 +14,11 @@ import android.widget.LinearLayout
 import android.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.twitturin.R
+import com.example.twitturin.auth.vm.StayInViewModel
 import com.example.twitturin.databinding.FragmentProfileBinding
 import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.manager.SessionManager
@@ -35,6 +37,7 @@ class ProfileFragment : Fragment() {
 
     @Inject lateinit var sessionManager: SessionManager
     @Inject lateinit var snackbarHelper: SnackbarHelper
+    private lateinit var stayInViewModel: StayInViewModel
     private val profileViewModel: ProfileViewModel by viewModels()
     private val binding by lazy { FragmentProfileBinding.inflate(layoutInflater) }
 
@@ -46,6 +49,8 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.profileFragment = this
+
+        stayInViewModel = ViewModelProvider(requireActivity())[StayInViewModel::class.java]
 
         // this portion of code with viewPager2 added, cause it cause an error: Fragment not found or no longer exist!
         binding.vp2.isSaveEnabled = false
@@ -271,6 +276,7 @@ class ProfileFragment : Fragment() {
         alertDialogBuilder.setMessage(resources.getString(R.string.logout_message))
         alertDialogBuilder.setPositiveButton(resources.getString(R.string.yes)) { _, _ ->
             sessionManager.clearToken()
+            stayInViewModel.setUserLoggedIn(false)
             findNavController().navigate(R.id.action_profileFragment_to_signInFragment)
         }
 
@@ -281,10 +287,5 @@ class ProfileFragment : Fragment() {
         alertDialogBuilder.setCancelable(true)
         val alertDialog = alertDialogBuilder.create()
         alertDialog.show()
-    }
-
-    companion object {
-        @JvmStatic
-        fun newInstance() = ProfileFragment()
     }
 }

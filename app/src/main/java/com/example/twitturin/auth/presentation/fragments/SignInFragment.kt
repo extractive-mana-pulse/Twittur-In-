@@ -9,10 +9,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
 import com.example.twitturin.auth.sealed.SignInResult
 import com.example.twitturin.auth.vm.SignInViewModel
+import com.example.twitturin.auth.vm.StayInViewModel
 import com.example.twitturin.databinding.FragmentSignInBinding
 import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.manager.SessionManager
@@ -24,6 +26,7 @@ class SignInFragment : Fragment() {
 
     @Inject lateinit var sessionManager: SessionManager
     @Inject lateinit var snackbarHelper: SnackbarHelper
+    private lateinit var stayInViewModel : StayInViewModel
     private val signInViewModel : SignInViewModel by viewModels()
     private val binding by lazy { FragmentSignInBinding.inflate(layoutInflater) }
 
@@ -36,10 +39,16 @@ class SignInFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.signInFragment = this
 
+        stayInViewModel = ViewModelProvider(requireActivity())[StayInViewModel::class.java]
+
         binding.signIn.setOnClickListener {
             val username = binding.usernameSignInEt.text.toString().trim()
             val password = binding.passwordEt.text.toString().trim()
             signInViewModel.signIn(username, password)
+        }
+
+        if (stayInViewModel.isUserLoggedIn()) {
+            findNavController().navigate(R.id.action_signInFragment_to_homeFragment)
         }
 
         val textWatcher1 = object : TextWatcher {
@@ -80,7 +89,8 @@ class SignInFragment : Fragment() {
                     val userId = signInViewModel.userId.value
                     sessionManager.saveToken(token.toString())
                     sessionManager.saveUserID(userId.toString())
-                    findNavController().navigate(R.id.action_signInFragment_to_homeFragment)
+
+                    findNavController().navigate(R.id.action_signInFragment_to_stayInFragment)
                 }
 
                 is SignInResult.Error -> {

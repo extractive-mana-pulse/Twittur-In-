@@ -1,8 +1,11 @@
 package com.example.twitturin.auth.di
 
+import android.app.Application
 import com.example.twitturin.auth.domain.repository.AuthRepository
 import com.example.twitturin.auth.domain.repositoryImpl.AuthRepositoryImpl
 import com.example.twitturin.auth.model.network.AuthApi
+import com.example.twitturin.auth.vm.SignInViewModel
+import com.example.twitturin.manager.SessionManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

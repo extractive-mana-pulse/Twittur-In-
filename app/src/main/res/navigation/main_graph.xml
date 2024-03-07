@@ -35,9 +35,10 @@
         <action
             android:id="@+id/action_homeFragment_to_webViewFragment"
             app:destination="@id/webViewFragment"/>
+
         <action
             android:id="@+id/action_homeFragment_to_detailFragment"
-            app:destination="@id/detailFragment" />
+            app:destination="@id/detailFragment"/>
     </fragment>
 
 <!--  privateMessagesFragment  -->
@@ -111,7 +112,8 @@
             android:id="@+id/action_profileFragment_to_signInFragment"
             app:destination="@id/signInFragment"
             app:popUpTo="@id/homeFragment"
-            app:popUpToInclusive="true"/>
+            app:popUpToInclusive="true"
+            app:launchSingleTop="true"/>
 
         <action
             android:id="@+id/action_profileFragment_to_publicPostFragment"
@@ -216,11 +218,18 @@
             android:id="@+id/action_signInFragment_to_homeFragment"
             app:destination="@id/homeFragment"
             app:popUpTo="@id/signInFragment"
-            app:popUpToInclusive="true"/>
+            app:popUpToInclusive="true"
+            app:launchSingleTop="true"/>
 
         <action
             android:id="@+id/action_signInFragment_to_kindFragment"
             app:destination="@id/kindFragment"
+            app:popUpTo="@id/signInFragment"
+            app:popUpToInclusive="false"/>
+
+        <action
+            android:id="@+id/action_signInFragment_to_stayInFragment"
+            app:destination="@id/stayInFragment"
             app:popUpTo="@id/signInFragment"
             app:popUpToInclusive="false"/>
 
@@ -360,6 +369,7 @@
             android:id="@+id/action_detailFragment_to_reportFragment"
             app:destination="@id/reportFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/reportFragment"
         android:name="com.example.twitturin.tweet.presentation.fragments.ReportFragment"
@@ -369,10 +379,25 @@
             android:id="@+id/action_reportFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/editTweetFragment"
         android:name="com.example.twitturin.tweet.presentation.fragments.EditTweetFragment"
         android:label="fragment_edit_tweet"
-        tools:layout="@layout/fragment_edit_tweet" />
+        tools:layout="@layout/fragment_edit_tweet"/>
+
+    <fragment
+        android:id="@+id/stayInFragment"
+        android:name="com.example.twitturin.auth.presentation.fragments.StayInFragment"
+        android:label="fragment_stay_in"
+        tools:layout="@layout/fragment_stay_in">
+
+        <action
+            android:id="@+id/action_stayInFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/stayInFragment"
+            app:popUpToInclusive="true"/>
+
+    </fragment>
 
 </navigation>

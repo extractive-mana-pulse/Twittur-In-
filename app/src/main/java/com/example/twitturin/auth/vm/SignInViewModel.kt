@@ -3,10 +3,10 @@ package com.example.twitturin.auth.vm
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.twitturin.auth.model.data.Login
 import com.example.twitturin.auth.domain.repository.AuthRepository
-import com.example.twitturin.auth.sealed.SignInResult
+import com.example.twitturin.auth.model.data.Login
 import com.example.twitturin.auth.model.data.User
+import com.example.twitturin.auth.sealed.SignInResult
 import com.example.twitturin.event.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import retrofit2.Call
