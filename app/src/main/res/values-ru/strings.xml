@@ -98,4 +98,7 @@
     <string name="back">back</string>
     <string name="groups">Groups</string>
     <string name="chat">Chat</string>
+    <string name="stayIn_title_message">We will save your username login information so that you do not have to enter it each time you log in again.</string>
+    <string name="divider">divider</string>
+    <string name="save_login_details">Save login details?</string>
 </resources>

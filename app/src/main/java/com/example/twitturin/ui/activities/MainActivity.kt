@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity() {
             R.id.fullScreenImageFragment,
             R.id.reportFragment,
             R.id.editTweetFragment,
-
+            R.id.stayInFragment,
         )
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
