@@ -1,6 +1,7 @@
 package com.example.twitturin.profile.presentation.fragments
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -8,10 +9,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.PopupMenu
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
@@ -49,153 +52,164 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.profileFragment = this
+        val userId = sessionManager.getUserId()
+        val baseUserUrl = "https://twitturin.onrender.com/users"
 
         stayInViewModel = ViewModelProvider(requireActivity())[StayInViewModel::class.java]
 
-        // this portion of code with viewPager2 added, cause it cause an error: Fragment not found or no longer exist!
+        /**this portion of code with viewPager2 added, cause it cause an error: Fragment not found or no longer exist!*/
         binding.vp2.isSaveEnabled = false
 
-        val userId = sessionManager.getUserId()
+        binding.apply {
 
-        binding.followersTv.setOnClickListener {
-            findNavController().navigate(R.id.action_profileFragment_to_followersListFragment)
-        }
+            shareProfile.setOnClickListener {
+                val intent = Intent(Intent.ACTION_SEND)
+                val link = "$baseUserUrl/$userId"
 
-        binding.followingTv.setOnClickListener {
-            findNavController().navigate(R.id.action_profileFragment_to_followingListFragment)
-        }
+                intent.putExtra(Intent.EXTRA_TEXT, link)
+                intent.type = "text/plain"
 
-        profileViewModel.getUserCredentials(userId!!)
-        profileViewModel.getUserCredentials.observe(viewLifecycleOwner) { result ->
-            binding.profileShimmerLayout.startShimmer()
-            when (result) {
-                is UserCredentials.Success -> {
-                    binding.profileShimmerLayout.stopShimmer()
-                    binding.profileShimmerLayout.visibility = View.GONE
-                    val profileImage = "${result.user.profilePicture ?: R.drawable.username_person}"
-                    Glide.with(requireContext())
-                        .load(profileImage)
-                        .error(R.drawable.not_found)
-                        .into(binding.profileImage)
+                requireContext().startActivity(Intent.createChooser(intent,"Choose app:"))
+            }
 
-                    binding.profileFullName.text = result.user.fullName ?: "Twittur User"
-                    binding.profileUsername.text = "@" + result.user.username
-                    binding.profileKindTv.text = result.user.kind
-                    binding.profileBiography.text = result.user.bio ?: "This user does not appear to have any biography."
-                    binding.followingCounterTv.text = result.user.followingCount.toString()
-                    binding.followersCounterTv.text = result.user.followersCount.toString()
+            followersTv.setOnClickListener {
+                findNavController().navigate(R.id.action_profileFragment_to_followersListFragment)
+            }
 
-                    // location
-                    if (result.user.country.isNullOrEmpty()) {
-                        binding.profileLocationImg.visibility = View.INVISIBLE
-                        binding.profileLocationTv.visibility = View.GONE
-                    } else {
-                        binding.profileLocationImg.visibility = View.VISIBLE
-                        binding.profileLocationTv.text = result.user.country
+            followingTv.setOnClickListener {
+                findNavController().navigate(R.id.action_profileFragment_to_followingListFragment)
+            }
+
+            profileViewModel.getUserCredentials(userId!!)
+            profileViewModel.getUserCredentials.observe(viewLifecycleOwner) { result ->
+                profileShimmerLayout.startShimmer()
+                when (result) {
+                    is UserCredentials.Success -> {
+                        profileShimmerLayout.stopShimmer()
+                        profileShimmerLayout.visibility = View.GONE
+                        val profileImage = "${result.user.profilePicture ?: R.drawable.person}"
+                        Glide.with(requireContext())
+                            .load(profileImage)
+                            .error(R.drawable.not_found)
+                            .into(profileUserAvatar)
+
+                        profileFullName.text = result.user.fullName ?: "Twittur User"
+                        profileUsername.text = "@" + result.user.username
+                        profileKindTv.text = result.user.kind
+                        profileBiography.text = result.user.bio ?: "This user does not appear to have any biography."
+                        followingCounterTv.text = result.user.followingCount.toString()
+                        followersCounterTv.text = result.user.followersCount.toString()
+
+                        // location
+                        if (result.user.country.isNullOrEmpty()) {
+                            profileLocationIcon.visibility = View.INVISIBLE
+                            profileLocationTv.visibility = View.GONE
+                        } else {
+                            profileLocationIcon.visibility = View.VISIBLE
+                            profileLocationTv.text = result.user.country
+                        }
+
                     }
 
-                }
+                    is UserCredentials.Error -> {
 
-                is UserCredentials.Error -> {
-
-                    snackbarHelper.snackbarError(
-                        requireActivity().findViewById(R.id.profile_root_layout),
-                        requireActivity().findViewById(R.id.profile_root_layout),
-                        error = result.message,
-                        ""
-                    ){}
+                        snackbarHelper.snackbarError(
+                            requireActivity().findViewById(R.id.profile_root_layout),
+                            requireActivity().findViewById(R.id.profile_root_layout),
+                            error = result.message,
+                            ""
+                        ){}
+                    }
                 }
             }
-        }
 
-        /**
-         * This code build to implement listener when user press on profile image open it in full screen size!
-         * */
-        binding.profileImage.setOnClickListener {
-            val fullScreenImageFragment = FullScreenImageFragment()
+            /**
+             * This code build to implement listener when user click's on profile image, to open it, in full screen size!
+             * */
+            profileUserAvatar.setOnClickListener {
+                val fullScreenImageFragment = FullScreenImageFragment()
 
-            binding.profileImage.buildDrawingCache()
-            val originalBitmap = binding.profileImage.drawingCache
-            val image = originalBitmap.copy(originalBitmap.config, true)
+                profileUserAvatar.buildDrawingCache()
+                val originalBitmap = profileUserAvatar.drawingCache
+                val image = originalBitmap.copy(originalBitmap.config, true)
 
-            val extras = Bundle()
-            extras.putParcelable("image", image)
-            fullScreenImageFragment.arguments = extras
+                val extras = Bundle()
+                extras.putParcelable("image", image)
+                fullScreenImageFragment.arguments = extras
 
-            fullScreenImageFragment.show(requireActivity().supportFragmentManager, "FullScreenImageFragment")
-        }
+                fullScreenImageFragment.show(requireActivity().supportFragmentManager, "FullScreenImageFragment")
+            }
 
+            threeDotMenu.setOnClickListener {
+                val popupMenu = PopupMenu(requireContext(), threeDotMenu)
 
+                popupMenu.setOnMenuItemClickListener { item ->
+                    when (item.itemId) {
 
-        binding.threeDotMenu.setOnClickListener {
-            val popupMenu = PopupMenu(requireContext(), binding.threeDotMenu)
+                        R.id.edit_profile -> {
+                            findNavController().navigate(R.id.action_profileFragment_to_editProfileFragment)
+                            true
+                        }
 
-            popupMenu.setOnMenuItemClickListener { item ->
-                when (item.itemId) {
+                        R.id.logout -> {
+                            logoutDialog()
+                            true
+                        }
 
-                    R.id.edit_profile -> {
-                        findNavController().navigate(R.id.action_profileFragment_to_editProfileFragment)
-                        true
-                    }
+                        R.id.delete_account -> {
 
-                    R.id.logout -> {
-                        logoutDialog()
-                        true
-                    }
+                            deleteDialog()
+                            profileViewModel.deleteResult.observe(viewLifecycleOwner) { result ->
+                                when (result) {
 
-                    R.id.delete_account -> {
+                                    is AccountDelete.Success -> {
+                                        findNavController().navigate(R.id.action_profileFragment_to_signInFragment)
+                                    }
 
-                        deleteDialog()
-                        profileViewModel.deleteResult.observe(viewLifecycleOwner) { result ->
-                            when (result) {
-
-                                is AccountDelete.Success -> {
-                                    findNavController().navigate(R.id.action_profileFragment_to_signInFragment)
-                                }
-
-                                is AccountDelete.Error -> {
-                                    snackbarHelper.snackbarError(
-                                        view.findViewById(R.id.profile_root_layout),
-                                        binding.profileRootLayout,
-                                        error = result.message,
-                                        ""){}
+                                    is AccountDelete.Error -> {
+                                        snackbarHelper.snackbarError(
+                                            view.findViewById(R.id.profile_root_layout),
+                                            profileRootLayout,
+                                            error = result.message,
+                                            ""){}
+                                    }
                                 }
                             }
+                            true
                         }
-                        true
+                        else -> false
                     }
-                    else -> false
+                }
+
+                popupMenu.inflate(R.menu.popup_menu_profile)
+
+                try {
+                    val fieldMPopup = PopupMenu::class.java.getDeclaredField("mPopup")
+                    fieldMPopup.isAccessible = true
+                    val mPopup = fieldMPopup.get(popupMenu)
+                    mPopup.javaClass
+                        .getDeclaredMethod("setForceShowIcon", Boolean::class.java)
+                        .invoke(mPopup, true)
+                } catch (e: Exception){
+                    Log.e("Main", "Error showing menu icons.", e)
+                } finally {
+                    popupMenu.show()
                 }
             }
 
-            popupMenu.inflate(R.menu.popup_menu_profile)
-
-            try {
-                val fieldMPopup = PopupMenu::class.java.getDeclaredField("mPopup")
-                fieldMPopup.isAccessible = true
-                val mPopup = fieldMPopup.get(popupMenu)
-                mPopup.javaClass
-                    .getDeclaredMethod("setForceShowIcon", Boolean::class.java)
-                    .invoke(mPopup, true)
-            } catch (e: Exception){
-                Log.e("Main", "Error showing menu icons.", e)
-            } finally {
-                popupMenu.show()
-            }
+            val adapter = ProfileViewPagerAdapter(childFragmentManager, lifecycle)
+            vp2.adapter = adapter
+            TabLayoutMediator(tb, vp2) { tab, pos ->
+                when (pos) {
+                    0 -> {
+                        tab.text = resources.getString(R.string.tweets)
+                    }
+                    1 -> {
+                        tab.text = resources.getString(R.string.likes)
+                    }
+                }
+            }.attach()
         }
-
-        val adapter = ProfileViewPagerAdapter(childFragmentManager, lifecycle)
-        binding.vp2.adapter = adapter
-        TabLayoutMediator(binding.tb, binding.vp2) { tab, pos ->
-            when (pos) {
-                0 -> {
-                    tab.text = resources.getString(R.string.tweets)
-                }
-                1 -> {
-                    tab.text = resources.getString(R.string.likes)
-                }
-            }
-        }.attach()
     }
 
     @SuppressLint("ResourceAsColor")
@@ -287,5 +301,23 @@ class ProfileFragment : Fragment() {
         alertDialogBuilder.setCancelable(true)
         val alertDialog = alertDialogBuilder.create()
         alertDialog.show()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val window = requireActivity().window
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+        window.statusBarColor = ContextCompat.getColor(requireActivity(), R.color.md_theme_light_surface)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        val window = requireActivity().window
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+        window.statusBarColor = ContextCompat.getColor(requireActivity(), com.google.android.material.R.color.m3_sys_color_light_surface_container)
     }
 }

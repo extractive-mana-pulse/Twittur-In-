@@ -1,14 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".profile.presentation.fragments.ProfileFragment">
-
-    <data>
-        <variable
-            name="profileFragment"
-            type="com.example.twitturin.profile.presentation.fragments.ProfileFragment"/>
-    </data>
+    xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/profile_root_layout"
@@ -29,7 +24,6 @@
                 android:id="@+id/back"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
-                android:onClick="@{ () -> profileFragment.fragmentManager.popBackStack() }"
                 android:layout_marginTop="24dp"
                 android:layout_marginStart="16dp"
                 android:background="@android:color/transparent"
@@ -38,17 +32,30 @@
                 android:src="@drawable/keyboard_backspace"
                 tools:ignore="ContentDescription"/>
 
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/profile_user_avatar"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:src="@drawable/person_add"
+                android:layout_marginStart="16dp"
+                android:background="@color/gray"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                tools:ignore="ContentDescription"/>
+
             <TextView
+                android:id="@+id/profile_kind_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/profile_page"
-                android:textStyle="bold"
-                android:textSize="24sp"
-                android:textColor="?attr/colorOnPrimaryContainer"
+                android:textStyle="italic"
+                android:text="kind"
+                android:layout_marginTop="55dp"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"/>
+                app:layout_constraintStart_toEndOf="@id/profile_user_avatar"
+                android:layout_marginStart="3dp"/>
 
             <ImageButton
                 android:id="@+id/share_profile"
@@ -97,26 +104,6 @@
 
         </com.facebook.shimmer.ShimmerFrameLayout>
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/profile_user_avatar"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:layout_marginTop="110dp"
-            android:layout_marginStart="16dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:ignore="ContentDescription"/>
-
-        <TextView
-            android:id="@+id/profile_kind_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textStyle="italic"
-            app:layout_constraintTop_toBottomOf="@id/profile_header_layout"
-            app:layout_constraintStart_toEndOf="@id/profile_user_avatar"
-            android:layout_marginStart="3dp"
-            android:layout_marginTop="4dp"/>
-
         <TextView
             android:id="@+id/profile_full_name"
             android:layout_width="wrap_content"
@@ -127,7 +114,7 @@
             android:textSize="18sp"
             android:layout_marginTop="10dp"
             android:layout_marginStart="16dp"
-            app:layout_constraintTop_toBottomOf="@id/profile_user_avatar"
+            app:layout_constraintTop_toBottomOf="@id/profile_header_layout"
             app:layout_constraintStart_toStartOf="parent"/>
 
         <TextView
@@ -169,15 +156,14 @@
             android:id="@+id/profile_location_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="11dp"
-            android:layout_marginStart="3dp"
+            android:layout_marginTop="13dp"
             app:layout_constraintStart_toEndOf="@id/profile_location_icon"
             app:layout_constraintTop_toBottomOf="@id/profile_biography"/>
 
         <LinearLayout
             android:id="@+id/foll_info_layout"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginTop="4dp"
             android:layout_marginHorizontal="16dp"
@@ -187,49 +173,41 @@
             <TextView
                 android:id="@+id/following_counter_tv"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:textStyle="bold"
-                android:text="@string/integer_string"
-                android:layout_marginStart="4dp"
-                android:layout_gravity="center"
-                android:textColor="?attr/colorOnSurfaceVariant"/>
+                android:text=""
+                android:textColor="?attr/colorOnSurfaceVariant"
+                android:layout_marginTop="5dp"
+                android:gravity="center"/>
 
             <TextView
                 android:id="@+id/following_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/following"
-                android:layout_gravity="center"
-                android:layout_marginStart="4dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginStart="3dp"
                 app:layout_constraintStart_toEndOf="@id/following_counter_tv"
                 app:layout_constraintTop_toBottomOf="@id/profile_biography"/>
-
-            <TextView
-                android:id="@+id/dot_2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="•"
-                android:layout_gravity="center"
-                android:layout_marginStart="8dp"/>
 
             <TextView
                 android:id="@+id/followers_counter_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
-                android:text="@string/integer_string"
+                android:text=""
                 android:textColor="?attr/colorOnSurfaceVariant"
-                android:layout_gravity="center"
-                android:layout_marginStart="8dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginStart="25sp"
                 app:layout_constraintStart_toEndOf="@id/following_tv"
-                app:layout_constraintTop_toBottomOf="@id/profile_biography"/>
+                app:layout_constraintTop_toBottomOf="@id/profile_biography" />
 
             <TextView
                 android:id="@+id/followers_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/followers"
-                android:layout_gravity="center"
+                android:layout_marginTop="5dp"
                 android:layout_marginStart="3dp"
                 app:layout_constraintStart_toEndOf="@id/followers_counter_tv"
                 app:layout_constraintTop_toBottomOf="@id/profile_biography"/>
@@ -269,4 +247,4 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-</layout>
+</androidx.constraintlayout.widget.ConstraintLayout>

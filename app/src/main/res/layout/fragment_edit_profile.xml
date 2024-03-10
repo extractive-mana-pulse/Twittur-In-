@@ -93,7 +93,7 @@
             </LinearLayout>
 
             <ImageView
-                android:id="@+id/profile_image"
+                android:id="@+id/edit_profile_user_avatar"
                 android:layout_width="70dp"
                 android:layout_height="70dp"
                 android:src="@drawable/avatar"
@@ -109,7 +109,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintTop_toBottomOf="@id/profile_image"
+                app:layout_constraintTop_toBottomOf="@id/edit_profile_user_avatar"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
 

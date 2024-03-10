@@ -18,11 +18,11 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
-import com.example.twitturin.preferences.MyPreferences
 import com.example.twitturin.R
 import com.example.twitturin.databinding.FragmentHomeBinding
 import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.manager.SessionManager
+import com.example.twitturin.preferences.MyPreferences
 import com.example.twitturin.profile.sealed.UserCredentials
 import com.example.twitturin.profile.vm.ProfileViewModel
 import com.example.twitturin.tweet.model.data.Tweet
@@ -86,13 +86,13 @@ class HomeFragment : Fragment() {
                     Glide.with(requireContext())
                         .load(profileImage)
                         .error(R.drawable.not_found)
-                        .placeholder(R.drawable.username_person)
+                        .placeholder(R.drawable.person)
                         .into(imageView)
 
                     Glide.with(requireContext())
                         .load(profileImage)
                         .error(R.drawable.not_found)
-                        .placeholder(R.drawable.username_person)
+                        .placeholder(R.drawable.person)
                         .into(binding.accountImage)
 
                     fullName.text = result.user.fullName ?: "Twittur User"

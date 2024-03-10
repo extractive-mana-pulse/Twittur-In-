@@ -84,7 +84,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:startIconDrawable="@drawable/username_person">
+                    app:startIconDrawable="@drawable/person">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/full_name_et"
@@ -110,7 +110,7 @@
                     app:endIconMode="clear_text"
                     android:background="@drawable/edit_text_bg_ui"
                     app:hintTextColor="?attr/colorOnPrimaryContainer"
-                    app:startIconDrawable="@drawable/username_person"
+                    app:startIconDrawable="@drawable/person"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/student_fullname_input_layout">

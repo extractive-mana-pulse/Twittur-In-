@@ -4,4 +4,12 @@
     <corners android:radius="24dp"/>
     <solid android:color="?attr/colorPrimary"/>
 
+<!--    <gradient-->
+<!--        android:type="linear"-->
+<!--        android:startColor="#000000"-->
+<!--        android:endColor="#45454A"-->
+<!--        android:angle="45"-->
+<!--        android:gradientRadius="30dp"-->
+<!--        />-->
+
 </shape>

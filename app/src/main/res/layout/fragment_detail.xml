@@ -78,7 +78,7 @@
                     android:layout_width="55dp"
                     android:layout_height="55dp"
                     android:layout_marginStart="16dp"
-                    android:src="@drawable/username_person"
+                    android:src="@drawable/person"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"/>

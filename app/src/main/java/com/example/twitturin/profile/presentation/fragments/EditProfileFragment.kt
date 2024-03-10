@@ -39,10 +39,6 @@ class EditProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.editProfileFragment = this
 
-        binding.profileImage.setOnClickListener {
-//            pickPhoto()
-        }
-
         val userId = sessionManager.getUserId()
 
         profileViewModel.getUserCredentials(userId!!)
@@ -50,11 +46,11 @@ class EditProfileFragment : Fragment() {
         profileViewModel.getUserCredentials.observe(viewLifecycleOwner) { result ->
             when (result) {
                 is UserCredentials.Success -> {
-                    val profileImage = "${result.user.profilePicture ?: R.drawable.username_person}"
+                    val profileImage = "${result.user.profilePicture ?: R.drawable.person}"
                     Glide.with(requireContext())
                         .load(profileImage)
                         .error(R.drawable.not_found)
-                        .into(binding.profileImage)
+                        .into(binding.editProfileUserAvatar)
 
                     binding.editProfileFullnameEt.setText(result.user.fullName ?: "Twittur User")
                     binding.editProfileUsernameEt.setText(result.user.username)

@@ -20,7 +20,7 @@
 
         <item
             android:id="@+id/time_table"
-            android:icon="@drawable/calendar_month"
+            android:icon="@drawable/time_table"
             android:title="@string/time_table"/>
 
         <item

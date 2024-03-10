@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -34,28 +36,48 @@ class PublicPostFragment : Fragment() {
 
         val token = sessionManager.getToken()
 
-        binding.btnTweet.setOnClickListener {
-                binding.btnTweet.isEnabled = false
-                val tweetContent = binding.contentEt.text.toString()
-            tweetViewModel.postTheTweet(tweetContent, "Bearer $token")
-        }
+        binding.apply {
+            btnTweet.setOnClickListener {
+                btnTweet.isEnabled = false
+                val tweetContent = contentEt.text.toString()
+                tweetViewModel.postTheTweet(tweetContent, "Bearer $token")
+            }
 
-        tweetViewModel.postTweetResult.observe(viewLifecycleOwner) { result ->
+            tweetViewModel.postTweetResult.observe(viewLifecycleOwner) { result ->
 
-            when (result) {
-                is PostTweet.Success -> {
-                    findNavController().navigate(R.id.action_publicPostFragment_to_homeFragment)
-                }
+                when (result) {
+                    is PostTweet.Success -> {
+                        findNavController().navigate(R.id.action_publicPostFragment_to_homeFragment)
+                    }
 
-                is PostTweet.Error -> {
-                    snackbarHelper.snackbarError(
-                        requireActivity().findViewById(R.id.public_post_root_layout),
-                        requireActivity().findViewById(R.id.public_post_root_layout),
-                        error = result.message,
-                        ""){}
-                    binding.btnTweet.isEnabled = true
+                    is PostTweet.Error -> {
+                        snackbarHelper.snackbarError(
+                            requireActivity().findViewById(R.id.public_post_root_layout),
+                            requireActivity().findViewById(R.id.public_post_root_layout),
+                            error = result.message,
+                            ""){}
+                        btnTweet.isEnabled = true
+                    }
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val window = requireActivity().window
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+        window.statusBarColor = ContextCompat.getColor(requireActivity(), R.color.md_theme_light_surface)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        val window = requireActivity().window
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+        window.statusBarColor = ContextCompat.getColor(requireActivity(), com.google.android.material.R.color.m3_sys_color_light_surface_container)
     }
 }
