@@ -24,21 +24,16 @@ class ReportFragment : Fragment() {
             }
 
             radioSpam.setOnCheckedChangeListener { _, _ ->
-                testTv.text = scamDescTv.text.toString()
+//                testTv.text = scamDescTv.text.toString()
             }
 
             radioPrivacy.setOnCheckedChangeListener{ _, _ ->
-                testTv.text = privacyDescTv.text.toString()
+//                testTv.text = privacyDescTv.text.toString()
             }
 
             radioAbuse.setOnCheckedChangeListener{ _, _ ->
-                testTv.text = abuseAndHarassmentDescTv.text.toString()
+//                testTv.text = abuseAndHarassmentDescTv.text.toString()
             }
         }
-    }
-
-    companion object {
-        @JvmStatic
-        fun newInstance() = ReportFragment()
     }
 }

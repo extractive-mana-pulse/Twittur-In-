@@ -10,13 +10,11 @@ import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
-import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.follow.sealed.FollowResult
 import com.example.twitturin.follow.vm.FollowViewModel
-import com.example.twitturin.profile.vm.ProfileViewModel
+import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.manager.SessionManager
 import com.example.twitturin.tweet.sealed.TweetDelete
 import com.example.twitturin.tweet.vm.TweetViewModel
@@ -30,12 +28,10 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MoreSettingsDetailFragment : BottomSheetDialogFragment() {
 
-    @Inject lateinit var snackbarHelper: SnackbarHelper
     @Inject lateinit var sessionManager: SessionManager
-    private lateinit var profileViewModel: ProfileViewModel
-    private lateinit var followViewModel: FollowViewModel
+    @Inject lateinit var snackbarHelper: SnackbarHelper
     private val tweetViewModel : TweetViewModel by viewModels()
-
+    private val followViewModel : FollowViewModel by viewModels()
 
     /** If i want to leave a comment as a doc. I need to write this type of doc outside override methods */
     @SuppressLint("SetTextI18n", "MissingInflatedId")
@@ -50,8 +46,6 @@ class MoreSettingsDetailFragment : BottomSheetDialogFragment() {
         val deleteLayout = view.findViewById<LinearLayout>(R.id.delete_layout)
         val editLayout = view.findViewById<LinearLayout>(R.id.edit_layout)
         val reportLayout = view.findViewById<LinearLayout>(R.id.report_post_layout)
-        profileViewModel = ViewModelProvider(requireActivity())[ProfileViewModel::class.java]
-        followViewModel = ViewModelProvider(requireActivity())[FollowViewModel::class.java]
 
         val sharedPreferences = requireActivity().getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
         val description = sharedPreferences.getString("post_description", "")

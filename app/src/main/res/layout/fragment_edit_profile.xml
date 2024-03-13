@@ -24,7 +24,7 @@
                 android:id="@+id/edit_profile_page_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:background="?attr/colorSurfaceContainer"
+                android:background="?attr/colorSurface"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -59,14 +59,11 @@
                     android:id="@+id/edit_profile_save_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="end"
                     android:text="@string/save"
                     android:onClick="@{() -> editProfileFragment.save()}"
                     android:textSize="14sp"
                     android:textColor="?attr/colorOnSurface"
-                    android:textAlignment="textEnd"
                     android:background="@android:color/transparent"
-                    app:layout_constraintStart_toEndOf="@id/edit_profile_tv"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"/>

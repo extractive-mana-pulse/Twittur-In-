@@ -26,9 +26,6 @@
         android:layout_width="0dp"
         android:layout_height="55dp"
         app:menu="@menu/bottom_nav"
-        android:background="?attr/colorSurfaceContainer"
-        app:itemTextColor="@color/bottom_nav_item_color"
-        app:itemIconTint="?attr/colorOnSecondaryContainer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>

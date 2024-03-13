@@ -95,10 +95,17 @@
     <string name="edit_post">Изменить публикацию</string>
     <string name="choose_picture">выбрать картинку</string>
     <string name="change_theme">Изменить режим</string>
-    <string name="back">back</string>
-    <string name="groups">Groups</string>
-    <string name="chat">Chat</string>
-    <string name="stayIn_title_message">We will save your username login information so that you do not have to enter it each time you log in again.</string>
-    <string name="divider">divider</string>
-    <string name="save_login_details">Save login details?</string>
+    <string name="back">назад</string>
+    <string name="groups">Группы</string>
+    <string name="chat">Чат</string>
+    <string name="stayIn_title_message">Мы сохраним данные для входа в систему, чтобы вам не приходилось вводить их каждый раз при повторном входе в систему.</string>
+    <string name="divider">разделитель</string>
+    <string name="save_login_details">Сохранить данные для входа?</string>
+    <string name="not_now">не сейчас</string>
+    <string name="microphone">Microphone</string>
+    <string name="internet_status_description">It seems there is something wrong with your internet connection. Please connect to the internet and start SPHERE again.</string>
+    <string name="ooops">Ooops!</string>
+    <string name="retry">Rerty</string>
+    <string name="no_spaces_allowed">No spaces allowed</string>
+    <string name="login">Login</string>
 </resources>

@@ -6,15 +6,12 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.EditText
-import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
 import com.example.twitturin.auth.sealed.SignUpStudentResult
@@ -24,7 +21,6 @@ import com.example.twitturin.helper.SnackbarHelper
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
-@Suppress("DEPRECATION")
 @AndroidEntryPoint
 class StudentRegistrationFragment : Fragment() {
 
@@ -93,7 +89,7 @@ class StudentRegistrationFragment : Fragment() {
                 val inputText = s?.toString()
 
                 if (inputText != null && inputText.contains(" ")) {
-                    binding.studentUsernameInputLayout.error = "No spaces allowed"
+                    binding.studentUsernameInputLayout.error = resources.getString(R.string.no_spaces_allowed)
                     binding.studentSignUpBtn.isEnabled = false
                 } else {
                     binding.studentUsernameInputLayout.error = null
@@ -113,7 +109,8 @@ class StudentRegistrationFragment : Fragment() {
                         requireActivity().findViewById(R.id.stud_reg_root_layout),
                         requireActivity().findViewById(R.id.stud_reg_root_layout),
                         error = result.message,
-                        ""){ /*better when u write function than just paste it HERE! */ }
+                        ""){ /** Implement logic when something went wrong and this input field show's error and when user press this button
+                     wipe out the error field or something logic like this! */ }
                 }
             }
         }
@@ -128,23 +125,5 @@ class StudentRegistrationFragment : Fragment() {
             editText.text.isNotEmpty()
         }
         binding.studentSignUpBtn.isVisible = allFieldsFilled
-    }
-
-    override fun onResume() {
-        super.onResume()
-        val window = requireActivity().window
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-        window.statusBarColor = ContextCompat.getColor(requireActivity(), R.color.md_theme_light_surface)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        val window = requireActivity().window
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-        window.statusBarColor = ContextCompat.getColor(requireActivity(), com.google.android.material.R.color.m3_sys_color_light_surface_container)
     }
 }

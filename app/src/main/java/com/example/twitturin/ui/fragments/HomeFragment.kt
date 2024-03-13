@@ -55,7 +55,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.homeFragment = this
-
+//        checkConnection()
         val headerView: View = binding.navigationView.getHeaderView(0)
 
         val userId = sessionManager.getUserId()
@@ -106,7 +106,7 @@ class HomeFragment : Fragment() {
 
                     snackbarHelper.snackbarError(
                         view.findViewById<DrawerLayout>(R.id.drawer_layout),
-                        view.findViewById(R.id.bottom_nav_view),
+                        view.findViewById<TextView>(R.id.tv_for_snackbar),
                         result.message,
                         ""
                     ){}
@@ -240,4 +240,16 @@ class HomeFragment : Fragment() {
         editor.putString("lang", lang)
         editor.apply()
     }
+
+//    private fun checkConnection() {
+//
+//        val connectivityManager = requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+//        val networkInfo = connectivityManager.activeNetworkInfo
+//
+//        if (networkInfo != null && networkInfo.isConnected) {
+//            findNavController().navigate(R.id.homeFragment)
+//        } else {
+//            findNavController().navigate(R.id.noInternetFragment)
+//        }
+//    }
 }

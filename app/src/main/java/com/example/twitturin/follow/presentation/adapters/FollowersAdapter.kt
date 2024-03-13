@@ -50,12 +50,12 @@ class FollowersAdapter @Inject constructor(
                     .error(R.drawable.not_found)
                     .into(userFollowerAvatar)
 
-                fullNameFollowerTv.text = item.fullName ?: "Twittur User"
-                usernameFollowerTv.text = "@" + item.username
-                postDescription.text = item.bio ?: "This user does not appear to have any biography."
+                fullNameFollowerTv.text = fullName ?: "Twittur User"
+                usernameFollowerTv.text = "@$username"
+                postDescription.text = bio ?: "This user does not appear to have any biography."
 
                 followBtn.setOnClickListener {
-                    followViewModel.followUsers(item.id!!,"Bearer $token")
+                    followViewModel.followUsers(id!!,"Bearer $token")
                 }
                 /** write code here ! */
                 // . . .

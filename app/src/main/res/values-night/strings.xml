@@ -19,4 +19,10 @@
     <string name="stayIn_title_message">We will save your username login information so that you do not have to enter it each time you log in again.</string>
     <string name="divider">divider</string>
     <string name="save_login_details">Save login details?</string>
+    <string name="microphone">Microphone</string>
+    <string name="internet_status_description">It seems there is something wrong with your internet connection. Please connect to the internet and start SPHERE again.</string>
+    <string name="ooops">Ooops!</string>
+    <string name="retry">Rerty</string>
+    <string name="no_spaces_allowed">No spaces allowed</string>
+    <string name="login">Login</string>
 </resources>

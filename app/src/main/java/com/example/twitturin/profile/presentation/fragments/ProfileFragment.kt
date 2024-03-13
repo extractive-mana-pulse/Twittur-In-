@@ -95,7 +95,7 @@ class ProfileFragment : Fragment() {
 
                         profileFullName.text = result.user.fullName ?: "Twittur User"
                         profileUsername.text = "@" + result.user.username
-                        profileKindTv.text = result.user.kind
+                        profileKind.text = result.user.kind
                         profileBiography.text = result.user.bio ?: "This user does not appear to have any biography."
                         followingCounterTv.text = result.user.followingCount.toString()
                         followersCounterTv.text = result.user.followersCount.toString()
@@ -301,23 +301,5 @@ class ProfileFragment : Fragment() {
         alertDialogBuilder.setCancelable(true)
         val alertDialog = alertDialogBuilder.create()
         alertDialog.show()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        val window = requireActivity().window
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-        window.statusBarColor = ContextCompat.getColor(requireActivity(), R.color.md_theme_light_surface)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        val window = requireActivity().window
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-        window.statusBarColor = ContextCompat.getColor(requireActivity(), com.google.android.material.R.color.m3_sys_color_light_surface_container)
     }
 }

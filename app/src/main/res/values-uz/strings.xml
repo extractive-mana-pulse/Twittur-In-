@@ -95,10 +95,17 @@
     <string name="edit_post">Xabarni tahrirlash</string>
     <string name="choose_picture">rasmni tanlang</string>
     <string name="change_theme">Rejimni oʻzgartirish</string>
-    <string name="back">back</string>
-    <string name="groups">Groups</string>
+    <string name="back">orqaga</string>
+    <string name="groups">Guruhlar</string>
     <string name="chat">Chat</string>
-    <string name="stayIn_title_message">We will save your username login information so that you do not have to enter it each time you log in again.</string>
-    <string name="divider">divider</string>
-    <string name="save_login_details">Save login details?</string>
+    <string name="stayIn_title_message">Har safar qayta kirganingizda kiritishingiz shart bo\'lmasligi uchun foydalanuvchi nomingizning kirish ma\'lumotlarini saqlaymiz.</string>
+    <string name="divider">ajratuvchi</string>
+    <string name="save_login_details">Kirish tafsilotlari saqlansinmi?</string>
+    <string name="not_now">hozir emas</string>
+    <string name="microphone">Microphone</string>
+    <string name="internet_status_description">It seems there is something wrong with your internet connection. Please connect to the internet and start SPHERE again.</string>
+    <string name="ooops">Ooops!</string>
+    <string name="retry">Rerty</string>
+    <string name="no_spaces_allowed">No spaces allowed</string>
+    <string name="login">Login</string>
 </resources>

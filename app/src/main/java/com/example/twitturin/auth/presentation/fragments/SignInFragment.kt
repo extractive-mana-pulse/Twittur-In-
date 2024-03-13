@@ -1,6 +1,8 @@
 package com.example.twitturin.auth.presentation.fragments
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -8,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -39,6 +42,7 @@ class SignInFragment : Fragment() {
     @SuppressLint("ResourceAsColor", "RestrictedApi", "MissingInflatedId")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+//        checkConnection()
         binding.signInFragment = this
 
         stayInViewModel = ViewModelProvider(requireActivity())[StayInViewModel::class.java]
@@ -91,7 +95,6 @@ class SignInFragment : Fragment() {
                     val userId = signInViewModel.userId.value
                     sessionManager.saveToken(token.toString())
                     sessionManager.saveUserID(userId.toString())
-
                     findNavController().navigate(R.id.action_signInFragment_to_stayInFragment)
                 }
 
@@ -101,8 +104,9 @@ class SignInFragment : Fragment() {
                         view.findViewById(R.id.rootLayout),
                         binding.signIn,
                         result.message,
-                        "Retry") { retryOperation() }
-
+                        resources.getString(R.string.retry)) {
+                        retryOperation()
+                    }
                 }
             }
         }
@@ -120,10 +124,18 @@ class SignInFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         val window = requireActivity().window
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+        window.apply {
 
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-        window.statusBarColor = ContextCompat.getColor(requireActivity(), R.color.md_theme_light_surface)
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            val currentNightMode = AppCompatDelegate.getDefaultNightMode()
+            val lightMode = AppCompatDelegate.MODE_NIGHT_NO
+            statusBarColor = if (currentNightMode == lightMode) {
+                ContextCompat.getColor(requireActivity(), R.color.md_theme_light_surface)
+            } else {
+                ContextCompat.getColor(requireActivity(), R.color.md_theme_dark_surface)
+            }
+        }
     }
 
     override fun onPause() {
@@ -134,4 +146,15 @@ class SignInFragment : Fragment() {
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
         window.statusBarColor = ContextCompat.getColor(requireActivity(), com.google.android.material.R.color.m3_sys_color_light_surface_container)
     }
+
+//    private fun checkConnection() {
+//        val connectivityManager = requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+//        val networkInfo = connectivityManager.activeNetworkInfo
+//
+//        if (networkInfo != null && networkInfo.isConnected) {
+//            findNavController().navigate(R.id.signInFragment)
+//        } else {
+//            findNavController().navigate(R.id.noInternetFragment)
+//        }
+//    }
 }

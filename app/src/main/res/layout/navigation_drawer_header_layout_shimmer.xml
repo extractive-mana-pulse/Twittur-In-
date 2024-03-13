@@ -93,15 +93,14 @@
 
     </LinearLayout>
 
-    <ImageView
+    <View
         android:id="@+id/header_layout_divider"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/rc_view_divider"
+        android:layout_height="1dp"
         android:layout_margin="16dp"
+        android:background="?attr/colorOutlineVariant"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/nav_foll_info_layout_shimmer"
-        tools:ignore="ContentDescription"/>
+        app:layout_constraintTop_toBottomOf="@id/nav_foll_info_layout_shimmer"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

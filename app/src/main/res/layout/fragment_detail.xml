@@ -26,15 +26,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:orientation="horizontal"
-                android:background="?attr/colorSurfaceContainer"
+                android:background="?attr/colorSurface"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
 
                 <ImageButton
                     android:id="@+id/go_back_btn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:src="@drawable/keyboard_backspace"
                     android:background="@android:color/transparent"
                     android:onClick="@{()-> detailFragment.fragmentManager.popBackStack()}"
@@ -48,21 +48,20 @@
                     android:layout_height="wrap_content"
                     android:text="@string/post"
                     android:textSize="24sp"
-                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:textColor="?attr/colorOnSurface"
                     android:layout_gravity="center"
                     android:layout_marginStart="25dp"/>
 
             </LinearLayout>
 
-            <ImageView
+            <View
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/rc_view_divider"
-                app:layout_constraintTop_toBottomOf="@id/detail_page_toolbar"
-                app:layout_constraintBottom_toTopOf="@id/post_layout_header"
-                app:layout_constraintStart_toStartOf="parent"
+                android:layout_height="1dp"
+                android:background="?attr/colorOutlineVariant"
                 app:layout_constraintEnd_toEndOf="parent"
-                tools:ignore="ContentDescription" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/post_layout_header"
+                app:layout_constraintTop_toBottomOf="@id/detail_page_toolbar"/>
 
             <!--    Header    -->
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -175,17 +174,16 @@
                 app:layout_constraintTop_toBottomOf="@id/detail_post_description"
                 app:layout_constraintStart_toEndOf="@id/when_created"/>
 
-            <ImageView
+            <View
                 android:id="@+id/divider2"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/rc_view_divider"
+                android:layout_height="1dp"
                 android:layout_marginHorizontal="16dp"
-                app:layout_constraintTop_toBottomOf="@id/when_created"
-                app:layout_constraintBottom_toTopOf="@id/layout_likes_views_counter"
-                app:layout_constraintStart_toStartOf="parent"
+                android:background="?attr/colorOutlineVariant"
                 app:layout_constraintEnd_toEndOf="parent"
-                tools:ignore="ContentDescription"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/when_created"
+                app:layout_constraintBottom_toTopOf="@id/layout_likes_views_counter"/>
 
             <LinearLayout
                 android:id="@+id/layout_likes_views_counter"
@@ -231,16 +229,16 @@
 
             </LinearLayout>
 
-            <ImageView
+            <View
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/rc_view_divider"
+                android:layout_height="1dp"
                 android:layout_marginHorizontal="16dp"
-                app:layout_constraintTop_toBottomOf="@id/layout_likes_views_counter"
-                app:layout_constraintBottom_toTopOf="@id/layout_article_icons"
-                app:layout_constraintStart_toStartOf="parent"
+                android:background="?attr/colorOutlineVariant"
                 app:layout_constraintEnd_toEndOf="parent"
-                tools:ignore="ContentDescription"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/layout_article_icons"
+                app:layout_constraintTop_toBottomOf="@id/layout_likes_views_counter"
+                />
 
             <!--            Icons Layout        -->
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -295,16 +293,15 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <ImageView
+            <View
                 android:id="@+id/last_divider_before_rc"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/rc_view_divider"
+                android:layout_height="1dp"
                 android:layout_marginHorizontal="16dp"
-                app:layout_constraintTop_toBottomOf="@id/layout_article_icons"
-                app:layout_constraintStart_toStartOf="parent"
+                android:background="?attr/colorOutlineVariant"
                 app:layout_constraintEnd_toEndOf="parent"
-                tools:ignore="ContentDescription"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/layout_article_icons"/>
 
             <!--            RecyclerView Layout         -->
             <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -325,15 +322,14 @@
 
             </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-            <ImageView
+            <View
                 android:id="@+id/last_divider_for_reply_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/rc_view_divider"
+                android:layout_height="1dp"
+                android:background="?attr/colorOutlineVariant"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/reply_layout"
-                tools:ignore="ContentDescription"/>
+                app:layout_constraintBottom_toTopOf="@id/reply_layout"/>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/reply_layout"

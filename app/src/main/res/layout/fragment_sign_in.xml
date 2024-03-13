@@ -26,16 +26,15 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/some_layout"
-            tools:ignore="ContentDescription" />
+            app:layout_constraintBottom_toTopOf="@+id/some_layout"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/ui_header_layout"
             android:layout_width="match_parent"
             android:layout_height="240dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/some_layout"
@@ -52,13 +51,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="34dp"
-                android:text="Login"
+                android:text="@string/login"
                 android:textColor="?attr/colorPrimary"
                 android:textSize="28sp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="HardcodedText" />
+                app:layout_constraintStart_toStartOf="parent"/>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/login_username_layout"
@@ -84,8 +82,7 @@
                     android:background="@android:color/transparent"
                     android:hint="@string/username"
                     android:imeOptions="actionNext"
-                    android:inputType="text"
-                    tools:ignore="TextContrastCheck" />
+                    android:inputType="text"/>
 
             </com.google.android.material.textfield.TextInputLayout>
 

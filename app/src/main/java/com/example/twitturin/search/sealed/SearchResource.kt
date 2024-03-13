@@ -1,9 +1,10 @@
 package com.example.twitturin.search.sealed
 
-import com.example.twitturin.tweet.model.data.Tweet
+sealed class SearchResource<T>(val data : T? = null, val message : String? =  null) {
 
-sealed class SearchResource{
-    data class Success(val data : Tweet): SearchResource()
-    class Error(val message: String?) : SearchResource()
-    data object Loading : SearchResource()
+    class Success<T>(data: T) : SearchResource<T>(data)
+
+    class Error<T>(message: String?, data: T? = null) : SearchResource<T>(data, message)
+
+    class Loading<T> : SearchResource<T>()
 }

@@ -400,5 +400,15 @@
             app:launchSingleTop="false"/>
 
     </fragment>
+    <fragment
+        android:id="@+id/observeProfileFragment"
+        android:name="com.example.twitturin.ObserveProfileFragment"
+        android:label="fragment_observe_profile"
+        tools:layout="@layout/fragment_observe_profile" />
+    <fragment
+        android:id="@+id/noInternetFragment"
+        android:name="com.example.twitturin.connection.presentation.fragments.NoInternetFragment"
+        android:label="fragment_no_internet"
+        tools:layout="@layout/fragment_no_internet" />
 
 </navigation>
