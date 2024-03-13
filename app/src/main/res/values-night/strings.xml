@@ -20,9 +20,11 @@
     <string name="divider">divider</string>
     <string name="save_login_details">Save login details?</string>
     <string name="microphone">Microphone</string>
-    <string name="internet_status_description">It seems there is something wrong with your internet connection. Please connect to the internet and start SPHERE again.</string>
+    <string name="internet_status_description">It seems there is something wrong with your internet connection. Please connect to the internet and try again.</string>
     <string name="ooops">Ooops!</string>
     <string name="retry">Rerty</string>
     <string name="no_spaces_allowed">No spaces allowed</string>
     <string name="login">Login</string>
+    <string name="there_is_no_any_conversations">There is no any conversations</string>
+    <string name="there_is_no_any_group_conversations">There is no any group conversations</string>
 </resources>

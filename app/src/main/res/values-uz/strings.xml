@@ -102,10 +102,13 @@
     <string name="divider">ajratuvchi</string>
     <string name="save_login_details">Kirish tafsilotlari saqlansinmi?</string>
     <string name="not_now">hozir emas</string>
-    <string name="microphone">Microphone</string>
-    <string name="internet_status_description">It seems there is something wrong with your internet connection. Please connect to the internet and start SPHERE again.</string>
+    <string name="microphone">Mikrofon</string>
+    <string name="internet_status_description">Internetga ulanishda nimadir noto‘g‘ri bo‘lganga o‘xshaydi. Internetga ulaning va qaytadan urining.</string>
     <string name="ooops">Ooops!</string>
-    <string name="retry">Rerty</string>
-    <string name="no_spaces_allowed">No spaces allowed</string>
-    <string name="login">Login</string>
+    <string name="retry">Qayta urinish</string>
+    <string name="no_spaces_allowed">Bo\'sh joylarga ruxsat yo\'q</string>
+    <string name="login">Tizimga kirish</string>
+    <string name="there_is_no_any_conversations">Hech qanday suhbat yo\'q</string>
+    <string name="there_is_no_any_group_conversations">Hech qanday guruh suhbatlari yo\'q</string>
+    <string name="try_again">QAYTA URINIB KO\'RING</string>
 </resources>
