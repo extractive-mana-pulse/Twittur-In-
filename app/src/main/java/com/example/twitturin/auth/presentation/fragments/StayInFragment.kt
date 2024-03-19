@@ -17,8 +17,8 @@ import com.example.twitturin.databinding.FragmentStayInBinding
 import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.manager.SessionManager
 import com.example.twitturin.profile.presentation.fragments.FullScreenImageFragment
-import com.example.twitturin.profile.sealed.UserCredentials
-import com.example.twitturin.profile.vm.ProfileViewModel
+import com.example.twitturin.profile.presentation.sealed.UserCredentials
+import com.example.twitturin.profile.presentation.vm.ProfileViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

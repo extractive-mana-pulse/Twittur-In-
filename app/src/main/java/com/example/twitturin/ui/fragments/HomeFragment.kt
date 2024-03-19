@@ -23,11 +23,11 @@ import com.example.twitturin.databinding.FragmentHomeBinding
 import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.manager.SessionManager
 import com.example.twitturin.preferences.MyPreferences
-import com.example.twitturin.profile.sealed.UserCredentials
-import com.example.twitturin.profile.vm.ProfileViewModel
-import com.example.twitturin.tweet.model.data.Tweet
-import com.example.twitturin.tweet.vm.LikeViewModel
-import com.example.twitturin.tweet.vm.TweetViewModel
+import com.example.twitturin.profile.presentation.sealed.UserCredentials
+import com.example.twitturin.profile.presentation.vm.ProfileViewModel
+import com.example.twitturin.tweet.data.data.Tweet
+import com.example.twitturin.tweet.presentation.vm.LikeViewModel
+import com.example.twitturin.tweet.presentation.vm.TweetViewModel
 import com.example.twitturin.ui.adapters.PostAdapter
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -209,18 +209,23 @@ class HomeFragment : Fragment() {
         builder.setTitle(resources.getString(R.string.choose_language))
         val styles = arrayOf("en", "it", "ru", "uz")
         builder.setSingleChoiceItems(styles, -1) { dialog, which ->
-            if (which==0) {
-                setLocale("en")
-                requireActivity().recreate()
-            } else if (which==1) {
-                setLocale("it")
-                requireActivity().recreate()
-            } else if (which==2) {
-                setLocale("ru")
-                requireActivity().recreate()
-            } else if (which==3) {
-                setLocale("uz")
-                requireActivity().recreate()
+            when (which) {
+                0 -> {
+                    setLocale("en")
+                    requireActivity().recreate()
+                }
+                1 -> {
+                    setLocale("it")
+                    requireActivity().recreate()
+                }
+                2 -> {
+                    setLocale("ru")
+                    requireActivity().recreate()
+                }
+                3 -> {
+                    setLocale("uz")
+                    requireActivity().recreate()
+                }
             }
             dialog.dismiss()
         }

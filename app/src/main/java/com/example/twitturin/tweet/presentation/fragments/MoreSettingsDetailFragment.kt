@@ -16,8 +16,8 @@ import com.example.twitturin.follow.sealed.FollowResult
 import com.example.twitturin.follow.vm.FollowViewModel
 import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.manager.SessionManager
-import com.example.twitturin.tweet.sealed.TweetDelete
-import com.example.twitturin.tweet.vm.TweetViewModel
+import com.example.twitturin.tweet.presentation.sealed.TweetDelete
+import com.example.twitturin.tweet.presentation.vm.TweetViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment

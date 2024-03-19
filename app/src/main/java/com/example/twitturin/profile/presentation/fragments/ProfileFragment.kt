@@ -9,12 +9,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.PopupMenu
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
@@ -26,9 +24,9 @@ import com.example.twitturin.databinding.FragmentProfileBinding
 import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.manager.SessionManager
 import com.example.twitturin.profile.presentation.adapters.ProfileViewPagerAdapter
-import com.example.twitturin.profile.sealed.AccountDelete
-import com.example.twitturin.profile.sealed.UserCredentials
-import com.example.twitturin.profile.vm.ProfileViewModel
+import com.example.twitturin.profile.presentation.sealed.AccountDelete
+import com.example.twitturin.profile.presentation.sealed.UserCredentials
+import com.example.twitturin.profile.presentation.vm.ProfileViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint

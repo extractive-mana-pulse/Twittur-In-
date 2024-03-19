@@ -14,8 +14,8 @@ import com.bumptech.glide.Glide
 import com.example.twitturin.R
 import com.example.twitturin.databinding.RcViewBinding
 import com.example.twitturin.helper.SnackbarHelper
-import com.example.twitturin.tweet.model.data.Tweet
-import com.example.twitturin.tweet.vm.LikeViewModel
+import com.example.twitturin.tweet.data.data.Tweet
+import com.example.twitturin.tweet.presentation.vm.LikeViewModel
 import com.example.twitturin.manager.SessionManager
 import java.text.SimpleDateFormat
 import java.util.*
@@ -53,6 +53,7 @@ class PostAdapter @Inject constructor(
 
         holder.binding.apply {
             item.apply {
+
                 val profileImage = "${author?.profilePicture}"
 
                 Glide.with(context)

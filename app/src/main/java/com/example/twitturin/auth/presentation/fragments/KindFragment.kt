@@ -38,30 +38,4 @@ class KindFragment : Fragment() {
             }
         }
     }
-
-    override fun onResume() {
-        super.onResume()
-        val window = requireActivity().window
-        window.apply {
-
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-            val currentNightMode = AppCompatDelegate.getDefaultNightMode()
-            val lightMode = AppCompatDelegate.MODE_NIGHT_NO
-            statusBarColor = if (currentNightMode == lightMode) {
-                ContextCompat.getColor(requireActivity(), R.color.md_theme_light_surface)
-            } else {
-                ContextCompat.getColor(requireActivity(), R.color.md_theme_dark_surface)
-            }
-        }
-    }
-
-    override fun onPause() {
-        super.onPause()
-        val window = requireActivity().window
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-        window.statusBarColor = ContextCompat.getColor(requireActivity(), com.google.android.material.R.color.m3_sys_color_light_surface_container)
-    }
 }

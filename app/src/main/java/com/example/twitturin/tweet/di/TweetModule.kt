@@ -2,7 +2,7 @@ package com.example.twitturin.tweet.di
 
 import com.example.twitturin.tweet.domain.repository.TweetRepository
 import com.example.twitturin.tweet.domain.repositoryImpl.TweetRepositoryImpl
-import com.example.twitturin.tweet.model.network.TweetApi
+import com.example.twitturin.tweet.data.network.TweetApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

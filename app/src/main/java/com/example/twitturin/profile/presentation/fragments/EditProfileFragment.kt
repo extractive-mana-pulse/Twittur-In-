@@ -14,9 +14,9 @@ import com.example.twitturin.R
 import com.example.twitturin.databinding.FragmentEditProfileBinding
 import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.manager.SessionManager
-import com.example.twitturin.profile.sealed.EditUser
-import com.example.twitturin.profile.sealed.UserCredentials
-import com.example.twitturin.profile.vm.ProfileViewModel
+import com.example.twitturin.profile.presentation.sealed.EditUser
+import com.example.twitturin.profile.presentation.sealed.UserCredentials
+import com.example.twitturin.profile.presentation.vm.ProfileViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

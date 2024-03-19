@@ -16,11 +16,13 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.twitturin.R
 import com.example.twitturin.auth.vm.StayInViewModel
 import com.example.twitturin.databinding.ActivityMainBinding
+import com.example.twitturin.notification.presentation.fragments.NotificationsFragment
 import com.example.twitturin.preferences.MyPreferences
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
@@ -38,6 +40,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
+        val fragmentToOpen = intent.getStringExtra("fragment")
+        if (fragmentToOpen == "notifications") {
+            navController.navigate(R.id.action_homeFragment_to_notificationFragment)
+        }
 
         stayInViewModel = ViewModelProvider(this)[StayInViewModel::class.java]
 
@@ -158,5 +165,5 @@ class MainActivity : AppCompatActivity() {
             .setNegativeButton("Cancel", null)
             .show()
     }
-    var hasNotificationPermissionGranted = false
+    private var hasNotificationPermissionGranted = false
 }

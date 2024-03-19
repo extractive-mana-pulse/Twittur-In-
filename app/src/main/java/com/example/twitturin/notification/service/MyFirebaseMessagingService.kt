@@ -11,6 +11,7 @@ import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import com.example.twitturin.R
 import com.example.twitturin.notification.Constants
+import com.example.twitturin.notification.presentation.fragments.NotificationsFragment
 import com.example.twitturin.ui.activities.MainActivity
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
@@ -26,7 +27,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     }
 
     @SuppressLint("RemoteViewLayout")
-    private fun getRemoteView(title : String, description : String) : RemoteViews? {
+    private fun getRemoteView(title : String, description : String) : RemoteViews {
         val remoteViews = RemoteViews("com.example.twitturin.notification.service", R.layout.notification)
 
         remoteViews.setTextViewText(R.id.notification_title, title)
@@ -35,8 +36,9 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
         return remoteViews
     }
-    fun generateNotification(title : String, description : String) {
+    private fun generateNotification(title : String, description : String) {
         val intent = Intent(this, MainActivity::class.java)
+        intent.putExtra("fragment", "notifications")
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
 
         val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE)
@@ -56,6 +58,5 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             val notificationChannel = NotificationChannel(Constants.CHANNEL_ID, Constants.CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH)
             notificationManager.createNotificationChannel(notificationChannel)
         }
-
     }
 }
