@@ -19,7 +19,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.twitturin.R
-import com.example.twitturin.auth.vm.StayInViewModel
+import com.example.twitturin.auth.presentation.vm.StayInViewModel
 import com.example.twitturin.databinding.FragmentProfileBinding
 import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.manager.SessionManager

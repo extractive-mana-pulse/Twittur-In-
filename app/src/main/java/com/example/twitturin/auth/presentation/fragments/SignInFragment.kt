@@ -1,25 +1,20 @@
 package com.example.twitturin.auth.presentation.fragments
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.net.ConnectivityManager
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
-import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
-import com.example.twitturin.auth.sealed.SignInResult
-import com.example.twitturin.auth.vm.SignInViewModel
-import com.example.twitturin.auth.vm.StayInViewModel
+import com.example.twitturin.auth.presentation.sealed.SignIn
+import com.example.twitturin.auth.presentation.vm.SignInViewModel
+import com.example.twitturin.auth.presentation.vm.StayInViewModel
 import com.example.twitturin.databinding.FragmentSignInBinding
 import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.manager.SessionManager
@@ -90,7 +85,7 @@ class SignInFragment : Fragment() {
 
         signInViewModel.signInResult.observe(viewLifecycleOwner) { result ->
             when (result) {
-                is SignInResult.Success -> {
+                is SignIn.Success -> {
                     val token = signInViewModel.token.value
                     val userId = signInViewModel.userId.value
                     sessionManager.saveToken(token.toString())
@@ -98,7 +93,7 @@ class SignInFragment : Fragment() {
                     findNavController().navigate(R.id.action_signInFragment_to_stayInFragment)
                 }
 
-                is SignInResult.Error -> {
+                is SignIn.Error -> {
 
                     snackbarHelper.snackbarError(
                         view.findViewById(R.id.rootLayout),

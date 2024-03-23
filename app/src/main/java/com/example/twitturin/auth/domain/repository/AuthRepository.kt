@@ -1,9 +1,9 @@
 package com.example.twitturin.auth.domain.repository
 
-import com.example.twitturin.auth.model.data.Login
-import com.example.twitturin.auth.model.data.SignUpProf
-import com.example.twitturin.auth.model.data.SignUpStudent
-import com.example.twitturin.auth.model.data.User
+import com.example.twitturin.auth.presentation.model.data.Login
+import com.example.twitturin.auth.presentation.model.data.SignUpProf
+import com.example.twitturin.auth.presentation.model.data.SignUpStudent
+import com.example.twitturin.auth.presentation.model.data.User
 import retrofit2.Call
 
 interface AuthRepository {

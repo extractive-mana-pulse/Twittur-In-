@@ -9,10 +9,10 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.twitturin.R
-import com.example.twitturin.auth.model.data.User
+import com.example.twitturin.auth.presentation.model.data.User
 import com.example.twitturin.databinding.RcViewFollowingBinding
-import com.example.twitturin.follow.sealed.UnFollow
-import com.example.twitturin.follow.vm.FollowViewModel
+import com.example.twitturin.follow.presentation.sealed.UnFollow
+import com.example.twitturin.follow.presentation.vm.FollowViewModel
 import com.example.twitturin.manager.SessionManager
 import javax.inject.Inject
 

@@ -12,8 +12,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
-import com.example.twitturin.auth.sealed.SignUpProfResult
-import com.example.twitturin.auth.vm.SignUpViewModel
+import com.example.twitturin.auth.presentation.sealed.SignUpProfResult
+import com.example.twitturin.auth.presentation.vm.SignUpViewModel
 import com.example.twitturin.databinding.FragmentProfessorRegistrationBinding
 import com.example.twitturin.helper.SnackbarHelper
 import dagger.hilt.android.AndroidEntryPoint

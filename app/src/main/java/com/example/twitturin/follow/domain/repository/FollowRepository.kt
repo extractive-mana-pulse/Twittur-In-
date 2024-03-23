@@ -1,6 +1,6 @@
 package com.example.twitturin.follow.domain.repository
 
-import com.example.twitturin.auth.model.data.User
+import com.example.twitturin.auth.presentation.model.data.User
 import retrofit2.Call
 import retrofit2.Response
 

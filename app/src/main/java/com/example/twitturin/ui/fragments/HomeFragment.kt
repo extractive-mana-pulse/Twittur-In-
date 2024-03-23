@@ -14,6 +14,8 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,7 +27,7 @@ import com.example.twitturin.manager.SessionManager
 import com.example.twitturin.preferences.MyPreferences
 import com.example.twitturin.profile.presentation.sealed.UserCredentials
 import com.example.twitturin.profile.presentation.vm.ProfileViewModel
-import com.example.twitturin.tweet.data.data.Tweet
+import com.example.twitturin.tweet.presentation.model.data.Tweet
 import com.example.twitturin.tweet.presentation.vm.LikeViewModel
 import com.example.twitturin.tweet.presentation.vm.TweetViewModel
 import com.example.twitturin.ui.adapters.PostAdapter
@@ -49,6 +51,21 @@ class HomeFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return binding.root
+    }
+
+    /**этот код пишется тестовом режиме надо будет потом испробовать все нюансы!*/
+    init {
+        lifecycleScope.launchWhenStarted {
+            try {
+                tweetViewModel.getTweet(binding.shimmerLayout)
+            } finally {
+                // This line might execute after Lifecycle is DESTROYED.
+                if (lifecycle.currentState >= Lifecycle.State.STARTED) {
+                    // Here, since we've checked, it is safe to run any
+                    // Fragment transactions.
+                }
+            }
+        }
     }
 
     @SuppressLint("SetTextI18n", "UseSwitchCompatOrMaterialCode")
@@ -133,24 +150,28 @@ class HomeFragment : Fragment() {
     }
 
 
+    /** need to optimize code */
     @SuppressLint("NotifyDataSetChanged")
     private fun updateRecyclerView() {
 
         binding.apply {
+
             rcView.adapter = postAdapter
-            rcView.addItemDecoration(DividerItemDecoration(rcView.context, DividerItemDecoration.VERTICAL))
             rcView.layoutManager = LinearLayoutManager(requireContext())
-            tweetViewModel.getTweet(shimmerLayout)
+            rcView.addItemDecoration(DividerItemDecoration(rcView.context, DividerItemDecoration.VERTICAL))
+
+//            tweetViewModel.getTweet(shimmerLayout)
+
             tweetViewModel.responseTweets.observe(requireActivity()) { response ->
                 if (response.isSuccessful) {
                     response.body()?.let { tweets ->
                         val tweetList: MutableList<Tweet> = tweets.toMutableList()
                         postAdapter.setData(tweetList)
                         swipeToRefreshLayout.setOnRefreshListener {
-                            val freshList = tweetList.sortedByDescending { it.createdAt }
+                            val freshList = tweetList.sortedByDescending { time -> time.createdAt }
                             tweetList.clear()
                             tweetList.addAll(freshList)
-                            tweetViewModel.getTweet(binding.shimmerLayout)
+//                            tweetViewModel.getTweet(shimmerLayout)
                             postAdapter.notifyDataSetChanged()
                             swipeToRefreshLayout.isRefreshing = false
                         }

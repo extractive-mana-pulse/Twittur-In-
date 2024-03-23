@@ -14,9 +14,9 @@ import com.example.twitturin.R
 import com.example.twitturin.databinding.FragmentFollowingBinding
 import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.manager.SessionManager
-import com.example.twitturin.auth.model.data.User
+import com.example.twitturin.auth.presentation.model.data.User
 import com.example.twitturin.follow.presentation.adapters.FollowingAdapter
-import com.example.twitturin.follow.vm.FollowViewModel
+import com.example.twitturin.follow.presentation.vm.FollowViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Random
 import javax.inject.Inject

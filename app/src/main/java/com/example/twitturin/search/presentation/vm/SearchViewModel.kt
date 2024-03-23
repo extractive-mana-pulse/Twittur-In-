@@ -3,7 +3,7 @@ package com.example.twitturin.search.presentation.vm
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.twitturin.auth.model.data.Head
+import com.example.twitturin.auth.presentation.model.data.Head
 import com.example.twitturin.search.domain.repository.SearchRepository
 import com.example.twitturin.search.presentation.sealed.SearchResource
 import dagger.hilt.android.lifecycle.HiltViewModel

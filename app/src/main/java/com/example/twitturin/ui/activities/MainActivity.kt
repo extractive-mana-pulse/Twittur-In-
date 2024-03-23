@@ -20,7 +20,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.twitturin.R
-import com.example.twitturin.auth.vm.StayInViewModel
+import com.example.twitturin.auth.presentation.vm.StayInViewModel
 import com.example.twitturin.databinding.ActivityMainBinding
 import com.example.twitturin.notification.presentation.fragments.NotificationsFragment
 import com.example.twitturin.preferences.MyPreferences

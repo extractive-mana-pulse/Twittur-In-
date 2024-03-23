@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.text.HtmlCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
@@ -14,7 +15,7 @@ import com.bumptech.glide.Glide
 import com.example.twitturin.R
 import com.example.twitturin.databinding.RcViewBinding
 import com.example.twitturin.helper.SnackbarHelper
-import com.example.twitturin.tweet.data.data.Tweet
+import com.example.twitturin.tweet.presentation.model.data.Tweet
 import com.example.twitturin.tweet.presentation.vm.LikeViewModel
 import com.example.twitturin.manager.SessionManager
 import java.text.SimpleDateFormat
@@ -65,6 +66,7 @@ class PostAdapter @Inject constructor(
 
                 fullNameTv.text = author?.fullName ?: "Twittur User"
                 usernameTv.text = "@" + author?.username
+                postDescription.text = HtmlCompat.fromHtml(postDescription.toString(), HtmlCompat.FROM_HTML_MODE_LEGACY)
                 postDescription.text = content
                 postCommentsCounter.text = replyCount.toString()
                 postHeartCounter.text = likes.toString()

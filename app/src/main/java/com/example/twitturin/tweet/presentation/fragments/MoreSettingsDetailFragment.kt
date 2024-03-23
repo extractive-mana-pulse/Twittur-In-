@@ -12,8 +12,8 @@ import android.widget.TextView
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
-import com.example.twitturin.follow.sealed.FollowResult
-import com.example.twitturin.follow.vm.FollowViewModel
+import com.example.twitturin.follow.presentation.sealed.FollowResult
+import com.example.twitturin.follow.presentation.vm.FollowViewModel
 import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.manager.SessionManager
 import com.example.twitturin.tweet.presentation.sealed.TweetDelete

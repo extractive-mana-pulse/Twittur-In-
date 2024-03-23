@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.twitturin.event.SingleLiveEvent
 import com.example.twitturin.profile.domain.repository.ProfileRepository
-import com.example.twitturin.profile.data.data.EditProfile
+import com.example.twitturin.profile.presentation.model.data.EditProfile
 import com.example.twitturin.profile.presentation.sealed.AccountDelete
 import com.example.twitturin.profile.presentation.sealed.EditUser
 import com.example.twitturin.profile.presentation.sealed.UserCredentials

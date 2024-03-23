@@ -1,6 +1,6 @@
 package com.example.twitturin.search.presentation.model.network
 
-import com.example.twitturin.auth.model.data.Head
+import com.example.twitturin.auth.presentation.model.data.Head
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query

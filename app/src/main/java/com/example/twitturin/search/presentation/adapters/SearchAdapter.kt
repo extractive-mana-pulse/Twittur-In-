@@ -9,7 +9,7 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.twitturin.R
-import com.example.twitturin.auth.model.data.User
+import com.example.twitturin.auth.presentation.model.data.User
 import com.example.twitturin.databinding.RcViewSearchBinding
 import com.example.twitturin.manager.SessionManager
 import java.text.SimpleDateFormat
