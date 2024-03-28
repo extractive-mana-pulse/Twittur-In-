@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -19,6 +20,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.SimpleItemAnimator
 import com.bumptech.glide.Glide
 import com.example.twitturin.R
 import com.example.twitturin.databinding.FragmentHomeBinding
@@ -34,6 +36,7 @@ import com.example.twitturin.ui.adapters.PostAdapter
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
+import okhttp3.internal.notifyAll
 import java.util.Locale
 import javax.inject.Inject
 
@@ -53,17 +56,13 @@ class HomeFragment : Fragment() {
         return binding.root
     }
 
-    /**этот код пишется тестовом режиме надо будет потом испробовать все нюансы!*/
+    /** этот код пишется тестовом режиме надо будет потом испробовать все нюансы! */
     init {
         lifecycleScope.launchWhenStarted {
             try {
                 tweetViewModel.getTweet(binding.shimmerLayout)
-            } finally {
-                // This line might execute after Lifecycle is DESTROYED.
-                if (lifecycle.currentState >= Lifecycle.State.STARTED) {
-                    // Here, since we've checked, it is safe to run any
-                    // Fragment transactions.
-                }
+            } catch(e : Exception) {
+                Toast.makeText(requireContext(), e.message, Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -72,7 +71,6 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.homeFragment = this
-//        checkConnection()
         val headerView: View = binding.navigationView.getHeaderView(0)
 
         val userId = sessionManager.getUserId()
@@ -160,8 +158,6 @@ class HomeFragment : Fragment() {
             rcView.layoutManager = LinearLayoutManager(requireContext())
             rcView.addItemDecoration(DividerItemDecoration(rcView.context, DividerItemDecoration.VERTICAL))
 
-//            tweetViewModel.getTweet(shimmerLayout)
-
             tweetViewModel.responseTweets.observe(requireActivity()) { response ->
                 if (response.isSuccessful) {
                     response.body()?.let { tweets ->
@@ -171,8 +167,7 @@ class HomeFragment : Fragment() {
                             val freshList = tweetList.sortedByDescending { time -> time.createdAt }
                             tweetList.clear()
                             tweetList.addAll(freshList)
-//                            tweetViewModel.getTweet(shimmerLayout)
-                            postAdapter.notifyDataSetChanged()
+                            tweetViewModel.getTweet(shimmerLayout)
                             swipeToRefreshLayout.isRefreshing = false
                         }
                     }
@@ -266,16 +261,4 @@ class HomeFragment : Fragment() {
         editor.putString("lang", lang)
         editor.apply()
     }
-
-//    private fun checkConnection() {
-//
-//        val connectivityManager = requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-//        val networkInfo = connectivityManager.activeNetworkInfo
-//
-//        if (networkInfo != null && networkInfo.isConnected) {
-//            findNavController().navigate(R.id.homeFragment)
-//        } else {
-//            findNavController().navigate(R.id.noInternetFragment)
-//        }
-//    }
 }

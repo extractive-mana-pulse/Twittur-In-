@@ -103,7 +103,7 @@ dependencies {
     implementation ("androidx.navigation:navigation-fragment-ktx:2.7.7")
 
     // Data Binding
-    implementation ("androidx.databinding:databinding-runtime:8.3.0")
+    implementation ("androidx.databinding:databinding-runtime:8.3.1")
 
     // Scroll to Refresh Layout
     implementation ("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")

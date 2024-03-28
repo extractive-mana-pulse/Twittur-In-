@@ -1,23 +1,20 @@
 package com.example.twitturin.tweet.presentation.fragments
 
-import android.graphics.Color
-import android.graphics.Typeface
+import android.app.AlertDialog
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
-import android.text.Html
-import android.text.SpannableString
-import android.text.SpannableStringBuilder
-import android.text.style.StyleSpan
-import android.text.style.UnderlineSpan
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.LinearLayout
+import android.widget.Button
+import android.widget.CheckBox
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
 import com.example.twitturin.databinding.FragmentPublicPostBinding
@@ -27,28 +24,38 @@ import com.example.twitturin.tweet.presentation.sealed.PostTweet
 import com.example.twitturin.tweet.presentation.vm.TweetViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
-import jp.wasabeef.richeditor.RichEditor
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class PublicPostFragment : Fragment() {
 
-    var normal = true
-    var pressed = false
-    var unpressed = false
-
+    private val PREFS_NAME = "MyPrefs"
+    private val SHOW_DIALOG_KEY = "showDialog"
     @Inject lateinit var sessionManager: SessionManager
     @Inject lateinit var snackbarHelper: SnackbarHelper
-    private val tweetViewModel : TweetViewModel by viewModels()
+    private lateinit var sharedPreferences: SharedPreferences
+    private val tweetViewModel: TweetViewModel by viewModels()
     private val binding by lazy { FragmentPublicPostBinding.inflate(layoutInflater) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return binding.root
     }
 
+    init {
+        lifecycleScope.launchWhenResumed {
+            sharedPreferences =
+                requireActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+
+            val showDialog = sharedPreferences.getBoolean(SHOW_DIALOG_KEY, true)
+            if (showDialog) {
+                showDialog()
+            }
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.publicPostFragment  = this
+        binding.publicPostFragment = this
 
         val token = sessionManager.getToken()
 
@@ -56,105 +63,184 @@ class PublicPostFragment : Fragment() {
 
             btnTweet.setOnClickListener {
                 btnTweet.isEnabled = false
-                val tweetContent = contentEt.html
-                val plainTextContent: String = Html.fromHtml(tweetContent).toString()
-                tweetViewModel.postTheTweet(plainTextContent, "Bearer $token")
+                tweetViewModel.postTheTweet(contentEt.text.toString(), "Bearer $token")
             }
 
-            var isPressed = false
-            val mEditor = contentEt
+            val textWatcher = object : TextWatcher {
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+                    //
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    btnTweet.isEnabled = !contentEt.text.isNullOrBlank()
+                }
+
+                override fun afterTextChanged(s: Editable?) {
+                    //
+                }
+            }
+
+            contentEt.addTextChangedListener(textWatcher)
+
+            tweetViewModel.postTweetResult.observe(viewLifecycleOwner) { result ->
+
+                when (result) {
+                    is PostTweet.Success -> {
+                        findNavController().navigate(R.id.action_publicPostFragment_to_homeFragment)
+                    }
+
+                    is PostTweet.Error -> {
+                        snackbarHelper.snackbarError(
+                            requireActivity().findViewById(R.id.public_post_root_layout),
+                            requireActivity().findViewById(R.id.public_post_root_layout),
+                            error = result.message,
+                            ""
+                        ) {}
+                        btnTweet.isEnabled = true
+                    }
+                }
+            }
+        }
+    }
+
+    private fun showDialog() {
+        val dialogView = layoutInflater.inflate(R.layout.alert_dialog, null)
+        val dialogCheckbox = dialogView.findViewById<CheckBox>(R.id.dialog_checkbox)
+        val dialogButton = dialogView.findViewById<Button>(R.id.dialog_button)
+
+        val dialog = MaterialAlertDialogBuilder(requireContext(), R.style.ThemeOverlay_App_MaterialAlertDialog)
+            .setView(dialogView)
+            .create()
+
+        dialogButton.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialogCheckbox.setOnCheckedChangeListener { _, isChecked ->
+            sharedPreferences.edit().putBoolean(SHOW_DIALOG_KEY, !isChecked).apply()
+        }
+
+        dialog.show()
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//            var isPressed = false
+//            val mEditor = contentEt
 //            val mPreview: TextView = findViewById(R.id.preview)
 
-            mEditor.setEditorHeight(200);
-            mEditor.setEditorFontSize(22);
-            mEditor.setEditorFontColor(Color.RED);
-            //mEditor.setEditorBackgroundColor(Color.BLUE);
+//            mEditor.setEditorHeight(200);
+//            mEditor.setEditorFontSize(22);
+//            mEditor.setEditorFontColor(Color.RED);
+//            mEditor.setEditorBackgroundColor(Color.BLUE);
             //mEditor.setBackgroundColor(Color.BLUE);
             //mEditor.setBackgroundResource(R.drawable.bg);
-            mEditor.setPadding(10, 10, 10, 10);
+//            mEditor.setPadding(10, 10, 10, 10);
             //mEditor.setBackground("https://raw.githubusercontent.com/wasabeef/art/master/chip.jpg");
-            mEditor.setPlaceholder("Insert text here...");
+//            mEditor.setPlaceholder("Insert text here...");
 
 //            mEditor.setOnTextChangeListener { text ->
 //                mPreview.text = text
 //            }
 
-            actionUndo.setOnClickListener {
-                if (isPressed) {
-                    mEditor.undo()
-                    actionUndo.setBackgroundColor(Color.TRANSPARENT)
-                } else {
-                    mEditor.undo()
-                    actionUndo.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.gray))
-                }
-                isPressed = !isPressed
-            }
-
-            actionRedo.setOnClickListener {
-                if (isPressed){
-                    mEditor.redo()
-                    actionRedo.setBackgroundColor(Color.TRANSPARENT)
-                } else {
-                    mEditor.redo()
-                    actionRedo.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.gray))
-                }
-                isPressed = !isPressed
-            }
-
-            actionBold.setOnClickListener {
-                if (isPressed) {
-                    mEditor.setBold()
-                    actionBold.setBackgroundColor(Color.TRANSPARENT)
-                } else {
-                    mEditor.setBold()
-                    actionBold.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.gray))
-                }
-                isPressed = !isPressed
-            }
-
-            actionItalic.setOnClickListener {
-                if (isPressed) {
-                    mEditor.setItalic()
-                    actionItalic.setBackgroundColor(Color.TRANSPARENT)
-                } else {
-                    mEditor.setItalic()
-                    actionItalic.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.gray))
-                }
-                isPressed = !isPressed
-            }
-
-            actionUnderline.setOnClickListener {
-                if (isPressed) {
-                    mEditor.setUnderline()
-                    actionUnderline.setBackgroundColor(Color.TRANSPARENT)
-                } else {
-                    mEditor.setUnderline()
-                    actionUnderline.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.gray))
-                }
-                isPressed = !isPressed
-            }
+//            actionUndo.setOnClickListener {
+//                if (isPressed) {
+//                    mEditor.undo()
+//                    actionUndo.setBackgroundColor(Color.TRANSPARENT)
+//                } else {
+//                    mEditor.undo()
+//                    actionUndo.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.gray))
+//                }
+//                isPressed = !isPressed
+//            }
+//
+//            actionRedo.setOnClickListener {
+//                if (isPressed){
+//                    mEditor.redo()
+//                    actionRedo.setBackgroundColor(Color.TRANSPARENT)
+//                } else {
+//                    mEditor.redo()
+//                    actionRedo.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.gray))
+//                }
+//                isPressed = !isPressed
+//            }
+//
+//            actionBold.setOnClickListener {
+//                if (isPressed) {
+//                    mEditor.setBold()
+//                    actionBold.setBackgroundColor(Color.TRANSPARENT)
+//                } else {
+//                    mEditor.setBold()
+//                    actionBold.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.gray))
+//                }
+//                isPressed = !isPressed
+//            }
+//
+//            actionItalic.setOnClickListener {
+//                if (isPressed) {
+//                    mEditor.setItalic()
+//                    actionItalic.setBackgroundColor(Color.TRANSPARENT)
+//                } else {
+//                    mEditor.setItalic()
+//                    actionItalic.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.gray))
+//                }
+//                isPressed = !isPressed
+//            }
+//
+//            actionUnderline.setOnClickListener {
+//                if (isPressed) {
+//                    mEditor.setUnderline()
+//                    actionUnderline.setBackgroundColor(Color.TRANSPARENT)
+//                } else {
+//                    mEditor.setUnderline()
+//                    actionUnderline.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.gray))
+//                }
+//                isPressed = !isPressed
+//            }
 
 //            actionSubscript.setOnClickListener { mEditor.setSubscript() }
 //            actionSuperscript.setOnClickListener { mEditor.setSuperscript() }
 
-            actionStrikethrough.setOnClickListener {
-                if (isPressed) {
-                    mEditor.setStrikeThrough()
-                    actionStrikethrough.setBackgroundColor(Color.TRANSPARENT)
-                } else {
-                    mEditor.setStrikeThrough()
-                    actionStrikethrough.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.gray))
-                }
-                isPressed = !isPressed
-            }
+//            actionStrikethrough.setOnClickListener {
+//                if (isPressed) {
+//                    mEditor.setStrikeThrough()
+//                    actionStrikethrough.setBackgroundColor(Color.TRANSPARENT)
+//                } else {
+//                    mEditor.setStrikeThrough()
+//                    actionStrikethrough.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.gray))
+//                }
+//                isPressed = !isPressed
+//            }
 
             /** Leave only headlines for title and subtitle */
-            actionHeading1.setOnClickListener { mEditor.setHeading(1) }
-            actionHeading2.setOnClickListener { mEditor.setHeading(2) }
-            actionHeading3.setOnClickListener { mEditor.setHeading(3) }
-            actionHeading4.setOnClickListener { mEditor.setHeading(4) }
-            actionHeading5.setOnClickListener { mEditor.setHeading(5) }
-            actionHeading6.setOnClickListener { mEditor.setHeading(6) }
+//            actionHeading1.setOnClickListener { mEditor.setHeading(1) }
+//            actionHeading2.setOnClickListener { mEditor.setHeading(2) }
+//            actionHeading3.setOnClickListener { mEditor.setHeading(3) }
+//            actionHeading4.setOnClickListener { mEditor.setHeading(4) }
+//            actionHeading5.setOnClickListener { mEditor.setHeading(5) }
+//            actionHeading6.setOnClickListener { mEditor.setHeading(6) }
 
 //            actionTxtColor.setOnClickListener {
 //                var isChanged = false
@@ -171,41 +257,41 @@ class PublicPostFragment : Fragment() {
 //            actionIndent.setOnClickListener { mEditor.setIndent() }
 //            actionOutdent.setOnClickListener { mEditor.setOutdent() }
 
-            actionAlignLeft.setOnClickListener {
-                if (isPressed) {
-                    mEditor.setAlignLeft()
-                    actionAlignLeft.setBackgroundColor(Color.TRANSPARENT)
-                } else {
-                    mEditor.setAlignLeft()
-                    actionAlignLeft.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.gray))
-                }
-                isPressed = !isPressed
-            }
-
-            actionAlignCenter.setOnClickListener {
-                if (isPressed) {
-                    mEditor.setAlignCenter()
-                    actionAlignCenter.setBackgroundColor(Color.TRANSPARENT)
-                } else {
-                    mEditor.setAlignCenter()
-                    actionAlignCenter.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.gray))
-                }
-                isPressed = !isPressed
-            }
-
-            actionAlignRight.setOnClickListener {
-                if (isPressed) {
-                    mEditor.setAlignRight()
-                    actionAlignRight.setBackgroundColor(Color.TRANSPARENT)
-                } else {
-                    mEditor.setAlignRight()
-                    actionAlignRight.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.gray))
-                }
-                isPressed = !isPressed
-            }
-
-            actionInsertBullets.setOnClickListener { mEditor.setBullets() }
-            actionInsertNumbers.setOnClickListener { mEditor.setNumbers() }
+//            actionAlignLeft.setOnClickListener {
+//                if (isPressed) {
+//                    mEditor.setAlignLeft()
+//                    actionAlignLeft.setBackgroundColor(Color.TRANSPARENT)
+//                } else {
+//                    mEditor.setAlignLeft()
+//                    actionAlignLeft.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.gray))
+//                }
+//                isPressed = !isPressed
+//            }
+//
+//            actionAlignCenter.setOnClickListener {
+//                if (isPressed) {
+//                    mEditor.setAlignCenter()
+//                    actionAlignCenter.setBackgroundColor(Color.TRANSPARENT)
+//                } else {
+//                    mEditor.setAlignCenter()
+//                    actionAlignCenter.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.gray))
+//                }
+//                isPressed = !isPressed
+//            }
+//
+//            actionAlignRight.setOnClickListener {
+//                if (isPressed) {
+//                    mEditor.setAlignRight()
+//                    actionAlignRight.setBackgroundColor(Color.TRANSPARENT)
+//                } else {
+//                    mEditor.setAlignRight()
+//                    actionAlignRight.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.gray))
+//                }
+//                isPressed = !isPressed
+//            }
+//
+//            actionInsertBullets.setOnClickListener { mEditor.setBullets() }
+//            actionInsertNumbers.setOnClickListener { mEditor.setNumbers() }
 
 //            actionBlockquote.setOnClickListener { mEditor.setBlockquote() }
 //            actionInsertImage.setOnClickListener {
@@ -228,55 +314,31 @@ class PublicPostFragment : Fragment() {
 //                Toast.makeText(this@MainActivity, "build YouTube", Toast.LENGTH_SHORT).show()
 //            }
 
-            actionInsertLink.setOnClickListener {
-                addLinkDialog()
-            }
+//            actionInsertLink.setOnClickListener {
+//                addLinkDialog()
+//            }
 
-            actionInsertCheckbox.setOnClickListener {
-                mEditor.insertTodo()
-            }
+//            actionInsertCheckbox.setOnClickListener {
+//                mEditor.insertTodo()
+//            }
 
-
-
-
-            tweetViewModel.postTweetResult.observe(viewLifecycleOwner) { result ->
-
-                when (result) {
-                    is PostTweet.Success -> {
-                        findNavController().navigate(R.id.action_publicPostFragment_to_homeFragment)
-                    }
-
-                    is PostTweet.Error -> {
-                        snackbarHelper.snackbarError(
-                            requireActivity().findViewById(R.id.public_post_root_layout),
-                            requireActivity().findViewById(R.id.public_post_root_layout),
-                            error = result.message,
-                            ""){}
-                        btnTweet.isEnabled = true
-                    }
-                }
-            }
-        }
-    }
-
-    private fun addLinkDialog() {
-        val mEditor = binding.contentEt
-        val alertDialogBuilder = MaterialAlertDialogBuilder(requireContext(), com.google.android.material.R.style.MaterialAlertDialog_Material3)
-        val inflater = layoutInflater
-        val dialogView = inflater.inflate(R.layout.custom_layout, null)
-        alertDialogBuilder.setView(dialogView)
-
-        val linkEditText = dialogView.findViewById<EditText>(R.id.dialog_link)
-        val yesBtn: LinearLayout = dialogView.findViewById(R.id.Add)
-        val linkTitleEditText = dialogView.findViewById<EditText>(R.id.dialog_link_title)
-
-        yesBtn.setOnClickListener {
-            val link = linkEditText.text.toString()
-            val linkTitle = linkTitleEditText.text.toString()
-            mEditor.insertLink(link, linkTitle)
-        }
-
-        alertDialogBuilder.setCancelable(true)
-        alertDialogBuilder.show()
-    }
-}
+//    private fun addLinkDialog() {
+//        val mEditor = binding.contentEt
+//        val alertDialogBuilder = MaterialAlertDialogBuilder(requireContext(), com.google.android.material.R.style.MaterialAlertDialog_Material3)
+//        val inflater = layoutInflater
+//        val dialogView = inflater.inflate(R.layout.custom_layout, null)
+//        alertDialogBuilder.setView(dialogView)
+//
+//        val linkEditText = dialogView.findViewById<EditText>(R.id.dialog_link)
+//        val yesBtn: LinearLayout = dialogView.findViewById(R.id.Add)
+//        val linkTitleEditText = dialogView.findViewById<EditText>(R.id.dialog_link_title)
+//
+//        yesBtn.setOnClickListener {
+//            val link = linkEditText.text.toString()
+//            val linkTitle = linkTitleEditText.text.toString()
+//            mEditor.insertLink(link, linkTitle)
+//        }
+//
+//        alertDialogBuilder.setCancelable(true)
+//        alertDialogBuilder.show()
+//    }
