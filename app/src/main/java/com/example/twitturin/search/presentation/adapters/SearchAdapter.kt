@@ -6,25 +6,31 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.Navigation
+import androidx.recyclerview.widget.AsyncListDiffer
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.twitturin.R
-import com.example.twitturin.auth.presentation.model.data.User
 import com.example.twitturin.databinding.RcViewSearchBinding
-import com.example.twitturin.manager.SessionManager
-import java.text.SimpleDateFormat
-import java.util.Locale
-import java.util.TimeZone
-import javax.inject.Inject
+import com.example.twitturin.search.data.model.SearchUser
 
-class SearchAdapter @Inject constructor() : RecyclerView.Adapter<SearchAdapter.ViewHolder>() {
-
-    private var list = emptyList<User>()
-    @Inject lateinit var sessionManager: SessionManager
+class SearchAdapter: RecyclerView.Adapter<SearchAdapter.ViewHolder>() {
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val binding = RcViewSearchBinding.bind(itemView)
     }
+
+    private val differCallback = object : DiffUtil.ItemCallback<SearchUser>(){
+
+        override fun areItemsTheSame(oldItem: SearchUser, newItem: SearchUser): Boolean {
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(oldItem: SearchUser, newItem: SearchUser): Boolean {
+            return oldItem.id == newItem.id
+        }
+    }
+    val differ = AsyncListDiffer(this,differCallback)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.rc_view_search, parent, false)
@@ -33,12 +39,12 @@ class SearchAdapter @Inject constructor() : RecyclerView.Adapter<SearchAdapter.V
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = list[position]
+        val item = differ.currentList[position]
         val context = holder.itemView.context
 
         holder.binding.apply {
             item.apply {
-                val profileImage = "$profilePicture"
+                val profileImage = profilePicture
 
                 Glide.with(context)
                     .load(profileImage)
@@ -67,12 +73,12 @@ class SearchAdapter @Inject constructor() : RecyclerView.Adapter<SearchAdapter.V
     }
 
     override fun getItemCount(): Int {
-        return list.size
+        return differ.currentList.size
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    fun setData(newList: List<User>){
-        list = newList
-        notifyDataSetChanged()
-    }
+//    @SuppressLint("NotifyDataSetChanged")
+//    fun setData(newList: List<User>){
+//        list = newList
+//        notifyDataSetChanged()
+//    }
 }

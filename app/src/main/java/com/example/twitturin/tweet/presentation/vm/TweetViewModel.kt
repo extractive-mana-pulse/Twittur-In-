@@ -131,8 +131,7 @@ class TweetViewModel @Inject constructor(
         })
     }
 
-    private val _postTweet =
-        SingleLiveEvent<PostTweet>()
+    private val _postTweet = SingleLiveEvent<PostTweet>()
     val postTweetResult: LiveData<PostTweet> = _postTweet
 
     fun postTheTweet(content: String, authToken: String) {

@@ -1,6 +1,5 @@
 package com.example.twitturin.tweet.presentation.fragments
 
-import android.app.AlertDialog
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -11,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -20,6 +18,7 @@ import com.example.twitturin.R
 import com.example.twitturin.databinding.FragmentPublicPostBinding
 import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.manager.SessionManager
+import com.example.twitturin.tweet.presentation.constans.Constants
 import com.example.twitturin.tweet.presentation.sealed.PostTweet
 import com.example.twitturin.tweet.presentation.vm.TweetViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -29,8 +28,6 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class PublicPostFragment : Fragment() {
 
-    private val PREFS_NAME = "MyPrefs"
-    private val SHOW_DIALOG_KEY = "showDialog"
     @Inject lateinit var sessionManager: SessionManager
     @Inject lateinit var snackbarHelper: SnackbarHelper
     private lateinit var sharedPreferences: SharedPreferences
@@ -43,10 +40,9 @@ class PublicPostFragment : Fragment() {
 
     init {
         lifecycleScope.launchWhenResumed {
-            sharedPreferences =
-                requireActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            sharedPreferences = requireActivity().getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE)
 
-            val showDialog = sharedPreferences.getBoolean(SHOW_DIALOG_KEY, true)
+            val showDialog = sharedPreferences.getBoolean(Constants.SHOW_DIALOG_KEY, true)
             if (showDialog) {
                 showDialog()
             }
@@ -122,9 +118,8 @@ class PublicPostFragment : Fragment() {
         }
 
         dialogCheckbox.setOnCheckedChangeListener { _, isChecked ->
-            sharedPreferences.edit().putBoolean(SHOW_DIALOG_KEY, !isChecked).apply()
+            sharedPreferences.edit().putBoolean(Constants.SHOW_DIALOG_KEY, !isChecked).apply()
         }
-
         dialog.show()
     }
 }

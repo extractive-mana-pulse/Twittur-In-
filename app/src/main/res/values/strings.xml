@@ -112,6 +112,7 @@
     <string name="there_is_no_any_conversations">There is no any conversations</string>
     <string name="there_is_no_any_group_conversations">There is no any group conversations</string>
     <string name="Home">Home</string>
+    <string name="Search">Search</string>
 
     <string-array name="major_array">
         <item>SE</item>

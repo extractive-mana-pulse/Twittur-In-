@@ -10,128 +10,128 @@
             type="com.example.twitturin.search.presentation.fragments.SearchFragment"/>
     </data>
 
-<!--    <androidx.coordinatorlayout.widget.CoordinatorLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent">-->
-
-<!--        <androidx.core.widget.NestedScrollView-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            app:layout_behavior="@string/appbar_scrolling_view_behavior">-->
-
-<!--            <androidx.constraintlayout.widget.ConstraintLayout-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent">-->
-
-<!--                <androidx.recyclerview.widget.RecyclerView-->
-<!--                    android:id="@+id/rc_view"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="match_parent"-->
-<!--                    app:layout_constraintTop_toTopOf="parent"-->
-<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                    app:layout_constraintStart_toStartOf="parent"-->
-<!--                    app:layout_constraintEnd_toEndOf="parent"/>-->
-
-<!--                <ProgressBar-->
-<!--                    android:id="@+id/paginationProgressBar"-->
-<!--                    style="?attr/progressBarStyle"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:visibility="invisible"-->
-<!--                    android:background="@android:color/transparent"-->
-<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                    app:layout_constraintEnd_toEndOf="parent"-->
-<!--                    app:layout_constraintStart_toStartOf="parent" />-->
-
-<!--            </androidx.constraintlayout.widget.ConstraintLayout>-->
-
-<!--            &lt;!&ndash; Screen content goes here. &ndash;&gt;-->
-
-<!--        </androidx.core.widget.NestedScrollView>-->
-
-<!--        <com.google.android.material.appbar.AppBarLayout-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content">-->
-
-<!--            <com.google.android.material.search.SearchBar-->
-<!--                android:id="@+id/search_bar"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:hint="@string/search_hint" />-->
-<!--        </com.google.android.material.appbar.AppBarLayout>-->
-
-<!--        <com.google.android.material.search.SearchView-->
-<!--            android:id="@+id/search_view"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:hint="@string/search_hint"-->
-<!--            app:layout_anchor="@id/search_bar">-->
-<!--            &lt;!&ndash; Search suggestions/results go here (ScrollView, RecyclerView, etc.). &ndash;&gt;-->
-<!--        </com.google.android.material.search.SearchView>-->
-<!--    </androidx.coordinatorlayout.widget.CoordinatorLayout>-->
-
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/search_root_layout"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/tech_work_an_view"
-            android:layout_width="282dp"
-            android:layout_height="222dp"
-            app:lottie_loop="true"
-            app:lottie_autoPlay="true"
-            android:layout_marginStart="-145dp"
-            app:lottie_rawRes="@raw/gear_search"
-            app:layout_constraintWidth_percent="0.4"
-            app:layout_constraintDimensionRatio="1.1"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <TextView
-            android:id="@+id/technical_work_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/page_not_available"
-            android:layout_marginTop="8dp"
-            android:paddingHorizontal="16dp"
-            android:textSize="26sp"
-            android:textStyle="bold"
-            android:textColor="?attr/colorPrimary"
-            android:textAlignment="textStart"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tech_work_an_view_2"/>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/search_rc_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <ProgressBar
+                    android:id="@+id/search_paginationProgressBar"
+                    style="?attr/progressBarStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="invisible"
+                    android:background="@android:color/transparent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!-- Screen content goes here. -->
+
+        </androidx.core.widget.NestedScrollView>
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.search.SearchBar
+                android:id="@+id/search_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/search_hint" />
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <com.google.android.material.search.SearchView
+            android:id="@+id/search_search_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="@string/search_hint"
+            app:layout_anchor="@id/search_bar">
+            <!-- Search suggestions/results go here (ScrollView, RecyclerView, etc.). -->
+        </com.google.android.material.search.SearchView>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 
-        <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/tech_work_an_view_2"
-            android:layout_width="262dp"
-            android:layout_height="222dp"
-            app:lottie_loop="true"
-            app:lottie_autoPlay="true"
-            android:layout_marginEnd="-130dp"
-            android:layout_marginTop="156dp"
-            app:lottie_rawRes="@raw/gear_search"
-            app:layout_constraintWidth_percent="0.4"
-            app:layout_constraintDimensionRatio="1.1"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+<!--    <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--        android:id="@+id/search_root_layout"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent">-->
 
-        <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/tech_work_an_view_3"
-            android:layout_width="282dp"
-            android:layout_height="222dp"
-            app:lottie_loop="true"
-            app:lottie_autoPlay="true"
-            android:layout_marginTop="185dp"
-            android:layout_marginStart="-145dp"
-            app:lottie_rawRes="@raw/gear_search"
-            app:layout_constraintWidth_percent="0.4"
-            app:layout_constraintDimensionRatio="1.1"
-            app:layout_constraintTop_toBottomOf="@id/tech_work_an_view"
-            app:layout_constraintStart_toStartOf="parent"/>
+<!--        <com.airbnb.lottie.LottieAnimationView-->
+<!--            android:id="@+id/tech_work_an_view"-->
+<!--            android:layout_width="282dp"-->
+<!--            android:layout_height="222dp"-->
+<!--            app:lottie_loop="true"-->
+<!--            app:lottie_autoPlay="true"-->
+<!--            android:layout_marginStart="-145dp"-->
+<!--            app:lottie_rawRes="@raw/gear_search"-->
+<!--            app:layout_constraintWidth_percent="0.4"-->
+<!--            app:layout_constraintDimensionRatio="1.1"-->
+<!--            app:layout_constraintTop_toTopOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"/>-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/technical_work_tv"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="@string/page_not_available"-->
+<!--            android:layout_marginTop="8dp"-->
+<!--            android:paddingHorizontal="16dp"-->
+<!--            android:textSize="26sp"-->
+<!--            android:textStyle="bold"-->
+<!--            android:textColor="?attr/colorPrimary"-->
+<!--            android:textAlignment="textStart"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@id/tech_work_an_view_2"/>-->
+
+
+<!--        <com.airbnb.lottie.LottieAnimationView-->
+<!--            android:id="@+id/tech_work_an_view_2"-->
+<!--            android:layout_width="262dp"-->
+<!--            android:layout_height="222dp"-->
+<!--            app:lottie_loop="true"-->
+<!--            app:lottie_autoPlay="true"-->
+<!--            android:layout_marginEnd="-130dp"-->
+<!--            android:layout_marginTop="156dp"-->
+<!--            app:lottie_rawRes="@raw/gear_search"-->
+<!--            app:layout_constraintWidth_percent="0.4"-->
+<!--            app:layout_constraintDimensionRatio="1.1"-->
+<!--            app:layout_constraintTop_toTopOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"/>-->
+
+<!--        <com.airbnb.lottie.LottieAnimationView-->
+<!--            android:id="@+id/tech_work_an_view_3"-->
+<!--            android:layout_width="282dp"-->
+<!--            android:layout_height="222dp"-->
+<!--            app:lottie_loop="true"-->
+<!--            app:lottie_autoPlay="true"-->
+<!--            android:layout_marginTop="185dp"-->
+<!--            android:layout_marginStart="-145dp"-->
+<!--            app:lottie_rawRes="@raw/gear_search"-->
+<!--            app:layout_constraintWidth_percent="0.4"-->
+<!--            app:layout_constraintDimensionRatio="1.1"-->
+<!--            app:layout_constraintTop_toBottomOf="@id/tech_work_an_view"-->
+<!--            app:layout_constraintStart_toStartOf="parent"/>-->
 
 
 
@@ -229,5 +229,4 @@
 <!--            app:layout_constraintBottom_toBottomOf="parent"-->
 <!--            app:layout_constraintTop_toBottomOf="@id/toolbar"/>-->
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -3,8 +3,9 @@ package com.example.twitturin.search.presentation.vm
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.twitturin.auth.presentation.model.data.Head
-import com.example.twitturin.search.domain.repository.SearchRepository
+import com.example.twitturin.search.data.model.SearchResponse
+import com.example.twitturin.search.data.model.SearchUser
+import com.example.twitturin.search.data.repository.SearchRepository
 import com.example.twitturin.search.presentation.sealed.SearchResource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -16,7 +17,7 @@ class SearchViewModel @Inject constructor(
     val repository: SearchRepository
 ) : ViewModel() {
 
-    val searchNews: MutableLiveData<SearchResource<Head>> = MutableLiveData()
+    val searchNews: MutableLiveData<SearchResource<SearchResponse>> = MutableLiveData()
 
     fun searchString(keyword : String) = viewModelScope.launch {
         searchNews.postValue(SearchResource.Loading())
@@ -24,7 +25,7 @@ class SearchViewModel @Inject constructor(
         searchNews.postValue(handleSearchNews(response))
     }
 
-    private fun handleSearchNews(response: Response<Head>): SearchResource<Head> {
+    private fun handleSearchNews(response: Response<SearchResponse>): SearchResource<SearchResponse> {
         if(response.isSuccessful){
             response.body()?.let { resultResponse ->
                 return SearchResource.Success(resultResponse)
