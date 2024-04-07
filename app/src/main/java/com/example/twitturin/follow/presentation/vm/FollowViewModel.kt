@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.twitturin.follow.domain.repository.FollowRepository
-import com.example.twitturin.auth.presentation.model.data.User
+import com.example.twitturin.User
 import com.example.twitturin.follow.presentation.sealed.UnFollow
 import com.example.twitturin.follow.presentation.sealed.FollowResult
 import com.example.twitturin.event.SingleLiveEvent

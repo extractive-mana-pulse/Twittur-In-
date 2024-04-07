@@ -3,9 +3,9 @@ package com.example.twitturin.search.presentation.vm
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.twitturin.search.data.model.SearchResponse
-import com.example.twitturin.search.data.model.SearchUser
-import com.example.twitturin.search.data.repository.SearchRepository
+import com.example.twitturin.search.domain.model.SearchResponse
+import com.example.twitturin.search.domain.model.SearchUser
+import com.example.twitturin.search.data.remote.repository.SearchRepository
 import com.example.twitturin.search.presentation.sealed.SearchResource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch

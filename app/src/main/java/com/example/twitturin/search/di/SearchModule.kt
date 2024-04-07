@@ -1,8 +1,8 @@
 package com.example.twitturin.search.di
 
-import com.example.twitturin.search.data.repository.SearchRepository
+import com.example.twitturin.search.data.remote.repository.SearchRepository
 import com.example.twitturin.search.domain.repositoryImpl.SearchRepositoryImpl
-import com.example.twitturin.search.data.network.SearchApi
+import com.example.twitturin.search.data.remote.api.SearchApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

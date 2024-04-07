@@ -34,22 +34,22 @@ class EditTweetFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.apply {
+
             val sharedPreferences = requireActivity().getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
             val description = sharedPreferences.getString("description", "")
 
             val tweetId = sharedPreferences.getString("id","")
-
             val token = sessionManager.getToken()
 
-            binding.editTweetContent.setText(description)
+            editTweetContent.setText(description)
 
-            binding.editTweetCancelBtn.setOnClickListener {
+            editTweetCancelBtn.setOnClickListener {
                 findNavController().popBackStack()
             }
 
-            binding.editTweetPublishBtn.setOnClickListener {
-                binding.editTweetPublishBtn.isEnabled = false
-                val content = binding.editTweetContent.text.toString()
+            editTweetPublishBtn.setOnClickListener {
+                editTweetPublishBtn.isEnabled = false
+                val content = editTweetContent.text.toString()
                 tweetViewModel.editTweet(content, tweetId!!, "Bearer $token")
             }
 
@@ -62,11 +62,11 @@ class EditTweetFragment : Fragment() {
                     is EditTweet.Error -> {
                         snackbarHelper.snackbarError(
                             requireActivity().findViewById<ConstraintLayout>(R.id.edit_tweet_tv_for_snackbar),
-                            binding.editTweetTvForSnackbar,
+                            editTweetTvForSnackbar,
                             error = result.error,
                             ""
                         ) {}
-                        binding.editTweetPublishBtn.isEnabled = true
+                        editTweetPublishBtn.isEnabled = true
                     }
                 }
             }

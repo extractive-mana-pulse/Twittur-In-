@@ -1,11 +1,11 @@
 package com.example.twitturin.tweet.domain.repositoryImpl
 
-import com.example.twitturin.tweet.presentation.model.data.LikeTweet
-import com.example.twitturin.tweet.presentation.model.data.TweetContent
-import com.example.twitturin.tweet.presentation.model.data.ReplyContent
-import com.example.twitturin.tweet.presentation.model.data.Tweet
-import com.example.twitturin.tweet.domain.repository.TweetRepository
-import com.example.twitturin.tweet.presentation.model.network.TweetApi
+import com.example.twitturin.tweet.domain.model.LikeTweet
+import com.example.twitturin.tweet.domain.model.TweetContent
+import com.example.twitturin.tweet.domain.model.ReplyContent
+import com.example.twitturin.tweet.domain.model.Tweet
+import com.example.twitturin.tweet.data.remote.repository.TweetRepository
+import com.example.twitturin.tweet.data.remote.api.TweetApi
 import retrofit2.Call
 import retrofit2.Response
 

@@ -18,7 +18,7 @@ import com.example.twitturin.R
 import com.example.twitturin.databinding.FragmentPublicPostBinding
 import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.manager.SessionManager
-import com.example.twitturin.tweet.presentation.constans.Constants
+import com.example.twitturin.tweet.presentation.util.Constants
 import com.example.twitturin.tweet.presentation.sealed.PostTweet
 import com.example.twitturin.tweet.presentation.vm.TweetViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder

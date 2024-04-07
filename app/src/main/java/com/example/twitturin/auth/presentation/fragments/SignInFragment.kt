@@ -26,8 +26,8 @@ class SignInFragment : Fragment() {
 
     @Inject lateinit var sessionManager: SessionManager
     @Inject lateinit var snackbarHelper: SnackbarHelper
-    private lateinit var stayInViewModel : StayInViewModel
     private val signInViewModel : SignInViewModel by viewModels()
+    private val stayInViewModel : StayInViewModel by viewModels()
     private val binding by lazy { FragmentSignInBinding.inflate(layoutInflater) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -37,10 +37,7 @@ class SignInFragment : Fragment() {
     @SuppressLint("ResourceAsColor", "RestrictedApi", "MissingInflatedId")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        checkConnection()
         binding.signInFragment = this
-
-        stayInViewModel = ViewModelProvider(requireActivity())[StayInViewModel::class.java]
 
         binding.signIn.setOnClickListener {
             val username = binding.usernameSignInEt.text.toString().trim()
@@ -115,15 +112,4 @@ class SignInFragment : Fragment() {
     fun chooseKindPage() {
         findNavController().navigate(R.id.action_signInFragment_to_kindFragment)
     }
-
-//    private fun checkConnection() {
-//        val connectivityManager = requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-//        val networkInfo = connectivityManager.activeNetworkInfo
-//
-//        if (networkInfo != null && networkInfo.isConnected) {
-//            findNavController().navigate(R.id.signInFragment)
-//        } else {
-//            findNavController().navigate(R.id.noInternetFragment)
-//        }
-//    }
 }

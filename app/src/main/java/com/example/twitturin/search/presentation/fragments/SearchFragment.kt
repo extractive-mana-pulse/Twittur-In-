@@ -15,6 +15,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.twitturin.R
 import com.example.twitturin.databinding.FragmentSearchBinding
+import com.example.twitturin.follow.presentation.vm.FollowViewModel
 import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.search.presentation.adapters.SearchAdapter
 import com.example.twitturin.search.presentation.sealed.SearchResource
@@ -31,10 +32,11 @@ import javax.inject.Inject
 class SearchFragment : Fragment() {
 
     private val rqSpeechRec = 102
-    private val myAdapter by lazy { SearchAdapter() }
     @Inject lateinit var  snackbarHelper: SnackbarHelper
     private val searchViewModel : SearchViewModel by viewModels()
+    private val followViewModel : FollowViewModel by viewModels()
     private val binding by lazy { FragmentSearchBinding.inflate(layoutInflater) }
+    private val myAdapter by lazy { SearchAdapter(viewLifecycleOwner, followViewModel) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return binding.root
@@ -78,12 +80,8 @@ class SearchFragment : Fragment() {
                 when (response) {
                     is SearchResource.Success -> {
                         hideProgressBar()
-                        val user = response.data
                         response.data?.let { newsResponse ->
                             myAdapter.differ.submitList(newsResponse.users)
-//                            Log.d("success", myAdapter.differ.submitList(mutableListOf(user)).toString())
-                            Log.d("success", user.toString())
-                            Log.d("success", newsResponse.toString())
                         }
                     }
 

@@ -2,8 +2,8 @@ package com.example.twitturin.tweet.presentation.vm
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import com.example.twitturin.tweet.presentation.model.data.LikeTweet
-import com.example.twitturin.tweet.domain.repository.TweetRepository
+import com.example.twitturin.tweet.domain.model.LikeTweet
+import com.example.twitturin.tweet.data.remote.repository.TweetRepository
 import com.example.twitturin.tweet.presentation.sealed.PostLike
 import com.example.twitturin.event.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel

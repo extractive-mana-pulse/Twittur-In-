@@ -3,9 +3,9 @@ package com.example.twitturin.auth.presentation.vm
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.twitturin.auth.domain.repository.AuthRepository
-import com.example.twitturin.auth.presentation.model.data.Login
-import com.example.twitturin.auth.presentation.model.data.User
+import com.example.twitturin.auth.data.remote.repository.AuthRepository
+import com.example.twitturin.auth.domain.model.AuthUser
+import com.example.twitturin.auth.domain.model.Login
 import com.example.twitturin.auth.presentation.sealed.SignIn
 import com.example.twitturin.event.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -32,9 +32,9 @@ class SignInViewModel @Inject constructor(
 
         val request = Login(username, password)
 
-        repository.signInUser(request).enqueue(object : Callback<User> {
+        repository.signInUser(request).enqueue(object : Callback<AuthUser> {
 
-            override fun onResponse(call: Call<User>, response: Response<User>) {
+            override fun onResponse(call: Call<AuthUser>, response: Response<AuthUser>) {
 
                 if (response.isSuccessful) {
                     val signInResponse = response.body()
@@ -48,7 +48,7 @@ class SignInViewModel @Inject constructor(
                 }
             }
 
-            override fun onFailure(call: Call<User>, t: Throwable) {
+            override fun onFailure(call: Call<AuthUser>, t: Throwable) {
                 _signInResult.value = SignIn.Error("Network error")
             }
         })

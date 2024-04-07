@@ -33,7 +33,6 @@ class MoreSettingsDetailFragment : BottomSheetDialogFragment() {
     private val tweetViewModel : TweetViewModel by viewModels()
     private val followViewModel : FollowViewModel by viewModels()
 
-    /** If i want to leave a comment as a doc. I need to write this type of doc outside override methods */
     @SuppressLint("SetTextI18n", "MissingInflatedId")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.bottom_sheet_layout, container, false)
@@ -53,9 +52,7 @@ class MoreSettingsDetailFragment : BottomSheetDialogFragment() {
         val userId = sharedPreferences.getString("userId", "")
         val tweetId = sharedPreferences.getString("id", "")
 
-
-        // this code written in purpose to manipulate with ui elements
-        // of more settings of detail page!
+        /** Note:  check's userId with userId to manipulate with UI elements */
         if (userId == userId2) {
             followLayout.visibility = View.GONE
             editLayout.visibility = View.VISIBLE

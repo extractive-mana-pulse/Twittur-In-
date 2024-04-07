@@ -1,6 +1,6 @@
 package com.example.twitturin.tweet.presentation.sealed
 
-import com.example.twitturin.tweet.presentation.model.data.ReplyContent
+import com.example.twitturin.tweet.domain.model.ReplyContent
 
 
 sealed class PostReply {

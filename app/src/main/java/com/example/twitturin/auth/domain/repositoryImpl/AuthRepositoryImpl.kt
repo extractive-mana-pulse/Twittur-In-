@@ -1,15 +1,16 @@
 package com.example.twitturin.auth.domain.repositoryImpl
 
-import com.example.twitturin.auth.presentation.model.data.Login
-import com.example.twitturin.auth.presentation.model.data.SignUpProf
-import com.example.twitturin.auth.presentation.model.data.SignUpStudent
-import com.example.twitturin.auth.domain.repository.AuthRepository
-import com.example.twitturin.auth.presentation.model.network.AuthApi
-import com.example.twitturin.auth.presentation.model.data.User
+import com.example.twitturin.auth.data.remote.api.AuthApi
+import com.example.twitturin.auth.data.remote.repository.AuthRepository
+import com.example.twitturin.auth.domain.model.AuthUser
+import com.example.twitturin.auth.domain.model.Login
+import com.example.twitturin.auth.domain.model.SignUpProf
+import com.example.twitturin.auth.domain.model.SignUpStudent
 import retrofit2.Call
 
 class AuthRepositoryImpl(private val authApi: AuthApi) : AuthRepository {
-    override fun signInUser(authUser: Login): Call<User> {
+
+    override fun signInUser(authUser: Login): Call<AuthUser> {
         return authApi.signInUser(authUser)
     }
 

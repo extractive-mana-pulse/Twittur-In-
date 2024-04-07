@@ -9,7 +9,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.twitturin.R
-import com.example.twitturin.auth.presentation.model.data.User
+import com.example.twitturin.User
 import com.example.twitturin.databinding.RcViewFollowersBinding
 import com.example.twitturin.follow.presentation.sealed.FollowResult
 import com.example.twitturin.follow.presentation.vm.FollowViewModel
@@ -36,10 +36,8 @@ class FollowersAdapter @Inject constructor(
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = list[position]
-
         val context = holder.itemView.context
-        sessionManager = SessionManager(context)
-        val token = sessionManager.getToken()
+        val token = SessionManager(context).getToken()
 
         item.apply {
             holder.binding.apply {

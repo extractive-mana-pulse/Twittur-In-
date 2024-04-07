@@ -13,7 +13,7 @@ import com.example.twitturin.R
 import com.example.twitturin.databinding.FragmentLikesBinding
 import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.manager.SessionManager
-import com.example.twitturin.tweet.presentation.model.data.Tweet
+import com.example.twitturin.tweet.domain.model.Tweet
 import com.example.twitturin.tweet.presentation.vm.LikeViewModel
 import com.example.twitturin.tweet.presentation.vm.TweetViewModel
 import com.example.twitturin.ui.adapters.PostAdapter

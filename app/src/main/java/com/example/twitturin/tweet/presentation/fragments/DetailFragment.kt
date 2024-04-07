@@ -22,7 +22,7 @@ import com.example.twitturin.follow.presentation.vm.FollowViewModel
 import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.manager.SessionManager
 import com.example.twitturin.profile.presentation.fragments.FullScreenImageFragment
-import com.example.twitturin.tweet.presentation.model.data.Tweet
+import com.example.twitturin.tweet.domain.model.Tweet
 import com.example.twitturin.tweet.presentation.sealed.PostReply
 import com.example.twitturin.tweet.presentation.vm.LikeViewModel
 import com.example.twitturin.tweet.presentation.vm.TweetViewModel
@@ -45,7 +45,7 @@ class DetailFragment : Fragment() {
     private val binding  by lazy { FragmentDetailBinding.inflate(layoutInflater) }
     private val postAdapter by lazy { PostAdapter(likeViewModel, viewLifecycleOwner) }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return binding.root
     }
 
@@ -74,6 +74,7 @@ class DetailFragment : Fragment() {
             sharedPreferences.edit().putString("id", id).apply()
 
             val activateEditText = arguments?.getBoolean("activateEditText", false)
+
             if (activateEditText!!) {
                 replyEt.post {
                     replyEt.requestFocus()
@@ -167,6 +168,7 @@ class DetailFragment : Fragment() {
             }
 
             val dateConverter = convertDateFormat(updatedAt.toString())
+
             whenUpdated.text = dateConverter
 
             authorAvatar.setOnLongClickListener {
@@ -314,10 +316,5 @@ class DetailFragment : Fragment() {
 
         val date = inputFormat.parse(dateString)
         return outputFormat.format(date)
-    }
-
-    companion object {
-        @JvmStatic
-        fun newInstance() = DetailFragment()
     }
 }

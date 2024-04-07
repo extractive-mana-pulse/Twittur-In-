@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
@@ -12,9 +14,18 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.twitturin.R
 import com.example.twitturin.databinding.RcViewSearchBinding
-import com.example.twitturin.search.data.model.SearchUser
+import com.example.twitturin.follow.presentation.sealed.FollowResult
+import com.example.twitturin.follow.presentation.vm.FollowViewModel
+import com.example.twitturin.manager.SessionManager
+import com.example.twitturin.search.domain.model.SearchUser
+import javax.inject.Inject
 
-class SearchAdapter: RecyclerView.Adapter<SearchAdapter.ViewHolder>() {
+class SearchAdapter @Inject constructor(
+    private val lifecycleOwner : LifecycleOwner,
+    private val followViewModel: FollowViewModel
+): RecyclerView.Adapter<SearchAdapter.ViewHolder>() {
+
+    private lateinit var sessionManager: SessionManager
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val binding = RcViewSearchBinding.bind(itemView)
@@ -41,11 +52,13 @@ class SearchAdapter: RecyclerView.Adapter<SearchAdapter.ViewHolder>() {
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = differ.currentList[position]
         val context = holder.itemView.context
+        val token = SessionManager(context).getToken()
+
 
         holder.binding.apply {
             item.apply {
-                val profileImage = profilePicture
 
+                val profileImage = profilePicture
                 Glide.with(context)
                     .load(profileImage)
                     .error(R.drawable.not_found)
@@ -53,20 +66,35 @@ class SearchAdapter: RecyclerView.Adapter<SearchAdapter.ViewHolder>() {
                     .centerCrop()
                     .into(searchUserAvatar)
 
-                searchFullNameTv.text = fullName ?: "Twittur User"
+                searchFullNameTv.text = fullName
                 searchUsernameTv.text = "@$username"
+                searchPostDescriptionTv.text = bio
 
                 holder.itemView.setOnClickListener {
 
                     val bundle = Bundle().apply {
-                        putString("fullname", fullName ?: "Twittur User")
+                        putString("fullname", fullName)
                         putString("username", username)
                         putString("id",id)
+                        putString("biography", bio)
                         putBoolean("activateEditText", true)
+
                     }
 
                     val navController = Navigation.findNavController(holder.itemView)
                     navController.navigate(R.id.observeProfileFragment, bundle)
+                }
+
+                searchFollowBtn.setOnClickListener { followViewModel.followUsers(id, "Bearer $token") }
+
+                followViewModel.followResult.observe(lifecycleOwner) { result ->
+
+                    when (result) {
+
+                        is FollowResult.Success -> { Toast.makeText(context, "you follow ${result.user.username}", Toast.LENGTH_SHORT).show() }
+
+                        is FollowResult.Error -> { Toast.makeText(context, result.message, Toast.LENGTH_SHORT).show() }
+                    }
                 }
             }
         }
@@ -75,10 +103,4 @@ class SearchAdapter: RecyclerView.Adapter<SearchAdapter.ViewHolder>() {
     override fun getItemCount(): Int {
         return differ.currentList.size
     }
-
-//    @SuppressLint("NotifyDataSetChanged")
-//    fun setData(newList: List<User>){
-//        list = newList
-//        notifyDataSetChanged()
-//    }
 }
