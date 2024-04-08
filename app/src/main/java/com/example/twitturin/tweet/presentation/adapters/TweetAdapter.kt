@@ -168,8 +168,11 @@ class TweetAdapter @Inject constructor(
                         when (item.itemId) {
 
                             R.id.edit_user_own_tweet -> {
+                                val bundle = Bundle().apply {
+                                    putString("description", content)
+                                }
                                 val navController = Navigation.findNavController(holder.itemView)
-                                navController.navigate(R.id.editTweetFragment)
+                                navController.navigate(R.id.editTweetFragment, bundle)
                                 true
                             }
 

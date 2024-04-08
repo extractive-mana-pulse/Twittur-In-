@@ -1,9 +1,9 @@
 package com.example.twitturin.tweet.data.remote.repository
 
 import com.example.twitturin.tweet.domain.model.LikeTweet
-import com.example.twitturin.tweet.domain.model.TweetContent
 import com.example.twitturin.tweet.domain.model.ReplyContent
 import com.example.twitturin.tweet.domain.model.Tweet
+import com.example.twitturin.tweet.domain.model.TweetContent
 import retrofit2.Call
 import retrofit2.Response
 
@@ -50,4 +50,5 @@ interface TweetRepository {
         token: String
     ) : Call<LikeTweet>
 
+    suspend fun getTweetDescription(tweetId: String): Response<TweetContent>
 }

@@ -92,11 +92,12 @@ class ProfileFragment : Fragment() {
                             .into(profileUserAvatar)
 
                         profileFullName.text = result.user.fullName ?: "Twittur User"
-                        profileUsername.text = "@" + result.user.username
+                        profileUsername.text = "@"+result.user.username
                         profileKind.text = result.user.kind
                         profileBiography.text = result.user.bio ?: "This user does not appear to have any biography."
                         followingCounterTv.text = result.user.followingCount.toString()
                         followersCounterTv.text = result.user.followersCount.toString()
+                        profileDateTv.text = result.user.birthday
 
                         // location
                         if (result.user.country.isNullOrEmpty()) {
@@ -145,7 +146,13 @@ class ProfileFragment : Fragment() {
                     when (item.itemId) {
 
                         R.id.edit_profile -> {
-                            findNavController().navigate(R.id.action_profileFragment_to_editProfileFragment)
+                            val bundle = Bundle().apply {
+                                putString("profile_fullname", profileFullName.text.toString())
+                                putString("profile_username", profileUsername.text.toString())
+                                putString("profile_bio", profileBiography.text.toString())
+                                putString("profile_date", profileDateTv.text.toString())
+                            }
+                            findNavController().navigate(R.id.action_profileFragment_to_editProfileFragment, bundle)
                             true
                         }
 
@@ -168,7 +175,7 @@ class ProfileFragment : Fragment() {
                                         snackbarHelper.snackbarError(
                                             view.findViewById(R.id.profile_root_layout),
                                             profileRootLayout,
-                                            error = result.message,
+                                            result.message,
                                             ""){}
                                     }
                                 }

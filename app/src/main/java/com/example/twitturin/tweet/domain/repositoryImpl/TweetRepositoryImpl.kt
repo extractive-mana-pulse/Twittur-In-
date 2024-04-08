@@ -6,7 +6,10 @@ import com.example.twitturin.tweet.domain.model.ReplyContent
 import com.example.twitturin.tweet.domain.model.Tweet
 import com.example.twitturin.tweet.data.remote.repository.TweetRepository
 import com.example.twitturin.tweet.data.remote.api.TweetApi
+import com.example.twitturin.tweet.presentation.sealed.PostTweet
+import com.example.twitturin.tweet.presentation.sealed.TweetsContent
 import retrofit2.Call
+import retrofit2.Callback
 import retrofit2.Response
 
 class TweetRepositoryImpl(
@@ -59,5 +62,9 @@ class TweetRepositoryImpl(
 
     override fun unLike(tweet: LikeTweet, userId: String, token: String): Call<LikeTweet> {
         return tweetApi.unLike(tweet, userId, token)
+    }
+
+    override suspend fun getTweetDescription(tweetId: String): Response<TweetContent> {
+        return tweetApi.getTweetDescription(tweetId)
     }
 }

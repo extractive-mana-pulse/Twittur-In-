@@ -4,6 +4,7 @@ import com.example.twitturin.tweet.domain.model.LikeTweet
 import com.example.twitturin.tweet.domain.model.TweetContent
 import com.example.twitturin.tweet.domain.model.ReplyContent
 import com.example.twitturin.tweet.domain.model.Tweet
+import com.example.twitturin.tweet.presentation.sealed.TweetsContent
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
@@ -57,4 +58,6 @@ interface TweetApi {
     @DELETE("tweets/{id}/likes")
     fun unLike(@Body tweet: LikeTweet, @Path("id") userId: String, @Header("Authorization") token: String): Call<LikeTweet>
 
+    @GET("tweets/{id}")
+    suspend fun getTweetDescription(@Path("id") tweetId: String): Response<TweetContent>
 }

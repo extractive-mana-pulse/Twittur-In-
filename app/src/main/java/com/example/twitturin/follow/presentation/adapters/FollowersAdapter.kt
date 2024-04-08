@@ -22,7 +22,6 @@ class FollowersAdapter @Inject constructor(
 ) : RecyclerView.Adapter<FollowersAdapter.ViewHolder>() {
 
     private var list = emptyList<User>()
-    private lateinit var sessionManager: SessionManager
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val binding = RcViewFollowersBinding.bind(itemView)

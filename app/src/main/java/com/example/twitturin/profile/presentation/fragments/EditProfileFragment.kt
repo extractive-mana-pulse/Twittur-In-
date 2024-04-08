@@ -39,37 +39,52 @@ class EditProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.editProfileFragment = this
 
+        // TODO {fix: fix issue when user navigates to edit profile fragment user has username with sign @. in case user
+        //  did not edit his username and submit changes. in profile page user has 2 @@ sign in username textView. Need to fix that!}
+
+        val fullname = arguments?.getString("profile_fullname")
+        val username = arguments?.getString("profile_username")
+        val bio = arguments?.getString("profile_bio")
+        val date = arguments?.getString("profile_date")
+
         val userId = sessionManager.getUserId()
 
-        profileViewModel.getUserCredentials(userId!!)
-
-        profileViewModel.getUserCredentials.observe(viewLifecycleOwner) { result ->
-            when (result) {
-                is UserCredentials.Success -> {
-                    val profileImage = "${result.user.profilePicture ?: R.drawable.person}"
-                    Glide.with(requireContext())
-                        .load(profileImage)
-                        .error(R.drawable.not_found)
-                        .into(binding.editProfileUserAvatar)
-
-                    binding.editProfileFullnameEt.setText(result.user.fullName ?: "Twittur User")
-                    binding.editProfileUsernameEt.setText(result.user.username)
-                    binding.editProfileBioEt.setText(result.user.bio ?: "This user does not appear to have any biography.")
-                    binding.editProfileEmailEt.setText(result.user.email)
-                    binding.editProfileBirthdayEt.setText(result.user.birthday)
-                }
-
-                is UserCredentials.Error -> {
-
-                    snackbarHelper.snackbarError(
-                        requireActivity().findViewById(R.id.profile_root_layout),
-                        requireActivity().findViewById(R.id.profile_root_layout),
-                        error = result.message,
-                        ""
-                    ){}
-                }
-            }
+        binding.apply {
+            editProfileFullnameEt.setText(fullname)
+            editProfileUsernameEt.setText(username)
+            editProfileBioEt.setText(bio)
+            editProfileBirthdayEt.setText(date)
         }
+
+//        profileViewModel.getUserCredentials(userId!!)
+//
+//        profileViewModel.getUserCredentials.observe(viewLifecycleOwner) { result ->
+//            when (result) {
+//                is UserCredentials.Success -> {
+//                    val profileImage = "${result.user.profilePicture ?: R.drawable.person}"
+//                    Glide.with(requireContext())
+//                        .load(profileImage)
+//                        .error(R.drawable.not_found)
+//                        .into(binding.editProfileUserAvatar)
+//
+//                    binding.editProfileFullnameEt.setText(result.user.fullName ?: "Twittur User")
+//                    binding.editProfileUsernameEt.setText(result.user.username)
+//                    binding.editProfileBioEt.setText(result.user.bio ?: "This user does not appear to have any biography.")
+//                    binding.editProfileEmailEt.setText(result.user.email)
+//                    binding.editProfileBirthdayEt.setText(result.user.birthday)
+//                }
+//
+//                is UserCredentials.Error -> {
+//
+//                    snackbarHelper.snackbarError(
+//                        requireActivity().findViewById(R.id.profile_root_layout),
+//                        requireActivity().findViewById(R.id.profile_root_layout),
+//                        error = result.message,
+//                        ""
+//                    ){}
+//                }
+//            }
+//        }
 
         binding.headerLayout.setOnClickListener {
 //            showColorPickerDialog()
@@ -196,9 +211,4 @@ class EditProfileFragment : Fragment() {
 //            // Handle the selected image URI
 //        }
 //    }
-
-    companion object {
-        @JvmStatic
-        fun newInstance() = EditProfileFragment()
-    }
 }

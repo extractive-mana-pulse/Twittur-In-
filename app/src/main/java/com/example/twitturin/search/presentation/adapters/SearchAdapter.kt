@@ -25,8 +25,6 @@ class SearchAdapter @Inject constructor(
     private val followViewModel: FollowViewModel
 ): RecyclerView.Adapter<SearchAdapter.ViewHolder>() {
 
-    private lateinit var sessionManager: SessionManager
-
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val binding = RcViewSearchBinding.bind(itemView)
     }

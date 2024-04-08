@@ -139,13 +139,15 @@ class MoreSettingsDetailFragment : BottomSheetDialogFragment() {
         }
 
         editLayout.setOnClickListener {
-            with(sharedPreferences.edit()) {
+            val bundle = Bundle().apply {
                 putString("description", description)
-                apply() // Use apply() for immediate non-blocking writes
             }
+//            with(sharedPreferences.edit()) {
+//                putString("description", description)
+//                apply()
+//            }
 
-            findNavController().navigate(R.id.editTweetFragment)
-
+            findNavController().navigate(R.id.editTweetFragment, bundle)
             dismiss()
         }
 

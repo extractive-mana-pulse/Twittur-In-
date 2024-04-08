@@ -170,6 +170,14 @@
             app:layout_constraintTop_toBottomOf="@id/profile_biography"
             app:layout_constraintStart_toEndOf="@id/profile_location_icon"/>
 
+        <TextView
+            android:id="@+id/profile_date_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:visibility="gone"
+            tools:ignore="MissingConstraints" />
+
         <LinearLayout
             android:id="@+id/foll_info_layout"
             android:layout_width="match_parent"

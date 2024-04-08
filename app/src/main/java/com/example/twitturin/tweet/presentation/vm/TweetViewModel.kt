@@ -1,5 +1,6 @@
 package com.example.twitturin.tweet.presentation.vm
 
+import android.util.Log
 import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -14,6 +15,7 @@ import com.example.twitturin.tweet.presentation.sealed.EditTweet
 import com.example.twitturin.tweet.presentation.sealed.PostReply
 import com.example.twitturin.tweet.presentation.sealed.PostTweet
 import com.example.twitturin.tweet.presentation.sealed.TweetDelete
+import com.example.twitturin.tweet.presentation.sealed.TweetsContent
 import com.facebook.shimmer.ShimmerFrameLayout
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -86,7 +88,7 @@ class TweetViewModel @Inject constructor(
     val editTweetResult: LiveData<EditTweet> = _editTweetResult
 
     fun editTweet(content: String, tweetId: String, token: String) {
-        val request = TweetContent(content)
+        val request = TweetContent(content,"")
         val authRequest = repository.editTweet(tweetContent = request, tweetId = tweetId, token = token)
         authRequest.enqueue(object : Callback<TweetContent> {
             override fun onResponse(call: Call<TweetContent>, response: Response<TweetContent>) {
@@ -135,7 +137,7 @@ class TweetViewModel @Inject constructor(
     val postTweetResult: LiveData<PostTweet> = _postTweet
 
     fun postTheTweet(content: String, authToken: String) {
-        val request = TweetContent(content)
+        val request = TweetContent(content,"")
         val authRequest = repository.postTweet(request, authToken)
 
         authRequest.enqueue(object : Callback<TweetContent> {
@@ -154,4 +156,13 @@ class TweetViewModel @Inject constructor(
             }
         })
     }
+
+    var tweetDescriptionResponse: MutableLiveData<Response<TweetContent>> = MutableLiveData()
+    fun getTweetDescription(tweetId : String) {
+        viewModelScope.launch {
+            val response = repository.getTweetDescription(tweetId)
+            tweetDescriptionResponse.value = response
+        }
+    }
+
 }
