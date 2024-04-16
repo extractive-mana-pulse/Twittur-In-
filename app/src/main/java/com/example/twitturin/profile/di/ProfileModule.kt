@@ -1,8 +1,8 @@
 package com.example.twitturin.profile.di
 
-import com.example.twitturin.profile.domain.repository.ProfileRepository
+import com.example.twitturin.profile.data.remote.repository.ProfileRepository
 import com.example.twitturin.profile.domain.repositoryImpl.ProfileRepositoryImpl
-import com.example.twitturin.profile.presentation.model.network.ProfileApi
+import com.example.twitturin.profile.data.remote.api.ProfileApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

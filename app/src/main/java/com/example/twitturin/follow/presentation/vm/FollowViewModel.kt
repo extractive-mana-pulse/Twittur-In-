@@ -5,11 +5,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.twitturin.follow.domain.repository.FollowRepository
-import com.example.twitturin.User
-import com.example.twitturin.follow.presentation.sealed.UnFollow
-import com.example.twitturin.follow.presentation.sealed.FollowResult
 import com.example.twitturin.event.SingleLiveEvent
+import com.example.twitturin.follow.data.remote.repository.FollowRepository
+import com.example.twitturin.follow.domain.model.FollowUser
+import com.example.twitturin.follow.presentation.followers.sealed.Follow
+import com.example.twitturin.follow.presentation.following.sealed.UnFollow
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import retrofit2.Call
@@ -22,7 +22,7 @@ class FollowViewModel @Inject constructor(
     private val repository: FollowRepository
 ) : ViewModel() {
 
-    var followersList: MutableLiveData<Response<List<User>>> = MutableLiveData()
+    var followersList: MutableLiveData<Response<List<FollowUser>>> = MutableLiveData()
     fun getFollowers(userId : String) {
 
         viewModelScope.launch {
@@ -31,7 +31,7 @@ class FollowViewModel @Inject constructor(
         }
     }
 
-    var followingList: MutableLiveData<Response<List<User>>> = MutableLiveData()
+    var followingList: MutableLiveData<Response<List<FollowUser>>> = MutableLiveData()
     fun getFollowing(userId : String) {
         viewModelScope.launch {
             val response = repository.getListOfFollowing(userId)
@@ -40,49 +40,42 @@ class FollowViewModel @Inject constructor(
         }
     }
 
-    /** use SingeLiveEvent instead MutableLiveData. cause in case when you use 2nd option you will receive a message toast or whatever
-     * you have there multiple times. Single Live Event show this message only one time*/
-    private val _followResult =
-        SingleLiveEvent<FollowResult>()
-    val followResult: LiveData<FollowResult> = _followResult
+    private val _follow = SingleLiveEvent<Follow>()
+    val follow: LiveData<Follow> = _follow
 
     fun followUsers(id : String, token: String) {
-        repository.followUser(id, token).enqueue(object : Callback<User> {
-            override fun onResponse(call: Call<User>, response: Response<User>) {
+        repository.followUser(id, token).enqueue(object : Callback<FollowUser> {
+            override fun onResponse(call: Call<FollowUser>, response: Response<FollowUser>) {
                 if (response.isSuccessful) {
                     val responseBody = response.body()
-                    _followResult.value = responseBody?.let { FollowResult.Success(it) }
+                    _follow.value = responseBody?.let { Follow.Success(it) }
                 } else {
-                    _followResult.value = FollowResult.Error(response.message().toString())
+                    _follow.value = Follow.Error(response.message().toString())
                 }
             }
 
-            override fun onFailure(call: Call<User>, t: Throwable) {
-                _followResult.value = FollowResult.Error("Failed to follow user")
+            override fun onFailure(call: Call<FollowUser>, t: Throwable) {
+                _follow.value = Follow.Error("Failed to follow user")
             }
         })
     }
 
+    private val _unFollow = SingleLiveEvent<UnFollow>()
+    val unFollow: LiveData<UnFollow> = _unFollow
 
-    /** this code made for un follow single user when user press unfollow button.*/
-
-    private val _deleteFollow =
-        SingleLiveEvent<UnFollow>()
-    val deleteFollowResult: LiveData<UnFollow> = _deleteFollow
-
-    fun unFollow(id : String, token: String) {
-        repository.deleteFollow(id, token).enqueue(object : Callback<User> {
-            override fun onResponse(call: Call<User>, response: Response<User>) {
+    fun unFollowUser(id : String, token: String) {
+        repository.unFollowUser(id, token).enqueue(object : Callback<FollowUser> {
+            override fun onResponse(call: Call<FollowUser>, response: Response<FollowUser>) {
                 if (response.isSuccessful) {
                     val responseBody = response.body()
-                    _deleteFollow.value = responseBody?.let { UnFollow.Success(it) }
+                    _unFollow.value = responseBody?.let { UnFollow.Success(it) }
                 } else {
-                    _deleteFollow.value = UnFollow.Error(response.code().toString())
+                    _unFollow.value = UnFollow.Error(response.code().toString())
                 }
             }
 
-            override fun onFailure(call: Call<User>, t: Throwable) {
-                _deleteFollow.value = UnFollow.Error("Failed to unfollow user")
+            override fun onFailure(call: Call<FollowUser>, t: Throwable) {
+                _unFollow.value = UnFollow.Error("Failed to unfollow user")
             }
         })
     }

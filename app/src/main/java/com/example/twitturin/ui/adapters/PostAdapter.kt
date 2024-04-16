@@ -14,12 +14,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.twitturin.R
 import com.example.twitturin.databinding.RcViewBinding
-import com.example.twitturin.helper.SnackbarHelper
+import com.example.twitturin.manager.SessionManager
 import com.example.twitturin.tweet.domain.model.Tweet
 import com.example.twitturin.tweet.presentation.vm.LikeViewModel
-import com.example.twitturin.manager.SessionManager
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
+import java.util.TimeZone
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -30,7 +30,6 @@ class PostAdapter @Inject constructor(
 
     private var list = emptyList<Tweet>()
     @Inject lateinit var sessionManager: SessionManager
-    private lateinit var snackbarHelper: SnackbarHelper
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val binding = RcViewBinding.bind(itemView)
@@ -46,8 +45,6 @@ class PostAdapter @Inject constructor(
         val item = list[position]
         val baseTweetsUrl = "https://twitturin.onrender.com/tweets"
         val context = holder.itemView.context
-
-        snackbarHelper = SnackbarHelper(context.resources)
 
 //        var likeCount: Int? = item.likes
 //        var isLiked: Boolean = false
@@ -142,14 +139,14 @@ class PostAdapter @Inject constructor(
                 postIconShare.setOnClickListener {
                     val intent = Intent(Intent.ACTION_SEND)
                     val link = "$baseTweetsUrl/$id"
-
                     intent.putExtra(Intent.EXTRA_TEXT, link)
                     intent.type = "text/plain"
-
                     context.startActivity(Intent.createChooser(intent,"Choose app:"))
                 }
+
             }
         }
+
 
 //        val token = sessionManager.getToken()
 //

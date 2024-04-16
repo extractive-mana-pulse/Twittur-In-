@@ -11,8 +11,8 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.twitturin.R
 import com.example.twitturin.databinding.FragmentTweetsBinding
-import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.manager.SessionManager
+import com.example.twitturin.profile.presentation.util.snackbarError
 import com.example.twitturin.tweet.domain.model.Tweet
 import com.example.twitturin.tweet.presentation.adapters.TweetAdapter
 import com.example.twitturin.tweet.presentation.vm.TweetViewModel
@@ -23,7 +23,6 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class TweetsFragment : Fragment() {
 
-    @Inject lateinit var snackbarHelper: SnackbarHelper
     @Inject lateinit var sessionManager: SessionManager
     private val tweetViewModel : TweetViewModel by viewModels()
     private val binding by lazy { FragmentTweetsBinding.inflate(layoutInflater) }
@@ -36,15 +35,6 @@ class TweetsFragment : Fragment() {
     @SuppressLint("NotifyDataSetChanged")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        binding.tweetsPageAnView.setFailureListener { t ->
-            snackbarHelper.snackbarError(
-                requireActivity().findViewById(R.id.tweets_root_layout),
-                requireActivity().findViewById(R.id.tweets_root_layout),
-                error = t.message.toString(),
-                ""){}
-        }
-
         updateRecyclerView()
     }
 
@@ -89,18 +79,11 @@ class TweetsFragment : Fragment() {
                 }
 
             } else {
-                snackbarHelper.snackbarError(
+                binding.tweetsRootLayout.snackbarError(
                     requireActivity().findViewById(R.id.tweets_root_layout),
-                    requireActivity().findViewById(R.id.tweets_root_layout),
-                    error = response.body().toString(),
+                    error = response.message(),
                     ""){}
-
             }
         }
-    }
-
-    companion object {
-        @JvmStatic
-        fun newInstance() = TweetsFragment()
     }
 }

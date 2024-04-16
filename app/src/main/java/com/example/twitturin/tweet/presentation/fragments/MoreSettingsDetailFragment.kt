@@ -12,10 +12,11 @@ import android.widget.TextView
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
-import com.example.twitturin.follow.presentation.sealed.FollowResult
+import com.example.twitturin.follow.presentation.followers.sealed.Follow
 import com.example.twitturin.follow.presentation.vm.FollowViewModel
-import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.manager.SessionManager
+import com.example.twitturin.profile.presentation.util.snackbar
+import com.example.twitturin.profile.presentation.util.snackbarError
 import com.example.twitturin.tweet.presentation.sealed.TweetDelete
 import com.example.twitturin.tweet.presentation.vm.TweetViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -29,17 +30,17 @@ import javax.inject.Inject
 class MoreSettingsDetailFragment : BottomSheetDialogFragment() {
 
     @Inject lateinit var sessionManager: SessionManager
-    @Inject lateinit var snackbarHelper: SnackbarHelper
     private val tweetViewModel : TweetViewModel by viewModels()
     private val followViewModel : FollowViewModel by viewModels()
 
-    @SuppressLint("SetTextI18n", "MissingInflatedId")
+    @SuppressLint("SetTextI18n", "MissingInflatedId", "ShowToast")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.bottom_sheet_layout, container, false)
 
         val token = sessionManager.getToken()
         val userId2 = sessionManager.getUserId()
 
+        val mainLayout = view.findViewById<LinearLayout>(R.id.bottom_sheet_root_layout)
         val usernameTv = view.findViewById<TextView>(R.id.b_username_tv)
         val followLayout = view.findViewById<LinearLayout>(R.id.follow_layout)
         val deleteLayout = view.findViewById<LinearLayout>(R.id.delete_layout)
@@ -70,20 +71,18 @@ class MoreSettingsDetailFragment : BottomSheetDialogFragment() {
             dismiss()
         }
 
-        followViewModel.followResult.observe(viewLifecycleOwner) { result ->
+        followViewModel.follow.observe(viewLifecycleOwner) { result ->
             when (result) {
-                is FollowResult.Success -> {
-                    snackbarHelper.snackbar(
-                        requireActivity().findViewById(R.id.bottom_sheet_root_layout),
+                is Follow.Success -> {
+                    mainLayout.snackbar(
                         requireActivity().findViewById(R.id.bottom_sheet_root_layout),
                         message = "now you follow: ${username?.uppercase()}"
                     )
                 }
-                is FollowResult.Error -> {
-                    snackbarHelper.snackbarError(
+                is Follow.Error -> {
+                    mainLayout.snackbarError(
                         requireActivity().findViewById(R.id.bottom_sheet_root_layout),
-                        requireActivity().findViewById(R.id.bottom_sheet_root_layout),
-                        result.message,
+                        error = result.message,
                         ""){}
                 }
             }
@@ -110,18 +109,16 @@ class MoreSettingsDetailFragment : BottomSheetDialogFragment() {
             tweetViewModel.deleteTweetResult.observe(viewLifecycleOwner){ result ->
                 when(result){
                     is TweetDelete.Success -> {
-                        snackbarHelper.snackbar(
+                        mainLayout.snackbar(
                             requireActivity().findViewById(R.id.bottom_sheet_root_layout),
-                            requireActivity().findViewById(R.id.add_post),
-                            message = requireContext().resources.getString(R.string.deleted)
+                            message = resources.getString(R.string.deleted)
                         )
 
                     }
                     is  TweetDelete.Error -> {
-                        snackbarHelper.snackbarError(
+                        mainLayout.snackbarError(
                             requireActivity().findViewById(R.id.bottom_sheet_root_layout),
-                            requireActivity().findViewById(R.id.bottom_sheet_root_layout),
-                            result.message,
+                            error = result.message,
                             ""){}
                     }
                 }
@@ -129,10 +126,9 @@ class MoreSettingsDetailFragment : BottomSheetDialogFragment() {
         }
 
         reportLayout.setOnClickListener {
-            snackbarHelper.snackbar(
-                view.findViewById(R.id.bottom_sheet_root_layout),
-                view.findViewById(R.id.bottom_sheet_root_layout),
-                message = requireContext().resources.getString(R.string.in_progress)
+            mainLayout.snackbar(
+                requireActivity().findViewById(R.id.bottom_sheet_root_layout),
+                message = resources.getString(R.string.in_progress)
             )
 //            findNavController().navigate(R.id.reportFragment)
 //            dismiss()
@@ -142,11 +138,6 @@ class MoreSettingsDetailFragment : BottomSheetDialogFragment() {
             val bundle = Bundle().apply {
                 putString("description", description)
             }
-//            with(sharedPreferences.edit()) {
-//                putString("description", description)
-//                apply()
-//            }
-
             findNavController().navigate(R.id.editTweetFragment, bundle)
             dismiss()
         }

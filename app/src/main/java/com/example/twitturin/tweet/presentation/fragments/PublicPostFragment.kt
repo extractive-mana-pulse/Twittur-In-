@@ -16,10 +16,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
 import com.example.twitturin.databinding.FragmentPublicPostBinding
-import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.manager.SessionManager
-import com.example.twitturin.tweet.presentation.util.Constants
+import com.example.twitturin.profile.presentation.util.snackbarError
 import com.example.twitturin.tweet.presentation.sealed.PostTweet
+import com.example.twitturin.tweet.presentation.util.Constants
 import com.example.twitturin.tweet.presentation.vm.TweetViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,7 +29,6 @@ import javax.inject.Inject
 class PublicPostFragment : Fragment() {
 
     @Inject lateinit var sessionManager: SessionManager
-    @Inject lateinit var snackbarHelper: SnackbarHelper
     private lateinit var sharedPreferences: SharedPreferences
     private val tweetViewModel: TweetViewModel by viewModels()
     private val binding by lazy { FragmentPublicPostBinding.inflate(layoutInflater) }
@@ -91,12 +90,10 @@ class PublicPostFragment : Fragment() {
                     }
 
                     is PostTweet.Error -> {
-                        snackbarHelper.snackbarError(
-                            requireActivity().findViewById(R.id.public_post_root_layout),
+                        binding.publicPostRootLayout.snackbarError(
                             requireActivity().findViewById(R.id.public_post_root_layout),
                             error = result.message,
-                            ""
-                        ) {}
+                            ""){}
                         btnTweet.isEnabled = true
                     }
                 }

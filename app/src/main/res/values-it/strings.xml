@@ -111,6 +111,6 @@
     <string name="there_is_no_any_conversations">Non ci sono conversazioni</string>
     <string name="there_is_no_any_group_conversations">Non ci sono conversazioni di gruppo</string>
     <string name="try_again">RIPROVA</string>
-    <string name="Home">Home</string>
-    <string name="Search">Search</string>
+    <string name="Home">Casa</string>
+    <string name="Search">Ricerca</string>
 </resources>

@@ -9,7 +9,6 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -17,16 +16,18 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.twitturin.R
 import com.example.twitturin.databinding.FragmentDetailBinding
-import com.example.twitturin.follow.presentation.sealed.FollowResult
+import com.example.twitturin.follow.presentation.followers.sealed.Follow
 import com.example.twitturin.follow.presentation.vm.FollowViewModel
-import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.manager.SessionManager
 import com.example.twitturin.profile.presentation.fragments.FullScreenImageFragment
+import com.example.twitturin.profile.presentation.util.snackbar
+import com.example.twitturin.profile.presentation.util.snackbarError
 import com.example.twitturin.tweet.domain.model.Tweet
 import com.example.twitturin.tweet.presentation.sealed.PostReply
 import com.example.twitturin.tweet.presentation.vm.LikeViewModel
 import com.example.twitturin.tweet.presentation.vm.TweetViewModel
 import com.example.twitturin.ui.adapters.PostAdapter
+import com.example.twitturin.ui.util.showKeyboard
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -38,7 +39,6 @@ import javax.inject.Inject
 class DetailFragment : Fragment() {
 
     @Inject lateinit var sessionManager : SessionManager
-    @Inject lateinit var snackbarHelper : SnackbarHelper
     private val likeViewModel : LikeViewModel by viewModels()
     private val tweetViewModel : TweetViewModel by viewModels()
     private val followingViewModel : FollowViewModel by viewModels()
@@ -75,12 +75,8 @@ class DetailFragment : Fragment() {
 
             val activateEditText = arguments?.getBoolean("activateEditText", false)
 
-            if (activateEditText!!) {
-                replyEt.post {
-                    replyEt.requestFocus()
-                    val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                    imm.showSoftInput(replyEt, InputMethodManager.SHOW_IMPLICIT)
-                }
+            if (activateEditText!!){
+                replyEt.showKeyboard()
             }
 
             val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.getDefault())
@@ -113,7 +109,15 @@ class DetailFragment : Fragment() {
                 }
 
                 override fun afterTextChanged(s: Editable?) {
-                    // Not used
+                    replyEt.post {
+                        val lineCount = replyEt.lineCount
+                        val lineHeight = replyEt.lineHeight
+                        val desiredHeight = lineCount * lineHeight
+
+                        val layoutParams = replyEt.layoutParams
+                        layoutParams.height = desiredHeight
+                        replyEt.layoutParams = layoutParams
+                    }
                 }
             }
             replyEt.addTextChangedListener(textWatcher1)
@@ -129,12 +133,10 @@ class DetailFragment : Fragment() {
                     }
 
                     is PostReply.Error -> {
-                        snackbarHelper.snackbarError(
-                            requireActivity().findViewById(R.id.detail_root_layout),
+                        binding.detailRootLayout.snackbarError(
                             requireActivity().findViewById(R.id.reply_layout),
                             result.message,
-                            ""
-                        ) {}
+                            ""){}
                         replyEt.addTextChangedListener(textWatcher1)
                     }
                 }
@@ -199,56 +201,39 @@ class DetailFragment : Fragment() {
             detailPostDescription.text = postDescription
             articlePageLikesCounter.text = likes
 
-            // TODO so when follow button pressed. add user's username to "followedList" after check list like below that do logic
-            // TODO also use getAll Users endpoint to do that !
-
             followBtn.setOnClickListener {
                 followingViewModel.followUsers(userId!!, "Bearer $token")
             }
 
-            followingViewModel.followResult.observe(viewLifecycleOwner) { result ->
+            followingViewModel.follow.observe(viewLifecycleOwner) { result ->
                 when (result) {
-                    is FollowResult.Success -> {
-                        snackbarHelper.snackbar(
-                            requireActivity().findViewById(R.id.detail_root_layout),
+                    is Follow.Success -> {
+                        binding.detailRootLayout.snackbar(
                             requireActivity().findViewById(R.id.reply_layout),
-                            message = "now you follow: ${result.user.username}"
+                            message = "now you follow: ${username?.uppercase()}",
                         )
                     }
 
-                    is FollowResult.Error -> {
-                        snackbarHelper.snackbarError(
-                            requireActivity().findViewById(R.id.detail_root_layout),
+                    is Follow.Error -> {
+                        detailRootLayout.snackbarError(
                             requireActivity().findViewById(R.id.reply_layout),
-                            result.message,
+                            error = result.message,
                             ""
-                        ) {}
+                        ) { /*actionCallBack -> default Unit*/ }
                     }
                 }
             }
 
-            detailPageCommentsIcon.setOnClickListener {
-                val activateEditText1 = arguments?.getBoolean("activateEditText", true)
-                if (activateEditText1 == true) {
-                    replyEt.post {
-                        replyEt.requestFocus()
-                        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                        imm.showSoftInput(replyEt, InputMethodManager.SHOW_IMPLICIT)
-                    }
-                }
-            }
+            detailPageCommentsIcon.setOnClickListener { replyEt.showKeyboard() }
 
             articlePageHeartIcon.setOnClickListener {
-                snackbarHelper.snackbar(
-                    requireActivity().findViewById(R.id.detail_root_layout),
+                detailRootLayout.snackbar(
                     requireActivity().findViewById(R.id.reply_layout),
-                    message = resources.getString(R.string.in_progress)
+                    resources.getString(R.string.in_progress)
                 )
             }
 
-            articlePageShareIcon.setOnClickListener {
-                shareData()
-            }
+            articlePageShareIcon.setOnClickListener { shareData() }
 
             moreSettings.setOnClickListener {
                 val bottomSheetDialogFragment = MoreSettingsDetailFragment()
@@ -266,12 +251,14 @@ class DetailFragment : Fragment() {
         val sharedPreferences = requireActivity().getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
         val id = sharedPreferences.getString("id", null)
 
-        val intent = Intent(Intent.ACTION_SEND)
-        val baseUrl = "https://twitturin.onrender.com/tweets"
-        val link = "$baseUrl/$id"
+        val intent = Intent(Intent.ACTION_SEND).apply {
+            val baseUrl = "https://twitturin.onrender.com/tweets"
+            val link = "$baseUrl/$id"
 
-        intent.putExtra(Intent.EXTRA_TEXT, link)
-        intent.type = "text/plain"
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, link)
+            type = "text/plain"
+        }
 
         startActivity(Intent.createChooser(intent, "Choose app:"))
     }
@@ -301,11 +288,10 @@ class DetailFragment : Fragment() {
                     }
                 }
             } else {
-                snackbarHelper.snackbarError(
-                    requireActivity().findViewById(R.id.detail_root_layout),
+                binding.detailRootLayout.snackbarError(
                     requireActivity().findViewById(R.id.reply_layout),
-                    response.message().toString(),
-                    ""){}
+                    response.body().toString(),
+                    "") {  }
             }
         }
     }

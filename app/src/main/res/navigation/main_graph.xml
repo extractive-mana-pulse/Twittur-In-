@@ -210,7 +210,7 @@
 <!--  signInFragment  -->
     <fragment
         android:id="@+id/signInFragment"
-        android:name="com.example.twitturin.auth.presentation.fragments.SignInFragment"
+        android:name="com.example.twitturin.auth.presentation.login.ui.SignInFragment"
         android:label="fragment_sign_in"
         tools:layout="@layout/fragment_sign_in">
 
@@ -253,7 +253,7 @@
 <!--    kind fragment    -->
     <fragment
         android:id="@+id/kindFragment"
-        android:name="com.example.twitturin.auth.presentation.fragments.KindFragment"
+        android:name="com.example.twitturin.auth.presentation.kind.ui.KindFragment"
         android:label="fragment_kind"
         tools:layout="@layout/fragment_kind">
 
@@ -280,7 +280,7 @@
 <!--    professor registration fragment    -->
     <fragment
         android:id="@+id/professorRegistrationFragment"
-        android:name="com.example.twitturin.auth.presentation.fragments.ProfessorRegistrationFragment"
+        android:name="com.example.twitturin.auth.presentation.registration.professor.ui.ProfessorRegistrationFragment"
         android:label="fragment_professor_registration"
         tools:layout="@layout/fragment_professor_registration">
 
@@ -299,7 +299,7 @@
 <!--    student registration fragment    -->
     <fragment
         android:id="@+id/studentRegistrationFragment"
-        android:name="com.example.twitturin.auth.presentation.fragments.StudentRegistrationFragment"
+        android:name="com.example.twitturin.auth.presentation.registration.student.ui.StudentRegistrationFragment"
         android:label="fragment_student_registration"
         tools:layout="@layout/fragment_student_registration">
 
@@ -332,7 +332,7 @@
 
     <fragment
         android:id="@+id/followersListFragment"
-        android:name="com.example.twitturin.follow.presentation.fragments.FollowersFragment"
+        android:name="com.example.twitturin.follow.presentation.followers.ui.FollowersFragment"
         android:label="fragment_followers_list"
         tools:layout="@layout/fragment_followers" >
         <action
@@ -342,7 +342,7 @@
 
     <fragment
         android:id="@+id/followingListFragment"
-        android:name="com.example.twitturin.follow.presentation.fragments.FollowingFragment"
+        android:name="com.example.twitturin.follow.presentation.following.ui.FollowingFragment"
         android:label="fragment_following_list"
         tools:layout="@layout/fragment_following" >
         <action
@@ -388,7 +388,7 @@
 
     <fragment
         android:id="@+id/stayInFragment"
-        android:name="com.example.twitturin.auth.presentation.fragments.StayInFragment"
+        android:name="com.example.twitturin.auth.presentation.stayIn.ui.StayInFragment"
         android:label="fragment_stay_in"
         tools:layout="@layout/fragment_stay_in">
 

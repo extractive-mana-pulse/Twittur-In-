@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +15,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.twitturin.R
 import com.example.twitturin.databinding.FragmentSearchBinding
 import com.example.twitturin.follow.presentation.vm.FollowViewModel
-import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.search.presentation.adapters.SearchAdapter
 import com.example.twitturin.search.presentation.sealed.SearchResource
 import com.example.twitturin.search.presentation.vm.SearchViewModel
@@ -26,13 +24,11 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.Locale
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class SearchFragment : Fragment() {
 
     private val rqSpeechRec = 102
-    @Inject lateinit var  snackbarHelper: SnackbarHelper
     private val searchViewModel : SearchViewModel by viewModels()
     private val followViewModel : FollowViewModel by viewModels()
     private val binding by lazy { FragmentSearchBinding.inflate(layoutInflater) }

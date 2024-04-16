@@ -2,12 +2,12 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".follow.presentation.fragments.FollowingFragment">
+    tools:context=".follow.presentation.following.ui.FollowingFragment">
 
     <data>
         <variable
             name="followingFragment"
-            type="com.example.twitturin.follow.presentation.fragments.FollowingFragment"/>
+            type="com.example.twitturin.follow.presentation.following.ui.FollowingFragment"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -12,15 +12,11 @@ import android.provider.Settings
 import android.util.Log
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.twitturin.R
-import com.example.twitturin.auth.presentation.vm.StayInViewModel
 import com.example.twitturin.databinding.ActivityMainBinding
 import com.example.twitturin.preferences.MyPreferences
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -31,7 +27,6 @@ import java.util.Locale
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var stayInViewModel : StayInViewModel
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     private val navController by lazy { (supportFragmentManager.findFragmentById(R.id.nav_host_fragment_container) as NavHostFragment).navController }
 
@@ -44,8 +39,6 @@ class MainActivity : AppCompatActivity() {
         if (fragmentToOpen == "notifications") {
             navController.navigate(R.id.action_homeFragment_to_notificationFragment)
         }
-
-        stayInViewModel = ViewModelProvider(this)[StayInViewModel::class.java]
 
         if (Build.VERSION.SDK_INT >= 33) {
             notificationPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)

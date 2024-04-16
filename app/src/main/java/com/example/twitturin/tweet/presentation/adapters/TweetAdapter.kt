@@ -8,18 +8,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
+import android.widget.Toast
 import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.twitturin.R
 import com.example.twitturin.databinding.RcViewUserTweetsBinding
-import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.manager.SessionManager
 import com.example.twitturin.tweet.domain.model.Tweet
 import com.example.twitturin.tweet.presentation.sealed.TweetDelete
-import com.example.twitturin.tweet.presentation.vm.TweetViewModel
 import com.example.twitturin.tweet.presentation.vm.LikeViewModel
+import com.example.twitturin.tweet.presentation.vm.TweetViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -35,7 +35,6 @@ class TweetAdapter @Inject constructor(
     private var list = emptyList<Tweet>()
     private lateinit var likeViewModel: LikeViewModel
     private lateinit var sessionManager: SessionManager
-    private lateinit var snackbarHelper: SnackbarHelper
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val binding = RcViewUserTweetsBinding.bind(itemView)
@@ -56,7 +55,6 @@ class TweetAdapter @Inject constructor(
 //        var isLiked: Boolean = false
 
         sessionManager = SessionManager(context)
-        snackbarHelper = SnackbarHelper(context.resources)
 
         holder.binding.apply {
             item.apply {
@@ -143,11 +141,7 @@ class TweetAdapter @Inject constructor(
                 }
 
                 postIconHeartUserOwnTweet.setOnClickListener {
-                    snackbarHelper.snackbar(
-                        holder.itemView.findViewById(R.id.test_user_tv),
-                        holder.itemView.findViewById(R.id.test_user_tv),
-                        message = context.resources.getString(R.string.in_progress)
-                    )
+                    Toast.makeText(context, context.resources.getString(R.string.in_progress), Toast.LENGTH_SHORT).show()
                 }
 
                 postIconShareUserOwnTweet.setOnClickListener {
@@ -198,19 +192,11 @@ class TweetAdapter @Inject constructor(
                                     when(result){
                                         is TweetDelete.Success -> {
                                             alertDialog.dismiss()
-                                            snackbarHelper.snackbar(
-                                                holder.itemView.findViewById(R.id.user_own_root_layout),
-                                                holder.itemView.findViewById(R.id.user_own_root_layout),
-                                                message = context.resources.getString(R.string.deleted)
-                                            )
+                                            Toast.makeText(context, context.resources.getString(R.string.deleted), Toast.LENGTH_SHORT).show()
                                         }
                                         is  TweetDelete.Error -> {
                                             alertDialog.dismiss()
-                                            snackbarHelper.snackbarError(
-                                                holder.itemView.findViewById(R.id.user_own_root_layout),
-                                                holder.itemView.findViewById(R.id.user_own_root_layout),
-                                                result.message,
-                                                ""){}
+                                            Toast.makeText(context, result.message, Toast.LENGTH_SHORT).show()
                                         }
                                     }
                                 }

@@ -15,17 +15,16 @@ import android.widget.LinearLayout
 import android.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.twitturin.R
-import com.example.twitturin.auth.presentation.vm.StayInViewModel
+import com.example.twitturin.auth.presentation.stayIn.vm.StayInViewModel
 import com.example.twitturin.databinding.FragmentProfileBinding
-import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.manager.SessionManager
 import com.example.twitturin.profile.presentation.adapters.ProfileViewPagerAdapter
 import com.example.twitturin.profile.presentation.sealed.AccountDelete
 import com.example.twitturin.profile.presentation.sealed.UserCredentials
+import com.example.twitturin.profile.presentation.util.snackbarError
 import com.example.twitturin.profile.presentation.vm.ProfileViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayoutMediator
@@ -37,8 +36,7 @@ import javax.inject.Inject
 class ProfileFragment : Fragment() {
 
     @Inject lateinit var sessionManager: SessionManager
-    @Inject lateinit var snackbarHelper: SnackbarHelper
-    private lateinit var stayInViewModel: StayInViewModel
+    private val stayInViewModel: StayInViewModel by viewModels()
     private val profileViewModel: ProfileViewModel by viewModels()
     private val binding by lazy { FragmentProfileBinding.inflate(layoutInflater) }
 
@@ -53,7 +51,6 @@ class ProfileFragment : Fragment() {
         val userId = sessionManager.getUserId()
         val baseUserUrl = "https://twitturin.onrender.com/users"
 
-        stayInViewModel = ViewModelProvider(requireActivity())[StayInViewModel::class.java]
 
         /**this portion of code with viewPager2 added, cause it cause an error: Fragment not found or no longer exist!*/
         binding.vp2.isSaveEnabled = false
@@ -111,13 +108,10 @@ class ProfileFragment : Fragment() {
                     }
 
                     is UserCredentials.Error -> {
-
-                        snackbarHelper.snackbarError(
-                            requireActivity().findViewById(R.id.profile_root_layout),
+                        binding.profileRootLayout.snackbarError(
                             requireActivity().findViewById(R.id.profile_root_layout),
                             error = result.message,
-                            ""
-                        ){}
+                            ""){}
                     }
                 }
             }
@@ -172,10 +166,9 @@ class ProfileFragment : Fragment() {
                                     }
 
                                     is AccountDelete.Error -> {
-                                        snackbarHelper.snackbarError(
-                                            view.findViewById(R.id.profile_root_layout),
-                                            profileRootLayout,
-                                            result.message,
+                                        binding.profileRootLayout.snackbarError(
+                                            requireActivity().findViewById(R.id.profile_root_layout),
+                                            error = result.message,
                                             ""){}
                                     }
                                 }

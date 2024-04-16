@@ -1,9 +1,9 @@
 package com.example.twitturin.profile.domain.repositoryImpl
 
-import com.example.twitturin.profile.presentation.model.data.EditProfile
+import com.example.twitturin.profile.domain.model.EditProfile
 import com.example.twitturin.User
-import com.example.twitturin.profile.domain.repository.ProfileRepository
-import com.example.twitturin.profile.presentation.model.network.ProfileApi
+import com.example.twitturin.profile.data.remote.repository.ProfileRepository
+import com.example.twitturin.profile.data.remote.api.ProfileApi
 import retrofit2.Call
 import retrofit2.Response
 

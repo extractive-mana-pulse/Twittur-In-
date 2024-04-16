@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.twitturin.R
 import com.example.twitturin.databinding.RcViewSearchBinding
-import com.example.twitturin.follow.presentation.sealed.FollowResult
+import com.example.twitturin.follow.presentation.followers.sealed.Follow
 import com.example.twitturin.follow.presentation.vm.FollowViewModel
 import com.example.twitturin.manager.SessionManager
 import com.example.twitturin.search.domain.model.SearchUser
@@ -85,13 +85,13 @@ class SearchAdapter @Inject constructor(
 
                 searchFollowBtn.setOnClickListener { followViewModel.followUsers(id, "Bearer $token") }
 
-                followViewModel.followResult.observe(lifecycleOwner) { result ->
+                followViewModel.follow.observe(lifecycleOwner) { result ->
 
                     when (result) {
 
-                        is FollowResult.Success -> { Toast.makeText(context, "you follow ${result.user.username}", Toast.LENGTH_SHORT).show() }
+                        is Follow.Success -> { Toast.makeText(context, "you follow ${result.user.username}", Toast.LENGTH_SHORT).show() }
 
-                        is FollowResult.Error -> { Toast.makeText(context, result.message, Toast.LENGTH_SHORT).show() }
+                        is Follow.Error -> { Toast.makeText(context, result.message, Toast.LENGTH_SHORT).show() }
                     }
                 }
             }

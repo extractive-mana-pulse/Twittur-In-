@@ -1,84 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/stayIn_root_layout"
-    android:background="@drawable/stay_in_bg"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".auth.presentation.fragments.StayInFragment">
+    tools:context=".auth.presentation.stayIn.ui.StayInFragment">
 
-    <TextView
-        android:id="@+id/stayIn_title_message"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/save_login_details"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:layout_marginTop="24dp"
-        android:layout_marginHorizontal="16dp"
-        android:textColor="@color/white"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+    <data>
+        <variable
+            name="stayInFragment"
+            type="com.example.twitturin.auth.presentation.stayIn.ui.StayInFragment"/>
+    </data>
 
-    <TextView
-        android:id="@+id/stayIn_description_message"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:layout_marginVertical="8dp"
-        android:layout_marginHorizontal="24dp"
-        android:textColor="@color/white"
-        android:text="@string/stayIn_title_message"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/stayIn_title_message"/>
-
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/stayIn_profile_image"
-        android:layout_width="282dp"
-        android:layout_height="282dp"
-        android:contentDescription="@string/profile"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/approve_btn"
-        app:layout_constraintTop_toBottomOf="@+id/stayIn_description_message"/>
-
-    <View
-        android:id="@+id/divider_stayIn"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/stayIn_root_layout"
+        android:background="@drawable/stay_in_bg"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginVertical="24dp"
-        android:background="?attr/colorOutlineVariant"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/approve_btn"/>
+        android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/approve_btn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/save"
-        android:textColor="@color/white"
-        android:background="@drawable/approve_btn_bg"
-        android:layout_marginBottom="24dp"
-        android:layout_marginHorizontal="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/later_btn"/>
+        <TextView
+            android:id="@+id/stayIn_title_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/save_login_details"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_marginTop="24dp"
+            android:layout_marginHorizontal="16dp"
+            android:textColor="@color/white"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
 
-    <Button
-        android:id="@+id/later_btn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/not_now"
-        android:textColor="@color/white"
-        android:layout_marginBottom="24dp"
-        android:layout_marginHorizontal="16dp"
-        android:background="@drawable/later_btn_bg"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        <TextView
+            android:id="@+id/stayIn_description_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:layout_marginVertical="8dp"
+            android:layout_marginHorizontal="24dp"
+            android:textColor="@color/white"
+            android:text="@string/stayIn_title_message"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/stayIn_title_message"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/stayIn_profile_image"
+            android:layout_width="282dp"
+            android:layout_height="282dp"
+            android:contentDescription="@string/profile"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/save_btn"
+            app:layout_constraintTop_toBottomOf="@+id/stayIn_description_message"/>
+
+        <View
+            android:id="@+id/divider_stayIn"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginVertical="24dp"
+            android:background="?attr/colorOutlineVariant"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/save_btn"/>
+
+        <Button
+            android:id="@+id/save_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/save"
+            android:textColor="@color/white"
+            android:background="@drawable/approve_btn_bg"
+            android:layout_marginBottom="24dp"
+            android:layout_marginHorizontal="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/not_save_btn"/>
+
+        <Button
+            android:id="@+id/not_save_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/not_now"
+            android:textColor="@color/white"
+            android:layout_marginBottom="24dp"
+            android:layout_marginHorizontal="16dp"
+            android:background="@drawable/later_btn_bg"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

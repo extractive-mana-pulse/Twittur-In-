@@ -2,12 +2,12 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".auth.presentation.fragments.StudentRegistrationFragment">
+    tools:context=".auth.presentation.registration.student.ui.StudentRegistrationFragment">
 
     <data>
         <variable
             name="signUpFragment"
-            type="com.example.twitturin.auth.presentation.fragments.StudentRegistrationFragment"/>
+            type="com.example.twitturin.auth.presentation.registration.student.ui.StudentRegistrationFragment"/>
     </data>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -33,10 +33,11 @@
 
                 <ImageButton
                     android:id="@+id/back_btn_student"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="24dp"
+                    android:onClick="@{()-> signUpFragment.fragmentManager.popBackStack()}"
                     android:background="@android:color/transparent"
                     android:src="@drawable/keyboard_backspace"
                     app:layout_constraintStart_toStartOf="parent"

@@ -5,17 +5,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.bumptech.glide.Glide
 import com.example.twitturin.R
 import com.example.twitturin.databinding.FragmentEditProfileBinding
-import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.manager.SessionManager
 import com.example.twitturin.profile.presentation.sealed.EditUser
-import com.example.twitturin.profile.presentation.sealed.UserCredentials
+import com.example.twitturin.profile.presentation.util.snackbarError
 import com.example.twitturin.profile.presentation.vm.ProfileViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -25,7 +22,6 @@ class EditProfileFragment : Fragment() {
 
 //    private val PICK_PHOTO_REQUEST_CODE = 1
 //    private val calendar: Calendar = Calendar.getInstance()
-    @Inject lateinit var snackbarHelper: SnackbarHelper
     @Inject lateinit var sessionManager: SessionManager
     private val profileViewModel : ProfileViewModel by viewModels()
     private val binding by lazy { FragmentEditProfileBinding.inflate(layoutInflater) }
@@ -47,44 +43,12 @@ class EditProfileFragment : Fragment() {
         val bio = arguments?.getString("profile_bio")
         val date = arguments?.getString("profile_date")
 
-        val userId = sessionManager.getUserId()
-
         binding.apply {
             editProfileFullnameEt.setText(fullname)
             editProfileUsernameEt.setText(username)
             editProfileBioEt.setText(bio)
             editProfileBirthdayEt.setText(date)
         }
-
-//        profileViewModel.getUserCredentials(userId!!)
-//
-//        profileViewModel.getUserCredentials.observe(viewLifecycleOwner) { result ->
-//            when (result) {
-//                is UserCredentials.Success -> {
-//                    val profileImage = "${result.user.profilePicture ?: R.drawable.person}"
-//                    Glide.with(requireContext())
-//                        .load(profileImage)
-//                        .error(R.drawable.not_found)
-//                        .into(binding.editProfileUserAvatar)
-//
-//                    binding.editProfileFullnameEt.setText(result.user.fullName ?: "Twittur User")
-//                    binding.editProfileUsernameEt.setText(result.user.username)
-//                    binding.editProfileBioEt.setText(result.user.bio ?: "This user does not appear to have any biography.")
-//                    binding.editProfileEmailEt.setText(result.user.email)
-//                    binding.editProfileBirthdayEt.setText(result.user.birthday)
-//                }
-//
-//                is UserCredentials.Error -> {
-//
-//                    snackbarHelper.snackbarError(
-//                        requireActivity().findViewById(R.id.profile_root_layout),
-//                        requireActivity().findViewById(R.id.profile_root_layout),
-//                        error = result.message,
-//                        ""
-//                    ){}
-//                }
-//            }
-//        }
 
         binding.headerLayout.setOnClickListener {
 //            showColorPickerDialog()
@@ -120,9 +84,8 @@ class EditProfileFragment : Fragment() {
                 }
 
                 is EditUser.Error -> {
-                    snackbarHelper.snackbarError(
-                        requireView().findViewById<ConstraintLayout>(R.id.edit_profile_root_layout),
-                        binding.testTv,
+                    binding.editProfileRootLayout.snackbarError(
+                        requireActivity().findViewById(R.id.edit_profile_root_layout),
                         error = result.error,
                         ""){}
                 }

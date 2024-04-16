@@ -11,8 +11,8 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.twitturin.R
 import com.example.twitturin.databinding.FragmentLikesBinding
-import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.manager.SessionManager
+import com.example.twitturin.profile.presentation.util.snackbarError
 import com.example.twitturin.tweet.domain.model.Tweet
 import com.example.twitturin.tweet.presentation.vm.LikeViewModel
 import com.example.twitturin.tweet.presentation.vm.TweetViewModel
@@ -24,7 +24,6 @@ import javax.inject.Inject
 class LikesFragment : Fragment() {
 
     @Inject lateinit var sessionManager: SessionManager
-    @Inject lateinit var snackbarHelper: SnackbarHelper
     private val lViewModel: LikeViewModel by viewModels()
     private val tweetViewModel : TweetViewModel by viewModels()
     private val binding by lazy { FragmentLikesBinding.inflate(layoutInflater) }
@@ -36,15 +35,6 @@ class LikesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        binding.likesPageAnView.setFailureListener { t ->
-            snackbarHelper.snackbarError(
-                requireActivity().findViewById(R.id.likes_root_layout),
-                requireActivity().findViewById(R.id.likes_root_layout),
-                error = t.message.toString(),
-                ""){}
-
-        }
         updateRecyclerView()
     }
 
@@ -72,8 +62,7 @@ class LikesFragment : Fragment() {
                     }
                 }
             } else {
-                snackbarHelper.snackbarError(
-                    requireActivity().findViewById(R.id.likes_root_layout),
+                binding.likesRootLayout.snackbarError(
                     requireActivity().findViewById(R.id.likes_root_layout),
                     error = response.body().toString(),
                     ""){}

@@ -1,9 +1,7 @@
 package com.example.twitturin.di
 
 import android.app.Application
-import android.content.res.Resources
 import com.example.twitturin.BuildConfig
-import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.manager.SessionManager
 import dagger.Module
 import dagger.Provides
@@ -22,18 +20,6 @@ object AppModule {
     @Singleton
     fun provideSessionManager(app: Application): SessionManager {
         return SessionManager(app)
-    }
-
-    @Provides
-    @Singleton
-    fun provideResources(application: Application): Resources {
-        return application.resources
-    }
-
-    @Provides
-    @Singleton
-    fun provideSnackbarHelper(resources: Resources): SnackbarHelper {
-        return SnackbarHelper(resources)
     }
 
 

@@ -312,7 +312,7 @@
                 android:layout_marginHorizontal="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/reply_layout"
+                app:layout_constraintBottom_toTopOf="@id/last_divider_for_reply_layout"
                 app:layout_constraintTop_toBottomOf="@id/last_divider_before_rc">
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -329,24 +329,29 @@
                 android:background="?attr/colorOutlineVariant"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/reply_layout"/>
+                app:layout_constraintBottom_toTopOf="@id/reply_layout"
+                app:layout_constraintTop_toBottomOf="@id/swipe_to_refresh_article"/>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/reply_layout"
                 android:layout_width="match_parent"
-                android:layout_height="65dp"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
                 android:background="@drawable/reply_bg"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent">
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/last_divider_for_reply_layout">
 
                 <EditText
                     android:id="@+id/reply_et"
                     android:layout_width="0dp"
-                    android:layout_height="45dp"
+                    android:layout_height="wrap_content"
                     android:hint="@string/reply"
-                    android:paddingStart="16dp"
+                    android:paddingHorizontal="16dp"
                     android:imeOptions="actionDone"
+                    android:maxLines="35"
+                    android:inputType="textMultiLine"
                     android:textAlignment="textStart"
                     android:background="@drawable/reply_et_bg"
                     android:layout_marginHorizontal="16dp"

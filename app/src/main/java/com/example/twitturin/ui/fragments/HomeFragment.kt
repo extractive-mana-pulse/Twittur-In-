@@ -12,7 +12,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.GravityCompat
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -22,15 +21,17 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.twitturin.R
 import com.example.twitturin.databinding.FragmentHomeBinding
-import com.example.twitturin.helper.SnackbarHelper
 import com.example.twitturin.manager.SessionManager
 import com.example.twitturin.preferences.MyPreferences
 import com.example.twitturin.profile.presentation.sealed.UserCredentials
+import com.example.twitturin.profile.presentation.util.snackbarError
 import com.example.twitturin.profile.presentation.vm.ProfileViewModel
 import com.example.twitturin.tweet.domain.model.Tweet
 import com.example.twitturin.tweet.presentation.vm.LikeViewModel
 import com.example.twitturin.tweet.presentation.vm.TweetViewModel
 import com.example.twitturin.ui.adapters.PostAdapter
+import com.example.twitturin.ui.sealed.HomeScreenUiEvent
+import com.example.twitturin.ui.vm.TestViewModel
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
@@ -41,9 +42,9 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
 
-    @Inject lateinit var snackbarHelper: SnackbarHelper
     @Inject lateinit var sessionManager: SessionManager
     private val likeViewModel: LikeViewModel by viewModels()
+    private val testViewModel : TestViewModel by viewModels()
     private val tweetViewModel : TweetViewModel by viewModels()
     private val profileViewModel: ProfileViewModel by viewModels()
     private val binding by lazy { FragmentHomeBinding.inflate(layoutInflater) }
@@ -53,7 +54,7 @@ class HomeFragment : Fragment() {
         return binding.root
     }
 
-    /** этот код пишется тестовом режиме надо будет потом испробовать все нюансы! */
+    /** Test! */
     init {
         lifecycleScope.launchWhenStarted {
             try {
@@ -68,18 +69,38 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.homeFragment = this
-        val headerView: View = binding.navigationView.getHeaderView(0)
+
+        binding.apply {
+            testViewModel.event.observe(viewLifecycleOwner) { event ->
+                when(event){
+                    is HomeScreenUiEvent.NavigateToPublicPost -> {
+                        findNavController().navigate(R.id.action_homeFragment_to_publicPostFragment)
+                    }
+                    is HomeScreenUiEvent.OpenDrawer -> {
+                        drawerLayout.openDrawer(GravityCompat.START)
+                    }
+                }
+            }
+        }
+
+        binding.addPost.setOnClickListener { testViewModel.sendEvent(HomeScreenUiEvent.NavigateToPublicPost) }
+
+        binding.accountImage.setOnClickListener { testViewModel.sendEvent(HomeScreenUiEvent.OpenDrawer) }
 
         val userId = sessionManager.getUserId()
+        val headerView: View = binding.navigationView.getHeaderView(0)
 
+        val headerViewAvatar: ImageView = headerView.findViewById(R.id.nav_avatar)
+        val headerUsername: TextView = headerView.findViewById(R.id.nav_username_tv)
+        val headerFullname: TextView = headerView.findViewById(R.id.nav_full_name_tv)
+        val headerFollowing: TextView = headerView.findViewById(R.id.nav_following_counter_tv)
+        val headingFollowers: TextView = headerView.findViewById(R.id.nav_followers_counter_tv)
         val layout: ShimmerFrameLayout = headerView.findViewById(R.id.navigation_drawer_shimmer)
 
         profileViewModel.getUserCredentials(userId!!)
-
         profileViewModel.getUserCredentials.observe(viewLifecycleOwner) { result ->
 
             layout.startShimmer()
-
             when (result) {
 
                 is UserCredentials.Success -> {
@@ -87,19 +108,13 @@ class HomeFragment : Fragment() {
                     layout.stopShimmer()
                     layout.visibility = View.GONE
 
-                    val imageView: ImageView = headerView.findViewById(R.id.nav_avatar)
-                    val fullName: TextView = headerView.findViewById(R.id.nav_full_name_tv)
-                    val userName: TextView = headerView.findViewById(R.id.nav_username_tv)
-                    val followingTv: TextView = headerView.findViewById(R.id.nav_following_counter_tv)
-                    val followersTv: TextView = headerView.findViewById(R.id.nav_followers_counter_tv)
-
                     val profileImage = "${result.user.profilePicture}"
 
                     Glide.with(requireContext())
                         .load(profileImage)
                         .error(R.drawable.not_found)
                         .placeholder(R.drawable.person)
-                        .into(imageView)
+                        .into(headerViewAvatar)
 
                     Glide.with(requireContext())
                         .load(profileImage)
@@ -107,43 +122,38 @@ class HomeFragment : Fragment() {
                         .placeholder(R.drawable.person)
                         .into(binding.accountImage)
 
-                    fullName.text = result.user.fullName ?: "Twittur User"
-                    userName.text = "@" + result.user.username
-                    followingTv.text = result.user.followingCount.toString()
-                    followersTv.text = result.user.followersCount.toString()
-
+                    result.user.apply {
+                        headerFullname.text = fullName ?: "Twittur User"
+                        headerUsername.text = "@$username"
+                        headerFollowing.text = followingCount.toString()
+                        headingFollowers.text = followersCount.toString()
+                    }
                 }
 
                 is UserCredentials.Error -> {
-
-                    snackbarHelper.snackbarError(
-                        view.findViewById<DrawerLayout>(R.id.drawer_layout),
+                    binding.homeRootLayout.snackbarError(
                         view.findViewById<TextView>(R.id.tv_for_snackbar),
-                        result.message,
-                        ""
-                    ){}
+                        error = result.message,
+                        ""){}
                 }
             }
         }
 
-        binding.accountImage.setOnClickListener {
-            binding.drawerLayout.openDrawer(GravityCompat.START)
-        }
+        binding.navigationView.setNavigationItemSelectedListener { menuItem ->
 
-        binding.navigationView.setNavigationItemSelectedListener {menuItem ->
             when(menuItem.itemId){
-                R.id.profile_item -> findNavController().navigate(R.id.action_homeFragment_to_profileFragment)
                 R.id.language_item ->  appLanguage()
-                R.id.time_table -> findNavController().navigate(R.id.action_homeFragment_to_webViewFragment)
                 R.id.change_mode -> appThemeDialog()
+                R.id.time_table -> findNavController().navigate(R.id.action_homeFragment_to_webViewFragment)
+                R.id.profile_item -> findNavController().navigate(R.id.action_homeFragment_to_profileFragment)
             }
+
             menuItem.isChecked = true
             binding.drawerLayout.close()
             true
         }
         updateRecyclerView()
     }
-
 
     /** need to optimize code */
     @SuppressLint("NotifyDataSetChanged")
@@ -156,10 +166,14 @@ class HomeFragment : Fragment() {
             rcView.addItemDecoration(DividerItemDecoration(rcView.context, DividerItemDecoration.VERTICAL))
 
             tweetViewModel.responseTweets.observe(requireActivity()) { response ->
+
                 if (response.isSuccessful) {
+
                     response.body()?.let { tweets ->
+
                         val tweetList: MutableList<Tweet> = tweets.toMutableList()
                         postAdapter.setData(tweetList)
+
                         swipeToRefreshLayout.setOnRefreshListener {
                             val freshList = tweetList.sortedByDescending { time -> time.createdAt }
                             tweetList.clear()
@@ -168,21 +182,15 @@ class HomeFragment : Fragment() {
                             swipeToRefreshLayout.isRefreshing = false
                         }
                     }
+
                 } else {
-                    snackbarHelper.snackbarError(
-                        requireActivity().findViewById(R.id.drawer_layout),
+                    binding.homeRootLayout.snackbarError(
                         requireActivity().findViewById(R.id.bottom_nav_view),
-                        response.message().toString(),
+                        error = response.message().toString(),
                         ""){}
                 }
             }
         }
-    }
-
-    /**this method use data binding to handle navigation !*/
-
-    fun goToPublicPost(){
-        findNavController().navigate(R.id.action_homeFragment_to_publicPostFragment)
     }
 
     private fun appThemeDialog() {
