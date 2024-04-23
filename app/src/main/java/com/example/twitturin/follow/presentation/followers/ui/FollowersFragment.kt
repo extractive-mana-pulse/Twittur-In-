@@ -10,22 +10,21 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.twitturin.R
-import com.example.twitturin.User
 import com.example.twitturin.databinding.FragmentFollowersBinding
 import com.example.twitturin.follow.domain.model.FollowUser
 import com.example.twitturin.follow.presentation.followers.adapter.FollowersAdapter
+import com.example.twitturin.follow.presentation.followers.vm.FollowersUiViewModel
 import com.example.twitturin.follow.presentation.vm.FollowViewModel
 import com.example.twitturin.manager.SessionManager
 import com.example.twitturin.profile.presentation.util.snackbarError
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Random
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class FollowersFragment : Fragment() {
 
-    @Inject lateinit var sessionManager : SessionManager
     private val followViewModel: FollowViewModel by viewModels()
+    private val followersUiViewModel : FollowersUiViewModel by viewModels()
     private val binding by lazy { FragmentFollowersBinding.inflate(layoutInflater) }
     private val followersAdapter by lazy { FollowersAdapter(viewLifecycleOwner, followViewModel) }
 
@@ -37,54 +36,54 @@ class FollowersFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.followersFragment = this
         updateRecyclerView()
+        followersUiViewModel
     }
 
 
     @SuppressLint("NotifyDataSetChanged")
     private fun updateRecyclerView() {
-        binding.rcViewFollowers.adapter = followersAdapter
-        binding.rcViewFollowers.addItemDecoration(DividerItemDecoration(binding.rcViewFollowers.context, DividerItemDecoration.VERTICAL))
-        binding.rcViewFollowers.layoutManager = LinearLayoutManager(requireContext())
-        val userId = sessionManager.getUserId()
-        followViewModel.getFollowers(userId!!)
-        followViewModel.followersList.observe(requireActivity()) { response ->
-            if (response.isSuccessful) {
-                response.body()?.let { tweets ->
-                    val tweetList: MutableList<FollowUser> = tweets.toMutableList()
-                    followersAdapter.setData(tweetList)
-                    binding.swipeToRefreshLayoutFollowersList.setOnRefreshListener {
+        binding.apply {
 
-                        tweetList.shuffle(Random(System.currentTimeMillis()))
-                        followViewModel.getFollowers(userId)
-                        binding.swipeToRefreshLayoutFollowersList.isRefreshing = false
+            rcViewFollowers.adapter = followersAdapter
+            rcViewFollowers.addItemDecoration(DividerItemDecoration(rcViewFollowers.context, DividerItemDecoration.VERTICAL))
+            rcViewFollowers.layoutManager = LinearLayoutManager(requireContext())
+            val userId = SessionManager(requireContext()).getUserId()
+            followViewModel.getFollowers(userId!!)
+            followViewModel.followersList.observe(requireActivity()) { response ->
+                if (response.isSuccessful) {
+                    response.body()?.let { tweets ->
+                        val followersList: MutableList<FollowUser> = tweets.toMutableList()
+                        followersAdapter.differ.submitList(followersList)
+                        swipeToRefreshLayoutFollowersList.setOnRefreshListener {
 
+                            followersList.shuffle(Random(System.currentTimeMillis()))
+                            followViewModel.getFollowers(userId)
+                            swipeToRefreshLayoutFollowersList.isRefreshing = false
+
+                        }
+
+                        if (followersList.isEmpty()) {
+
+                            rcViewFollowers.visibility = View.GONE
+                            anViewFollowers.visibility = View.VISIBLE
+                            emptyFollowersTv.visibility = View.VISIBLE
+
+                        } else {
+
+                            rcViewFollowers.visibility = View.VISIBLE
+                            anViewFollowers.visibility = View.GONE
+                            emptyFollowersTv.visibility = View.GONE
+                            followersAdapter.differ.submitList(followersList)
+                        }
                     }
-
-                    if (tweetList.isEmpty()) {
-
-                        binding.rcViewFollowers.visibility = View.GONE
-                        binding.anViewFollowers.visibility = View.VISIBLE
-                        binding.emptyFollowersTv.visibility = View.VISIBLE
-
-                    } else {
-
-                        binding.rcViewFollowers.visibility = View.VISIBLE
-                        binding.anViewFollowers.visibility = View.GONE
-                        binding.emptyFollowersTv.visibility = View.GONE
-                        followersAdapter.setData(tweetList)
-                    }
+                } else {
+                    followersRootLayout.snackbarError(
+                        requireActivity().findViewById(R.id.followers_root_layout),
+                        error = response.body().toString(),
+                        ""
+                    ) {}
                 }
-            } else {
-                binding.followersRootLayout.snackbarError(
-                    requireActivity().findViewById(R.id.followers_root_layout),
-                    error = response.body().toString(),
-                    ""){}
             }
         }
-    }
-
-    companion object {
-        @JvmStatic
-        fun newInstance() = FollowersFragment()
     }
 }

@@ -28,7 +28,7 @@ class KindFragment : Fragment() {
 
         binding.apply {
 
-            kindViewModel.kindEvent.observe(viewLifecycleOwner){ event ->
+            kindViewModel.kindEventResult.observe(viewLifecycleOwner){ event ->
                 when(event) {
                     is KindUiEvent.NavigateToProfReg -> {
                         findNavController().navigate(R.id.action_kindFragment_to_professorRegistrationFragment)

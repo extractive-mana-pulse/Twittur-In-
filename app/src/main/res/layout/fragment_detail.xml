@@ -2,12 +2,12 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".tweet.presentation.fragments.DetailFragment">
+    tools:context=".tweet.presentation.detail.ui.DetailFragment">
     
     <data>
         <variable
             name="detailFragment"
-            type="com.example.twitturin.tweet.presentation.fragments.DetailFragment"/>
+            type="com.example.twitturin.tweet.presentation.detail.ui.DetailFragment"/>
     </data>
 
     <ScrollView

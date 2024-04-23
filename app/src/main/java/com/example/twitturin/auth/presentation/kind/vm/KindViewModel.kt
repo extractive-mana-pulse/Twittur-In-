@@ -11,7 +11,7 @@ import javax.inject.Inject
 class KindViewModel @Inject constructor(): ViewModel() {
 
     private val _kindEvent = SingleLiveEvent<KindUiEvent>()
-    val kindEvent: LiveData<KindUiEvent> = _kindEvent
+    val kindEventResult: LiveData<KindUiEvent> = _kindEvent
 
     private fun onBackPressedKind(){
         _kindEvent.value = KindUiEvent.OnBackPressedFromKindPage

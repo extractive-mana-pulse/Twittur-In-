@@ -2,12 +2,12 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".tweet.presentation.fragments.TweetsFragment">
+    tools:context=".tweet.presentation.tweet.ui.TweetsFragment">
 
     <data>
         <variable
             name="tweetsFragment"
-            type="com.example.twitturin.tweet.presentation.fragments.TweetsFragment"/>
+            type="com.example.twitturin.tweet.presentation.tweet.ui.TweetsFragment"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

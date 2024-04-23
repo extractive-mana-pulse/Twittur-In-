@@ -1,8 +1,7 @@
 package com.example.twitturin.follow.domain.repositoryImpl
 
-import com.example.twitturin.follow.data.remote.repository.FollowRepository
 import com.example.twitturin.follow.data.remote.api.FollowApi
-import com.example.twitturin.User
+import com.example.twitturin.follow.data.remote.repository.FollowRepository
 import com.example.twitturin.follow.domain.model.FollowUser
 import retrofit2.Call
 import retrofit2.Response

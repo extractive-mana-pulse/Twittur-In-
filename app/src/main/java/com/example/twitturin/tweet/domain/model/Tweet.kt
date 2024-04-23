@@ -1,6 +1,6 @@
 package com.example.twitturin.tweet.domain.model
 
-import com.example.twitturin.User
+import com.example.twitturin.profile.domain.model.User
 import com.google.gson.annotations.SerializedName
 
 data class Tweet (

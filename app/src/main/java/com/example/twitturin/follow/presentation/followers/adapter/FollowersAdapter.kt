@@ -6,15 +6,20 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.AsyncListDiffer
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.twitturin.R
-import com.example.twitturin.User
 import com.example.twitturin.databinding.RcViewFollowersBinding
 import com.example.twitturin.follow.domain.model.FollowUser
 import com.example.twitturin.follow.presentation.followers.sealed.Follow
 import com.example.twitturin.follow.presentation.vm.FollowViewModel
 import com.example.twitturin.manager.SessionManager
+import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class FollowersAdapter @Inject constructor(
@@ -22,11 +27,21 @@ class FollowersAdapter @Inject constructor(
     private val followViewModel: FollowViewModel
 ) : RecyclerView.Adapter<FollowersAdapter.ViewHolder>() {
 
-    private var list = emptyList<FollowUser>()
-
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val binding = RcViewFollowersBinding.bind(itemView)
     }
+
+    private val differCallback = object : DiffUtil.ItemCallback<FollowUser>(){
+
+        override fun areItemsTheSame(oldItem: FollowUser, newItem: FollowUser): Boolean {
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(oldItem: FollowUser, newItem: FollowUser): Boolean {
+            return oldItem.id == newItem.id
+        }
+    }
+    val differ = AsyncListDiffer(this,differCallback)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.rc_view_followers, parent, false)
@@ -35,13 +50,14 @@ class FollowersAdapter @Inject constructor(
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = list[position]
+        val item = differ.currentList[position]
         val context = holder.itemView.context
         val token = SessionManager(context).getToken()
 
         item.apply {
             holder.binding.apply {
-                val profileImage = item.profilePicture
+
+                val profileImage = profilePicture
 
                 Glide.with(context)
                     .load(profileImage)
@@ -55,9 +71,6 @@ class FollowersAdapter @Inject constructor(
                 followBtn.setOnClickListener {
                     followViewModel.followUsers(id!!,"Bearer $token")
                 }
-                /** write code here ! */
-                // . . .
-                /** write code here ! */
             }
         }
 
@@ -66,7 +79,11 @@ class FollowersAdapter @Inject constructor(
             when (result) {
 
                 is Follow.Success -> {
-                    Toast.makeText(context, "you follow ${result.user.username}", Toast.LENGTH_SHORT).show()
+                    lifecycleOwner.lifecycleScope.launchWhenStarted {
+                        followViewModel.sharedFlow.collectLatest {
+                            Snackbar.make(holder.itemView, "you follow $it",Snackbar.LENGTH_SHORT).show()
+                        }
+                    }
                 }
 
                 is Follow.Error -> {  }
@@ -77,12 +94,6 @@ class FollowersAdapter @Inject constructor(
     }
 
     override fun getItemCount(): Int {
-        return list.size
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    fun setData(newList: List<FollowUser>){
-        list = newList
-        notifyDataSetChanged()
+        return differ.currentList.size
     }
 }

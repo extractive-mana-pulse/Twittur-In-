@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
 import com.example.twitturin.auth.presentation.login.sealed.SignIn
@@ -20,6 +21,7 @@ import com.example.twitturin.databinding.FragmentSignInBinding
 import com.example.twitturin.manager.SessionManager
 import com.example.twitturin.profile.presentation.util.snackbarError
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -40,10 +42,45 @@ class SignInFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.signInFragment = this
 
-        binding.signIn.setOnClickListener {
-            val username = binding.usernameSignInEt.text.toString().trim()
-            val password = binding.passwordEt.text.toString().trim()
-            signInViewModel.signIn(username, password)
+        binding.apply {
+
+            signIn.setOnClickListener { signInViewModel.signIn(usernameSignInEt.text.toString().trim(), passwordEt.text.toString().trim()) }
+
+            signUpTv.setOnClickListener { signInUiEventViewModel.sendKindEvents(SignInUiEvent.OnKindPressed) }
+        }
+
+        signInViewModel.signInResult.observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is SignIn.Success -> {
+
+                    val token = signInViewModel.token.value
+                    val userId = signInViewModel.userId.value
+
+                    sessionManager.saveToken(token.toString())
+                    sessionManager.saveUserID(userId.toString())
+
+                    signInUiEventViewModel.sendKindEvents(SignInUiEvent.OnLoginPressed)
+
+                    lifecycleScope.launchWhenStarted {
+                        signInUiEventViewModel.signInEvent.collectLatest {
+                            when(it) {
+                                SignInUiEvent.StateNoting -> {   }
+                                is SignInUiEvent.OnKindPressed -> { findNavController().navigate(R.id.action_signInFragment_to_kindFragment) }
+                                is SignInUiEvent.OnLoginPressed -> { findNavController().navigate(R.id.action_signInFragment_to_stayInFragment) }
+                            }
+                        }
+                    }
+                }
+
+                is SignIn.Error -> {
+
+                    binding.signInRootLayout.snackbarError(
+                        view.findViewById(R.id.sign_in),
+                        error = result.message,
+                        resources.getString(R.string.retry)
+                    ) { retryOperation() }
+                }
+            }
         }
 
         if (stayInViewModel.isUserLoggedIn()) {
@@ -80,40 +117,10 @@ class SignInFragment : Fragment() {
 
         binding.usernameSignInEt.addTextChangedListener(textWatcher1)
         binding.passwordEt.addTextChangedListener(textWatcher2)
-
-        signInViewModel.signInResult.observe(viewLifecycleOwner) { result ->
-            when (result) {
-                is SignIn.Success -> {
-                    val token = signInViewModel.token.value
-                    val userId = signInViewModel.userId.value
-                    sessionManager.saveToken(token.toString())
-                    sessionManager.saveUserID(userId.toString())
-                    signInUiEventViewModel.sendKindEvents(SignInUiEvent.OnLoginPressed)
-                    signInUiEventViewModel.signInEvent.observe(viewLifecycleOwner){event ->
-                        when(event){
-                            is SignInUiEvent.OnLoginPressed -> { findNavController().navigate(R.id.action_signInFragment_to_stayInFragment) }
-                        }
-                    }
-                }
-
-                is SignIn.Error -> {
-
-                    binding.signInRootLayout.snackbarError(
-                        view.findViewById(R.id.sign_in),
-                        error = result.message,
-                        resources.getString(R.string.retry)
-                    ) { retryOperation() }
-                }
-            }
-        }
     }
 
     private fun retryOperation() {
         binding.usernameSignInEt.text?.clear()
         binding.passwordEt.text?.clear()
-    }
-
-    fun chooseKindPage() {
-        findNavController().navigate(R.id.action_signInFragment_to_kindFragment)
     }
 }

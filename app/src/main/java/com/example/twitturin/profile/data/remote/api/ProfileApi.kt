@@ -1,7 +1,7 @@
 package com.example.twitturin.profile.data.remote.api
 
 import com.example.twitturin.profile.domain.model.EditProfile
-import com.example.twitturin.User
+import com.example.twitturin.profile.domain.model.User
 import com.example.twitturin.profile.domain.model.ImageResource
 import retrofit2.Call
 import retrofit2.Response

@@ -1,6 +1,6 @@
 package com.example.twitturin.profile.presentation.sealed
 
-import com.example.twitturin.User
+import com.example.twitturin.profile.domain.model.User
 
 sealed class UserCredentials {
 

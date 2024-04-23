@@ -9,8 +9,8 @@ import com.example.twitturin.event.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
-@HiltViewModel
-class StayInViewModel @Inject constructor(app : Application): AndroidViewModel(app) {
+
+class StayInViewModel(app : Application): AndroidViewModel(app) {
 
     private val _stayInEvent = SingleLiveEvent<StayInUiEvent>()
     val stayInEvent: LiveData<StayInUiEvent> = _stayInEvent

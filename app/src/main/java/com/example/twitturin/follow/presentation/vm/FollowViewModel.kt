@@ -11,6 +11,9 @@ import com.example.twitturin.follow.domain.model.FollowUser
 import com.example.twitturin.follow.presentation.followers.sealed.Follow
 import com.example.twitturin.follow.presentation.following.sealed.UnFollow
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
@@ -40,6 +43,15 @@ class FollowViewModel @Inject constructor(
         }
     }
 
+    private val _sharedFlow = MutableSharedFlow<String>()
+    val sharedFlow = _sharedFlow.asSharedFlow()
+
+    fun triggerSharedFlow(value : String){
+        viewModelScope.launch {
+            _sharedFlow.emit(value)
+        }
+    }
+
     private val _follow = SingleLiveEvent<Follow>()
     val follow: LiveData<Follow> = _follow
 
@@ -49,6 +61,7 @@ class FollowViewModel @Inject constructor(
                 if (response.isSuccessful) {
                     val responseBody = response.body()
                     _follow.value = responseBody?.let { Follow.Success(it) }
+                    triggerSharedFlow(value = responseBody?.username.toString())
                 } else {
                     _follow.value = Follow.Error(response.message().toString())
                 }
@@ -69,6 +82,7 @@ class FollowViewModel @Inject constructor(
                 if (response.isSuccessful) {
                     val responseBody = response.body()
                     _unFollow.value = responseBody?.let { UnFollow.Success(it) }
+                    triggerSharedFlow(value = responseBody?.username.toString())
                 } else {
                     _unFollow.value = UnFollow.Error(response.code().toString())
                 }

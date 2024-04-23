@@ -5,13 +5,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.twitturin.R
-import com.example.twitturin.User
 import com.example.twitturin.databinding.FragmentFollowingBinding
 import com.example.twitturin.follow.domain.model.FollowUser
 import com.example.twitturin.follow.presentation.following.adapter.FollowingAdapter
@@ -50,15 +48,15 @@ class FollowingFragment : Fragment() {
         followViewModel.followingList.observe(requireActivity()) { response ->
             if (response.isSuccessful) {
                 response.body()?.let { tweets ->
-                    val tweetList: MutableList<FollowUser> = tweets.toMutableList()
-                    followingAdapter.setData(tweetList)
+                    val followingList: MutableList<FollowUser> = tweets.toMutableList()
+                    followingAdapter.differ.submitList(followingList)
                     binding.swipeToRefreshLayoutFollowingList.setOnRefreshListener {
-                        tweetList.shuffle(Random(System.currentTimeMillis()))
+                        followingList.shuffle(Random(System.currentTimeMillis()))
                         followViewModel.getFollowing(userId)
                         binding.swipeToRefreshLayoutFollowingList.isRefreshing = false
                     }
 
-                    if (tweetList.isEmpty()){
+                    if (followingList.isEmpty()){
                         binding.rcViewFollowing.visibility = View.GONE
                         binding.anViewFollowing.visibility = View.VISIBLE
                         binding.emptyFollowingTv.visibility = View.VISIBLE
@@ -66,8 +64,7 @@ class FollowingFragment : Fragment() {
                         binding.rcViewFollowing.visibility = View.VISIBLE
                         binding.anViewFollowing.visibility = View.GONE
                         binding.emptyFollowingTv.visibility = View.GONE
-
-                        followingAdapter.setData(tweetList)
+                        followingAdapter.differ.submitList(followingList)
                     }
                 }
             } else {
