@@ -1,4 +1,4 @@
-package com.example.twitturin.ui.activities
+package com.example.twitturin
 
 import android.app.Activity
 import android.content.Intent

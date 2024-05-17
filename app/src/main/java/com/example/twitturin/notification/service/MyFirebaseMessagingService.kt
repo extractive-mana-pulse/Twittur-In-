@@ -11,7 +11,7 @@ import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import com.example.twitturin.R
 import com.example.twitturin.notification.presentation.constans.Constants
-import com.example.twitturin.ui.activities.MainActivity
+import com.example.twitturin.MainActivity
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 

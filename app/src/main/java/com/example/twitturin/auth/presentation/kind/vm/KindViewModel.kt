@@ -4,11 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.example.twitturin.auth.presentation.kind.sealed.KindUiEvent
 import com.example.twitturin.event.SingleLiveEvent
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 
-@HiltViewModel
-class KindViewModel @Inject constructor(): ViewModel() {
+class KindViewModel : ViewModel() {
 
     private val _kindEvent = SingleLiveEvent<KindUiEvent>()
     val kindEventResult: LiveData<KindUiEvent> = _kindEvent
@@ -27,9 +24,9 @@ class KindViewModel @Inject constructor(): ViewModel() {
 
     fun sendKindEvents(event: KindUiEvent) {
         when(event){
-            is KindUiEvent.NavigateToStudReg -> { onStudPressed()}
-            is KindUiEvent.NavigateToProfReg -> { onProfPressed()}
-            is KindUiEvent.OnBackPressedFromKindPage -> { onBackPressedKind()}
+            is KindUiEvent.NavigateToStudReg -> { onStudPressed() }
+            is KindUiEvent.NavigateToProfReg -> { onProfPressed() }
+            is KindUiEvent.OnBackPressedFromKindPage -> { onBackPressedKind() }
         }
     }
 }

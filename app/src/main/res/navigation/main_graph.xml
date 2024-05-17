@@ -168,7 +168,7 @@
 <!--  webViewFragment  -->
     <fragment
         android:id="@+id/webViewFragment"
-        android:name="com.example.twitturin.ui.fragments.WebViewFragment"
+        android:name="com.example.twitturin.tweet.presentation.home.ui.WebViewFragment"
         android:label="fragment_web_view"
         tools:layout="@layout/fragment_web_view" >
 

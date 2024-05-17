@@ -26,7 +26,7 @@ class FollowersFragment : Fragment() {
     private val followViewModel: FollowViewModel by viewModels()
     private val followersUiViewModel : FollowersUiViewModel by viewModels()
     private val binding by lazy { FragmentFollowersBinding.inflate(layoutInflater) }
-    private val followersAdapter by lazy { FollowersAdapter(viewLifecycleOwner, followViewModel) }
+    private val followersAdapter by lazy { FollowersAdapter(viewLifecycleOwner, followViewModel, followersUiViewModel) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return binding.root
@@ -36,7 +36,6 @@ class FollowersFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.followersFragment = this
         updateRecyclerView()
-        followersUiViewModel
     }
 
 

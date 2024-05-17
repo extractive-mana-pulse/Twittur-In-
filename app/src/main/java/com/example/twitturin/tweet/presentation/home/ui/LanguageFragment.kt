@@ -1,4 +1,4 @@
-package com.example.twitturin.ui.fragments
+package com.example.twitturin.tweet.presentation.home.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater

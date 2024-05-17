@@ -1,4 +1,4 @@
-package com.example.twitturin.ui.fragments
+package com.example.twitturin.tweet.presentation.home.ui
 
 import android.annotation.SuppressLint
 import android.os.Bundle

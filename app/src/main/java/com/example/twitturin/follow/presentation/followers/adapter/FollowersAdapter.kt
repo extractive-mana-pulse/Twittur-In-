@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -15,6 +16,8 @@ import com.example.twitturin.R
 import com.example.twitturin.databinding.RcViewFollowersBinding
 import com.example.twitturin.follow.domain.model.FollowUser
 import com.example.twitturin.follow.presentation.followers.sealed.Follow
+import com.example.twitturin.follow.presentation.followers.sealed.FollowersUiEvent
+import com.example.twitturin.follow.presentation.followers.vm.FollowersUiViewModel
 import com.example.twitturin.follow.presentation.vm.FollowViewModel
 import com.example.twitturin.manager.SessionManager
 import com.google.android.material.snackbar.Snackbar
@@ -24,7 +27,8 @@ import javax.inject.Inject
 
 class FollowersAdapter @Inject constructor(
     private val lifecycleOwner : LifecycleOwner,
-    private val followViewModel: FollowViewModel
+    private val followViewModel: FollowViewModel,
+    private val followersUiViewModel : FollowersUiViewModel
 ) : RecyclerView.Adapter<FollowersAdapter.ViewHolder>() {
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -68,8 +72,22 @@ class FollowersAdapter @Inject constructor(
                 usernameFollowerTv.text = "@$username"
                 postDescription.text = bio ?: "This user does not appear to have any biography."
 
-                followBtn.setOnClickListener {
-                    followViewModel.followUsers(id!!,"Bearer $token")
+                followBtn.setOnClickListener { followViewModel.followUsers(id!!,"Bearer $token") }
+
+                holder.itemView.setOnClickListener { followersUiViewModel.sendUiEvent(FollowersUiEvent.OnItemPressed) }
+
+                lifecycleOwner.lifecycleScope.launch {
+                    followersUiViewModel.followersEvent.collect {event ->
+                        when (event) {
+                            is FollowersUiEvent.OnItemPressed -> {
+                                Navigation.findNavController(holder.itemView).navigate(R.id.observeProfileFragment)
+                            }
+                            is FollowersUiEvent.OnFollowPressed -> {
+
+                            }
+                            is FollowersUiEvent.NothingState -> {  }
+                        }
+                    }
                 }
             }
         }
@@ -86,11 +104,11 @@ class FollowersAdapter @Inject constructor(
                     }
                 }
 
-                is Follow.Error -> {  }
+                is Follow.Error -> {
+
+                }
             }
         }
-
-        holder.itemView.setOnClickListener {  }
     }
 
     override fun getItemCount(): Int {

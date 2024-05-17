@@ -2,9 +2,9 @@ package com.example.twitturin.auth.presentation.registration.vm
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import com.example.twitturin.auth.data.remote.repository.AuthRepository
 import com.example.twitturin.auth.domain.model.SignUpProf
 import com.example.twitturin.auth.domain.model.SignUpStudent
-import com.example.twitturin.auth.data.remote.repository.AuthRepository
 import com.example.twitturin.auth.presentation.registration.professor.sealed.SignUpProfResult
 import com.example.twitturin.auth.presentation.registration.student.sealed.SignUpStudentResult
 import com.example.twitturin.event.SingleLiveEvent

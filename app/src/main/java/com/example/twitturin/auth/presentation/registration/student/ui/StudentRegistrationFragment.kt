@@ -14,7 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
-import com.example.twitturin.auth.presentation.registration.professor.sealed.ProfRegUiEvent
+import com.example.twitturin.auth.domain.use_case.Username
 import com.example.twitturin.auth.presentation.registration.student.sealed.SignUpStudentResult
 import com.example.twitturin.auth.presentation.registration.student.sealed.StudRegUiEvent
 import com.example.twitturin.auth.presentation.registration.student.vm.StudentRegViewModel
@@ -26,6 +26,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class StudentRegistrationFragment : Fragment() {
 
+    private lateinit var username : Username
     private val signUpViewModel : SignUpViewModel by viewModels()
     private val editTextList: MutableList<EditText> = mutableListOf()
     private val studentUiEventViewModel : StudentRegViewModel by viewModels()
@@ -38,8 +39,62 @@ class StudentRegistrationFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.studentSignUpBtn.setOnClickListener {
-            studentUiEventViewModel.sentStudRegEvent(StudRegUiEvent.OnRegPressed)
+
+        // TODO { test code! }
+        username.execute(binding.userNameEt.text.toString(), requireContext())
+
+        binding.apply {
+
+            studentSignUpBtn.setOnClickListener { studentUiEventViewModel.sentStudRegEvent(StudRegUiEvent.OnRegPressed) }
+
+            editTextList.add(userNameEt)
+            editTextList.add(studentIdEt)
+            editTextList.add(studentPasswordEt)
+
+            editTextList.forEach { editText ->
+                editText.addTextChangedListener(object : TextWatcher {
+                    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+                    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+                    override fun afterTextChanged(s: Editable?) {
+                        updateButtonState()
+                    }
+                })
+            }
+
+            ArrayAdapter.createFromResource(requireContext(), R.array.major_array, android.R.layout.simple_spinner_item).also { adapter ->
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                planetsSpinner.adapter = adapter
+            }
+
+            planetsSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {  }
+
+                override fun onNothingSelected(p0: AdapterView<*>?) {  }
+            }
+
+            userNameEt.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                    //
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    //
+                }
+
+                override fun afterTextChanged(s: Editable?) {
+                    val inputText = s?.toString()
+
+                    if (inputText != null && inputText.contains(" ")) {
+                        studentUsernameInputLayout.error = resources.getString(R.string.no_spaces_allowed)
+                        studentSignUpBtn.isEnabled = false
+                    } else {
+                        studentUsernameInputLayout.error = null
+                        studentSignUpBtn.isEnabled = true
+                    }
+                }
+            })
         }
 
         studentUiEventViewModel.studRegEvent.observe(viewLifecycleOwner) {
@@ -72,59 +127,6 @@ class StudentRegistrationFragment : Fragment() {
                 }
             }
         }
-
-        editTextList.add(binding.userNameEt)
-        editTextList.add(binding.studentIdEt)
-        editTextList.add(binding.studentPasswordEt)
-
-        editTextList.forEach { editText ->
-            editText.addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-
-                override fun afterTextChanged(s: Editable?) {
-                    updateButtonState()
-                }
-            })
-        }
-
-        ArrayAdapter.createFromResource(requireContext(), R.array.major_array, android.R.layout.simple_spinner_item).also { adapter ->
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            binding.planetsSpinner.adapter = adapter
-        }
-
-        binding.planetsSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-                //
-            }
-
-            override fun onNothingSelected(p0: AdapterView<*>?) {
-                //
-            }
-        }
-
-        binding.userNameEt.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                //
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                //
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                val inputText = s?.toString()
-
-                if (inputText != null && inputText.contains(" ")) {
-                    binding.studentUsernameInputLayout.error = resources.getString(R.string.no_spaces_allowed)
-                    binding.studentSignUpBtn.isEnabled = false
-                } else {
-                    binding.studentUsernameInputLayout.error = null
-                    binding.studentSignUpBtn.isEnabled = true
-                }
-            }
-        })
     }
 
     private fun updateButtonState() {

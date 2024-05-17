@@ -1,4 +1,4 @@
-package com.example.twitturin.ui.activities
+package com.example.twitturin
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -16,7 +16,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
-import com.example.twitturin.R
 import com.example.twitturin.databinding.ActivityMainBinding
 import com.example.twitturin.preferences.MyPreferences
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
