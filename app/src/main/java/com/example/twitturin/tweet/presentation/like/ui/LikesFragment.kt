@@ -14,9 +14,8 @@ import com.example.twitturin.databinding.FragmentLikesBinding
 import com.example.twitturin.manager.SessionManager
 import com.example.twitturin.profile.presentation.util.snackbarError
 import com.example.twitturin.tweet.domain.model.Tweet
-import com.example.twitturin.tweet.presentation.like.vm.LikeViewModel
-import com.example.twitturin.tweet.presentation.tweet.vm.TweetViewModel
 import com.example.twitturin.tweet.presentation.home.ui.adapter.PostAdapter
+import com.example.twitturin.tweet.presentation.tweet.vm.TweetViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -24,10 +23,9 @@ import javax.inject.Inject
 class LikesFragment : Fragment() {
 
     @Inject lateinit var sessionManager: SessionManager
-    private val lViewModel: LikeViewModel by viewModels()
     private val tweetViewModel : TweetViewModel by viewModels()
     private val binding by lazy { FragmentLikesBinding.inflate(layoutInflater) }
-    private val postAdapter by lazy { PostAdapter(lViewModel, viewLifecycleOwner) }
+    private val postAdapter by lazy { PostAdapter() }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return binding.root

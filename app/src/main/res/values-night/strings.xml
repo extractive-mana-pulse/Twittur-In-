@@ -27,4 +27,5 @@
     <string name="login">Login</string>
     <string name="there_is_no_any_conversations">There is no any conversations</string>
     <string name="there_is_no_any_group_conversations">There is no any group conversations</string>
+    <string name="invalid_date">Invalid date</string>
 </resources>

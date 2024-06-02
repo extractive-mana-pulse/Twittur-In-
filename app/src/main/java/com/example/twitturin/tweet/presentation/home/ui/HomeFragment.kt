@@ -27,11 +27,10 @@ import com.example.twitturin.profile.presentation.sealed.UserCredentials
 import com.example.twitturin.profile.presentation.util.snackbarError
 import com.example.twitturin.profile.presentation.vm.ProfileViewModel
 import com.example.twitturin.tweet.domain.model.Tweet
-import com.example.twitturin.tweet.presentation.like.vm.LikeViewModel
-import com.example.twitturin.tweet.presentation.tweet.vm.TweetViewModel
-import com.example.twitturin.tweet.presentation.home.ui.adapter.PostAdapter
 import com.example.twitturin.tweet.presentation.home.sealed.HomeScreenUiEvent
+import com.example.twitturin.tweet.presentation.home.ui.adapter.PostAdapter
 import com.example.twitturin.tweet.presentation.home.vm.HomeViewModel
+import com.example.twitturin.tweet.presentation.tweet.vm.TweetViewModel
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
@@ -43,12 +42,11 @@ import javax.inject.Inject
 class HomeFragment : Fragment() {
 
     @Inject lateinit var sessionManager: SessionManager
-    private val likeViewModel: LikeViewModel by viewModels()
     private val homeViewModel : HomeViewModel by viewModels()
     private val tweetViewModel : TweetViewModel by viewModels()
     private val profileViewModel: ProfileViewModel by viewModels()
     private val binding by lazy { FragmentHomeBinding.inflate(layoutInflater) }
-    private val postAdapter by lazy { PostAdapter(likeViewModel, viewLifecycleOwner) }
+    private val postAdapter by lazy { PostAdapter() }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return binding.root

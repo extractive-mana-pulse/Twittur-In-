@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.text.HtmlCompat
-import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
@@ -17,17 +16,10 @@ import com.bumptech.glide.Glide
 import com.example.twitturin.R
 import com.example.twitturin.databinding.RcViewBinding
 import com.example.twitturin.tweet.domain.model.Tweet
-import com.example.twitturin.tweet.presentation.like.vm.LikeViewModel
-import java.text.SimpleDateFormat
-import java.util.Locale
-import java.util.TimeZone
-import java.util.concurrent.TimeUnit
+import com.example.twitturin.tweet.presentation.detail.ui.util.formatCreatedAt
 import javax.inject.Inject
 
-class PostAdapter @Inject constructor(
-    private val likeViewModel: LikeViewModel,
-    private val parentLifecycleOwner: LifecycleOwner
-) : RecyclerView.Adapter<PostAdapter.ViewHolder>() {
+class PostAdapter @Inject constructor() : RecyclerView.Adapter<PostAdapter.ViewHolder>() {
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val binding = RcViewBinding.bind(itemView)
@@ -56,9 +48,6 @@ class PostAdapter @Inject constructor(
         val baseTweetsUrl = "https://twitturin.onrender.com/tweets"
         val context = holder.itemView.context
 
-//        var likeCount: Int? = item.likes
-//        var isLiked: Boolean = false
-
         holder.binding.apply {
             item.apply {
 
@@ -78,32 +67,7 @@ class PostAdapter @Inject constructor(
                 postCommentsCounter.text = replyCount.toString()
                 postHeartCounter.text = likes.toString()
 
-                val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.getDefault())
-                dateFormat.timeZone = TimeZone.getTimeZone("UTC")
-
-                try {
-                    val date = dateFormat.parse(item.createdAt)
-                    val currentTime = System.currentTimeMillis()
-                    val durationMillis = currentTime - date!!.time
-
-                    val seconds = TimeUnit.MILLISECONDS.toSeconds(durationMillis)
-                    val minutes = TimeUnit.MILLISECONDS.toMinutes(durationMillis)
-                    val hours = TimeUnit.MILLISECONDS.toHours(durationMillis)
-                    val days = TimeUnit.MILLISECONDS.toDays(durationMillis)
-                    val weeks = days / 7
-
-                    val durationString = when {
-                        weeks > 0 -> "$weeks w."
-                        days > 0 -> "$days d."
-                        hours > 0 -> "$hours h."
-                        minutes > 0 -> "$minutes m."
-                        else -> "$seconds s."
-                    }
-                    createdAtTv.text = durationString
-
-                } catch (e: Exception) {
-                    createdAtTv.text = "Invalid date"
-                }
+                createdAtTv.text = createdAt.formatCreatedAt()
 
                 holder.itemView.setOnClickListener {
 
@@ -156,57 +120,6 @@ class PostAdapter @Inject constructor(
 
             }
         }
-
-
-//        val token = sessionManager.getToken()
-//
-//        viewModel = ViewModelProvider(holder.itemView.context as ViewModelStoreOwner)[LikeViewModel::class.java]
-//
-//        holder.binding.postIconHeart.setOnClickListener {
-//            if (!token.isNullOrEmpty()) {
-//                if (isLiked) {
-//                    likeCount = likeCount!! - 1
-//                    viewModel.likeDelete(likeCount.toString(), item.id, token)
-//                    holder.binding.postIconHeart.isSelected = isLiked
-//                    holder.binding.postHeartCounter.text = likeCount.toString()
-//                    holder.binding.postIconHeart.setBackgroundResource(R.drawable.heart)
-//                } else {
-//                    likeCount = likeCount!! + 1
-//                    viewModel.likePost(likeCount.toString(),item.id, token)
-//                    holder.binding.postIconHeart.isSelected = isLiked
-//                    holder.binding.postHeartCounter.text = likeCount.toString()
-//                    holder.binding.postIconHeart.setBackgroundResource(R.drawable.heart_solid_icon)
-//                }
-//            } else {
-//                Toast.makeText(holder.itemView.context, "Something went wrong! Please try again.", Toast.LENGTH_SHORT).show()
-//            }
-//        }
-//
-//        // Like
-//        viewModel.likePostResult.observe(parentLifecycleOwner) { result ->
-//            when (result) {
-//                is PostLikeResult.Success -> {  }
-//
-//                is PostLikeResult.Error -> {
-//                    val errorMessage = result.message
-//                    Toast.makeText(holder.itemView.context, errorMessage, Toast.LENGTH_SHORT).show()
-//                }
-//            }
-//        }
-//
-//        // Delete
-//        viewModel.likeDeleteResult.observe(parentLifecycleOwner) { result ->
-//            when (result) {
-//                is PostLikeResult.Success -> {
-//                    Toast.makeText(holder.itemView.context, "Success", Toast.LENGTH_LONG).show()
-//                }
-//
-//                is PostLikeResult.Error -> {
-//                    val errorMessage = result.message
-//                    Toast.makeText(holder.itemView.context, errorMessage, Toast.LENGTH_SHORT).show()
-//                }
-//            }
-//        }
     }
 
     override fun getItemCount(): Int {

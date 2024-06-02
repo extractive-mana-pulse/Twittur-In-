@@ -53,7 +53,7 @@ class MoreSettingsDetailFragment : BottomSheetDialogFragment() {
         val userId = sharedPreferences.getString("userId", "")
         val tweetId = sharedPreferences.getString("id", "")
 
-        /** Note:  check's userId with userId to manipulate with UI elements */
+        /**Checking user id. if match illustrate other ui otherwise don't. */
         if (userId == userId2) {
             followLayout.visibility = View.GONE
             editLayout.visibility = View.VISIBLE

@@ -24,26 +24,23 @@ import com.example.twitturin.profile.presentation.util.snackbar
 import com.example.twitturin.profile.presentation.util.snackbarError
 import com.example.twitturin.tweet.domain.model.Tweet
 import com.example.twitturin.tweet.presentation.detail.sealed.PostReply
-import com.example.twitturin.tweet.presentation.like.vm.LikeViewModel
-import com.example.twitturin.tweet.presentation.tweet.vm.TweetViewModel
-import com.example.twitturin.tweet.presentation.home.ui.adapter.PostAdapter
+import com.example.twitturin.tweet.presentation.detail.ui.util.formatCreatedAt
 import com.example.twitturin.tweet.presentation.detail.ui.util.showKeyboard
+import com.example.twitturin.tweet.presentation.home.ui.adapter.PostAdapter
+import com.example.twitturin.tweet.presentation.tweet.vm.TweetViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.Locale
-import java.util.TimeZone
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class DetailFragment : Fragment() {
 
     @Inject lateinit var sessionManager : SessionManager
-    private val likeViewModel : LikeViewModel by viewModels()
     private val tweetViewModel : TweetViewModel by viewModels()
     private val followingViewModel : FollowViewModel by viewModels()
     private val binding  by lazy { FragmentDetailBinding.inflate(layoutInflater) }
-    private val postAdapter by lazy { PostAdapter(likeViewModel, viewLifecycleOwner) }
+    private val postAdapter by lazy { PostAdapter() }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return binding.root
@@ -78,9 +75,6 @@ class DetailFragment : Fragment() {
             if (activateEditText!!){
                 replyEt.showKeyboard()
             }
-
-            val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.getDefault())
-            dateFormat.timeZone = TimeZone.getTimeZone("UTC")
 
             val token = sessionManager.getToken()
             val userId2 = sessionManager.getUserId()
@@ -142,35 +136,8 @@ class DetailFragment : Fragment() {
                 }
             }
 
-            try {
-                val date = dateFormat.parse(createdAt.toString())
-                val currentTime = System.currentTimeMillis()
-
-                val durationMillis = currentTime - date!!.time
-
-                val seconds = TimeUnit.MILLISECONDS.toSeconds(durationMillis)
-                val minutes = TimeUnit.MILLISECONDS.toMinutes(durationMillis)
-                val hours = TimeUnit.MILLISECONDS.toHours(durationMillis)
-                val days = TimeUnit.MILLISECONDS.toDays(durationMillis)
-                val weeks = days / 7
-
-                val durationString = when {
-                    weeks > 0 -> "$weeks weeks ago"
-                    days > 0 -> "$days days ago"
-                    hours > 0 -> "$hours hours ago"
-                    minutes > 0 -> "$minutes minutes ago"
-                    else -> "$seconds seconds ago"
-                }
-
-                println("Post created $durationString")
-                binding.whenCreated.text = durationString
-            } catch (e: Exception) {
-                println("Invalid date")
-                binding.whenCreated.text = "Invalid date"
-            }
-
+            whenCreated.text = createdAt?.formatCreatedAt()
             val dateConverter = convertDateFormat(updatedAt.toString())
-
             whenUpdated.text = dateConverter
 
             authorAvatar.setOnLongClickListener {
@@ -189,9 +156,8 @@ class DetailFragment : Fragment() {
                 true
             }
 
-            val profileImageUrl = "$profileImage"
             Glide.with(requireContext())
-                .load(profileImageUrl)
+                .load(profileImage)
                 .error(R.drawable.not_found)
                 .centerCrop()
                 .into(authorAvatar)
@@ -219,7 +185,7 @@ class DetailFragment : Fragment() {
                             requireActivity().findViewById(R.id.reply_layout),
                             error = result.message,
                             ""
-                        ) { /*actionCallBack -> default Unit*/ }
+                        ) { /* actionCallBack ->  Unit */ }
                     }
                 }
             }

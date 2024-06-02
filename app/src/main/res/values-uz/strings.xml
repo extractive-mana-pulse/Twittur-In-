@@ -113,4 +113,5 @@
     <string name="try_again">QAYTA URINIB KO\'RING</string>
     <string name="Home">Uy</string>
     <string name="Search">Qidirmoq</string>
+    <string name="invalid_date">Invalid date</string>
 </resources>
