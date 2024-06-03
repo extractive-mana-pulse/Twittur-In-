@@ -27,16 +27,16 @@
 
             <ImageButton
                 android:id="@+id/back"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:onClick="@{ () -> profileFragment.fragmentManager.popBackStack() }"
                 android:layout_marginTop="24dp"
                 android:layout_marginStart="16dp"
-                android:background="@android:color/transparent"
+                android:src="@drawable/keyboard_backspace"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                android:src="@drawable/keyboard_backspace"
-                tools:ignore="ContentDescription"/>
+                android:background="@android:color/transparent"
+                android:contentDescription="@string/profile_page_back_button"/>
 
             <TextView
                 android:layout_width="wrap_content"

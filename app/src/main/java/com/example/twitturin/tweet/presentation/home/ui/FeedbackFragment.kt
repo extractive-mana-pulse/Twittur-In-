@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.twitturin.databinding.FragmentFeedbackBinding
 
 class FeedbackFragment : Fragment() {
@@ -21,6 +22,9 @@ class FeedbackFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.apply {
+
+            feedbackBackBtn.setOnClickListener { findNavController().navigateUp() }
+
             feedbackSendEmailBtn.setOnClickListener {
                 val subject = topicFeedbackEt.text.toString().trim()
                 val message = messageFeedbackEt.text.toString().trim()
@@ -35,9 +39,9 @@ class FeedbackFragment : Fragment() {
         val mIntent = Intent(Intent.ACTION_SEND)
         /*To send an email you need to specify mailto: as URI using setData() method\
         and data type will be to text/plain using setType() method*/
-        mIntent.setDataAndType(Uri.parse("mailto:"), "text/plain")
-//      mIntent.data = Uri.parse("mailto:")
-//      mIntent.type = "text/plain"
+//        mIntent.setDataAndType(Uri.parse("mailto:"), "text/plain")
+        mIntent.data = Uri.parse("mailto:")
+        mIntent.type = "message/rfc822"
 
         mIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf("invoker1441@gmail.com"))
         //put the Subject in the intent

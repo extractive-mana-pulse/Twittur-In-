@@ -118,4 +118,6 @@
     <string name="set_off">Set off!</string>
     <string name="detail_page_reply_btn_content_description">in detail page send to reply button.</string>
     <string name="email_topic">The reason for petition (optional)?</string>
+    <string name="feedback_page_back_button">feedback page back button</string>
+    <string name="profile_page_back_button">profile page back button</string>
 </resources>
