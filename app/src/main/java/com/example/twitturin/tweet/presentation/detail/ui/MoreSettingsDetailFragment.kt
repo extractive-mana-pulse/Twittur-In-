@@ -126,12 +126,12 @@ class MoreSettingsDetailFragment : BottomSheetDialogFragment() {
         }
 
         reportLayout.setOnClickListener {
-            mainLayout.snackbar(
-                requireActivity().findViewById(R.id.bottom_sheet_root_layout),
-                message = resources.getString(R.string.in_progress)
-            )
-//            findNavController().navigate(R.id.reportFragment)
-//            dismiss()
+//            mainLayout.snackbar(
+//                requireActivity().findViewById(R.id.bottom_sheet_root_layout),
+//                message = resources.getString(R.string.in_progress)
+//            )
+            findNavController().navigate(R.id.reportFragment)
+            dismiss()
         }
 
         editLayout.setOnClickListener {

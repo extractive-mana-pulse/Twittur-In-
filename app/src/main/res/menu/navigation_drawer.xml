@@ -30,4 +30,16 @@
 
     </group>
 
+    <group
+        android:id="@+id/secondary_group"
+        android:checkableBehavior="all">
+
+        <item
+            android:id="@+id/feedback_item"
+            android:icon="@drawable/feedback_icon"
+            android:title="@string/feedback"
+            android:checked="false"/>
+
+    </group>
+
 </menu>

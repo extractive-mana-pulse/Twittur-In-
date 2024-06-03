@@ -24,6 +24,7 @@ import com.example.twitturin.profile.presentation.util.snackbar
 import com.example.twitturin.profile.presentation.util.snackbarError
 import com.example.twitturin.tweet.domain.model.Tweet
 import com.example.twitturin.tweet.presentation.detail.sealed.PostReply
+import com.example.twitturin.tweet.presentation.detail.ui.util.addAutoResizeTextWatcher
 import com.example.twitturin.tweet.presentation.detail.ui.util.formatCreatedAt
 import com.example.twitturin.tweet.presentation.detail.ui.util.showKeyboard
 import com.example.twitturin.tweet.presentation.home.ui.adapter.PostAdapter
@@ -36,11 +37,11 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class DetailFragment : Fragment() {
 
+    private val postAdapter by lazy { PostAdapter() }
     @Inject lateinit var sessionManager : SessionManager
     private val tweetViewModel : TweetViewModel by viewModels()
     private val followingViewModel : FollowViewModel by viewModels()
     private val binding  by lazy { FragmentDetailBinding.inflate(layoutInflater) }
-    private val postAdapter by lazy { PostAdapter() }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return binding.root
@@ -93,28 +94,7 @@ class DetailFragment : Fragment() {
                 sentReply.isEnabled = false
             }
 
-            val textWatcher1 = object : TextWatcher {
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                    // Not used
-                }
-
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                    sentReply.isEnabled = !replyEt.text.isNullOrBlank()
-                }
-
-                override fun afterTextChanged(s: Editable?) {
-                    replyEt.post {
-                        val lineCount = replyEt.lineCount
-                        val lineHeight = replyEt.lineHeight
-                        val desiredHeight = lineCount * lineHeight
-
-                        val layoutParams = replyEt.layoutParams
-                        layoutParams.height = desiredHeight
-                        replyEt.layoutParams = layoutParams
-                    }
-                }
-            }
-            replyEt.addTextChangedListener(textWatcher1)
+            replyEt.addAutoResizeTextWatcher(sentReply)
 
             tweetViewModel.postReplyResult.observe(viewLifecycleOwner) { result ->
 
@@ -123,7 +103,7 @@ class DetailFragment : Fragment() {
                         replyEt.text?.clear()
                         tweetViewModel.getRepliesOfPost(id!!)
                         postAdapter.notifyDataSetChanged()
-                        replyEt.addTextChangedListener(textWatcher1)
+                        replyEt.addAutoResizeTextWatcher(sentReply)
                     }
 
                     is PostReply.Error -> {
@@ -131,7 +111,7 @@ class DetailFragment : Fragment() {
                             requireActivity().findViewById(R.id.reply_layout),
                             result.message,
                             ""){}
-                        replyEt.addTextChangedListener(textWatcher1)
+                        replyEt.addAutoResizeTextWatcher(sentReply)
                     }
                 }
             }

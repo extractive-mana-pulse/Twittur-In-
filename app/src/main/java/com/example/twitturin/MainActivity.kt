@@ -66,6 +66,7 @@ class MainActivity : AppCompatActivity() {
             R.id.editTweetFragment,
             R.id.stayInFragment,
             R.id.noInternetFragment,
+            R.id.feedbackFragment,
 
         )
 

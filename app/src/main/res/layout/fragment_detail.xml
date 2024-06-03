@@ -343,35 +343,35 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/last_divider_for_reply_layout">
 
-                <EditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/reply_et"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:hint="@string/reply"
-                    android:paddingHorizontal="16dp"
-                    android:imeOptions="actionDone"
-                    android:maxLines="35"
-                    android:inputType="textMultiLine"
-                    android:textAlignment="textStart"
                     android:background="@drawable/reply_et_bg"
+                    android:hint="@string/reply"
+                    android:imeOptions="actionDone"
+                    android:inputType="text|textCapSentences|textMultiLine"
+                    android:maxLines="30"
+                    android:padding="16dp"
                     android:layout_marginHorizontal="16dp"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/sent_reply"
-                    tools:ignore="Autofill,RtlSymmetry,TextFields"/>
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"/>
 
                 <ImageButton
                     android:id="@+id/sent_reply"
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
                     android:layout_marginEnd="16dp"
                     android:src="@drawable/send_filled"
                     android:background="@drawable/reply_btn_bg"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    tools:ignore="ContentDescription"/>
+                    android:contentDescription="@string/detail_page_reply_btn_content_description"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

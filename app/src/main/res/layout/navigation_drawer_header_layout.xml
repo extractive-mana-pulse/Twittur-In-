@@ -34,19 +34,7 @@
         android:layout_marginStart="16dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:ignore="ContentDescription"/>
-
-<!--    <ImageButton-->
-<!--        android:id="@+id/light_mode_dark_mode"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:src="@drawable/light_mode"-->
-<!--        android:layout_marginTop="24dp"-->
-<!--        android:layout_marginEnd="16dp"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        android:backgroundTint="@android:color/transparent"-->
-<!--        tools:ignore="ContentDescription" />-->
+        android:contentDescription="user avatar on navigation drawer."/>
 
     <TextView
         android:id="@+id/nav_full_name_tv"

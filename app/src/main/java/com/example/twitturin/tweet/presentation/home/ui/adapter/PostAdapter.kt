@@ -17,6 +17,7 @@ import com.example.twitturin.R
 import com.example.twitturin.databinding.RcViewBinding
 import com.example.twitturin.tweet.domain.model.Tweet
 import com.example.twitturin.tweet.presentation.detail.ui.util.formatCreatedAt
+import com.example.twitturin.tweet.presentation.home.ui.util.formatCreatedAtPost
 import javax.inject.Inject
 
 class PostAdapter @Inject constructor() : RecyclerView.Adapter<PostAdapter.ViewHolder>() {
@@ -67,7 +68,7 @@ class PostAdapter @Inject constructor() : RecyclerView.Adapter<PostAdapter.ViewH
                 postCommentsCounter.text = replyCount.toString()
                 postHeartCounter.text = likes.toString()
 
-                createdAtTv.text = createdAt.formatCreatedAt()
+                createdAtTv.text = createdAt.formatCreatedAtPost()
 
                 holder.itemView.setOnClickListener {
 

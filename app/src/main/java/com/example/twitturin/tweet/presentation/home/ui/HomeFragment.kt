@@ -89,7 +89,9 @@ class HomeFragment : Fragment() {
             val headerFollowing: TextView = headerView.findViewById(R.id.nav_following_counter_tv)
             val headingFollowers: TextView = headerView.findViewById(R.id.nav_followers_counter_tv)
             val layout: ShimmerFrameLayout = headerView.findViewById(R.id.navigation_drawer_shimmer)
+
             profileViewModel.getUserCredentials(userId!!)
+
             profileViewModel.getUserCredentials.observe(viewLifecycleOwner) { result ->
 
                 layout.startShimmer()
@@ -132,12 +134,12 @@ class HomeFragment : Fragment() {
             }
 
             navigationView.setNavigationItemSelectedListener { menuItem ->
-
                 when(menuItem.itemId){
                     R.id.language_item ->  appLanguage()
                     R.id.change_mode -> appThemeDialog()
                     R.id.time_table -> findNavController().navigate(R.id.action_homeFragment_to_webViewFragment)
                     R.id.profile_item -> findNavController().navigate(R.id.action_homeFragment_to_profileFragment)
+                    R.id.feedback_item -> findNavController().navigate(R.id.action_homeFragment_to_feedbackFragment)
                 }
 
                 menuItem.isChecked = true
