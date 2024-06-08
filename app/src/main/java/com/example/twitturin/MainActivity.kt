@@ -111,10 +111,6 @@ class MainActivity : AppCompatActivity() {
         val language = sharedPref.getString("lang","")
         language?.let { setLocale(it) }
     }
-    // в первую очередь нужно проверить зарегистрирован пользователь или нет. если заре
-    // если пользователь зареган после провесь соединение. если соединение установлено!
-    // выполни навигацию на главный экран. если соединение не установлено но покажи экран с ошибкой интернета
-    //
 
     private fun showSettingDialog() {
         MaterialAlertDialogBuilder(this, com.google.android.material.R.style.MaterialAlertDialog_Material3)

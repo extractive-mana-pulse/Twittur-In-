@@ -1,4 +1,4 @@
-package com.example.twitturin.tweet.presentation.detail.ui.util
+package com.example.twitturin.tweet.presentation.detail.util
 
 import android.text.Editable
 import android.text.TextWatcher

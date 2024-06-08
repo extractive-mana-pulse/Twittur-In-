@@ -14,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
 import com.example.twitturin.auth.presentation.registration.professor.sealed.ProfRegUiEvent
 import com.example.twitturin.auth.presentation.registration.professor.sealed.SignUpProfResult
+import com.example.twitturin.auth.presentation.registration.professor.util.addAutoResizeTextWatcherOfProf
 import com.example.twitturin.auth.presentation.registration.professor.vm.ProfRegViewModel
 import com.example.twitturin.auth.presentation.registration.vm.SignUpViewModel
 import com.example.twitturin.databinding.FragmentProfessorRegistrationBinding
@@ -36,88 +37,65 @@ class ProfessorRegistrationFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.professorFragment = this
 
-        binding.signUpProf.setOnClickListener {
-            professorRegistrationViewModel.sentProfRegEvent(ProfRegUiEvent.OnAuthPressed)
-        }
+        binding.apply {
 
-        professorRegistrationViewModel.profRegEvent.observe(viewLifecycleOwner){
-            when(it){
-                is ProfRegUiEvent.OnAuthPressed -> {
-                    val fullName = binding.profFullnameEt.text.toString().trim()
-                    val username = binding.profUsernameEt.text.toString().trim()
-                    val subject = binding.profSubjectEt.text.toString().trim()
-                    val password = binding.profPasswordEt.text.toString().trim()
-                    signUpViewModel.signUpProf(fullName, username, subject, password, "teacher")
+            signUpProf.setOnClickListener { professorRegistrationViewModel.sentProfRegEvent(ProfRegUiEvent.OnAuthPressed) }
 
-                    signUpViewModel.profRegResult.observe(viewLifecycleOwner) { result ->
-                        when (result) {
-                            is SignUpProfResult.Success -> {
-                                findNavController().navigate(R.id.action_professorRegistrationFragment_to_signInFragment)
-                            }
+            profUsernameEt.addAutoResizeTextWatcherOfProf(profUsernameInputLayout, signUpProf)
 
-                            is SignUpProfResult.Error -> {
-                                binding.profRegRootLayout.snackbarError(
-                                    requireActivity().findViewById(R.id.prof_reg_root_layout),
-                                    error = result.message,
-                                    ""
-                                ){ /*Action CallBack*/ }
+            professorRegistrationViewModel.profRegEvent.observe(viewLifecycleOwner){
+                when(it){
+                    is ProfRegUiEvent.OnAuthPressed -> {
+                        val fullName = profFullnameEt.text.toString().trim()
+                        val username = profUsernameEt.text.toString().trim()
+                        val subject = profSubjectEt.text.toString().trim()
+                        val password = profPasswordEt.text.toString().trim()
+                        signUpViewModel.signUpProf(fullName, username, subject, password, "teacher")
+
+                        signUpViewModel.profRegResult.observe(viewLifecycleOwner) { result ->
+                            when (result) {
+                                is SignUpProfResult.Success -> {
+                                    findNavController().navigate(R.id.action_professorRegistrationFragment_to_signInFragment)
+                                }
+
+                                is SignUpProfResult.Error -> {
+                                    binding.profRegRootLayout.snackbarError(
+                                        requireActivity().findViewById(R.id.prof_reg_root_layout),
+                                        error = result.message,
+                                        ""
+                                    ){ /*Action CallBack*/ }
+                                }
                             }
                         }
                     }
                 }
             }
-        }
 
-        profEditTextList.add(binding.profFullnameEt)
-        profEditTextList.add(binding.profUsernameEt)
-        profEditTextList.add(binding.profSubjectEt)
-        profEditTextList.add(binding.profPasswordEt)
+            profEditTextList.add(binding.profFullnameEt)
+            profEditTextList.add(binding.profUsernameEt)
+            profEditTextList.add(binding.profSubjectEt)
+            profEditTextList.add(binding.profPasswordEt)
 
-        profEditTextList.forEach { editText ->
-            editText.addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(
-                    s: CharSequence?,
-                    start: Int,
-                    count: Int,
-                    after: Int
-                ) {
-                }
+            profEditTextList.forEach { editText ->
+                editText.addTextChangedListener(object : TextWatcher {
+                    override fun beforeTextChanged(
+                        s: CharSequence?,
+                        start: Int,
+                        count: Int,
+                        after: Int
+                    ) {
+                    }
 
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+                    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
-                override fun afterTextChanged(s: Editable?) {
-                    updateButtonState()
-                }
-            })
-        }
-
-        binding.profUsernameEt.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                //
+                    override fun afterTextChanged(s: Editable?) {
+                        val allFieldsFilled = profEditTextList.all { editText ->
+                            editText.text.isNotBlank()
+                        }
+                        signUpProf.isVisible = allFieldsFilled
+                    }
+                })
             }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                //
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                val inputText = s?.toString()
-
-                if (inputText != null && inputText.contains(" ")) {
-                    binding.profUsernameInputLayout.error = "No spaces allowed"
-                    binding.signUpProf.isEnabled = false
-                } else {
-                    binding.profUsernameInputLayout.error = null
-                    binding.signUpProf.isEnabled = true
-                }
-            }
-        })
-    }
-
-    private fun updateButtonState() {
-        val allFieldsFilled = profEditTextList.all { editText ->
-            editText.text.isNotBlank()
         }
-        binding.signUpProf.isVisible = allFieldsFilled
     }
 }

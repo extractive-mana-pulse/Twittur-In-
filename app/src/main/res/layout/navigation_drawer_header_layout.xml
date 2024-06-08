@@ -117,7 +117,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_margin="16dp"
-        android:background="?attr/colorOutlineVariant"
+        android:background="?attr/colorOutline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/foll_info_layout"/>

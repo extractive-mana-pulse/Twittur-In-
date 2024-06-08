@@ -1,4 +1,4 @@
-package com.example.twitturin.tweet.presentation.tweet.ui.adapters
+package com.example.twitturin.tweet.presentation.tweet.adapters
 
 import android.annotation.SuppressLint
 import android.content.Intent

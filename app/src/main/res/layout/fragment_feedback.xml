@@ -26,16 +26,14 @@
         android:layout_height="wrap_content"
         android:layout_marginVertical="8dp"
         android:layout_marginHorizontal="16dp"
-        android:background="@drawable/edit_text_bg_ui"
+        android:background="@drawable/edit_text_bg2"
         app:hintTextColor="?attr/colorOnPrimaryContainer"
         app:endIconCheckable="true"
         app:endIconMode="clear_text"
-        app:startIconCheckable="true"
-        app:startIconDrawable="@drawable/feedback"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintBottom_toTopOf="@id/feedback_send_email_btn">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/topic_feedback_et"
@@ -56,12 +54,10 @@
         android:layout_height="wrap_content"
         android:layout_marginVertical="8dp"
         android:layout_marginHorizontal="16dp"
-        android:background="@drawable/edit_text_bg_ui"
+        android:background="@drawable/edit_text_bg2"
         app:hintTextColor="?attr/colorOnPrimaryContainer"
         app:endIconCheckable="true"
         app:endIconMode="clear_text"
-        app:startIconCheckable="true"
-        app:startIconDrawable="@drawable/feedback"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/feedback_topic_layout">

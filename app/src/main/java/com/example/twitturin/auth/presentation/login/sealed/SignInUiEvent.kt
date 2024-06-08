@@ -1,7 +1,5 @@
 package com.example.twitturin.auth.presentation.login.sealed
 
-import com.example.twitturin.auth.domain.model.AuthUser
-
 sealed class SignInUiEvent {
 
     data object OnLoginPressed: SignInUiEvent()

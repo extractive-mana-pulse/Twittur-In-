@@ -4,14 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.example.twitturin.event.SingleLiveEvent
 import com.example.twitturin.tweet.presentation.home.sealed.HomeScreenUiEvent
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 
-@HiltViewModel
-class HomeViewModel @Inject constructor(): ViewModel() {
+class HomeViewModel : ViewModel() {
 
     private val _event = SingleLiveEvent<HomeScreenUiEvent>()
-    val event: LiveData<HomeScreenUiEvent> get() = _event
+    val event: LiveData<HomeScreenUiEvent> = _event
 
     private fun onAddButtonPressed() {
         _event.value = HomeScreenUiEvent.NavigateToPublicPost
@@ -20,6 +17,7 @@ class HomeViewModel @Inject constructor(): ViewModel() {
     private fun onDrawerPressed() {
         _event.value = HomeScreenUiEvent.OpenDrawer
     }
+
 
     fun sendEvent(event : HomeScreenUiEvent) {
         when(event) {

@@ -42,46 +42,54 @@ class SignInFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.signInFragment = this
 
+        // TODO
+
         binding.apply {
 
-            signIn.setOnClickListener { signInViewModel.signIn(usernameSignInEt.text.toString().trim(), passwordEt.text.toString().trim()) }
+            signIn.setOnClickListener { signInUiEventViewModel.sendKindEvents(SignInUiEvent.OnLoginPressed) }
 
             signUpTv.setOnClickListener { signInUiEventViewModel.sendKindEvents(SignInUiEvent.OnKindPressed) }
+
         }
 
-        signInViewModel.signInResult.observe(viewLifecycleOwner) { result ->
-            when (result) {
-                is SignIn.Success -> {
+        lifecycleScope.launchWhenStarted {
+            signInUiEventViewModel.signInEvent.collect {
+                when(it) {
+                    SignInUiEvent.StateNoting -> {   }
+                    is SignInUiEvent.OnKindPressed -> { findNavController().navigate(R.id.action_signInFragment_to_kindFragment) }
+                    is SignInUiEvent.OnLoginPressed -> {
+                        val username = binding.usernameSignInEt.text.toString().trim()
+                        val password = binding.passwordEt.text.toString().trim()
+                        signInViewModel.signIn(username, password)
 
-                    val token = signInViewModel.token.value
-                    val userId = signInViewModel.userId.value
+                        signInViewModel.signInResult.observe(viewLifecycleOwner) { result ->
+                            when (result) {
+                                is SignIn.Success -> {
 
-                    sessionManager.saveToken(token.toString())
-                    sessionManager.saveUserID(userId.toString())
+                                    val token = signInViewModel.token.value
+                                    val userId = signInViewModel.userId.value
 
-                    signInUiEventViewModel.sendKindEvents(SignInUiEvent.OnLoginPressed)
+                                    sessionManager.saveToken(token.toString())
+                                    sessionManager.saveUserID(userId.toString())
+                                    findNavController().navigate(R.id.action_signInFragment_to_stayInFragment)
+                                }
 
-                    lifecycleScope.launchWhenStarted {
-                        signInUiEventViewModel.signInEvent.collectLatest {
-                            when(it) {
-                                SignInUiEvent.StateNoting -> {   }
-                                is SignInUiEvent.OnKindPressed -> { findNavController().navigate(R.id.action_signInFragment_to_kindFragment) }
-                                is SignInUiEvent.OnLoginPressed -> { findNavController().navigate(R.id.action_signInFragment_to_stayInFragment) }
+                                is SignIn.Error -> {
+
+                                    binding.signInRootLayout.snackbarError(
+                                        view.findViewById(R.id.sign_in),
+                                        error = result.message,
+                                        resources.getString(R.string.retry)
+                                    ) { retryOperation() }
+                                }
                             }
                         }
                     }
                 }
-
-                is SignIn.Error -> {
-
-                    binding.signInRootLayout.snackbarError(
-                        view.findViewById(R.id.sign_in),
-                        error = result.message,
-                        resources.getString(R.string.retry)
-                    ) { retryOperation() }
-                }
             }
         }
+
+        // fix bug with navigation in sign in page.
 
         if (stayInViewModel.isUserLoggedIn()) {
             findNavController().navigate(R.id.action_signInFragment_to_homeFragment)

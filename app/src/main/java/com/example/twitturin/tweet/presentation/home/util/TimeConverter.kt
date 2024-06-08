@@ -1,11 +1,11 @@
-package com.example.twitturin.tweet.presentation.detail.ui.util
+package com.example.twitturin.tweet.presentation.home.util
 
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.TimeZone
 import java.util.concurrent.TimeUnit
 
-fun String.formatCreatedAt(): String {
+fun String.formatCreatedAtPost(): String {
     val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.getDefault())
     dateFormat.timeZone = TimeZone.getTimeZone("UTC")
 
@@ -22,11 +22,11 @@ fun String.formatCreatedAt(): String {
         val weeks = days / 7
 
         when {
-            weeks > 0 -> "$weeks weeks ago"
-            days > 0 -> "$days days ago"
-            hours > 0 -> "$hours hours ago"
-            minutes > 0 -> "$minutes minutes ago"
-            else -> "$seconds seconds ago"
+            weeks > 0 -> "$weeks w."
+            days > 0 -> "$days d."
+            hours > 0 -> "$hours h."
+            minutes > 0 -> "$minutes min."
+            else -> "$seconds sec."
         }
     } catch (e: Exception) {
         "Invalid date"

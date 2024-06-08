@@ -30,15 +30,9 @@ class KindFragment : Fragment() {
 
             kindViewModel.kindEventResult.observe(viewLifecycleOwner) { event ->
                 when(event) {
-                    is KindUiEvent.NavigateToProfReg -> {
-                        findNavController().navigate(R.id.action_kindFragment_to_professorRegistrationFragment)
-                    }
-                    is KindUiEvent.NavigateToStudReg -> {
-                        findNavController().navigate(R.id.action_kindFragment_to_studentRegistrationFragment)
-                    }
-                    is KindUiEvent.OnBackPressedFromKindPage -> {
-                        findNavController().popBackStack()
-                    }
+                    is KindUiEvent.NavigateToProfReg -> { findNavController().navigate(R.id.action_kindFragment_to_professorRegistrationFragment) }
+                    is KindUiEvent.NavigateToStudReg -> { findNavController().navigate(R.id.action_kindFragment_to_studentRegistrationFragment) }
+                    is KindUiEvent.OnBackPressedFromKindPage -> { findNavController().navigateUp() }
                 }
             }
 

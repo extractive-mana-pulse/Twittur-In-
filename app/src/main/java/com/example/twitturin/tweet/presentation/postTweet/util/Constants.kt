@@ -1,4 +1,4 @@
-package com.example.twitturin.tweet.presentation.postTweet.ui.util
+package com.example.twitturin.tweet.presentation.postTweet.util
 
 class Constants {
     companion object {

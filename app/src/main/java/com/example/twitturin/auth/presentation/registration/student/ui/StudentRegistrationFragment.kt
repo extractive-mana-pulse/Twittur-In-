@@ -26,7 +26,6 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class StudentRegistrationFragment : Fragment() {
 
-    private lateinit var username : Username
     private val signUpViewModel : SignUpViewModel by viewModels()
     private val editTextList: MutableList<EditText> = mutableListOf()
     private val studentUiEventViewModel : StudentRegViewModel by viewModels()
@@ -38,10 +37,6 @@ class StudentRegistrationFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-
-        // TODO { test code! }
-        username.execute(binding.userNameEt.text.toString(), requireContext())
 
         binding.apply {
 

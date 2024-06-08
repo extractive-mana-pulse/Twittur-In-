@@ -42,13 +42,11 @@ class FeedbackFragment : Fragment() {
 //        mIntent.setDataAndType(Uri.parse("mailto:"), "text/plain")
         mIntent.data = Uri.parse("mailto:")
         mIntent.type = "message/rfc822"
-
         mIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf("invoker1441@gmail.com"))
         //put the Subject in the intent
         mIntent.putExtra(Intent.EXTRA_SUBJECT, subject)
         //put the message in the intent
         mIntent.putExtra(Intent.EXTRA_TEXT, message)
-
 
         try {
             //start email intent
@@ -59,6 +57,5 @@ class FeedbackFragment : Fragment() {
             //get and show exception message
             Toast.makeText(requireContext(), e.message, Toast.LENGTH_LONG).show()
         }
-
     }
 }

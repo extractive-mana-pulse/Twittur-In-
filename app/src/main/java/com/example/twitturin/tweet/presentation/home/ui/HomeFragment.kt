@@ -28,7 +28,7 @@ import com.example.twitturin.profile.presentation.util.snackbarError
 import com.example.twitturin.profile.presentation.vm.ProfileViewModel
 import com.example.twitturin.tweet.domain.model.Tweet
 import com.example.twitturin.tweet.presentation.home.sealed.HomeScreenUiEvent
-import com.example.twitturin.tweet.presentation.home.ui.adapter.PostAdapter
+import com.example.twitturin.tweet.presentation.home.adapter.PostAdapter
 import com.example.twitturin.tweet.presentation.home.vm.HomeViewModel
 import com.example.twitturin.tweet.presentation.tweet.vm.TweetViewModel
 import com.facebook.shimmer.ShimmerFrameLayout
@@ -46,7 +46,7 @@ class HomeFragment : Fragment() {
     private val tweetViewModel : TweetViewModel by viewModels()
     private val profileViewModel: ProfileViewModel by viewModels()
     private val binding by lazy { FragmentHomeBinding.inflate(layoutInflater) }
-    private val postAdapter by lazy { PostAdapter() }
+    private val postAdapter by lazy { PostAdapter(homeViewModel, viewLifecycleOwner) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return binding.root
@@ -66,8 +66,21 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.homeFragment = this
+        val userId = sessionManager.getUserId()
 
         binding.apply {
+
+            val headerView: View = navigationView.getHeaderView(0)
+            val headerViewAvatar: ImageView = headerView.findViewById(R.id.nav_avatar)
+            val headerUsername: TextView = headerView.findViewById(R.id.nav_username_tv)
+            val headerFullname: TextView = headerView.findViewById(R.id.nav_full_name_tv)
+            val headerFollowing: TextView = headerView.findViewById(R.id.nav_following_counter_tv)
+            val headingFollowers: TextView = headerView.findViewById(R.id.nav_followers_counter_tv)
+            val layout: ShimmerFrameLayout = headerView.findViewById(R.id.navigation_drawer_shimmer)
+
+            drawerIcon.setOnClickListener { homeViewModel.sendEvent(HomeScreenUiEvent.OpenDrawer) }
+
+            addPost.setOnClickListener { homeViewModel.sendEvent(HomeScreenUiEvent.NavigateToPublicPost) }
 
             homeViewModel.event.observe(viewLifecycleOwner) { event ->
                 when(event){
@@ -75,20 +88,6 @@ class HomeFragment : Fragment() {
                     is HomeScreenUiEvent.NavigateToPublicPost -> { findNavController().navigate(R.id.action_homeFragment_to_publicPostFragment) }
                 }
             }
-
-            drawerIcon.setOnClickListener { homeViewModel.sendEvent(HomeScreenUiEvent.OpenDrawer) }
-
-            addPost.setOnClickListener { homeViewModel.sendEvent(HomeScreenUiEvent.NavigateToPublicPost) }
-
-            val userId = sessionManager.getUserId()
-            val headerView: View = navigationView.getHeaderView(0)
-
-            val headerViewAvatar: ImageView = headerView.findViewById(R.id.nav_avatar)
-            val headerUsername: TextView = headerView.findViewById(R.id.nav_username_tv)
-            val headerFullname: TextView = headerView.findViewById(R.id.nav_full_name_tv)
-            val headerFollowing: TextView = headerView.findViewById(R.id.nav_following_counter_tv)
-            val headingFollowers: TextView = headerView.findViewById(R.id.nav_followers_counter_tv)
-            val layout: ShimmerFrameLayout = headerView.findViewById(R.id.navigation_drawer_shimmer)
 
             profileViewModel.getUserCredentials(userId!!)
 
@@ -102,16 +101,16 @@ class HomeFragment : Fragment() {
                         layout.stopShimmer()
                         layout.visibility = View.GONE
 
-                        val profileImage = "${result.user.profilePicture}"
-
+                        // navigation drawer header layout imageView
                         Glide.with(requireContext())
-                            .load(profileImage)
+                            .load(result.user.profilePicture)
                             .error(R.drawable.not_found)
                             .placeholder(R.drawable.person)
                             .into(headerViewAvatar)
 
+                        // top bar navigation icon
                         Glide.with(requireContext())
-                            .load(profileImage)
+                            .load(result.user.profilePicture)
                             .error(R.drawable.not_found)
                             .placeholder(R.drawable.person)
                             .into(drawerIcon)
@@ -149,7 +148,6 @@ class HomeFragment : Fragment() {
             updateRecyclerView()
         }
     }
-
 
     /** need to optimize code */
     @SuppressLint("NotifyDataSetChanged")
@@ -216,7 +214,6 @@ class HomeFragment : Fragment() {
                 }
             }
         }
-
         val dialog = builder.create()
         dialog.show()
     }

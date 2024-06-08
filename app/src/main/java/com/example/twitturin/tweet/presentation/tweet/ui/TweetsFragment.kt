@@ -14,7 +14,7 @@ import com.example.twitturin.databinding.FragmentTweetsBinding
 import com.example.twitturin.manager.SessionManager
 import com.example.twitturin.profile.presentation.util.snackbarError
 import com.example.twitturin.tweet.domain.model.Tweet
-import com.example.twitturin.tweet.presentation.tweet.ui.adapters.TweetAdapter
+import com.example.twitturin.tweet.presentation.tweet.adapters.TweetAdapter
 import com.example.twitturin.tweet.presentation.tweet.vm.TweetViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Random

@@ -19,7 +19,7 @@ import com.example.twitturin.databinding.FragmentPublicPostBinding
 import com.example.twitturin.manager.SessionManager
 import com.example.twitturin.profile.presentation.util.snackbarError
 import com.example.twitturin.tweet.presentation.postTweet.sealed.PostTweet
-import com.example.twitturin.tweet.presentation.postTweet.ui.util.Constants
+import com.example.twitturin.tweet.presentation.postTweet.util.Constants
 import com.example.twitturin.tweet.presentation.postTweet.vm.PostTweetViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint

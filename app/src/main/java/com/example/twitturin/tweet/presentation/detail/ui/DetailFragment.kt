@@ -4,8 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,10 +22,11 @@ import com.example.twitturin.profile.presentation.util.snackbar
 import com.example.twitturin.profile.presentation.util.snackbarError
 import com.example.twitturin.tweet.domain.model.Tweet
 import com.example.twitturin.tweet.presentation.detail.sealed.PostReply
-import com.example.twitturin.tweet.presentation.detail.ui.util.addAutoResizeTextWatcher
-import com.example.twitturin.tweet.presentation.detail.ui.util.formatCreatedAt
-import com.example.twitturin.tweet.presentation.detail.ui.util.showKeyboard
-import com.example.twitturin.tweet.presentation.home.ui.adapter.PostAdapter
+import com.example.twitturin.tweet.presentation.detail.util.addAutoResizeTextWatcher
+import com.example.twitturin.tweet.presentation.detail.util.formatCreatedAt
+import com.example.twitturin.tweet.presentation.detail.util.showKeyboard
+import com.example.twitturin.tweet.presentation.home.adapter.PostAdapter
+import com.example.twitturin.tweet.presentation.home.vm.HomeViewModel
 import com.example.twitturin.tweet.presentation.tweet.vm.TweetViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
@@ -37,11 +36,12 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class DetailFragment : Fragment() {
 
-    private val postAdapter by lazy { PostAdapter() }
     @Inject lateinit var sessionManager : SessionManager
+    private val homeViewModel : HomeViewModel by viewModels()
     private val tweetViewModel : TweetViewModel by viewModels()
     private val followingViewModel : FollowViewModel by viewModels()
     private val binding  by lazy { FragmentDetailBinding.inflate(layoutInflater) }
+    private val postAdapter by lazy { PostAdapter(homeViewModel, viewLifecycleOwner) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return binding.root

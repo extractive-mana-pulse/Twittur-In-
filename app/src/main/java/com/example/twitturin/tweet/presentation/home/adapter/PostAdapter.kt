@@ -1,4 +1,4 @@
-package com.example.twitturin.tweet.presentation.home.ui.adapter
+package com.example.twitturin.tweet.presentation.home.adapter
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.text.HtmlCompat
+import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
@@ -16,11 +17,16 @@ import com.bumptech.glide.Glide
 import com.example.twitturin.R
 import com.example.twitturin.databinding.RcViewBinding
 import com.example.twitturin.tweet.domain.model.Tweet
-import com.example.twitturin.tweet.presentation.detail.ui.util.formatCreatedAt
-import com.example.twitturin.tweet.presentation.home.ui.util.formatCreatedAtPost
+import com.example.twitturin.tweet.presentation.home.sealed.HomeScreenUiEvent
+import com.example.twitturin.tweet.presentation.home.util.formatCreatedAtPost
+import com.example.twitturin.tweet.presentation.home.vm.HomeViewModel
+import com.example.twitturin.tweet.presentation.tweet.vm.TweetViewModel
 import javax.inject.Inject
 
-class PostAdapter @Inject constructor() : RecyclerView.Adapter<PostAdapter.ViewHolder>() {
+class PostAdapter @Inject constructor(
+    private val homeViewModel : HomeViewModel,
+    private val parentLifecycleOwner: LifecycleOwner
+) : RecyclerView.Adapter<PostAdapter.ViewHolder>() {
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val binding = RcViewBinding.bind(itemView)
@@ -46,16 +52,14 @@ class PostAdapter @Inject constructor() : RecyclerView.Adapter<PostAdapter.ViewH
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = differ.currentList[position]
-        val baseTweetsUrl = "https://twitturin.onrender.com/tweets"
         val context = holder.itemView.context
+
 
         holder.binding.apply {
             item.apply {
 
-                val profileImage = "${author?.profilePicture}"
-
                 Glide.with(context)
-                    .load(profileImage)
+                    .load(author?.profilePicture)
                     .error(R.drawable.not_found)
                     .placeholder(R.drawable.loading)
                     .centerCrop()
@@ -67,11 +71,9 @@ class PostAdapter @Inject constructor() : RecyclerView.Adapter<PostAdapter.ViewH
                 postDescription.text = content
                 postCommentsCounter.text = replyCount.toString()
                 postHeartCounter.text = likes.toString()
-
                 createdAtTv.text = createdAt.formatCreatedAtPost()
 
                 holder.itemView.setOnClickListener {
-
                     val bundle = Bundle().apply {
                         putString("fullname", author?.fullName ?: "Twittur User")
                         putString("username", author?.username)
@@ -113,7 +115,7 @@ class PostAdapter @Inject constructor() : RecyclerView.Adapter<PostAdapter.ViewH
 
                 postIconShare.setOnClickListener {
                     val intent = Intent(Intent.ACTION_SEND)
-                    val link = "$baseTweetsUrl/$id"
+                    val link = "https://twitturin.onrender.com/tweets/$id"
                     intent.putExtra(Intent.EXTRA_TEXT, link)
                     intent.type = "text/plain"
                     context.startActivity(Intent.createChooser(intent,"Choose app:"))
