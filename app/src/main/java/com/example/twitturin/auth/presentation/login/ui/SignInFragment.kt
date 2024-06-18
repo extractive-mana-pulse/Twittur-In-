@@ -2,8 +2,6 @@ package com.example.twitturin.auth.presentation.login.ui
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
 import com.example.twitturin.auth.presentation.login.sealed.SignIn
 import com.example.twitturin.auth.presentation.login.sealed.SignInUiEvent
+import com.example.twitturin.auth.presentation.login.util.login
 import com.example.twitturin.auth.presentation.login.vm.SignInUiEventViewModel
 import com.example.twitturin.auth.presentation.login.vm.SignInViewModel
 import com.example.twitturin.auth.presentation.stayIn.vm.StayInViewModel
@@ -21,9 +20,10 @@ import com.example.twitturin.databinding.FragmentSignInBinding
 import com.example.twitturin.manager.SessionManager
 import com.example.twitturin.profile.presentation.util.snackbarError
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@Suppress("DEPRECATION")
 @AndroidEntryPoint
 class SignInFragment : Fragment() {
 
@@ -42,21 +42,21 @@ class SignInFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.signInFragment = this
 
-        // TODO
-
         binding.apply {
 
-            signIn.setOnClickListener { signInUiEventViewModel.sendKindEvents(SignInUiEvent.OnLoginPressed) }
+            signIn.setOnClickListener { signInUiEventViewModel.onLoginPressed()/*signInUiEventViewModel.sendKindEvents(SignInUiEvent.OnLoginPressed)*/ }
 
-            signUpTv.setOnClickListener { signInUiEventViewModel.sendKindEvents(SignInUiEvent.OnKindPressed) }
+            signUpTv.setOnClickListener { signInUiEventViewModel.onKindPressed()/*signInUiEventViewModel.sendKindEvents(SignInUiEvent.OnKindPressed)*/ }
 
+            usernameSignInEt.login(usernameSignInEt, passwordEt, signIn)
+
+            passwordEt.login(usernameSignInEt, passwordEt, signIn)
         }
 
-        lifecycleScope.launchWhenStarted {
-            signInUiEventViewModel.signInEvent.collect {
-                when(it) {
-                    SignInUiEvent.StateNoting -> {   }
-                    is SignInUiEvent.OnKindPressed -> { findNavController().navigate(R.id.action_signInFragment_to_kindFragment) }
+        // Observe the signInEvent flow and handle the events
+        viewLifecycleOwner.lifecycleScope.launch {
+            signInUiEventViewModel.signInEvent.collect { event ->
+                when (event) {
                     is SignInUiEvent.OnLoginPressed -> {
                         val username = binding.usernameSignInEt.text.toString().trim()
                         val password = binding.passwordEt.text.toString().trim()
@@ -85,46 +85,58 @@ class SignInFragment : Fragment() {
                             }
                         }
                     }
+                    is SignInUiEvent.OnKindPressed -> { findNavController().navigate(R.id.action_signInFragment_to_kindFragment) }
+                    is SignInUiEvent.StateNoting -> {  }
                 }
             }
         }
 
-        // fix bug with navigation in sign in page.
+        // Set up click listeners for the buttons
+//        binding.signIn.setOnClickListener { signInUiEventViewModel.onLoginPressed() }
+//        binding.signUpTv.setOnClickListener { signInUiEventViewModel.onKindPressed() }
 
+//        lifecycleScope.launchWhenStarted {
+//            signInUiEventViewModel.signInEvent.collect {
+//                when(it) {
+//                    is SignInUiEvent.StateNoting -> {   }
+//
+//                    is SignInUiEvent.OnKindPressed -> { findNavController().navigate(R.id.action_signInFragment_to_kindFragment) }
+//
+//                    is SignInUiEvent.OnLoginPressed -> {
+//                        val username = binding.usernameSignInEt.text.toString().trim()
+//                        val password = binding.passwordEt.text.toString().trim()
+//                        signInViewModel.signIn(username, password)
+//
+//                        signInViewModel.signInResult.observe(viewLifecycleOwner) { result ->
+//                            when (result) {
+//                                is SignIn.Success -> {
+//
+//                                    val token = signInViewModel.token.value
+//                                    val userId = signInViewModel.userId.value
+//
+//                                    sessionManager.saveToken(token.toString())
+//                                    sessionManager.saveUserID(userId.toString())
+//                                    findNavController().navigate(R.id.action_signInFragment_to_stayInFragment)
+//                                }
+//
+//                                is SignIn.Error -> {
+//
+//                                    binding.signInRootLayout.snackbarError(
+//                                        view.findViewById(R.id.sign_in),
+//                                        error = result.message,
+//                                        resources.getString(R.string.retry)
+//                                    ) { retryOperation() }
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
+        // fix bug with navigation in sign in page.
         if (stayInViewModel.isUserLoggedIn()) {
             findNavController().navigate(R.id.action_signInFragment_to_homeFragment)
         }
-
-        val textWatcher1 = object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                //
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                binding.signIn.isEnabled = !binding.usernameSignInEt.text.isNullOrBlank() && !binding.passwordEt.text.isNullOrBlank()
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                //
-            }
-        }
-
-        val textWatcher2 = object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                //
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                binding.signIn.isEnabled = !binding.usernameSignInEt.text.isNullOrBlank() && !binding.passwordEt.text.isNullOrBlank()
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                //
-            }
-        }
-
-        binding.usernameSignInEt.addTextChangedListener(textWatcher1)
-        binding.passwordEt.addTextChangedListener(textWatcher2)
     }
 
     private fun retryOperation() {

@@ -10,11 +10,12 @@ import android.widget.EditText
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
 import com.example.twitturin.auth.presentation.registration.professor.sealed.ProfRegUiEvent
 import com.example.twitturin.auth.presentation.registration.professor.sealed.SignUpProfResult
-import com.example.twitturin.auth.presentation.registration.professor.util.addAutoResizeTextWatcherOfProf
+import com.example.twitturin.auth.presentation.registration.professor.util.usernameRegistration
 import com.example.twitturin.auth.presentation.registration.professor.vm.ProfRegViewModel
 import com.example.twitturin.auth.presentation.registration.vm.SignUpViewModel
 import com.example.twitturin.databinding.FragmentProfessorRegistrationBinding
@@ -39,34 +40,40 @@ class ProfessorRegistrationFragment : Fragment() {
 
         binding.apply {
 
+            backBtnProf.setOnClickListener { professorRegistrationViewModel.sentProfRegEvent(ProfRegUiEvent.OnBackPressed) }
+
             signUpProf.setOnClickListener { professorRegistrationViewModel.sentProfRegEvent(ProfRegUiEvent.OnAuthPressed) }
 
-            profUsernameEt.addAutoResizeTextWatcherOfProf(profUsernameInputLayout, signUpProf)
+            profUsernameEt.usernameRegistration(profUsernameInputLayout, signUpProf, requireContext())
 
-            professorRegistrationViewModel.profRegEvent.observe(viewLifecycleOwner){
-                when(it){
-                    is ProfRegUiEvent.OnAuthPressed -> {
-                        val fullName = profFullnameEt.text.toString().trim()
-                        val username = profUsernameEt.text.toString().trim()
-                        val subject = profSubjectEt.text.toString().trim()
-                        val password = profPasswordEt.text.toString().trim()
-                        signUpViewModel.signUpProf(fullName, username, subject, password, "teacher")
+            lifecycleScope.launchWhenStarted {
+                professorRegistrationViewModel.profRegEvent.collect{
+                    when(it){
+                        is ProfRegUiEvent.OnAuthPressed -> {
+                            val fullName = profFullnameEt.text.toString().trim()
+                            val username = profUsernameEt.text.toString().trim()
+                            val subject = profSubjectEt.text.toString().trim()
+                            val password = profPasswordEt.text.toString().trim()
+                            signUpViewModel.signUpProf(fullName, username, subject, password, "teacher")
 
-                        signUpViewModel.profRegResult.observe(viewLifecycleOwner) { result ->
-                            when (result) {
-                                is SignUpProfResult.Success -> {
-                                    findNavController().navigate(R.id.action_professorRegistrationFragment_to_signInFragment)
-                                }
+                            signUpViewModel.profRegResult.observe(viewLifecycleOwner) { result ->
+                                when (result) {
+                                    is SignUpProfResult.Success -> {
+                                        findNavController().navigate(R.id.action_professorRegistrationFragment_to_signInFragment)
+                                    }
 
-                                is SignUpProfResult.Error -> {
-                                    binding.profRegRootLayout.snackbarError(
-                                        requireActivity().findViewById(R.id.prof_reg_root_layout),
-                                        error = result.message,
-                                        ""
-                                    ){ /*Action CallBack*/ }
+                                    is SignUpProfResult.Error -> {
+                                        binding.profRegRootLayout.snackbarError(
+                                            requireActivity().findViewById(R.id.prof_reg_root_layout),
+                                            error = result.message,
+                                            ""
+                                        ){ /*Action CallBack*/ }
+                                    }
                                 }
                             }
                         }
+                        ProfRegUiEvent.OnBackPressed -> { findNavController().navigateUp() }
+                        ProfRegUiEvent.NothingState -> {  }
                     }
                 }
             }

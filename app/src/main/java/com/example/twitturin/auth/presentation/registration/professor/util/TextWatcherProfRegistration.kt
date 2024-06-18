@@ -1,17 +1,17 @@
 package com.example.twitturin.auth.presentation.registration.professor.util
 
+import android.content.Context
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageButton
 import android.widget.TextView
-import androidx.core.view.isVisible
+import com.example.twitturin.R
 import com.google.android.material.textfield.TextInputLayout
 
-fun TextView.addAutoResizeTextWatcherOfProf(
+fun TextView.usernameRegistration(
     profUsernameInputLayout : TextInputLayout,
-    signUpProf : Button
+    signUpProf : Button,
+    context: Context
 ) {
 
     val textWatcher = object : TextWatcher {
@@ -29,7 +29,7 @@ fun TextView.addAutoResizeTextWatcherOfProf(
             val inputText = s?.toString()
 
             if (inputText != null && inputText.contains(" ")) {
-                profUsernameInputLayout.error = "No spaces allowed"
+                profUsernameInputLayout.error = context.resources.getString(R.string.no_spaces_allowed)
                 signUpProf.isEnabled = false
             } else {
                 profUsernameInputLayout.error = null

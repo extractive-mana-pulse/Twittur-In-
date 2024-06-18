@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.twitturin.R
@@ -36,63 +37,74 @@ class StayInFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.stayInFragment = this
 
-        val userId = sessionManager.getUserId()
-        profileViewModel.getUserCredentials(userId!!)
-
-        profileViewModel.getUserCredentials.observe(viewLifecycleOwner) {result ->
-            when(result) {
-                is UserCredentials.Success -> {
-                    val profileImage = "${result.user.profilePicture ?: R.drawable.person}"
-                    Glide.with(requireContext())
-                        .load(profileImage)
-                        .error(R.drawable.not_found)
-                        .into(binding.stayInProfileImage)
-                }
-
-                is UserCredentials.Error -> {
-                    binding.stayInRootLayout.snackbarError(
-                        requireActivity().findViewById(R.id.stayIn_root_layout),
-                        error = result.message,
-                        ""){  }
-                }
-            }
-        }
-
-        stayInViewModel.stayInEvent.observe(viewLifecycleOwner){
-            when(it){
-                is StayInUiEvent.OnSavePressed -> {
-                    stayInViewModel.setUserLoggedIn(true)
-                    findNavController().navigate(R.id.action_stayInFragment_to_homeFragment)
-                }
-                is StayInUiEvent.OnNotSavePressed -> {
-                    stayInViewModel.setUserLoggedIn(false)
-                    findNavController().navigate(R.id.action_stayInFragment_to_homeFragment)
-                }
-            }
-        }
-
         binding.apply {
 
-            saveBtn.setOnClickListener {
-                stayInViewModel.stayInUiEvent(StayInUiEvent.OnSavePressed)
+            saveBtn.setOnClickListener { stayInViewModel.stayInUiEvent(StayInUiEvent.OnSavePressed) }
+
+            notSaveBtn.setOnClickListener { stayInViewModel.stayInUiEvent(StayInUiEvent.OnNotSavePressed) }
+
+            stayInProfileImage.setOnClickListener { stayInViewModel.stayInUiEvent(StayInUiEvent.FullScreenPressed) }
+
+            profileViewModel.getUserCredentials(sessionManager.getUserId()!!)
+
+            profileViewModel.getUserCredentials.observe(viewLifecycleOwner) { result ->
+                when (result) {
+                    is UserCredentials.Success -> {
+                        val profileImage = "${result.user.profilePicture ?: R.drawable.person}"
+                        Glide.with(requireContext())
+                            .load(profileImage)
+                            .error(R.drawable.not_found)
+                            .into(stayInProfileImage)
+                    }
+
+                    is UserCredentials.Error -> {
+                        stayInRootLayout.snackbarError(
+                            requireActivity().findViewById(R.id.stayIn_root_layout),
+                            error = result.message,
+                            ""
+                        ) { }
+                    }
+                }
             }
 
-            notSaveBtn.setOnClickListener {
-                stayInViewModel.stayInUiEvent(StayInUiEvent.OnNotSavePressed)
-            }
+            lifecycleScope.launchWhenStarted {
+                stayInViewModel.stayInEvent.collect {
+                    when (it) {
 
-            stayInProfileImage.setOnClickListener {
-                val fullScreenImageFragment = FullScreenImageFragment()
+                        is StayInUiEvent.OnSavePressed -> {
+                            stayInViewModel.setUserLoggedIn(true)
+                            findNavController().navigate(R.id.action_stayInFragment_to_homeFragment)
+                        }
 
-                stayInProfileImage.buildDrawingCache()
-                val originalBitmap = stayInProfileImage.drawingCache
-                val image = originalBitmap.copy(originalBitmap.config, true)
+                        is StayInUiEvent.OnNotSavePressed -> {
+                            stayInViewModel.setUserLoggedIn(false)
+                            findNavController().navigate(R.id.action_stayInFragment_to_homeFragment)
+                        }
 
-                val extras = Bundle()
-                extras.putParcelable("image", image)
-                fullScreenImageFragment.arguments = extras
+                        StayInUiEvent.FullScreenPressed -> {
+                            val fullScreenImageFragment = FullScreenImageFragment()
 
-                fullScreenImageFragment.show(requireActivity().supportFragmentManager, "FullScreenImageFragment")
+                            stayInProfileImage.buildDrawingCache()
+
+                            val extras = Bundle()
+                            extras.putParcelable(
+                                "image",
+                                stayInProfileImage.drawingCache.copy(
+                                    stayInProfileImage.drawingCache.config,
+                                    true
+                                )
+                            )
+                            fullScreenImageFragment.arguments = extras
+
+                            fullScreenImageFragment.show(
+                                requireActivity().supportFragmentManager,
+                                "FullScreenImageFragment"
+                            )
+                        }
+
+                        StayInUiEvent.NothingState -> {}
+                    }
+                }
             }
         }
     }

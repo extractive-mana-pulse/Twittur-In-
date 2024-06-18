@@ -35,14 +35,13 @@
                     android:id="@+id/back_btn_student"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:layout_marginStart="16dp"
                     android:layout_marginTop="24dp"
-                    android:onClick="@{()-> signUpFragment.fragmentManager.popBackStack()}"
+                    android:layout_marginStart="16dp"
                     android:background="@android:color/transparent"
                     android:src="@drawable/keyboard_backspace"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:ignore="ContentDescription,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+                    android:contentDescription="@string/back"/>
 
                 <TextView
                     android:id="@+id/login_tv"

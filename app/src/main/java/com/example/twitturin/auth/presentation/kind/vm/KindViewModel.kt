@@ -1,32 +1,41 @@
 package com.example.twitturin.auth.presentation.kind.vm
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.twitturin.auth.presentation.kind.sealed.KindUiEvent
-import com.example.twitturin.event.SingleLiveEvent
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
 
 class KindViewModel : ViewModel() {
 
-    private val _kindEvent = SingleLiveEvent<KindUiEvent>()
-    val kindEventResult: LiveData<KindUiEvent> = _kindEvent
+    private val channel = Channel<KindUiEvent>(Channel.BUFFERED)
+    val kindEventResult = channel.receiveAsFlow()
 
-    private fun onBackPressedKind(){
-        _kindEvent.value = KindUiEvent.OnBackPressedFromKindPage
+    fun onBackPressedKind(){
+        viewModelScope.launch {
+            channel.send(KindUiEvent.OnBackPressed)
+        }
     }
 
-    private fun onProfPressed(){
-        _kindEvent.value = KindUiEvent.NavigateToProfReg
+    fun onProfPressed(){
+        viewModelScope.launch {
+            channel.send(KindUiEvent.NavigateToProfReg)
+        }
     }
 
-    private fun onStudPressed(){
-        _kindEvent.value = KindUiEvent.NavigateToStudReg
+    fun onStudPressed(){
+        viewModelScope.launch {
+            channel.send(KindUiEvent.NavigateToStudReg)
+        }
     }
 
     fun sendKindEvents(event: KindUiEvent) {
         when(event){
             is KindUiEvent.NavigateToStudReg -> { onStudPressed() }
             is KindUiEvent.NavigateToProfReg -> { onProfPressed() }
-            is KindUiEvent.OnBackPressedFromKindPage -> { onBackPressedKind() }
+            is KindUiEvent.OnBackPressed -> { onBackPressedKind() }
+            is KindUiEvent.StateNoting -> {  }
         }
     }
 }

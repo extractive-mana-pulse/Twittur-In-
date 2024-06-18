@@ -27,13 +27,13 @@ android {
 
     buildTypes {
         debug {
-            buildConfigField ("String", "BASE_URL", "\"https://twitturin-dev.onrender.com/api/\"")
-//           buildConfigField("String", "BASE_URL", "\"https://twitturin-api.onrender.com/api/\"")
+//            buildConfigField ("String", "BASE_URL", "\"https://twitturin-dev.onrender.com/api/\"")
+           buildConfigField("String", "BASE_URL", "\"https://twitturin-api.onrender.com/api/\"")
         }
         release {
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-            buildConfigField("String", "BASE_URL", "\"https://twitturin-dev.onrender.com/api/\"")
-//            buildConfigField("String", "BASE_URL", "\"https://twitturin-api.onrender.com/api/\"")
+//            buildConfigField("String", "BASE_URL", "\"https://twitturin-dev.onrender.com/api/\"")
+            buildConfigField("String", "BASE_URL", "\"https://twitturin-api.onrender.com/api/\"")
         }
     }
     buildFeatures{

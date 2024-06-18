@@ -1,11 +1,16 @@
-package com.example.twitturin.tweet.presentation.detail.util
+package com.example.twitturin.auth.presentation.login.util
 
 import android.text.Editable
 import android.text.TextWatcher
-import android.widget.ImageButton
+import android.widget.Button
+import android.widget.EditText
 import android.widget.TextView
 
-fun TextView.addAutoResizeTextWatcher(sentReply : ImageButton) {
+fun TextView.login(
+    usernameSignInEt : EditText,
+    passwordEt : EditText,
+    signIn : Button
+) {
 
     val textWatcher = object : TextWatcher {
 
@@ -14,7 +19,7 @@ fun TextView.addAutoResizeTextWatcher(sentReply : ImageButton) {
         }
 
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            sentReply.isEnabled = !s.isNullOrBlank()
+            signIn.isEnabled = !usernameSignInEt.text.isNullOrBlank() && !passwordEt.text.isNullOrBlank()
         }
 
         override fun afterTextChanged(s: Editable?) {
