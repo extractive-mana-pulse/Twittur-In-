@@ -1,4 +1,4 @@
-package com.example.twitturin.preferences
+package com.example.twitturin.tweet.presentation.home.preferences
 
 import android.content.Context
 import android.preference.PreferenceManager

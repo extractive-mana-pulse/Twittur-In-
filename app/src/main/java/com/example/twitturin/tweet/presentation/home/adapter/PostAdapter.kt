@@ -17,10 +17,8 @@ import com.bumptech.glide.Glide
 import com.example.twitturin.R
 import com.example.twitturin.databinding.RcViewBinding
 import com.example.twitturin.tweet.domain.model.Tweet
-import com.example.twitturin.tweet.presentation.home.sealed.HomeScreenUiEvent
 import com.example.twitturin.tweet.presentation.home.util.formatCreatedAtPost
 import com.example.twitturin.tweet.presentation.home.vm.HomeViewModel
-import com.example.twitturin.tweet.presentation.tweet.vm.TweetViewModel
 import javax.inject.Inject
 
 class PostAdapter @Inject constructor(

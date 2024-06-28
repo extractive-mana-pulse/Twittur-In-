@@ -53,11 +53,11 @@ class StudentRegistrationFragment : Fragment() {
                     when(it) {
 
                         StudentRegistrationUiEvent.OnRegisterPressed -> {
-                            val fullname = binding.fullNameEt.text.toString().trim()
-                            val username = binding.userNameEt.text.toString().trim()
-                            val studentId = binding.studentIdEt.text.toString().trim()
-                            val major = binding.planetsSpinner.selectedItem.toString()
-                            val password = binding.studentPasswordEt.text.toString().trim()
+                            val fullname = fullNameEt.text.toString().trim()
+                            val username = userNameEt.text.toString().trim()
+                            val studentId = studentIdEt.text.toString().trim()
+                            val major = majorSpinner.selectedItem.toString()
+                            val password = studentPasswordEt.text.toString().trim()
 
                             signUpViewModel.signUpStudent(fullname, username, studentId, major, password, "student")
 
@@ -68,7 +68,7 @@ class StudentRegistrationFragment : Fragment() {
                                     }
 
                                     is SignUpStudentResult.Error -> {
-                                        binding.studRegRootLayout.snackbarError(
+                                        studRegRootLayout.snackbarError(
                                             requireActivity().findViewById(R.id.stud_reg_root_layout),
                                             error = result.message,
                                             ""){  }
@@ -86,10 +86,10 @@ class StudentRegistrationFragment : Fragment() {
 
             ArrayAdapter.createFromResource(requireContext(), R.array.major_array, android.R.layout.simple_spinner_item).also { adapter ->
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                planetsSpinner.adapter = adapter
+                majorSpinner.adapter = adapter
             }
 
-            planetsSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            majorSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {  }
 
                 override fun onNothingSelected(p0: AdapterView<*>?) {  }

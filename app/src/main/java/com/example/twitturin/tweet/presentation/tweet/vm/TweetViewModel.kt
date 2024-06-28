@@ -27,6 +27,7 @@ class TweetViewModel @Inject constructor(
 ) : ViewModel() {
 
     var responseTweets: MutableLiveData<Response<List<Tweet>>> = MutableLiveData()
+
     fun getTweet(shimmerLayout: ShimmerFrameLayout) {
         shimmerLayout.startShimmer()
 

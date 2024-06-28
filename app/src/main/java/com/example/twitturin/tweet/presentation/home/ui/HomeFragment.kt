@@ -13,8 +13,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,7 +22,7 @@ import com.bumptech.glide.Glide
 import com.example.twitturin.R
 import com.example.twitturin.databinding.FragmentHomeBinding
 import com.example.twitturin.manager.SessionManager
-import com.example.twitturin.preferences.MyPreferences
+import com.example.twitturin.tweet.presentation.home.preferences.MyPreferences
 import com.example.twitturin.profile.presentation.sealed.UserCredentials
 import com.example.twitturin.profile.presentation.util.snackbarError
 import com.example.twitturin.profile.presentation.vm.ProfileViewModel
@@ -149,7 +149,7 @@ class HomeFragment : Fragment() {
         }
     }
 
-    /** need to optimize code */
+
     @SuppressLint("NotifyDataSetChanged")
     private fun updateRecyclerView() {
 

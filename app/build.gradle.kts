@@ -20,20 +20,20 @@ android {
         minSdk = 24
         targetSdk = 34
         versionCode = 1
-        versionName = "1.0"
+        versionName = "2.0.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         debug {
-//            buildConfigField ("String", "BASE_URL", "\"https://twitturin-dev.onrender.com/api/\"")
-           buildConfigField("String", "BASE_URL", "\"https://twitturin-api.onrender.com/api/\"")
+            buildConfigField ("String", "BASE_URL", "\"https://twitturin-dev.onrender.com/api/\"")
+//           buildConfigField("String", "BASE_URL", "\"https://twitturin-api.onrender.com/api/\"")
         }
         release {
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-//            buildConfigField("String", "BASE_URL", "\"https://twitturin-dev.onrender.com/api/\"")
-            buildConfigField("String", "BASE_URL", "\"https://twitturin-api.onrender.com/api/\"")
+            buildConfigField("String", "BASE_URL", "\"https://twitturin-dev.onrender.com/api/\"")
+//            buildConfigField("String", "BASE_URL", "\"https://twitturin-api.onrender.com/api/\"")
         }
     }
     buildFeatures{
@@ -137,5 +137,8 @@ dependencies {
 
     // Rich Text Editor
     implementation ("jp.wasabeef:richeditor-android:2.0.0")
+
+    // Markdown
+    implementation ("io.noties.markwon:core:4.6.2")
 
 }

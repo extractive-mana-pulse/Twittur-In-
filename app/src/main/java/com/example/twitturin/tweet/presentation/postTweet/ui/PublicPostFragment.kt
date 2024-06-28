@@ -2,6 +2,7 @@ package com.example.twitturin.tweet.presentation.postTweet.ui
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.graphics.Paint
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -10,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -19,10 +21,14 @@ import com.example.twitturin.databinding.FragmentPublicPostBinding
 import com.example.twitturin.manager.SessionManager
 import com.example.twitturin.profile.presentation.util.snackbarError
 import com.example.twitturin.tweet.presentation.postTweet.sealed.PostTweet
+import com.example.twitturin.tweet.presentation.postTweet.sealed.PostTweetUI
 import com.example.twitturin.tweet.presentation.postTweet.util.Constants
+import com.example.twitturin.tweet.presentation.postTweet.util.addTextButtonEnables
+import com.example.twitturin.tweet.presentation.postTweet.vm.PostTweetUIViewModel
 import com.example.twitturin.tweet.presentation.postTweet.vm.PostTweetViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -31,6 +37,7 @@ class PublicPostFragment : Fragment() {
     @Inject lateinit var sessionManager: SessionManager
     private lateinit var sharedPreferences: SharedPreferences
     private val postTweetViewModel: PostTweetViewModel by viewModels()
+    private val postTweetUIViewModel: PostTweetUIViewModel by viewModels()
     private val binding by lazy { FragmentPublicPostBinding.inflate(layoutInflater) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -38,11 +45,12 @@ class PublicPostFragment : Fragment() {
     }
 
     init {
-        lifecycleScope.launchWhenResumed {
+        lifecycleScope.launchWhenStarted {
             sharedPreferences = requireActivity().getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE)
 
-            val showDialog = sharedPreferences.getBoolean(Constants.SHOW_DIALOG_KEY, true)
-            if (showDialog) {
+            val checkCheckedDialogStatus = sharedPreferences.getBoolean(Constants.SHOW_DIALOG_KEY, true)
+
+            if (checkCheckedDialogStatus) {
                 showDialog()
             }
         }
@@ -52,49 +60,40 @@ class PublicPostFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.publicPostFragment = this
 
-        val token = sessionManager.getToken()
-
         binding.apply {
 
-            btnTweet.setOnClickListener {
-                btnTweet.isEnabled = false
-                postTweetViewModel.postTheTweet(contentEt.text.toString(), "Bearer $token")
-            }
+            contentEt.addTextButtonEnables(btnTweet, contentEt)
 
-            val textWatcher = object : TextWatcher {
-                override fun beforeTextChanged(
-                    s: CharSequence?,
-                    start: Int,
-                    count: Int,
-                    after: Int
-                ) {
-                    //
-                }
+            btnTweet.setOnClickListener { postTweetUIViewModel.onPublishPressed() }
 
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                    btnTweet.isEnabled = !contentEt.text.isNullOrBlank()
-                }
+            btnCancel.setOnClickListener { postTweetUIViewModel.onCancelPressed() }
 
-                override fun afterTextChanged(s: Editable?) {
-                    //
-                }
-            }
+            viewLifecycleOwner.lifecycleScope.launch {
 
-            contentEt.addTextChangedListener(textWatcher)
+                postTweetUIViewModel.signInEvent.collect{
+                    when(it){
+                        PostTweetUI.OnPublishPressed -> {
+                            btnTweet.isEnabled = false
+                            postTweetViewModel.postTheTweet(contentEt.text.toString(), "Bearer ${sessionManager.getToken()}")
+                            postTweetViewModel.postTweetResult.observe(viewLifecycleOwner) { result ->
 
-            postTweetViewModel.postTweetResult.observe(viewLifecycleOwner) { result ->
+                                when (result) {
+                                    is PostTweet.Success -> {
+                                        findNavController().navigate(R.id.action_publicPostFragment_to_homeFragment)
+                                    }
 
-                when (result) {
-                    is PostTweet.Success -> {
-                        findNavController().navigate(R.id.action_publicPostFragment_to_homeFragment)
-                    }
-
-                    is PostTweet.Error -> {
-                        binding.publicPostRootLayout.snackbarError(
-                            requireActivity().findViewById(R.id.public_post_root_layout),
-                            error = result.message,
-                            ""){}
-                        btnTweet.isEnabled = true
+                                    is PostTweet.Error -> {
+                                        binding.publicPostRootLayout.snackbarError(
+                                            requireActivity().findViewById(R.id.public_post_root_layout),
+                                            error = result.message,
+                                            ""){}
+                                        btnTweet.isEnabled = true
+                                    }
+                                }
+                            }
+                        }
+                        PostTweetUI.OnCancelPressed -> { findNavController().navigateUp() }
+                        PostTweetUI.OnDialogReadPolicyPressed -> { findNavController().navigate(R.id.action_publicPostFragment_to_publicPostPolicyFragment) }
                     }
                 }
             }
@@ -104,6 +103,7 @@ class PublicPostFragment : Fragment() {
     private fun showDialog() {
         val dialogView = layoutInflater.inflate(R.layout.alert_dialog, null)
         val dialogCheckbox = dialogView.findViewById<CheckBox>(R.id.dialog_checkbox)
+        val dialogReadPolicyTV = dialogView.findViewById<TextView>(R.id.read_policy_tv)
         val dialogButton = dialogView.findViewById<Button>(R.id.dialog_button)
 
         val dialog = MaterialAlertDialogBuilder(requireContext(), R.style.ThemeOverlay_App_MaterialAlertDialog)
@@ -114,30 +114,19 @@ class PublicPostFragment : Fragment() {
             dialog.dismiss()
         }
 
+        dialogReadPolicyTV.setOnClickListener {
+            dialog.dismiss()
+            postTweetUIViewModel.onDialogReadPolicyPressed()
+        }
+
+        dialogReadPolicyTV.paint.flags = dialogReadPolicyTV.paint.flags or Paint.UNDERLINE_TEXT_FLAG
+
         dialogCheckbox.setOnCheckedChangeListener { _, isChecked ->
             sharedPreferences.edit().putBoolean(Constants.SHOW_DIALOG_KEY, !isChecked).apply()
         }
         dialog.show()
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 //            var isPressed = false
 //            val mEditor = contentEt

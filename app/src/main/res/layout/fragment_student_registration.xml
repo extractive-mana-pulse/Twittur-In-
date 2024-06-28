@@ -172,7 +172,7 @@
                     app:layout_constraintTop_toBottomOf="@id/student_id_input_layout">
 
                     <Spinner
-                        android:id="@+id/planets_spinner"
+                        android:id="@+id/major_spinner"
                         android:layout_width="match_parent"
                         android:layout_height="55dp"
                         android:textAlignment="center"

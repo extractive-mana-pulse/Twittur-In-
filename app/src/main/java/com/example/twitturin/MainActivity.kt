@@ -17,7 +17,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.twitturin.databinding.ActivityMainBinding
-import com.example.twitturin.preferences.MyPreferences
+import com.example.twitturin.tweet.presentation.home.preferences.MyPreferences
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Locale
@@ -67,6 +67,7 @@ class MainActivity : AppCompatActivity() {
             R.id.stayInFragment,
             R.id.noInternetFragment,
             R.id.feedbackFragment,
+            R.id.publicPostPolicyFragment,
 
         )
 

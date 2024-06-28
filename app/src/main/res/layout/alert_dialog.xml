@@ -1,4 +1,3 @@
-<!-- dialog_custom.xml -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -6,19 +5,26 @@
     android:padding="16dp">
 
     <TextView
-        android:id="@+id/dialog_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Alert"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+        android:textAppearance="?attr/textAppearanceTitleLarge"
+        android:textStyle="bold"/>
 
     <TextView
-        android:id="@+id/dialog_message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="In order to continue you must agree with our policy"
-        android:layout_marginTop="8dp" />
+        android:layout_marginTop="8dp"
+        android:textAppearance="?attr/textAppearanceTitleMedium"/>
+
+    <TextView
+        android:id="@+id/read_policy_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="read policy"
+        android:textColor="?attr/colorPrimary"
+        android:textAppearance="?attr/textAppearanceTitleMedium"/>
 
     <CheckBox
         android:id="@+id/dialog_checkbox"
@@ -26,14 +32,15 @@
         android:layout_height="wrap_content"
         android:text="Don't show again"
         android:textSize="16sp"
-        android:layout_marginTop="16dp" />
+        android:layout_marginTop="16dp"
+        android:textAppearance="?attr/textAppearanceBody2"/>
 
     <Button
         android:id="@+id/dialog_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="OK"
-        android:textSize="18sp"
+        android:text="I agree"
+        android:textAppearance="?attr/textAppearanceButton"
         android:layout_gravity="end"
         android:layout_marginTop="16dp"/>
 

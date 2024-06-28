@@ -149,6 +149,9 @@
         <action
             android:id="@+id/action_publicPostFragment_to_tweetsFragment"
             app:destination="@id/tweetsFragment"/>
+        <action
+            android:id="@+id/action_publicPostFragment_to_publicPostPolicyFragment"
+            app:destination="@id/publicPostPolicyFragment" />
 
     </fragment>
 
@@ -234,9 +237,6 @@
             app:destination="@id/stayInFragment"
             app:popUpTo="@id/signInFragment"
             app:popUpToInclusive="true"/>
-        <action
-            android:id="@+id/action_signInFragment_to_testFragment"
-            app:destination="@id/testFragment" />
 
     </fragment>
 
@@ -413,7 +413,7 @@
         tools:layout="@layout/fragment_observe_profile" />
     <fragment
         android:id="@+id/noInternetFragment"
-        android:name="com.example.twitturin.connection.presentation.fragments.NoInternetFragment"
+        android:name="com.example.twitturin.connection.presentation.ui.NoInternetFragment"
         android:label="fragment_no_internet"
         tools:layout="@layout/fragment_no_internet" />
     <fragment
@@ -425,14 +425,19 @@
             android:id="@+id/action_feedbackFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
     </fragment>
+
     <fragment
-        android:id="@+id/testFragment"
-        android:name="com.example.twitturin.TestFragment"
-        android:label="fragment_test"
-        tools:layout="@layout/fragment_test" >
+        android:id="@+id/publicPostPolicyFragment"
+        android:name="com.example.twitturin.tweet.presentation.postTweet.ui.PublicPostPolicyFragment"
+        android:label="fragment_public_post_policy"
+        tools:layout="@layout/fragment_public_post_policy" >
+
         <action
-            android:id="@+id/action_testFragment_to_signInFragment"
-            app:destination="@id/signInFragment" />
+            android:id="@+id/action_publicPostPolicyFragment_to_publicPostFragment"
+            app:destination="@id/publicPostFragment"
+            app:popUpTo="@id/publicPostPolicyFragment"
+            app:popUpToInclusive="true"/>
+
     </fragment>
 
 </navigation>

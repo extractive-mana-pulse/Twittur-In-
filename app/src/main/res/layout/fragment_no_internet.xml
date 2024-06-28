@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".connection.presentation.fragments.NoInternetFragment">
+    tools:context=".connection.presentation.ui.NoInternetFragment">
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/internet_status_page_an_view"

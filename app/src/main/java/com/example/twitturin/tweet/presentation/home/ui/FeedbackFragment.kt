@@ -6,9 +6,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.example.twitturin.R
 import com.example.twitturin.databinding.FragmentFeedbackBinding
 
 class FeedbackFragment : Fragment() {
@@ -26,35 +29,45 @@ class FeedbackFragment : Fragment() {
             feedbackBackBtn.setOnClickListener { findNavController().navigateUp() }
 
             feedbackSendEmailBtn.setOnClickListener {
-                val subject = topicFeedbackEt.text.toString().trim()
+                val subject = feedbackSpinner.selectedItem.toString()
                 val message = messageFeedbackEt.text.toString().trim()
 
                 sendEmail(subject, message)
+            }
+
+            ArrayAdapter.createFromResource(requireContext(), R.array.feedback_array, android.R.layout.simple_spinner_item).also { adapter ->
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                feedbackSpinner.adapter = adapter
+            }
+
+            feedbackSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(parent: AdapterView<*>?, p1: View?, position: Int, p3: Long) {
+                    if (parent?.getItemAtPosition(position).toString() == "Other"){
+                        feedbackTopicLayout2.visibility = View.VISIBLE
+                    } else {
+                        feedbackTopicLayout2.visibility = View.GONE
+                    }
+                }
+
+                override fun onNothingSelected(p0: AdapterView<*>?) {  }
             }
         }
     }
 
     private fun sendEmail(subject: String, message: String) {
-        /*ACTION_SEND action to launch an email client installed on your Android device.*/
-        val mIntent = Intent(Intent.ACTION_SEND)
-        /*To send an email you need to specify mailto: as URI using setData() method\
+        /**ACTION_SENDTO action to launch an email client installed on your Android device.*/
+        val mIntent = Intent(Intent.ACTION_SENDTO)
+        /**To send an email you need to specify mailto: as URI using setData() method\
         and data type will be to text/plain using setType() method*/
-//        mIntent.setDataAndType(Uri.parse("mailto:"), "text/plain")
         mIntent.data = Uri.parse("mailto:")
-        mIntent.type = "message/rfc822"
         mIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf("invoker1441@gmail.com"))
-        //put the Subject in the intent
         mIntent.putExtra(Intent.EXTRA_SUBJECT, subject)
-        //put the message in the intent
         mIntent.putExtra(Intent.EXTRA_TEXT, message)
 
         try {
-            //start email intent
             startActivity(Intent.createChooser(mIntent, "Choose Email Client..."))
         }
         catch (e: Exception){
-            //if any thing goes wrong for example no email client application or any exception
-            //get and show exception message
             Toast.makeText(requireContext(), e.message, Toast.LENGTH_LONG).show()
         }
     }

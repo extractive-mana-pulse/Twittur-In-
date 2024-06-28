@@ -6,6 +6,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
@@ -33,8 +34,13 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         remoteViews.setTextViewText(R.id.notification_description, description)
         remoteViews.setImageViewResource(R.id.notification_image, R.drawable.logo)
 
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(""))
+        val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+        remoteViews.setOnClickPendingIntent(R.id.notification_image, pendingIntent)
+
         return remoteViews
     }
+
     private fun generateNotification(title : String, description : String) {
         val intent = Intent(this, MainActivity::class.java)
         intent.putExtra("fragment", "notifications")

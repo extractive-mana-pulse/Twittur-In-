@@ -121,6 +121,8 @@
     <string name="email_topic">The reason for petition (optional)?</string>
     <string name="feedback_page_back_button">feedback page back button</string>
     <string name="profile_page_back_button">profile page back button</string>
+    <string name="other">Other</string>
+    <string name="policy_agree_btn">I accept the Terms of Service</string>
 
     <string-array name="major_array">
         <item>SE</item>
@@ -130,6 +132,14 @@
         <item>CIE</item>
         <item>AD</item>
         <item>AE</item>
+    </string-array>
+
+    <string-array name="feedback_array">
+        <item>Find a bug!</item>
+        <item>Function does not work properly!</item>
+        <item>I cannot finish navigation!</item>
+        <item>I cannot delete my account! </item>
+        <item>Other</item>
     </string-array>
 
 </resources>
