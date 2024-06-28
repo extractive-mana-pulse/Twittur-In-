@@ -68,6 +68,7 @@ class MainActivity : AppCompatActivity() {
             R.id.noInternetFragment,
             R.id.feedbackFragment,
             R.id.publicPostPolicyFragment,
+            R.id.newUpdatePatchNoteFragment,
 
         )
 
