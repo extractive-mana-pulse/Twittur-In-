@@ -19,6 +19,7 @@ import com.example.twitturin.databinding.RcViewBinding
 import com.example.twitturin.tweet.domain.model.Tweet
 import com.example.twitturin.tweet.presentation.home.util.formatCreatedAtPost
 import com.example.twitturin.tweet.presentation.home.vm.HomeViewModel
+import io.noties.markwon.Markwon
 import javax.inject.Inject
 
 class PostAdapter @Inject constructor(
@@ -65,8 +66,8 @@ class PostAdapter @Inject constructor(
 
                 fullNameTv.text = author?.fullName ?: "Twittur User"
                 usernameTv.text = "@" + author?.username
-                postDescription.text = HtmlCompat.fromHtml(postDescription.toString(), HtmlCompat.FROM_HTML_MODE_LEGACY)
-                postDescription.text = content
+                Markwon.create(context).setMarkdown(postDescription, content)
+//                postDescription.text = content
                 postCommentsCounter.text = replyCount.toString()
                 postHeartCounter.text = likes.toString()
                 createdAtTv.text = createdAt.formatCreatedAtPost()

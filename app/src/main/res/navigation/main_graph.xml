@@ -377,6 +377,9 @@
         <action
             android:id="@+id/action_detailFragment_to_reportFragment"
             app:destination="@id/reportFragment" />
+        <action
+            android:id="@+id/action_detailFragment_to_listOfLikesFragment"
+            app:destination="@id/listOfLikesFragment" />
     </fragment>
 
     <fragment
@@ -450,6 +453,15 @@
         <action
             android:id="@+id/action_newUpdatePatchNoteFragment_to_notificationsFragment"
             app:destination="@id/notificationsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/listOfLikesFragment"
+        android:name="com.example.twitturin.tweet.presentation.detail.ui.ListOfLikesFragment"
+        android:label="fragment_list_of_likes"
+        tools:layout="@layout/fragment_list_of_likes" >
+        <action
+            android:id="@+id/action_listOfLikesFragment_to_detailFragment"
+            app:destination="@id/detailFragment" />
     </fragment>
 
 </navigation>

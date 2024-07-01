@@ -28,6 +28,7 @@ import com.example.twitturin.tweet.presentation.postTweet.vm.PostTweetUIViewMode
 import com.example.twitturin.tweet.presentation.postTweet.vm.PostTweetViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
+import io.noties.markwon.Markwon
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -63,6 +64,16 @@ class PublicPostFragment : Fragment() {
         binding.apply {
 
             contentEt.addTextButtonEnables(btnTweet, contentEt)
+
+            Markwon.create(requireContext()).setMarkdown(contentEt, contentEt.text.toString())
+
+            actionBold.setOnClickListener {
+                val currentText = contentEt.text.toString()
+                val newText = "$currentText**"
+                contentEt.setText(newText)
+            }
+
+            actionItalic.setOnClickListener { addItalic(it) }
 
             btnTweet.setOnClickListener { postTweetUIViewModel.onPublishPressed() }
 
@@ -126,7 +137,22 @@ class PublicPostFragment : Fragment() {
         }
         dialog.show()
     }
+
+    private fun addBold(view: View) {
+        val currentText = binding.contentEt.text.toString()
+        val newText = "**$currentText**"
+        Markwon.create(requireContext()).setMarkdown(binding.contentEt, newText)
+        binding.contentEt.setSelection(binding.contentEt.length())
+    }
+
+    private fun addItalic(view: View) {
+        val currentText = binding.contentEt.text.toString()
+        val newText = "*$currentText*"
+        Markwon.create(requireContext()).setMarkdown(binding.contentEt, newText)
+        binding.contentEt.setSelection(binding.contentEt.length())
+    }
 }
+
 
 //            var isPressed = false
 //            val mEditor = contentEt

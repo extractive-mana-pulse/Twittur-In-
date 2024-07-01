@@ -33,7 +33,19 @@
         android:layout_marginHorizontal="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/patch_not_page_update_btn"
         app:layout_constraintTop_toBottomOf="@id/patch_note_toolbar"/>
+
+    <Button
+        android:id="@+id/patch_not_page_update_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Update"
+        android:layout_marginBottom="8dp"
+        android:layout_marginHorizontal="16dp"
+        android:textAppearance="?attr/textAppearanceButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

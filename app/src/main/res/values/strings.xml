@@ -123,6 +123,7 @@
     <string name="profile_page_back_button">profile page back button</string>
     <string name="other">Other</string>
     <string name="policy_agree_btn">I accept the Terms of Service</string>
+    <string name="detail_page_bottom_sheet">This is detail page bottom sheet</string>
 
     <string-array name="major_array">
         <item>SE</item>

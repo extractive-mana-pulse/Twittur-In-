@@ -9,6 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
@@ -21,18 +23,23 @@ import com.example.twitturin.profile.presentation.fragments.FullScreenImageFragm
 import com.example.twitturin.profile.presentation.util.snackbar
 import com.example.twitturin.profile.presentation.util.snackbarError
 import com.example.twitturin.tweet.domain.model.Tweet
+import com.example.twitturin.tweet.presentation.detail.sealed.DetailPageUI
 import com.example.twitturin.tweet.presentation.detail.sealed.PostReply
 import com.example.twitturin.tweet.presentation.detail.util.addAutoResizeTextWatcher
 import com.example.twitturin.tweet.presentation.detail.util.formatCreatedAt
 import com.example.twitturin.tweet.presentation.detail.util.showKeyboard
+import com.example.twitturin.tweet.presentation.detail.vm.DetailPageUIViewModel
 import com.example.twitturin.tweet.presentation.home.adapter.PostAdapter
 import com.example.twitturin.tweet.presentation.home.vm.HomeViewModel
 import com.example.twitturin.tweet.presentation.tweet.vm.TweetViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import io.noties.markwon.Markwon
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
 import javax.inject.Inject
 
+@Suppress("DEPRECATION")
 @AndroidEntryPoint
 class DetailFragment : Fragment() {
 
@@ -40,6 +47,7 @@ class DetailFragment : Fragment() {
     private val homeViewModel : HomeViewModel by viewModels()
     private val tweetViewModel : TweetViewModel by viewModels()
     private val followingViewModel : FollowViewModel by viewModels()
+    private val detailUiViewModel : DetailPageUIViewModel by viewModels()
     private val binding  by lazy { FragmentDetailBinding.inflate(layoutInflater) }
     private val postAdapter by lazy { PostAdapter(homeViewModel, viewLifecycleOwner) }
 
@@ -72,10 +80,7 @@ class DetailFragment : Fragment() {
             sharedPreferences.edit().putString("id", id).apply()
 
             val activateEditText = arguments?.getBoolean("activateEditText", false)
-
-            if (activateEditText!!){
-                replyEt.showKeyboard()
-            }
+            if (activateEditText!!){ replyEt.showKeyboard() }
 
             val token = sessionManager.getToken()
             val userId2 = sessionManager.getUserId()
@@ -86,56 +91,6 @@ class DetailFragment : Fragment() {
                 followBtn.visibility = View.VISIBLE
             }
 
-            sentReply.isEnabled = false
-
-            sentReply.setOnClickListener {
-                val reply = replyEt.text?.toString()?.trim()
-                tweetViewModel.postReply(reply!!, id!!, "Bearer $token")
-                sentReply.isEnabled = false
-            }
-
-            replyEt.addAutoResizeTextWatcher(sentReply)
-
-            tweetViewModel.postReplyResult.observe(viewLifecycleOwner) { result ->
-
-                when (result) {
-                    is PostReply.Success -> {
-                        replyEt.text?.clear()
-                        tweetViewModel.getRepliesOfPost(id!!)
-                        postAdapter.notifyDataSetChanged()
-                        replyEt.addAutoResizeTextWatcher(sentReply)
-                    }
-
-                    is PostReply.Error -> {
-                        binding.detailRootLayout.snackbarError(
-                            requireActivity().findViewById(R.id.reply_layout),
-                            result.message,
-                            ""){}
-                        replyEt.addAutoResizeTextWatcher(sentReply)
-                    }
-                }
-            }
-
-            whenCreated.text = createdAt?.formatCreatedAt()
-            val dateConverter = convertDateFormat(updatedAt.toString())
-            whenUpdated.text = dateConverter
-
-            authorAvatar.setOnLongClickListener {
-
-                val fullScreenImageFragment = FullScreenImageFragment()
-
-                binding.authorAvatar.buildDrawingCache()
-                val originalBitmap = binding.authorAvatar.drawingCache
-                val image = originalBitmap.copy(originalBitmap.config, true)
-
-                val extras = Bundle()
-                extras.putParcelable("image", image)
-                fullScreenImageFragment.arguments = extras
-
-                fullScreenImageFragment.show(requireActivity().supportFragmentManager, "FullScreenImageFragment")
-                true
-            }
-
             Glide.with(requireContext())
                 .load(profileImage)
                 .error(R.drawable.not_found)
@@ -144,49 +99,121 @@ class DetailFragment : Fragment() {
 
             authorFullname.text = userFullname ?: "Twittur User"
             authorUsername.text = "@$username"
-            detailPostDescription.text = postDescription
+            Markwon.create(requireContext()).setMarkdown(detailPostDescription, postDescription.toString())
             articlePageLikesCounter.text = likes
 
-            followBtn.setOnClickListener {
-                followingViewModel.followUsers(userId!!, "Bearer $token")
+            replyEt.addAutoResizeTextWatcher(sentReply)
+
+            whenCreated.text = createdAt?.formatCreatedAt()
+            val dateConverter = convertDateFormat(updatedAt.toString())
+            whenUpdated.text = dateConverter
+
+            sentReply.isEnabled = false
+
+            authorAvatar.setOnLongClickListener {
+                detailUiViewModel.onAvatarLongPressed()
+                true
             }
 
-            followingViewModel.follow.observe(viewLifecycleOwner) { result ->
-                when (result) {
-                    is Follow.Success -> {
-                        binding.detailRootLayout.snackbar(
-                            requireActivity().findViewById(R.id.reply_layout),
-                            message = "now you follow: ${username?.uppercase()}",
-                        )
-                    }
+            followBtn.setOnClickListener { detailUiViewModel.onFollowPressed() }
 
-                    is Follow.Error -> {
-                        detailRootLayout.snackbarError(
-                            requireActivity().findViewById(R.id.reply_layout),
-                            error = result.message,
-                            ""
-                        ) { /* actionCallBack ->  Unit */ }
+            moreSettings.setOnClickListener { detailUiViewModel.onMorePressed() }
+
+            sentReply.setOnClickListener { detailUiViewModel.onSendReplyPressed() }
+
+            articlePageHeartIcon.setOnClickListener { detailUiViewModel.onLikePressed() }
+
+            articlePageShareIcon.setOnClickListener { detailUiViewModel.onSharePressed() }
+
+            detailLikesLayout.setOnClickListener { detailUiViewModel.onListOfLikesPressed() }
+
+            detailPageCommentsIcon.setOnClickListener { detailUiViewModel.onCommentsPressed() }
+
+            detailPageToolbar.setNavigationOnClickListener { detailUiViewModel.onBackPressed() }
+
+            viewLifecycleOwner.lifecycleScope.launch {
+
+                detailUiViewModel.detailPageEvent.collect{
+
+                    when(it){
+                        DetailPageUI.OnBackPressed -> { findNavController().navigateUp() }
+
+                        DetailPageUI.OnCommentPressed -> { replyEt.showKeyboard() }
+
+                        DetailPageUI.OnFollowPressed -> {
+                            followingViewModel.followUsers(userId!!, "Bearer $token")
+
+                            followingViewModel.follow.observe(viewLifecycleOwner) { result ->
+                                when (result) {
+                                    is Follow.Success -> {
+                                        detailRootLayout.snackbar(
+                                            requireActivity().findViewById(R.id.reply_layout),
+                                            message = "now you follow: ${username?.uppercase()}",
+                                        )
+                                    }
+
+                                    is Follow.Error -> {
+                                        detailRootLayout.snackbarError(
+                                            requireActivity().findViewById(R.id.reply_layout),
+                                            error = result.message,
+                                            ""
+                                        ) { /* actionCallBack ->  Unit */ }
+                                    }
+                                }
+                            }
+                        }
+
+                        DetailPageUI.OnLikePressed -> { detailRootLayout.snackbar(requireActivity().findViewById(R.id.reply_layout), resources.getString(R.string.in_progress)) }
+
+                        DetailPageUI.OnListOfLikesPressed -> { findNavController().navigate(R.id.action_detailFragment_to_listOfLikesFragment) }
+
+                        DetailPageUI.OnMorePressed ->  { MoreSettingsDetailFragment().show(requireActivity().supportFragmentManager, R.string.detail_page_bottom_sheet.toString()) }
+
+                        DetailPageUI.OnSendReplyPressed -> {
+
+                            val reply = replyEt.text?.toString()?.trim()
+                            tweetViewModel.postReply(reply!!, id!!, "Bearer $token")
+                            sentReply.isEnabled = false
+
+                            tweetViewModel.postReplyResult.observe(viewLifecycleOwner) { result ->
+
+                                when (result) {
+                                    is PostReply.Success -> {
+                                        replyEt.text?.clear()
+                                        tweetViewModel.getRepliesOfPost(id)
+                                        postAdapter.notifyDataSetChanged()
+                                        replyEt.addAutoResizeTextWatcher(sentReply)
+                                    }
+
+                                    is PostReply.Error -> {
+                                        detailRootLayout.snackbarError(
+                                            requireActivity().findViewById(R.id.reply_layout),
+                                            result.message,
+                                            ""){}
+                                        replyEt.addAutoResizeTextWatcher(sentReply)
+                                    }
+                                }
+                            }
+                        }
+
+                        DetailPageUI.OnSharePressed ->  { shareData() }
+
+                        DetailPageUI.OnImagePressed -> {
+
+                            val fullScreenImageFragment = FullScreenImageFragment()
+
+                            authorAvatar.buildDrawingCache()
+                            val originalBitmap = authorAvatar.drawingCache
+                            val image = originalBitmap.copy(originalBitmap.config, true)
+
+                            val extras = Bundle()
+                            Bundle().putParcelable("image", image)
+                            fullScreenImageFragment.arguments = extras
+
+                            fullScreenImageFragment.show(requireActivity().supportFragmentManager, "FullScreenImageFragment")
+                        }
                     }
                 }
-            }
-
-            detailPageCommentsIcon.setOnClickListener { replyEt.showKeyboard() }
-
-            articlePageHeartIcon.setOnClickListener {
-                detailRootLayout.snackbar(
-                    requireActivity().findViewById(R.id.reply_layout),
-                    resources.getString(R.string.in_progress)
-                )
-            }
-
-            articlePageShareIcon.setOnClickListener { shareData() }
-
-            moreSettings.setOnClickListener {
-                val bottomSheetDialogFragment = MoreSettingsDetailFragment()
-                bottomSheetDialogFragment.show(
-                    requireActivity().supportFragmentManager,
-                    "MyBottomSheetDialogFragment"
-                )
             }
         }
         updateRecyclerView()
@@ -198,55 +225,57 @@ class DetailFragment : Fragment() {
         val id = sharedPreferences.getString("id", null)
 
         val intent = Intent(Intent.ACTION_SEND).apply {
-            val baseUrl = "https://twitturin.onrender.com/tweets"
-            val link = "$baseUrl/$id"
+            val baseUrl = "https://twitturin.onrender.com/tweets/$id"
+//            val link = "$baseUrl/$id"
 
             action = Intent.ACTION_SEND
-            putExtra(Intent.EXTRA_TEXT, link)
+            putExtra(Intent.EXTRA_TEXT, baseUrl)
             type = "text/plain"
         }
-
         startActivity(Intent.createChooser(intent, "Choose app:"))
     }
 
     @SuppressLint("NotifyDataSetChanged")
     private fun updateRecyclerView() {
-        val sharedPreferences = requireActivity().getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
-        val tweetId = sharedPreferences.getString("id", null)
 
-        binding.articleRcView.adapter = postAdapter
-        binding.articleRcView.layoutManager = LinearLayoutManager(requireContext())
-        binding.articleRcView.addItemDecoration(DividerItemDecoration(binding.articleRcView.context, DividerItemDecoration.VERTICAL))
+        binding.apply {
+            val sharedPreferences = requireActivity().getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
+            val tweetId = sharedPreferences.getString("id", null)
 
-        tweetViewModel.getRepliesOfPost(tweetId!!)
+            articleRcView.adapter = postAdapter
+            articleRcView.layoutManager = LinearLayoutManager(requireContext())
+            articleRcView.addItemDecoration(DividerItemDecoration(articleRcView.context, DividerItemDecoration.VERTICAL))
 
-        tweetViewModel.repliesOfPosts.observe(viewLifecycleOwner) { response ->
-            if (response.isSuccessful) {
-                response.body()?.let { tweets ->
-                    val tweetList: MutableList<Tweet> = tweets.toMutableList()
-                    postAdapter.differ.submitList(tweetList)
-                    binding.swipeToRefreshArticle.setOnRefreshListener {
-                        postAdapter.notifyDataSetChanged()
-                        val freshList = tweetList.sortedByDescending { it.createdAt }
-                        tweetList.clear()
-                        tweetList.addAll(freshList)
-                        binding.swipeToRefreshArticle.isRefreshing = false
+            tweetViewModel.getRepliesOfPost(tweetId!!)
+
+            tweetViewModel.repliesOfPosts.observe(viewLifecycleOwner) { response ->
+                if (response.isSuccessful) {
+                    response.body()?.let { tweets ->
+                        val tweetList: MutableList<Tweet> = tweets.toMutableList()
+                        postAdapter.differ.submitList(tweetList)
+                        swipeToRefreshArticle.setOnRefreshListener {
+                            postAdapter.notifyDataSetChanged()
+                            val freshList = tweetList.sortedByDescending { it.createdAt }
+                            tweetList.clear()
+                            tweetList.addAll(freshList)
+                            swipeToRefreshArticle.isRefreshing = false
+                        }
                     }
+                } else {
+                    detailRootLayout.snackbarError(
+                        requireActivity().findViewById(R.id.reply_layout),
+                        response.body().toString(),
+                        "") {  }
                 }
-            } else {
-                binding.detailRootLayout.snackbarError(
-                    requireActivity().findViewById(R.id.reply_layout),
-                    response.body().toString(),
-                    "") {  }
             }
         }
     }
 
-    fun convertDateFormat(dateString: String): String {
+    private fun convertDateFormat(dateString: String): String {
         val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.getDefault())
         val outputFormat = SimpleDateFormat("dd.MM.yyyy, HH:mm:ss", Locale.getDefault())
 
         val date = inputFormat.parse(dateString)
-        return outputFormat.format(date)
+        return outputFormat.format(date!!)
     }
 }
