@@ -54,28 +54,28 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:contentDescription="@string/divider"
-            android:background="?attr/colorOutlineVariant"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            android:background="?attr/colorOutlineVariant"
             app:layout_constraintTop_toBottomOf="@id/btn_layout"/>
 
         <EditText
             android:id="@+id/content_et"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:hint="@string/publication_context"
-            android:gravity="start"
             android:padding="8dp"
-            android:imeOptions="actionDone|flagNoEnterAction"
-            android:inputType="textMultiLine|textAutoCorrect|textCapSentences"
+            android:gravity="start"
+            tools:ignore="Autofill"
+            android:hint="@string/publication_context"
             android:layout_marginVertical="8dp"
             android:layout_marginHorizontal="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             android:background="@drawable/publish_et_bg"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/rich_text_editor_layout"
+            android:imeOptions="actionDone|flagNoEnterAction"
             app:layout_constraintTop_toBottomOf="@id/public_post_divider"
-            tools:ignore="Autofill"/>
+            app:layout_constraintBottom_toTopOf="@id/rich_text_editor_layout"
+            android:inputType="textMultiLine|textAutoCorrect|textCapSentences"/>
 
         <LinearLayout
             android:id="@+id/rich_text_editor_layout"

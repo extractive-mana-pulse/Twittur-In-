@@ -1,65 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/tweets_root_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     tools:context=".tweet.presentation.tweet.ui.TweetsFragment">
 
-    <data>
-        <variable
-            name="tweetsFragment"
-            type="com.example.twitturin.tweet.presentation.tweet.ui.TweetsFragment"/>
-    </data>
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_to_refresh_layout_tweets"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/tweets_root_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/swipe_to_refresh_layout_tweets"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rcView"
             android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_margin="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent">
+            android:layout_height="0dp"/>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rcView"
-                android:layout_width="0dp"
-                android:layout_height="0dp"/>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/tweets_page_an_view"
+        android:layout_width="282dp"
+        android:layout_height="282dp"
+        app:lottie_loop="false"
+        app:lottie_autoPlay="true"
+        android:visibility="visible"
+        app:layout_constraintWidth_percent="0.4"
+        app:layout_constraintDimensionRatio="1.1"
+        app:lottie_rawRes="@raw/empty_tweets_list"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
 
+    <TextView
+        android:id="@+id/lottie_infoTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/profile_page_tweet_info"
+        android:textStyle="italic"
+        android:textSize="18sp"
+        android:visibility="visible"
+        android:textColor="?attr/colorPrimaryInverse"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tweets_page_an_view"/>
 
-        <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/tweets_page_an_view"
-            android:layout_width="282dp"
-            android:layout_height="282dp"
-            app:lottie_loop="false"
-            app:lottie_autoPlay="true"
-            android:visibility="visible"
-            app:layout_constraintWidth_percent="0.4"
-            app:layout_constraintDimensionRatio="1.1"
-            app:lottie_rawRes="@raw/empty_tweets_list"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
-
-        <TextView
-            android:id="@+id/lottie_infoTv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/profile_page_tweet_info"
-            android:textStyle="italic"
-            android:textSize="18sp"
-            android:visibility="visible"
-            android:textColor="?attr/colorPrimaryInverse"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tweets_page_an_view"/>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-</layout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -68,9 +68,9 @@ class PublicPostFragment : Fragment() {
             Markwon.create(requireContext()).setMarkdown(contentEt, contentEt.text.toString())
 
             actionBold.setOnClickListener {
-                val currentText = contentEt.text.toString()
-                val newText = "$currentText**"
-                contentEt.setText(newText)
+                val currentText = contentEt.text.toString() + "**"
+                contentEt.setText(currentText)
+                contentEt.setSelection(currentText.length)
             }
 
             actionItalic.setOnClickListener { addItalic(it) }

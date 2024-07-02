@@ -41,48 +41,50 @@ class TweetsFragment : Fragment() {
     @SuppressLint("NotifyDataSetChanged")
     private fun updateRecyclerView() {
 
-        val userId = sessionManager.getUserId()
-        tweetViewModel.getUserTweet(userId!!)
-        binding.rcView.adapter = userPostAdapter
-        binding.rcView.layoutManager = LinearLayoutManager(requireContext())
-        binding.rcView.addItemDecoration(DividerItemDecoration(binding.rcView.context, DividerItemDecoration.VERTICAL))
+        binding.apply {
 
-        tweetViewModel.userTweets.observe(requireActivity()) { response ->
-            if (response.isSuccessful) {
-                response.body()?.let { tweets ->
+            tweetViewModel.getUserTweet(sessionManager.getUserId()!!)
+            rcView.adapter = userPostAdapter
+            rcView.layoutManager = LinearLayoutManager(requireContext())
+            rcView.addItemDecoration(DividerItemDecoration(rcView.context, DividerItemDecoration.VERTICAL))
 
-                    val tweetList: MutableList<Tweet> = tweets.toMutableList()
-                    binding.swipeToRefreshLayoutTweets.setOnRefreshListener {
+            tweetViewModel.userTweets.observe(requireActivity()) { response ->
+                if (response.isSuccessful) {
+                    response.body()?.let { tweets ->
 
-                        tweetViewModel.getUserTweet(userId)
-                        userPostAdapter.notifyDataSetChanged()
-                        tweetList.shuffle(Random(System.currentTimeMillis()))
-                        binding.swipeToRefreshLayoutTweets.isRefreshing = false
+                        val tweetList: MutableList<Tweet> = tweets.toMutableList()
+                        swipeToRefreshLayoutTweets.setOnRefreshListener {
 
+                            tweetViewModel.getUserTweet(sessionManager.getUserId()!!)
+                            userPostAdapter.notifyDataSetChanged()
+                            tweetList.shuffle(Random(System.currentTimeMillis()))
+                            swipeToRefreshLayoutTweets.isRefreshing = false
+
+                        }
+
+                        if (tweetList.isEmpty()) {
+
+                            rcView.visibility = View.GONE
+                            tweetsPageAnView.visibility = View.VISIBLE
+                            lottieInfoTv.visibility = View.VISIBLE
+
+                        } else {
+
+                            rcView.visibility = View.VISIBLE
+                            tweetsPageAnView.visibility = View.GONE
+                            lottieInfoTv.visibility = View.GONE
+                            userPostAdapter.setData(tweetList)
+                            userPostAdapter.notifyDataSetChanged()
+
+                        }
                     }
 
-                    if (tweetList.isEmpty()) {
-
-                        binding.rcView.visibility = View.GONE
-                        binding.tweetsPageAnView.visibility = View.VISIBLE
-                        binding.lottieInfoTv.visibility = View.VISIBLE
-
-                    } else {
-
-                        binding.rcView.visibility = View.VISIBLE
-                        binding.tweetsPageAnView.visibility = View.GONE
-                        binding.lottieInfoTv.visibility = View.GONE
-                        userPostAdapter.setData(tweetList)
-                        userPostAdapter.notifyDataSetChanged()
-
-                    }
+                } else {
+                    tweetsRootLayout.snackbarError(
+                        requireActivity().findViewById(R.id.tweets_root_layout),
+                        error = response.message(),
+                        ""){}
                 }
-
-            } else {
-                binding.tweetsRootLayout.snackbarError(
-                    requireActivity().findViewById(R.id.tweets_root_layout),
-                    error = response.message(),
-                    ""){}
             }
         }
     }

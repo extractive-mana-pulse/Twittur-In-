@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.AsyncListDiffer
@@ -18,6 +17,7 @@ import com.example.twitturin.follow.presentation.followers.sealed.Follow
 import com.example.twitturin.follow.presentation.vm.FollowViewModel
 import com.example.twitturin.manager.SessionManager
 import com.example.twitturin.search.domain.model.SearchUser
+import com.google.android.material.snackbar.Snackbar
 import javax.inject.Inject
 
 class SearchAdapter @Inject constructor(
@@ -50,15 +50,12 @@ class SearchAdapter @Inject constructor(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = differ.currentList[position]
         val context = holder.itemView.context
-        val token = SessionManager(context).getToken()
-
 
         holder.binding.apply {
             item.apply {
 
-                val profileImage = profilePicture
                 Glide.with(context)
-                    .load(profileImage)
+                    .load(profilePicture)
                     .error(R.drawable.not_found)
                     .placeholder(R.drawable.loading)
                     .centerCrop()
@@ -83,15 +80,15 @@ class SearchAdapter @Inject constructor(
                     navController.navigate(R.id.observeProfileFragment, bundle)
                 }
 
-                searchFollowBtn.setOnClickListener { followViewModel.followUsers(id, "Bearer $token") }
+                searchFollowBtn.setOnClickListener { followViewModel.followUsers(id, "Bearer ${SessionManager(context).getToken()}") }
 
                 followViewModel.follow.observe(lifecycleOwner) { result ->
 
                     when (result) {
 
-                        is Follow.Success -> { Toast.makeText(context, "you follow ${result.user.username}", Toast.LENGTH_SHORT).show() }
+                        is Follow.Success -> { Snackbar.make(searchRootLayout, "you follow ${result.user.username}", Snackbar.LENGTH_SHORT).show() }
 
-                        is Follow.Error -> { Toast.makeText(context, result.message, Toast.LENGTH_SHORT).show() }
+                        is Follow.Error -> { Snackbar.make(searchRootLayout, result.message, Snackbar.LENGTH_SHORT).show() }
                     }
                 }
             }
@@ -102,3 +99,20 @@ class SearchAdapter @Inject constructor(
         return differ.currentList.size
     }
 }
+
+
+
+
+//                val userId2 = SessionManager(context).getUserId()
+//
+//                val sharedPreferences = context.getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
+//                val userId = sharedPreferences.getString("userId", null)
+//
+//                Log.d(userId,"userId")
+//                Log.d(userId2,"userId2")
+//
+//                if (userId == userId2) {
+//                    searchFollowBtn.visibility = View.GONE
+//                } else {
+//                    searchFollowBtn.visibility = View.VISIBLE
+//                }

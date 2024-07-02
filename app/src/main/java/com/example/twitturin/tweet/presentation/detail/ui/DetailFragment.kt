@@ -80,6 +80,7 @@ class DetailFragment : Fragment() {
             sharedPreferences.edit().putString("id", id).apply()
 
             val activateEditText = arguments?.getBoolean("activateEditText", false)
+
             if (activateEditText!!){ replyEt.showKeyboard() }
 
             val token = sessionManager.getToken()
