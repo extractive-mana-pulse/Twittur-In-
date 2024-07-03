@@ -17,7 +17,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.twitturin.databinding.ActivityMainBinding
-import com.example.twitturin.tweet.presentation.home.preferences.MyPreferences
+import com.example.twitturin.home.presentation.preferences.MyPreferences
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Locale
@@ -69,6 +69,7 @@ class MainActivity : AppCompatActivity() {
             R.id.feedbackFragment,
             R.id.publicPostPolicyFragment,
             R.id.newUpdatePatchNoteFragment,
+            R.id.listOfLikesFragment,
 
         )
 

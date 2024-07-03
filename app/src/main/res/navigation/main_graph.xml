@@ -8,7 +8,7 @@
 <!--  home Fragment  -->
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.twitturin.tweet.presentation.home.ui.HomeFragment"
+        android:name="com.example.twitturin.home.presentation.ui.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home">
 
@@ -22,7 +22,10 @@
 
         <action
             android:id="@+id/action_homeFragment_to_profileFragment"
-            app:destination="@id/profileFragment"/>
+            app:destination="@id/profileFragment"
+            app:enterAnim="@anim/from_left"
+            app:exitAnim="@anim/to_right"
+            app:popExitAnim="@anim/to_right" />
 
         <action
             android:id="@+id/action_homeFragment_to_publicPostFragment"
@@ -41,7 +44,10 @@
             app:destination="@id/detailFragment"/>
         <action
             android:id="@+id/action_homeFragment_to_feedbackFragment"
-            app:destination="@id/feedbackFragment" />
+            app:destination="@id/feedbackFragment"
+            app:enterAnim="@anim/from_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right" />
     </fragment>
 
 <!--  privateMessagesFragment  -->
@@ -177,7 +183,7 @@
 <!--  webViewFragment  -->
     <fragment
         android:id="@+id/webViewFragment"
-        android:name="com.example.twitturin.tweet.presentation.home.ui.WebViewFragment"
+        android:name="com.example.twitturin.home.presentation.ui.WebViewFragment"
         android:label="fragment_web_view"
         tools:layout="@layout/fragment_web_view" >
 
@@ -361,14 +367,14 @@
 
     <dialog
         android:id="@+id/myBottomSheetDialogFragment"
-        android:name="com.example.twitturin.tweet.presentation.detail.ui.MoreSettingsDetailFragment"
+        android:name="com.example.twitturin.detail.presentation.ui.MoreSettingsDetailFragment"
         android:label="MyBottomSheetDialogFragment" >
         
     </dialog>
 
     <fragment
         android:id="@+id/detailFragment"
-        android:name="com.example.twitturin.tweet.presentation.detail.ui.DetailFragment"
+        android:name="com.example.twitturin.detail.presentation.ui.DetailFragment"
         android:label="fragment_detail"
         tools:layout="@layout/fragment_detail" >
         <action
@@ -424,7 +430,7 @@
         tools:layout="@layout/fragment_no_internet" />
     <fragment
         android:id="@+id/feedbackFragment"
-        android:name="com.example.twitturin.tweet.presentation.home.ui.FeedbackFragment"
+        android:name="com.example.twitturin.feedback.presentation.fragments.FeedbackFragment"
         android:label="fragment_feedback"
         tools:layout="@layout/fragment_feedback" >
         <action
@@ -456,7 +462,7 @@
     </fragment>
     <fragment
         android:id="@+id/listOfLikesFragment"
-        android:name="com.example.twitturin.tweet.presentation.detail.ui.ListOfLikesFragment"
+        android:name="com.example.twitturin.detail.presentation.ui.ListOfLikesFragment"
         android:label="fragment_list_of_likes"
         tools:layout="@layout/fragment_list_of_likes" >
         <action

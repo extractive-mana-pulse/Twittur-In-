@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    tools:context=".tweet.presentation.detail.ui.ListOfLikesFragment">
+    tools:context=".detail.presentation.ui.ListOfLikesFragment">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/list_of_likes_toolbar"
@@ -15,9 +15,26 @@
         app:title="@string/likes"
         app:titleTextAppearance="?attr/textAppearanceTitleLarge"/>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/list_of_likes_rc_view"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_list_of_likes_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/list_of_likes_rc_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginVertical="8dp"
+            android:layout_marginHorizontal="16dp"/>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <View
+        android:id="@+id/special_ui_for_snackbar_view"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        android:layout_gravity="center"
+        android:background="@color/black"
+        android:layout_marginBottom="16dp"/>
 
 </LinearLayout>

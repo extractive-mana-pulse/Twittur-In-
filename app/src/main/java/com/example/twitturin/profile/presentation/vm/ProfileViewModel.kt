@@ -22,8 +22,7 @@ class ProfileViewModel @Inject constructor(
     private val repository: ProfileRepository
 ): ViewModel() {
 
-    private val _deleteResult =
-        SingleLiveEvent<AccountDelete>()
+    private val _deleteResult = SingleLiveEvent<AccountDelete>()
     val deleteResult: LiveData<AccountDelete> = _deleteResult
 
     fun deleteUser(userId: String, token : String) {
@@ -41,8 +40,7 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
-    private val _getUserCredentials =
-        SingleLiveEvent<UserCredentials>()
+    private val _getUserCredentials = SingleLiveEvent<UserCredentials>()
     val getUserCredentials: LiveData<UserCredentials> = _getUserCredentials
 
     fun getUserCredentials(userId: String) {

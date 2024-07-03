@@ -17,7 +17,7 @@ import com.example.twitturin.R
 import com.example.twitturin.databinding.RcViewUserTweetsBinding
 import com.example.twitturin.manager.SessionManager
 import com.example.twitturin.tweet.domain.model.Tweet
-import com.example.twitturin.tweet.presentation.detail.sealed.TweetDelete
+import com.example.twitturin.detail.presentation.sealed.TweetDelete
 import com.example.twitturin.tweet.presentation.like.vm.LikeViewModel
 import com.example.twitturin.tweet.presentation.tweet.vm.TweetViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder

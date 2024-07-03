@@ -2,12 +2,12 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".tweet.presentation.home.ui.HomeFragment">
+    tools:context=".home.presentation.ui.HomeFragment">
 
     <data>
         <variable
             name="homeFragment"
-            type="com.example.twitturin.tweet.presentation.home.ui.HomeFragment"/>
+            type="com.example.twitturin.home.presentation.ui.HomeFragment"/>
     </data>
 
     <androidx.drawerlayout.widget.DrawerLayout

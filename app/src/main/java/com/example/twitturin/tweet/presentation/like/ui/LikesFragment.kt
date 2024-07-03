@@ -14,8 +14,8 @@ import com.example.twitturin.databinding.FragmentLikesBinding
 import com.example.twitturin.manager.SessionManager
 import com.example.twitturin.profile.presentation.util.snackbarError
 import com.example.twitturin.tweet.domain.model.Tweet
-import com.example.twitturin.tweet.presentation.home.adapter.PostAdapter
-import com.example.twitturin.tweet.presentation.home.vm.HomeViewModel
+import com.example.twitturin.home.presentation.adapter.HomeAdapter
+import com.example.twitturin.home.presentation.vm.HomeViewModel
 import com.example.twitturin.tweet.presentation.tweet.vm.TweetViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -27,7 +27,7 @@ class LikesFragment : Fragment() {
     private val homeViewModel : HomeViewModel by viewModels()
     private val tweetViewModel : TweetViewModel by viewModels()
     private val binding by lazy { FragmentLikesBinding.inflate(layoutInflater) }
-    private val postAdapter by lazy { PostAdapter(homeViewModel, viewLifecycleOwner) }
+    private val homeAdapter by lazy { HomeAdapter(homeViewModel, viewLifecycleOwner) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return binding.root
@@ -41,7 +41,7 @@ class LikesFragment : Fragment() {
     @SuppressLint("NotifyDataSetChanged")
     private fun updateRecyclerView() {
         val userId = sessionManager.getUserId()
-        binding.rcView.adapter = postAdapter
+        binding.rcView.adapter = homeAdapter
         binding.rcView.addItemDecoration(DividerItemDecoration(binding.rcView.context, DividerItemDecoration.VERTICAL))
         binding.rcView.layoutManager = LinearLayoutManager(requireContext())
         tweetViewModel.getLikedPosts(userId!!)
@@ -57,7 +57,7 @@ class LikesFragment : Fragment() {
                         binding.rcView.visibility = View.VISIBLE
                         binding.likesPageAnView.visibility = View.GONE
                         binding.lottieInfoTv.visibility = View.GONE
-                        postAdapter.differ.submitList(tweetList)
+                        homeAdapter.differ.submitList(tweetList)
                         tweetViewModel.getLikedPosts(userId)
                     }
                 }

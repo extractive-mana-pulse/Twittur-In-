@@ -124,6 +124,10 @@
     <string name="other">Other</string>
     <string name="policy_agree_btn">I accept the Terms of Service</string>
     <string name="detail_page_bottom_sheet">This is detail page bottom sheet</string>
+    <string name="italiano">Italiano</string>
+    <string name="russian">Русский</string>
+    <string name="english">English</string>
+    <string name="o_zbek">O\'zbek</string>
 
     <string-array name="major_array">
         <item>SE</item>
