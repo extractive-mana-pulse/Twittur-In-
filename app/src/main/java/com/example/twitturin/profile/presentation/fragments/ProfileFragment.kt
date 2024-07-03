@@ -3,9 +3,8 @@ package com.example.twitturin.profile.presentation.fragments
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +14,7 @@ import android.widget.LinearLayout
 import android.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.twitturin.R
@@ -23,12 +23,17 @@ import com.example.twitturin.databinding.FragmentProfileBinding
 import com.example.twitturin.manager.SessionManager
 import com.example.twitturin.profile.presentation.adapters.ProfileViewPagerAdapter
 import com.example.twitturin.profile.presentation.sealed.AccountDelete
+import com.example.twitturin.profile.presentation.sealed.ProfileUIEvent
 import com.example.twitturin.profile.presentation.sealed.UserCredentials
+import com.example.twitturin.profile.presentation.util.deleteDialogCodeWatcher
+import com.example.twitturin.profile.presentation.util.deleteDialogEmailWatcher
 import com.example.twitturin.profile.presentation.util.snackbarError
+import com.example.twitturin.profile.presentation.vm.ProfileUIViewModel
 import com.example.twitturin.profile.presentation.vm.ProfileViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @Suppress("DEPRECATION")
@@ -38,6 +43,7 @@ class ProfileFragment : Fragment() {
     @Inject lateinit var sessionManager: SessionManager
     private val stayInViewModel: StayInViewModel by viewModels()
     private val profileViewModel: ProfileViewModel by viewModels()
+    private val profileUIViewModel: ProfileUIViewModel by viewModels()
     private val binding by lazy { FragmentProfileBinding.inflate(layoutInflater) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -51,28 +57,106 @@ class ProfileFragment : Fragment() {
         val userId = sessionManager.getUserId()
         val baseUserUrl = "https://twitturin.onrender.com/users"
 
-
-        /**this portion of code with viewPager2 added, cause it cause an error: Fragment not found or no longer exist!*/
+        // this portion of code with viewPager2 added, cause it cause an error: Fragment not found or no longer exist!
         binding.vp2.isSaveEnabled = false
 
         binding.apply {
 
-            shareProfile.setOnClickListener {
-                val intent = Intent(Intent.ACTION_SEND)
-                val link = "$baseUserUrl/$userId"
+            /**
+             * This code build to implement listener when user click's on profile image, to open it, in full screen size!
+             * */
+            profileUserAvatar.setOnClickListener { profileUIViewModel.onAvatarPressed() }
 
-                intent.putExtra(Intent.EXTRA_TEXT, link)
-                intent.type = "text/plain"
+            followersTv.setOnClickListener { profileUIViewModel.onFollowersPressed() }
 
-                requireContext().startActivity(Intent.createChooser(intent,"Choose app:"))
+            followingTv.setOnClickListener { profileUIViewModel.onFollowingPressed() }
+
+            profileToolbar.setNavigationOnClickListener { profileUIViewModel.onBackPressed() }
+
+            profileToolbar.setOnMenuItemClickListener { menuItem ->
+                when (menuItem.itemId) {
+                    R.id.share_profile -> {
+                        val intent = Intent(Intent.ACTION_SEND)
+                        val link = "$baseUserUrl/$userId"
+
+                        intent.putExtra(Intent.EXTRA_TEXT, link)
+                        intent.type = "text/plain"
+
+                        requireContext().startActivity(Intent.createChooser(intent,"Choose app:"))
+                        true
+                    }
+                    R.id.three_dot_menu -> {
+
+                        val popupMenu = PopupMenu(requireContext(), profileToolbar, Gravity.END)
+
+                        popupMenu.setOnMenuItemClickListener { item ->
+                            when (item.itemId) {
+
+                                R.id.edit_profile -> {
+                                    val bundle = Bundle().apply {
+                                        putString("profile_fullname", profileFullName.text.toString())
+                                        putString("profile_username", profileUsername.text.toString())
+                                        putString("profile_bio", profileBiography.text.toString())
+                                        putString("profile_date", profileDateTv.text.toString())
+                                    }
+                                    findNavController().navigate(R.id.action_profileFragment_to_editProfileFragment, bundle)
+                                    true
+                                }
+
+                                R.id.logout -> {
+                                    logoutDialog()
+                                    true
+                                }
+
+                                R.id.delete_account -> {
+                                    deleteAccount()
+                                    true
+                                }
+                                else -> false
+                            }
+                        }
+
+                        popupMenu.inflate(R.menu.popup_menu_profile)
+
+                        try {
+                            val fieldMPopup = PopupMenu::class.java.getDeclaredField("mPopup")
+                            fieldMPopup.isAccessible = true
+                            val mPopup = fieldMPopup.get(popupMenu)
+                            mPopup.javaClass
+                                .getDeclaredMethod("setForceShowIcon", Boolean::class.java)
+                                .invoke(mPopup, true)
+                        } catch (e: Exception){
+                            Log.e("Main", "Error showing menu icons.", e)
+                        } finally {
+                            popupMenu.show()
+                        }
+                        true
+                    }
+                    else -> false
+                }
             }
 
-            followersTv.setOnClickListener {
-                findNavController().navigate(R.id.action_profileFragment_to_followersListFragment)
-            }
+            viewLifecycleOwner.lifecycleScope.launch {
+                profileUIViewModel.profileUiEvent.collect {
+                    when(it){
+                        ProfileUIEvent.OnAvatarPressed -> {
+                            val fullScreenImageFragment = FullScreenImageFragment()
 
-            followingTv.setOnClickListener {
-                findNavController().navigate(R.id.action_profileFragment_to_followingListFragment)
+                            profileUserAvatar.buildDrawingCache()
+                            val originalBitmap = profileUserAvatar.drawingCache
+                            val image = originalBitmap.copy(originalBitmap.config, true)
+
+                            val extras = Bundle()
+                            extras.putParcelable("image", image)
+                            fullScreenImageFragment.arguments = extras
+
+                            fullScreenImageFragment.show(requireActivity().supportFragmentManager, "FullScreenImageFragment")
+                        }
+                        ProfileUIEvent.OnBackPressed -> { findNavController().navigateUp() }
+                        ProfileUIEvent.OnFollowersPressed -> { findNavController().navigate(R.id.action_profileFragment_to_followersListFragment) }
+                        ProfileUIEvent.OnFollowingPressed -> { findNavController().navigate(R.id.action_profileFragment_to_followingListFragment) }
+                    }
+                }
             }
 
             profileViewModel.getUserCredentials(userId!!)
@@ -88,23 +172,25 @@ class ProfileFragment : Fragment() {
                             .error(R.drawable.not_found)
                             .into(profileUserAvatar)
 
-                        profileFullName.text = result.user.fullName ?: "Twittur User"
-                        profileUsername.text = "@"+result.user.username
-                        profileKind.text = result.user.kind
-                        profileBiography.text = result.user.bio ?: "This user does not appear to have any biography."
-                        followingCounterTv.text = result.user.followingCount.toString()
-                        followersCounterTv.text = result.user.followersCount.toString()
-                        profileDateTv.text = result.user.birthday
+                        result.apply {
 
-                        // location
-                        if (result.user.country.isNullOrEmpty()) {
-                            profileLocationIcon.visibility = View.INVISIBLE
-                            profileLocationTv.visibility = View.GONE
-                        } else {
-                            profileLocationIcon.visibility = View.VISIBLE
-                            profileLocationTv.text = result.user.country
+                            profileFullName.text = user.fullName ?: "Twittur User"
+                            profileUsername.text = "@"+user.username
+                            profileKind.text = user.kind
+                            profileBiography.text = user.bio ?: "This user does not appear to have any biography."
+                            followingCounterTv.text = user.followingCount.toString()
+                            followersCounterTv.text = user.followersCount.toString()
+                            profileDateTv.text = user.birthday
+
+                            // location
+                            if (user.country.isNullOrEmpty()) {
+                                profileLocationIcon.visibility = View.INVISIBLE
+                                profileLocationTv.visibility = View.GONE
+                            } else {
+                                profileLocationIcon.visibility = View.VISIBLE
+                                profileLocationTv.text = user.country
+                            }
                         }
-
                     }
 
                     is UserCredentials.Error -> {
@@ -113,85 +199,6 @@ class ProfileFragment : Fragment() {
                             error = result.message,
                             ""){}
                     }
-                }
-            }
-
-            /**
-             * This code build to implement listener when user click's on profile image, to open it, in full screen size!
-             * */
-            profileUserAvatar.setOnClickListener {
-                val fullScreenImageFragment = FullScreenImageFragment()
-
-                profileUserAvatar.buildDrawingCache()
-                val originalBitmap = profileUserAvatar.drawingCache
-                val image = originalBitmap.copy(originalBitmap.config, true)
-
-                val extras = Bundle()
-                extras.putParcelable("image", image)
-                fullScreenImageFragment.arguments = extras
-
-                fullScreenImageFragment.show(requireActivity().supportFragmentManager, "FullScreenImageFragment")
-            }
-
-            threeDotMenu.setOnClickListener {
-                val popupMenu = PopupMenu(requireContext(), threeDotMenu)
-
-                popupMenu.setOnMenuItemClickListener { item ->
-                    when (item.itemId) {
-
-                        R.id.edit_profile -> {
-                            val bundle = Bundle().apply {
-                                putString("profile_fullname", profileFullName.text.toString())
-                                putString("profile_username", profileUsername.text.toString())
-                                putString("profile_bio", profileBiography.text.toString())
-                                putString("profile_date", profileDateTv.text.toString())
-                            }
-                            findNavController().navigate(R.id.action_profileFragment_to_editProfileFragment, bundle)
-                            true
-                        }
-
-                        R.id.logout -> {
-                            logoutDialog()
-                            true
-                        }
-
-                        R.id.delete_account -> {
-
-                            deleteDialog()
-                            profileViewModel.deleteResult.observe(viewLifecycleOwner) { result ->
-                                when (result) {
-
-                                    is AccountDelete.Success -> {
-                                        findNavController().navigate(R.id.action_profileFragment_to_signInFragment)
-                                    }
-
-                                    is AccountDelete.Error -> {
-                                        binding.profileRootLayout.snackbarError(
-                                            requireActivity().findViewById(R.id.profile_root_layout),
-                                            error = result.message,
-                                            ""){}
-                                    }
-                                }
-                            }
-                            true
-                        }
-                        else -> false
-                    }
-                }
-
-                popupMenu.inflate(R.menu.popup_menu_profile)
-
-                try {
-                    val fieldMPopup = PopupMenu::class.java.getDeclaredField("mPopup")
-                    fieldMPopup.isAccessible = true
-                    val mPopup = fieldMPopup.get(popupMenu)
-                    mPopup.javaClass
-                        .getDeclaredMethod("setForceShowIcon", Boolean::class.java)
-                        .invoke(mPopup, true)
-                } catch (e: Exception){
-                    Log.e("Main", "Error showing menu icons.", e)
-                } finally {
-                    popupMenu.show()
                 }
             }
 
@@ -207,6 +214,27 @@ class ProfileFragment : Fragment() {
                     }
                 }
             }.attach()
+        }
+    }
+
+    private fun deleteAccount() {
+
+        deleteDialog()
+
+        profileViewModel.deleteResult.observe(viewLifecycleOwner) { result ->
+            when (result) {
+
+                is AccountDelete.Success -> {
+                    findNavController().navigate(R.id.action_profileFragment_to_signInFragment)
+                }
+
+                is AccountDelete.Error -> {
+                    binding.profileRootLayout.snackbarError(
+                        requireActivity().findViewById(R.id.profile_root_layout),
+                        error = result.message,
+                        ""){}
+                }
+            }
         }
     }
 
@@ -230,46 +258,19 @@ class ProfileFragment : Fragment() {
             val emailConfirmBtn = dialogView.findViewById<ImageButton>(R.id.email_confirm_btn)
 
             emailConfirmBtn.isEnabled = false
-            val emailTextWatcher = object : TextWatcher {
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                    //
-                }
 
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                    emailConfirmBtn.isEnabled = !emailEt.text.isNullOrBlank()
-                }
-
-                override fun afterTextChanged(s: Editable?) {
-                    //
-                }
-            }
-            emailEt.addTextChangedListener(emailTextWatcher)
+            emailEt.deleteDialogEmailWatcher(emailConfirmBtn, emailEt)
 
             deleteBtn.isEnabled = false
-            val codeTextWatcher = object : TextWatcher {
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                    //
-                }
 
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                    deleteBtn.isEnabled = !codeEt.text.isNullOrBlank()
-                }
+            codeEt.deleteDialogCodeWatcher(deleteBtn, codeEt)
 
-                override fun afterTextChanged(s: Editable?) {
-                    //
-                }
-            }
-            codeEt.addTextChangedListener(codeTextWatcher)
-
-            cancelBtn.setOnClickListener {
-                alertDialog.dismiss()
-            }
+            cancelBtn.setOnClickListener { alertDialog.dismiss() }
 
             deleteBtn.setOnClickListener {
                 profileViewModel.deleteUser(sessionManager.getUserId()!!, "Bearer ${sessionManager.getToken()}")
                 alertDialog.dismiss()
             }
-
             alertDialog.show()
         }
 

@@ -21,6 +21,7 @@ import com.example.twitturin.detail.presentation.sealed.TweetDelete
 import com.example.twitturin.tweet.presentation.like.vm.LikeViewModel
 import com.example.twitturin.tweet.presentation.tweet.vm.TweetViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.TimeZone
@@ -141,7 +142,7 @@ class TweetAdapter @Inject constructor(
                 }
 
                 postIconHeartUserOwnTweet.setOnClickListener {
-                    Toast.makeText(context, context.resources.getString(R.string.in_progress), Toast.LENGTH_SHORT).show()
+                    Snackbar.make(userOwnRootLayout, R.string.in_progress, Snackbar.LENGTH_SHORT).show()
                 }
 
                 postIconShareUserOwnTweet.setOnClickListener {

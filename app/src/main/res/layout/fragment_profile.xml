@@ -16,64 +16,79 @@
         android:layout_height="match_parent"
         android:background="@drawable/profile_layout_bg">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/profile_header_layout"
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/profile_toolbar"
             android:layout_width="match_parent"
             android:layout_height="152dp"
-            android:background="@drawable/header_layout_bg"
+            app:titleCentered="true"
+            app:title="@string/profile_page"
+            app:menu="@menu/profile_toolbar_menu"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:navigationIcon="@drawable/keyboard_backspace"
+            app:titleTextColor="?attr/colorOnPrimaryContainer"
+            app:titleTextAppearance="?attr/textAppearanceTitleLarge"/>
 
-            <ImageButton
-                android:id="@+id/back"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:onClick="@{ () -> profileFragment.fragmentManager.popBackStack() }"
-                android:layout_marginTop="24dp"
-                android:layout_marginStart="16dp"
-                android:src="@drawable/keyboard_backspace"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                android:background="@android:color/transparent"
-                android:contentDescription="@string/profile_page_back_button"/>
+<!--        <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--            android:id="@+id/profile_header_layout"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="152dp"-->
+<!--            android:background="@drawable/header_layout_bg"-->
+<!--            app:layout_constraintTop_toTopOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent">-->
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/profile_page"
-                android:textStyle="bold"
-                android:textSize="24sp"
-                android:textColor="?attr/colorOnPrimaryContainer"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"/>
+<!--            <ImageButton-->
+<!--                android:id="@+id/back"-->
+<!--                android:layout_width="48dp"-->
+<!--                android:layout_height="48dp"-->
+<!--                android:onClick="@{ () -> profileFragment.fragmentManager.popBackStack() }"-->
+<!--                android:layout_marginTop="24dp"-->
+<!--                android:layout_marginStart="16dp"-->
+<!--                android:src="@drawable/keyboard_backspace"-->
+<!--                app:layout_constraintTop_toTopOf="parent"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                android:background="@android:color/transparent"-->
+<!--                android:contentDescription="@string/profile_page_back_button"/>-->
 
-            <ImageButton
-                android:id="@+id/share_profile"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:src="@drawable/share"
-                android:background="@android:color/transparent"
-                android:layout_marginTop="24dp"
-                app:layout_constraintEnd_toStartOf="@id/three_dot_menu"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="ContentDescription"/>
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="@string/profile_page"-->
+<!--                android:textStyle="bold"-->
+<!--                android:textSize="24sp"-->
+<!--                android:textColor="?attr/colorOnPrimaryContainer"-->
+<!--                app:layout_constraintTop_toTopOf="parent"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                app:layout_constraintStart_toStartOf="parent"/>-->
 
-            <ImageButton
-                android:id="@+id/three_dot_menu"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:src="@drawable/more_vert_profile"
-                android:background="@android:color/transparent"
-                android:layout_marginTop="24dp"
-                android:layout_marginEnd="16dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="ContentDescription"/>
+<!--            <ImageButton-->
+<!--                android:id="@+id/share_profile"-->
+<!--                android:layout_width="48dp"-->
+<!--                android:layout_height="48dp"-->
+<!--                android:src="@drawable/share"-->
+<!--                android:background="@android:color/transparent"-->
+<!--                android:layout_marginTop="24dp"-->
+<!--                app:layout_constraintEnd_toStartOf="@id/three_dot_menu"-->
+<!--                app:layout_constraintTop_toTopOf="parent"-->
+<!--                tools:ignore="ContentDescription"/>-->
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+<!--            <ImageButton-->
+<!--                android:id="@+id/three_dot_menu"-->
+<!--                android:layout_width="48dp"-->
+<!--                android:layout_height="48dp"-->
+<!--                android:src="@drawable/more_vert_profile"-->
+<!--                android:background="@android:color/transparent"-->
+<!--                android:layout_marginTop="24dp"-->
+<!--                android:layout_marginEnd="16dp"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintTop_toTopOf="parent"-->
+<!--                tools:ignore="ContentDescription"/>-->
+
+<!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
 
         <com.facebook.shimmer.ShimmerFrameLayout
             android:id="@+id/profile_shimmer_layout"
@@ -113,7 +128,7 @@
             android:layout_marginTop="4dp"
             android:layout_marginStart="3dp"
             app:layout_constraintStart_toEndOf="@id/profile_user_avatar"
-            app:layout_constraintTop_toBottomOf="@id/profile_header_layout"/>
+            app:layout_constraintTop_toBottomOf="@id/profile_toolbar"/>
 
         <TextView
             android:id="@+id/profile_full_name"
