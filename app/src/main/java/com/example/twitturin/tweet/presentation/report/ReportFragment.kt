@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
 import com.example.twitturin.databinding.FragmentReportBinding
+import com.google.android.material.snackbar.Snackbar
 
 class ReportFragment : Fragment() {
 
@@ -32,8 +33,12 @@ class ReportFragment : Fragment() {
 
             radioAbuse.setOnCheckedChangeListener { _, _ -> /* TODO: hande click and send content to server. */ }
 
+            radioOther.setOnCheckedChangeListener { _, isChecked ->
+                describeReportEt.visibility = if (isChecked) View.VISIBLE else View.GONE
+            }
+
             reportNextBtn.setOnClickListener {
-                Toast.makeText(requireContext(), R.string.gratitude, Toast.LENGTH_SHORT).show()
+                Snackbar.make(reportNextBtn, R.string.gratitude, Snackbar.LENGTH_SHORT).show()
                 findNavController().navigate(R.id.action_reportFragment_to_homeFragment)
             }
             setupRadioButtons()
@@ -42,27 +47,30 @@ class ReportFragment : Fragment() {
 
     private fun setupRadioButtons() {
         // Get references to the radio buttons
-        val radioSpam = binding.radioSpam
-        val radioPrivacy = binding.radioPrivacy
-        val radioAbuse = binding.radioAbuse
+        binding.apply {
+            // Set up the radio button click listeners
+            radioSpam.setOnCheckedChangeListener { _, isChecked ->
+                updateButtonState(isChecked, radioPrivacy.isChecked, radioAbuse.isChecked, radioOther.isChecked)
+            }
+            radioPrivacy.setOnCheckedChangeListener { _, isChecked ->
+                updateButtonState(radioSpam.isChecked, isChecked, radioAbuse.isChecked, radioOther.isChecked)
+            }
+            radioAbuse.setOnCheckedChangeListener { _, isChecked ->
+                updateButtonState(radioSpam.isChecked, radioPrivacy.isChecked, isChecked, radioOther.isChecked)
+            }
 
-        // Set up the radio button click listeners
-        radioSpam.setOnCheckedChangeListener { _, isChecked ->
-            updateButtonState(isChecked, radioPrivacy.isChecked, radioAbuse.isChecked)
-        }
-        radioPrivacy.setOnCheckedChangeListener { _, isChecked ->
-            updateButtonState(radioSpam.isChecked, isChecked, radioAbuse.isChecked)
-        }
-        radioAbuse.setOnCheckedChangeListener { _, isChecked ->
-            updateButtonState(radioSpam.isChecked, radioPrivacy.isChecked, isChecked)
-        }
+            radioOther.setOnCheckedChangeListener { _, isChecked ->
+                updateButtonState(radioSpam.isChecked, radioPrivacy.isChecked, radioOther.isChecked, isChecked)
+            }
 
-        // Initially update the button state
-        updateButtonState(radioSpam.isChecked, radioPrivacy.isChecked, radioAbuse.isChecked)
+            // Initially update the button state
+            updateButtonState(radioSpam.isChecked, radioPrivacy.isChecked, radioAbuse.isChecked, radioOther.isChecked)
+        }
     }
 
-    private fun updateButtonState(isSpamChecked: Boolean, isPrivacyChecked: Boolean, isAbuseChecked: Boolean) {
+    private fun updateButtonState(isSpamChecked: Boolean, isPrivacyChecked: Boolean, isAbuseChecked: Boolean, isOtherChecked: Boolean) {
         // Enable or disable the button based on whether any radio button is checked
-        binding.reportNextBtn.isEnabled = isSpamChecked || isPrivacyChecked || isAbuseChecked
+        binding.reportNextBtn.isEnabled = isSpamChecked || isPrivacyChecked || isAbuseChecked || isOtherChecked
+        binding.describeReportEt.visibility = if (binding.radioOther.isChecked) View.VISIBLE else View.GONE
     }
 }

@@ -54,9 +54,6 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.profileFragment = this
-        val userId = sessionManager.getUserId()
-        val baseUserUrl = "https://twitturin.onrender.com/users"
-
         // this portion of code with viewPager2 added, cause it cause an error: Fragment not found or no longer exist!
         binding.vp2.isSaveEnabled = false
 
@@ -76,18 +73,12 @@ class ProfileFragment : Fragment() {
             profileToolbar.setOnMenuItemClickListener { menuItem ->
                 when (menuItem.itemId) {
                     R.id.share_profile -> {
-                        val intent = Intent(Intent.ACTION_SEND)
-                        val link = "$baseUserUrl/$userId"
-
-                        intent.putExtra(Intent.EXTRA_TEXT, link)
-                        intent.type = "text/plain"
-
-                        requireContext().startActivity(Intent.createChooser(intent,"Choose app:"))
+                        shareProfile()
                         true
                     }
                     R.id.three_dot_menu -> {
 
-                        val popupMenu = PopupMenu(requireContext(), profileToolbar, Gravity.END)
+                        val popupMenu = PopupMenu(requireContext(), threeDotMenuView)
 
                         popupMenu.setOnMenuItemClickListener { item ->
                             when (item.itemId) {
@@ -139,19 +130,7 @@ class ProfileFragment : Fragment() {
             viewLifecycleOwner.lifecycleScope.launch {
                 profileUIViewModel.profileUiEvent.collect {
                     when(it){
-                        ProfileUIEvent.OnAvatarPressed -> {
-                            val fullScreenImageFragment = FullScreenImageFragment()
-
-                            profileUserAvatar.buildDrawingCache()
-                            val originalBitmap = profileUserAvatar.drawingCache
-                            val image = originalBitmap.copy(originalBitmap.config, true)
-
-                            val extras = Bundle()
-                            extras.putParcelable("image", image)
-                            fullScreenImageFragment.arguments = extras
-
-                            fullScreenImageFragment.show(requireActivity().supportFragmentManager, "FullScreenImageFragment")
-                        }
+                        ProfileUIEvent.OnAvatarPressed -> { fullScreenAvatar() }
                         ProfileUIEvent.OnBackPressed -> { findNavController().navigateUp() }
                         ProfileUIEvent.OnFollowersPressed -> { findNavController().navigate(R.id.action_profileFragment_to_followersListFragment) }
                         ProfileUIEvent.OnFollowingPressed -> { findNavController().navigate(R.id.action_profileFragment_to_followingListFragment) }
@@ -159,7 +138,7 @@ class ProfileFragment : Fragment() {
                 }
             }
 
-            profileViewModel.getUserCredentials(userId!!)
+            profileViewModel.getUserCredentials(sessionManager.getUserId()!!)
             profileViewModel.getUserCredentials.observe(viewLifecycleOwner) { result ->
                 profileShimmerLayout.startShimmer()
                 when (result) {
@@ -215,6 +194,32 @@ class ProfileFragment : Fragment() {
                 }
             }.attach()
         }
+    }
+
+    private fun shareProfile() {
+        val userId = sessionManager.getUserId()
+        val baseUserUrl = "https://twitturin.onrender.com/users"
+        val intent = Intent(Intent.ACTION_SEND)
+        val link = "$baseUserUrl/$userId"
+
+        intent.putExtra(Intent.EXTRA_TEXT, link)
+        intent.type = "text/plain"
+
+        requireContext().startActivity(Intent.createChooser(intent,"Choose app:"))
+    }
+
+    private fun fullScreenAvatar() {
+        val fullScreenImageFragment = FullScreenImageFragment()
+
+        binding.profileUserAvatar.buildDrawingCache()
+        val originalBitmap = binding.profileUserAvatar.drawingCache
+        val image = originalBitmap.copy(originalBitmap.config, true)
+
+        val extras = Bundle()
+        extras.putParcelable("image", image)
+        fullScreenImageFragment.arguments = extras
+
+        fullScreenImageFragment.show(requireActivity().supportFragmentManager, "FullScreenImageFragment")
     }
 
     private fun deleteAccount() {

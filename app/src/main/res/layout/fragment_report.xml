@@ -107,6 +107,20 @@
                 android:layout_height="wrap_content"
                 android:text="@string/abuse_and_harassment_desc"/>
 
+            <RadioButton
+                android:id="@+id/radio_other"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/other"
+                android:textStyle="bold"/>
+
+            <EditText
+                android:id="@+id/describe_report_et"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Describe issue..."
+                android:visibility="invisible"/>
+
         </RadioGroup>
 
     </LinearLayout>
