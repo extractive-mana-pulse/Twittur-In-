@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
@@ -21,18 +20,19 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.twitturin.R
 import com.example.twitturin.databinding.FragmentHomeBinding
+import com.example.twitturin.home.presentation.adapter.HomeAdapter
+import com.example.twitturin.home.presentation.preferences.MyPreferences
+import com.example.twitturin.home.presentation.sealed.HomeUIEvent
+import com.example.twitturin.home.presentation.vm.HomeViewModel
 import com.example.twitturin.manager.SessionManager
 import com.example.twitturin.profile.presentation.sealed.UserCredentials
 import com.example.twitturin.profile.presentation.util.snackbarError
 import com.example.twitturin.profile.presentation.vm.ProfileViewModel
 import com.example.twitturin.tweet.domain.model.Tweet
-import com.example.twitturin.home.presentation.adapter.HomeAdapter
-import com.example.twitturin.home.presentation.preferences.MyPreferences
-import com.example.twitturin.home.presentation.sealed.HomeUIEvent
-import com.example.twitturin.home.presentation.vm.HomeViewModel
 import com.example.twitturin.tweet.presentation.tweet.vm.TweetViewModel
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.util.Locale
@@ -58,7 +58,7 @@ class HomeFragment : Fragment() {
             try {
                 tweetViewModel.getTweet(binding.shimmerLayout)
             } catch(e : Exception) {
-                Toast.makeText(requireContext(), e.message, Toast.LENGTH_SHORT).show()
+                Snackbar.make(binding.homeRootLayout, e.message.toString(), Snackbar.LENGTH_SHORT).show()
             }
         }
     }

@@ -16,21 +16,21 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.twitturin.R
 import com.example.twitturin.databinding.FragmentDetailBinding
-import com.example.twitturin.follow.presentation.followers.sealed.Follow
-import com.example.twitturin.follow.presentation.vm.FollowViewModel
-import com.example.twitturin.manager.SessionManager
-import com.example.twitturin.profile.presentation.fragments.FullScreenImageFragment
-import com.example.twitturin.profile.presentation.util.snackbar
-import com.example.twitturin.profile.presentation.util.snackbarError
-import com.example.twitturin.tweet.domain.model.Tweet
 import com.example.twitturin.detail.presentation.sealed.DetailPageUI
 import com.example.twitturin.detail.presentation.sealed.PostReply
 import com.example.twitturin.detail.presentation.util.addAutoResizeTextWatcher
 import com.example.twitturin.detail.presentation.util.formatCreatedAt
 import com.example.twitturin.detail.presentation.util.showKeyboard
 import com.example.twitturin.detail.presentation.vm.DetailPageUIViewModel
+import com.example.twitturin.follow.presentation.followers.sealed.Follow
+import com.example.twitturin.follow.presentation.vm.FollowViewModel
 import com.example.twitturin.home.presentation.adapter.HomeAdapter
 import com.example.twitturin.home.presentation.vm.HomeViewModel
+import com.example.twitturin.manager.SessionManager
+import com.example.twitturin.profile.presentation.fragments.FullScreenImageFragment
+import com.example.twitturin.profile.presentation.util.snackbar
+import com.example.twitturin.profile.presentation.util.snackbarError
+import com.example.twitturin.tweet.domain.model.Tweet
 import com.example.twitturin.tweet.presentation.tweet.vm.TweetViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import io.noties.markwon.Markwon
@@ -61,15 +61,16 @@ class DetailFragment : Fragment() {
         binding.detailFragment = this
         binding.apply {
 
-            val profileImage = arguments?.getString("userAvatar")
-            val userFullname = arguments?.getString("fullname")
-            val username = arguments?.getString("username")
-            val postDescription = arguments?.getString("post_description")
-            val createdAt = arguments?.getString("createdAt")
-            val updatedAt = arguments?.getString("updatedAt")
-            val likes = arguments?.getString("likes")
             val id = arguments?.getString("id")
+            val likes = arguments?.getString("likes")
             val userId = arguments?.getString("userId")
+            val username = arguments?.getString("username")
+            val updatedAt = arguments?.getString("updatedAt")
+            val createdAt = arguments?.getString("createdAt")
+            val userFullname = arguments?.getString("fullname")
+            val profileImage = arguments?.getString("userAvatar")
+            val postDescription = arguments?.getString("post_description")
+            val activateEditText = arguments?.getBoolean("activateEditText", false)
 
             val sharedPreferences = requireActivity().getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
             sharedPreferences.edit().putString("post_description", postDescription).apply()
@@ -79,14 +80,10 @@ class DetailFragment : Fragment() {
             sharedPreferences.edit().putString("userId", userId).apply()
             sharedPreferences.edit().putString("id", id).apply()
 
-            val activateEditText = arguments?.getBoolean("activateEditText", false)
-
             if (activateEditText!!){ replyEt.showKeyboard() }
 
-            val token = sessionManager.getToken()
-            val userId2 = sessionManager.getUserId()
-
-            if (userId == userId2) {
+            // this condition done to manipulate with UI
+            if (userId == sessionManager.getUserId()) {
                 followBtn.visibility = View.GONE
             } else {
                 followBtn.visibility = View.VISIBLE
@@ -142,7 +139,8 @@ class DetailFragment : Fragment() {
                         DetailPageUI.OnCommentPressed -> { replyEt.showKeyboard() }
 
                         DetailPageUI.OnFollowPressed -> {
-                            followingViewModel.followUsers(userId!!, "Bearer $token")
+
+                            followingViewModel.followUsers(userId!!, "Bearer ${sessionManager.getToken()}")
 
                             followingViewModel.follow.observe(viewLifecycleOwner) { result ->
                                 when (result) {
@@ -173,7 +171,7 @@ class DetailFragment : Fragment() {
                         DetailPageUI.OnSendReplyPressed -> {
 
                             val reply = replyEt.text?.toString()?.trim()
-                            tweetViewModel.postReply(reply!!, id!!, "Bearer $token")
+                            tweetViewModel.postReply(reply!!, id!!, "Bearer ${sessionManager.getToken()}")
                             sentReply.isEnabled = false
 
                             tweetViewModel.postReplyResult.observe(viewLifecycleOwner) { result ->
@@ -227,7 +225,6 @@ class DetailFragment : Fragment() {
 
         val intent = Intent(Intent.ACTION_SEND).apply {
             val baseUrl = "https://twitturin.onrender.com/tweets/$id"
-//            val link = "$baseUrl/$id"
 
             action = Intent.ACTION_SEND
             putExtra(Intent.EXTRA_TEXT, baseUrl)

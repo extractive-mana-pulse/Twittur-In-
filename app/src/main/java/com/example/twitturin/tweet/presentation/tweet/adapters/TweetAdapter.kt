@@ -8,17 +8,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
-import android.widget.Toast
 import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.Navigation
+import androidx.recyclerview.widget.AsyncListDiffer
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.twitturin.R
 import com.example.twitturin.databinding.RcViewUserTweetsBinding
+import com.example.twitturin.detail.domain.model.UserLikesAPost
+import com.example.twitturin.detail.presentation.sealed.TweetDelete
+import com.example.twitturin.detail.presentation.util.formatCreatedAt
 import com.example.twitturin.manager.SessionManager
 import com.example.twitturin.tweet.domain.model.Tweet
-import com.example.twitturin.detail.presentation.sealed.TweetDelete
 import com.example.twitturin.tweet.presentation.like.vm.LikeViewModel
+import com.example.twitturin.tweet.presentation.tweet.util.formatCreatedAtShortened
 import com.example.twitturin.tweet.presentation.tweet.vm.TweetViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
@@ -41,6 +45,18 @@ class TweetAdapter @Inject constructor(
         val binding = RcViewUserTweetsBinding.bind(itemView)
     }
 
+    private val differCallback = object : DiffUtil.ItemCallback<Tweet>(){
+
+        override fun areItemsTheSame(oldItem: Tweet, newItem: Tweet): Boolean {
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(oldItem: Tweet, newItem: Tweet): Boolean {
+            return oldItem.id == newItem.id
+        }
+    }
+    val differ = AsyncListDiffer(this,differCallback)
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.rc_view_user_tweets, parent, false)
         return ViewHolder(view)
@@ -48,7 +64,7 @@ class TweetAdapter @Inject constructor(
 
     @SuppressLint("SetTextI18n", "DiscouragedPrivateApi")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = list[position]
+        val item = differ.currentList[position]
         val context = holder.itemView.context
         val baseUrl = "https://twitturin.onrender.com/tweets"
 
@@ -75,47 +91,49 @@ class TweetAdapter @Inject constructor(
                 postHeartCounter.text = likes.toString()
 
 
-                val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.getDefault())
-                dateFormat.timeZone = TimeZone.getTimeZone("UTC")
+//                val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.getDefault())
+//                dateFormat.timeZone = TimeZone.getTimeZone("UTC")
+//
+//                try {
+//                    val date = dateFormat.parse(createdAt)
+//                    val currentTime = System.currentTimeMillis()
+//                    val durationMillis = currentTime - date!!.time
+//
+//                    val seconds = TimeUnit.MILLISECONDS.toSeconds(durationMillis)
+//                    val minutes = TimeUnit.MILLISECONDS.toMinutes(durationMillis)
+//                    val hours = TimeUnit.MILLISECONDS.toHours(durationMillis)
+//                    val days = TimeUnit.MILLISECONDS.toDays(durationMillis)
+//                    val weeks = days / 7
+//
+//                    val durationString = when {
+//                        weeks > 0 -> "$weeks w."
+//                        days > 0 -> "$days d."
+//                        hours > 0 -> "$hours h."
+//                        minutes > 0 -> "$minutes m."
+//                        else -> "$seconds s."
+//                    }
+//                    println("Post created $durationString")
+//                    createdAtTv.text = durationString
+//
+//                } catch (e: Exception) {
+//                    println("Invalid date")
+//                    createdAtTv.text = "Invalid date"
+//                }
 
-                try {
-                    val date = dateFormat.parse(createdAt)
-                    val currentTime = System.currentTimeMillis()
-                    val durationMillis = currentTime - date!!.time
-
-                    val seconds = TimeUnit.MILLISECONDS.toSeconds(durationMillis)
-                    val minutes = TimeUnit.MILLISECONDS.toMinutes(durationMillis)
-                    val hours = TimeUnit.MILLISECONDS.toHours(durationMillis)
-                    val days = TimeUnit.MILLISECONDS.toDays(durationMillis)
-                    val weeks = days / 7
-
-                    val durationString = when {
-                        weeks > 0 -> "$weeks w."
-                        days > 0 -> "$days d."
-                        hours > 0 -> "$hours h."
-                        minutes > 0 -> "$minutes m."
-                        else -> "$seconds s."
-                    }
-                    println("Post created $durationString")
-                    createdAtTv.text = durationString
-
-                } catch (e: Exception) {
-                    println("Invalid date")
-                    createdAtTv.text = "Invalid date"
-                }
+                createdAtTv.text = createdAt.formatCreatedAtShortened()
 
                 holder.itemView.setOnClickListener {
 
                     val bundle = Bundle().apply {
-                        putString("fullname", author?.fullName ?: "Twittur User")
-                        putString("username", author?.username)
-                        putString("post_description", content)
+                        putString("id", id)
+                        putString("userId", author?.id)
                         putString("createdAt", createdAt)
                         putString("updatedAt", updatedAt)
                         putString("likes", likes.toString())
-                        putString("id", id)
-                        putString("userId", author?.id)
+                        putString("post_description", content)
+                        putString("username", author?.username)
                         putString("userAvatar", author?.profilePicture)
+                        putString("fullname", author?.fullName ?: "Twittur User")
                     }
 
                     val navController = Navigation.findNavController(holder.itemView)
@@ -163,9 +181,8 @@ class TweetAdapter @Inject constructor(
                         when (item.itemId) {
 
                             R.id.edit_user_own_tweet -> {
-                                val bundle = Bundle().apply {
-                                    putString("description", content)
-                                }
+                                val bundle = Bundle()
+                                bundle.putString("description", content)
                                 val navController = Navigation.findNavController(holder.itemView)
                                 navController.navigate(R.id.editTweetFragment, bundle)
                                 true
@@ -177,8 +194,7 @@ class TweetAdapter @Inject constructor(
                                 alertDialogBuilder.setTitle(context.resources.getString(R.string.delete_tweet_title))
                                 alertDialogBuilder.setMessage(context.resources.getString(R.string.delete_tweet_message))
                                 alertDialogBuilder.setPositiveButton(context.resources.getString(R.string.yes)) { _, _ ->
-                                    val token = sessionManager.getToken()
-                                    tweetViewModel.deleteTweet(/** this id is tweetId */ id,"Bearer $token")
+                                    tweetViewModel.deleteTweet(/** this id is tweetId */ id,"Bearer ${sessionManager.getToken()}")
                                 }
 
                                 alertDialogBuilder.setNegativeButton(context.resources.getString(R.string.no)) { dialog, _ ->
@@ -193,11 +209,11 @@ class TweetAdapter @Inject constructor(
                                     when(result){
                                         is TweetDelete.Success -> {
                                             alertDialog.dismiss()
-                                            Toast.makeText(context, context.resources.getString(R.string.deleted), Toast.LENGTH_SHORT).show()
+                                            Snackbar.make(userOwnRootLayout, R.string.deleted, Snackbar.LENGTH_SHORT).show()
                                         }
                                         is  TweetDelete.Error -> {
                                             alertDialog.dismiss()
-                                            Toast.makeText(context, result.message, Toast.LENGTH_SHORT).show()
+                                            Snackbar.make(userOwnRootLayout, result.message, Snackbar.LENGTH_SHORT).show()
                                         }
                                     }
                                 }
@@ -279,14 +295,5 @@ class TweetAdapter @Inject constructor(
 //            }
 //        }
     }
-
-    override fun getItemCount(): Int {
-        return list.size
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    fun setData(newList: List<Tweet>){
-        list = newList
-        notifyDataSetChanged()
-    }
+    override fun getItemCount(): Int = differ.currentList.size
 }

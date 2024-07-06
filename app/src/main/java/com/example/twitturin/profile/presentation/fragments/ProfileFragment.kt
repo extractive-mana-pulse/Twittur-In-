@@ -154,7 +154,7 @@ class ProfileFragment : Fragment() {
                         result.apply {
 
                             profileFullName.text = user.fullName ?: "Twittur User"
-                            profileUsername.text = "@"+user.username
+                            profileUsername.text = /*"@"+*/user.username
                             profileKind.text = user.kind
                             profileBiography.text = user.bio ?: "This user does not appear to have any biography."
                             followingCounterTv.text = user.followingCount.toString()

@@ -56,9 +56,9 @@ class TweetsFragment : Fragment() {
                         swipeToRefreshLayoutTweets.setOnRefreshListener {
 
                             tweetViewModel.getUserTweet(sessionManager.getUserId()!!)
-                            userPostAdapter.notifyDataSetChanged()
                             tweetList.shuffle(Random(System.currentTimeMillis()))
                             swipeToRefreshLayoutTweets.isRefreshing = false
+                            userPostAdapter.notifyDataSetChanged()
 
                         }
 
@@ -73,7 +73,7 @@ class TweetsFragment : Fragment() {
                             rcView.visibility = View.VISIBLE
                             tweetsPageAnView.visibility = View.GONE
                             lottieInfoTv.visibility = View.GONE
-                            userPostAdapter.setData(tweetList)
+                            userPostAdapter.differ.submitList(tweetList)
                             userPostAdapter.notifyDataSetChanged()
 
                         }

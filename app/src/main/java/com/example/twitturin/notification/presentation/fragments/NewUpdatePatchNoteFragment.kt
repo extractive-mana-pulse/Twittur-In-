@@ -24,6 +24,8 @@ class NewUpdatePatchNoteFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+//        val gitHubApiBaseUrl =  "https://api.github.com/repos/{owner}/{repo}/releases/latest"
+
         binding.apply {
 
             patchNotPageUpdateBtn.setOnClickListener {
@@ -33,25 +35,26 @@ class NewUpdatePatchNoteFragment : Fragment() {
             }
 
             patchNoteToolbar.setNavigationOnClickListener { findNavController().navigateUp() }
-            Markwon.create(requireContext()).setMarkdown(patchNoteTv, "### UI/UX Improvements\n" +
+            Markwon.create(requireContext()).setMarkdown(patchNoteTv, "## UI/UX Improvements\n" +
                     "\n" +
                     "* Home screen bottom bar now has title\n" +
                     "* Create post Button shape changed\n" +
                     "* Detail page, Reply Edit text reworked. Now it's flexible under size of user text\n" +
-                    "* Create post page rebuild \n" +
+                    "* Create post page rebuild\n" +
                     "\n" +
-                    "### Optimization\n" +
+                    "## Optimization\n" +
                     "\n" +
-                    "* Mostly done code optimization so user cannot see that but there is noticeable improvements in performance\n" +
+                    "* Mostly done code optimization so user cannot see that but there is noticeable improvements in performance and animations\n" +
                     "\n" +
-                    "### Features\n" +
+                    "## Features\n" +
                     "\n" +
                     "* Feedback system implemented. Now user can leave a feedback!\n" +
                     "* Report system implemented. Now user can report a post!\n" +
                     "* Policy of creating post added (template only!) Will be modified soon.\n" +
                     "* Search function implemented.\n" +
+                    "* Report page has Other radio button. Gives users opportunity to leave their own report.\n" +
                     "\n" +
-                    "### Bug Fixes\n" +
+                    "## Bug Fixes\n" +
                     "\n" +
                     "* Fixed list of navigation bugs\n" +
                     "* Fixed search logic. Now when user search another user will be shown correct result\n" +

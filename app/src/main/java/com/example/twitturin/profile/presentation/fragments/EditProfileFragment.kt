@@ -33,10 +33,14 @@ class EditProfileFragment : Fragment() {
     @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.editProfileFragment = this
 
-        // TODO {fix: fix issue when user navigates to edit profile fragment user has username with sign @. in case user
-        //  did not edit his username and submit changes. in profile page user has 2 @@ sign in username textView. Need to fix that!}
+        /** TODO
+         * Fix. Scrolling now working.
+         * Rebuild. When  user navigates from profile to edit profile page. @ sign username.
+         * Fix. Navigation issue. when user successfully navigates to edit profile page and after navigates back. and press back button in profile page user accidentally navigates to edit profile page.
+         * */
+
+
 
         val fullname = arguments?.getString("profile_fullname")
         val username = arguments?.getString("profile_username")
@@ -44,50 +48,51 @@ class EditProfileFragment : Fragment() {
         val date = arguments?.getString("profile_date")
 
         binding.apply {
+
             editProfileFullnameEt.setText(fullname)
             editProfileUsernameEt.setText(username)
             editProfileBioEt.setText(bio)
             editProfileBirthdayEt.setText(date)
-        }
 
-        binding.headerLayout.setOnClickListener {
-//            showColorPickerDialog()
+            headerLayout.setOnClickListener { /*showColorPickerDialog()*/ }
+
+            editProfilePageToolbar.setNavigationOnClickListener { findNavController().navigateUp() }
+
+            editProfilePageToolbar.setOnMenuItemClickListener {
+                when(it.itemId) {
+                    R.id.save_changes -> {
+                        saveChanges()
+                        true
+                    }
+                    else -> false
+                }
+            }
         }
     }
 
-    fun save() {
-        val token = sessionManager.getToken()
-        val userId = sessionManager.getUserId()
+    private fun saveChanges() {
+        binding.apply {
+            val fullName = editProfileFullnameEt.text.toString()
+            val username = editProfileUsernameEt.text.toString()
+            val bio = editProfileBioEt.text.toString()
+            val email = editProfileEmailEt.text.toString()
+            val country = countryEt.selectedCountryName
+            val birthday = editProfileBirthdayEt.text.toString()
 
-        val fullName = binding.editProfileFullnameEt.text.toString()
-        val username = binding.editProfileUsernameEt.text.toString()
-        val bio = binding.editProfileBioEt.text.toString()
-        val email = binding.editProfileEmailEt.text.toString()
-        val country = binding.countryEt.selectedCountryName
-        val birthday = binding.editProfileBirthdayEt.text.toString()
+            profileViewModel.editUser(fullName, username, email, bio, country.toString(), birthday, sessionManager.getUserId()!!, "Bearer ${sessionManager.getToken()}")
 
-        profileViewModel.editUser(
-            fullName,
-            username,
-            email,
-            bio,
-            country.toString(),
-            birthday,
-            userId!!,
-            "Bearer $token"
-        )
+            profileViewModel.editUserResult.observe(viewLifecycleOwner) { result ->
+                when (result) {
+                    is EditUser.Success -> {
+                        findNavController().navigate(R.id.action_editProfileFragment_to_profileFragment)
+                    }
 
-        profileViewModel.editUserResult.observe(viewLifecycleOwner) { result ->
-            when (result) {
-                is EditUser.Success -> {
-                    findNavController().navigate(R.id.action_editProfileFragment_to_profileFragment)
-                }
-
-                is EditUser.Error -> {
-                    binding.editProfileRootLayout.snackbarError(
-                        requireActivity().findViewById(R.id.edit_profile_root_layout),
-                        error = result.error,
-                        ""){}
+                    is EditUser.Error -> {
+                        editProfileRootLayout.snackbarError(
+                            requireActivity().findViewById(R.id.edit_profile_root_layout),
+                            error = result.error,
+                            ""){}
+                    }
                 }
             }
         }
