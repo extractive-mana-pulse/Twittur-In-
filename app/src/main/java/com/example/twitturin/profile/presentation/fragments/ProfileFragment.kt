@@ -2,9 +2,8 @@ package com.example.twitturin.profile.presentation.fragments
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.graphics.Bitmap
 import android.os.Bundle
-import android.util.Log
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +11,7 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.PopupMenu
+import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -25,15 +25,18 @@ import com.example.twitturin.profile.presentation.adapters.ProfileViewPagerAdapt
 import com.example.twitturin.profile.presentation.sealed.AccountDelete
 import com.example.twitturin.profile.presentation.sealed.ProfileUIEvent
 import com.example.twitturin.profile.presentation.sealed.UserCredentials
+import com.example.twitturin.profile.presentation.util.converter
 import com.example.twitturin.profile.presentation.util.deleteDialogCodeWatcher
 import com.example.twitturin.profile.presentation.util.deleteDialogEmailWatcher
 import com.example.twitturin.profile.presentation.util.snackbarError
 import com.example.twitturin.profile.presentation.vm.ProfileUIViewModel
 import com.example.twitturin.profile.presentation.vm.ProfileViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import java.io.ByteArrayOutputStream
 import javax.inject.Inject
 
 @Suppress("DEPRECATION")
@@ -54,10 +57,17 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.profileFragment = this
-        // this portion of code with viewPager2 added, cause it cause an error: Fragment not found or no longer exist!
+
+        /** @return NOTE code related to viewPager2, vp2 cause an error: Fragment not found or no longer exist! */
         binding.vp2.isSaveEnabled = false
 
         binding.apply {
+
+//            val profileImage = profileUserAvatar.drawable?.toBitmap()
+//
+//            val byteArrayOutputStream = ByteArrayOutputStream()
+//            profileImage?.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
+//            val profileImageByteArray = byteArrayOutputStream.toByteArray()
 
             /**
              * This code build to implement listener when user click's on profile image, to open it, in full screen size!
@@ -89,6 +99,7 @@ class ProfileFragment : Fragment() {
                                         putString("profile_username", profileUsername.text.toString())
                                         putString("profile_bio", profileBiography.text.toString())
                                         putString("profile_date", profileDateTv.text.toString())
+//                                        putByteArray("profile_image", profileImageByteArray)
                                     }
                                     findNavController().navigate(R.id.action_profileFragment_to_editProfileFragment, bundle)
                                     true
@@ -109,18 +120,7 @@ class ProfileFragment : Fragment() {
 
                         popupMenu.inflate(R.menu.popup_menu_profile)
 
-                        try {
-                            val fieldMPopup = PopupMenu::class.java.getDeclaredField("mPopup")
-                            fieldMPopup.isAccessible = true
-                            val mPopup = fieldMPopup.get(popupMenu)
-                            mPopup.javaClass
-                                .getDeclaredMethod("setForceShowIcon", Boolean::class.java)
-                                .invoke(mPopup, true)
-                        } catch (e: Exception){
-                            Log.e("Main", "Error showing menu icons.", e)
-                        } finally {
-                            popupMenu.show()
-                        }
+                        popupMenu.converter(popupMenu)
                         true
                     }
                     else -> false
@@ -139,27 +139,31 @@ class ProfileFragment : Fragment() {
             }
 
             profileViewModel.getUserCredentials(sessionManager.getUserId()!!)
+
             profileViewModel.getUserCredentials.observe(viewLifecycleOwner) { result ->
+
                 profileShimmerLayout.startShimmer()
                 when (result) {
                     is UserCredentials.Success -> {
+
                         profileShimmerLayout.stopShimmer()
                         profileShimmerLayout.visibility = View.GONE
-                        val profileImage = "${result.user.profilePicture ?: R.drawable.person}"
+
+
                         Glide.with(requireContext())
-                            .load(profileImage)
+                            .load("${result.user.profilePicture ?: R.drawable.person}")
                             .error(R.drawable.not_found)
                             .into(profileUserAvatar)
 
                         result.apply {
 
-                            profileFullName.text = user.fullName ?: "Twittur User"
-                            profileUsername.text = /*"@"+*/user.username
                             profileKind.text = user.kind
-                            profileBiography.text = user.bio ?: "This user does not appear to have any biography."
+                            profileDateTv.text = user.birthday
+                            profileUsername.text = user.username
                             followingCounterTv.text = user.followingCount.toString()
                             followersCounterTv.text = user.followersCount.toString()
-                            profileDateTv.text = user.birthday
+                            profileFullName.text = (user.fullName ?: R.string.default_user_fullname).toString()
+                            profileBiography.text = (user.bio ?: R.string.empty_bio).toString()
 
                             // location
                             if (user.country.isNullOrEmpty()) {
@@ -181,8 +185,7 @@ class ProfileFragment : Fragment() {
                 }
             }
 
-            val adapter = ProfileViewPagerAdapter(childFragmentManager, lifecycle)
-            vp2.adapter = adapter
+            vp2.adapter = ProfileViewPagerAdapter(childFragmentManager, lifecycle)
             TabLayoutMediator(tb, vp2) { tab, pos ->
                 when (pos) {
                     0 -> {
@@ -256,19 +259,21 @@ class ProfileFragment : Fragment() {
             builder.setView(dialogView)
             val alertDialog = builder.create()
 
-            val emailEt = dialogView.findViewById<EditText>(R.id.email_confirm_et)
-            val codeEt = dialogView.findViewById<EditText>(R.id.code_sent_from_email_et)
             val cancelBtn = dialogView.findViewById<LinearLayout>(R.id.cancel_btn)
             val deleteBtn = dialogView.findViewById<LinearLayout>(R.id.delete_btn)
+            val emailEt = dialogView.findViewById<EditText>(R.id.email_confirm_et)
+            val codeEt = dialogView.findViewById<EditText>(R.id.code_sent_from_email_et)
             val emailConfirmBtn = dialogView.findViewById<ImageButton>(R.id.email_confirm_btn)
 
             emailConfirmBtn.isEnabled = false
 
+            codeEt.deleteDialogCodeWatcher(deleteBtn, codeEt)
+
             emailEt.deleteDialogEmailWatcher(emailConfirmBtn, emailEt)
 
-            deleteBtn.isEnabled = false
+            emailConfirmBtn.setOnClickListener { Snackbar.make(binding.profileRootLayout, R.string.in_progress,Snackbar.LENGTH_SHORT).show() }
 
-            codeEt.deleteDialogCodeWatcher(deleteBtn, codeEt)
+            deleteBtn.isEnabled = false
 
             cancelBtn.setOnClickListener { alertDialog.dismiss() }
 

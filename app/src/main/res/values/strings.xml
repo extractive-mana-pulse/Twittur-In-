@@ -128,6 +128,8 @@
     <string name="russian">Русский</string>
     <string name="english">English</string>
     <string name="o_zbek">O\'zbek</string>
+    <string name="default_user_fullname">Twittur User</string>
+    <string name="empty_bio">This user does not appear to have any biography.</string>
 
     <string-array name="major_array">
         <item>SE</item>

@@ -119,7 +119,7 @@
             android:id="@+id/action_profileFragment_to_editProfileFragment"
             app:destination="@id/editProfileFragment"
             app:popUpTo="@id/profileFragment"
-            app:popUpToInclusive="true"/>
+            app:popUpToInclusive="false"/>
 
         <action
             android:id="@+id/action_profileFragment_to_signInFragment"

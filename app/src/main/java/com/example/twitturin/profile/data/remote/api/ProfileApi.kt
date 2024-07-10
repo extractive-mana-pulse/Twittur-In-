@@ -36,5 +36,5 @@ interface ProfileApi {
         @Body image : ImageResource,
         @Path("id") userId : String,
         @Header("Authorization") token : String
-    ) : Call<ImageResource>
+    ) : Result<String>
 }

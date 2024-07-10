@@ -95,7 +95,7 @@ class DetailFragment : Fragment() {
                 .centerCrop()
                 .into(authorAvatar)
 
-            authorFullname.text = userFullname ?: "Twittur User"
+            authorFullname.text = userFullname ?: R.string.default_user_fullname.toString()
             authorUsername.text = "@$username"
             Markwon.create(requireContext()).setMarkdown(detailPostDescription, postDescription.toString())
             articlePageLikesCounter.text = likes

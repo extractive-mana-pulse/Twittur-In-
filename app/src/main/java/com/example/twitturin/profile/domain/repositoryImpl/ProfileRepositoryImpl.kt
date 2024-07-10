@@ -4,6 +4,7 @@ import com.example.twitturin.profile.domain.model.EditProfile
 import com.example.twitturin.profile.domain.model.User
 import com.example.twitturin.profile.data.remote.repository.ProfileRepository
 import com.example.twitturin.profile.data.remote.api.ProfileApi
+import com.example.twitturin.profile.domain.model.ImageResource
 import retrofit2.Call
 import retrofit2.Response
 
@@ -25,5 +26,13 @@ class ProfileRepositoryImpl(
 
     override suspend fun deleteUser(userId: String, token: String): Response<Unit> {
         return profileApi.deleteUser(userId, token)
+    }
+
+    override fun loadImage(
+        image: ImageResource,
+        userId: String,
+        token: String
+    ): Result<String> {
+        return profileApi.loadImage(image,userId,token)
     }
 }

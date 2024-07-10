@@ -66,14 +66,14 @@ class HomeAdapter @Inject constructor(
                 postHeartCounter.text = likes.toString()
                 postCommentsCounter.text = replyCount.toString()
                 createdAtTv.text = createdAt.formatCreatedAtPost()
-                fullNameTv.text = author?.fullName ?: "Twittur User"
+                fullNameTv.text = author?.fullName ?: R.string.default_user_fullname.toString()
                 Markwon.create(context).setMarkdown(postDescription, content)
 
                 holder.itemView.setOnClickListener {
 
                     val bundle = Bundle().apply {
-                        putString("fullname", author?.fullName ?: "Twittur User")
                         putString("userAvatar", author?.profilePicture)
+                        putString("fullname", author?.fullName)
                         putString("username", author?.username)
                         putString("post_description", content)
                         putString("likes", likes.toString())
@@ -90,8 +90,8 @@ class HomeAdapter @Inject constructor(
                 postIconComments.setOnClickListener {
 
                     val bundle = Bundle().apply {
-                        putString("fullname", author?.fullName ?: "Twittur User")
                         putString("userAvatar", author?.profilePicture)
+                        putString("fullname", author?.fullName)
                         putString("username", author?.username)
                         putString("post_description", content)
                         putString("likes", likes.toString())

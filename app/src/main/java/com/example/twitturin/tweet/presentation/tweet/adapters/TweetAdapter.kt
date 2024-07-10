@@ -16,20 +16,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.twitturin.R
 import com.example.twitturin.databinding.RcViewUserTweetsBinding
-import com.example.twitturin.detail.domain.model.UserLikesAPost
 import com.example.twitturin.detail.presentation.sealed.TweetDelete
-import com.example.twitturin.detail.presentation.util.formatCreatedAt
 import com.example.twitturin.manager.SessionManager
+import com.example.twitturin.profile.presentation.util.converter
 import com.example.twitturin.tweet.domain.model.Tweet
 import com.example.twitturin.tweet.presentation.like.vm.LikeViewModel
 import com.example.twitturin.tweet.presentation.tweet.util.formatCreatedAtShortened
 import com.example.twitturin.tweet.presentation.tweet.vm.TweetViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
-import java.text.SimpleDateFormat
-import java.util.Locale
-import java.util.TimeZone
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class TweetAdapter @Inject constructor(
@@ -37,9 +32,7 @@ class TweetAdapter @Inject constructor(
     private val parentLifecycleOwner: LifecycleOwner
 ) : RecyclerView.Adapter<TweetAdapter.ViewHolder>() {
 
-    private var list = emptyList<Tweet>()
     private lateinit var likeViewModel: LikeViewModel
-    private lateinit var sessionManager: SessionManager
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val binding = RcViewUserTweetsBinding.bind(itemView)
@@ -64,61 +57,28 @@ class TweetAdapter @Inject constructor(
 
     @SuppressLint("SetTextI18n", "DiscouragedPrivateApi")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = differ.currentList[position]
         val context = holder.itemView.context
+        val item = differ.currentList[position]
         val baseUrl = "https://twitturin.onrender.com/tweets"
 
 //        var likeCount: Int? = item.likes
 //        var isLiked: Boolean = false
 
-        sessionManager = SessionManager(context)
-
         holder.binding.apply {
             item.apply {
-                val profileImage = "${author?.profilePicture}"
 
                 Glide.with(context)
-                    .load(profileImage)
+                    .load("${author?.profilePicture}")
                     .error(R.drawable.not_found)
                     .placeholder(R.drawable.loading)
                     .centerCrop()
                     .into(userAvatarOwnTweet)
 
-                fullNameTvUserOwnTweet.text = author?.fullName ?: "Twittur User"
-                usernameTvUserOwnTweet.text = "@" + author?.username
+                postHeartCounter.text = likes.toString()
                 postDescriptionUserOwnTweet.text = content
                 postCommentsCounter.text = replyCount.toString()
-                postHeartCounter.text = likes.toString()
-
-
-//                val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.getDefault())
-//                dateFormat.timeZone = TimeZone.getTimeZone("UTC")
-//
-//                try {
-//                    val date = dateFormat.parse(createdAt)
-//                    val currentTime = System.currentTimeMillis()
-//                    val durationMillis = currentTime - date!!.time
-//
-//                    val seconds = TimeUnit.MILLISECONDS.toSeconds(durationMillis)
-//                    val minutes = TimeUnit.MILLISECONDS.toMinutes(durationMillis)
-//                    val hours = TimeUnit.MILLISECONDS.toHours(durationMillis)
-//                    val days = TimeUnit.MILLISECONDS.toDays(durationMillis)
-//                    val weeks = days / 7
-//
-//                    val durationString = when {
-//                        weeks > 0 -> "$weeks w."
-//                        days > 0 -> "$days d."
-//                        hours > 0 -> "$hours h."
-//                        minutes > 0 -> "$minutes m."
-//                        else -> "$seconds s."
-//                    }
-//                    println("Post created $durationString")
-//                    createdAtTv.text = durationString
-//
-//                } catch (e: Exception) {
-//                    println("Invalid date")
-//                    createdAtTv.text = "Invalid date"
-//                }
+                usernameTvUserOwnTweet.text = "@" + author?.username
+                fullNameTvUserOwnTweet.text = author?.fullName ?: R.string.default_user_fullname.toString()
 
                 createdAtTv.text = createdAt.formatCreatedAtShortened()
 
@@ -132,8 +92,8 @@ class TweetAdapter @Inject constructor(
                         putString("likes", likes.toString())
                         putString("post_description", content)
                         putString("username", author?.username)
+                        putString("fullname", author?.fullName)
                         putString("userAvatar", author?.profilePicture)
-                        putString("fullname", author?.fullName ?: "Twittur User")
                     }
 
                     val navController = Navigation.findNavController(holder.itemView)
@@ -141,27 +101,23 @@ class TweetAdapter @Inject constructor(
                 }
 
                 postIconCommentsUserOwnTweet.setOnClickListener {
-
                     val bundle = Bundle().apply {
-                        putString("fullname", author?.fullName ?: "Twittur User")
-                        putString("username", author?.username)
-                        putString("post_description", content)
-                        putString("createdAt", createdAt)
-                        putString("updatedAt", updatedAt)
-                        putString("likes", likes.toString())
                         putString("id", id)
                         putString("userId", author?.id)
-                        putString("userAvatar", author?.profilePicture)
+                        putString("updatedAt", updatedAt)
+                        putString("createdAt", createdAt)
+                        putString("likes", likes.toString())
                         putBoolean("activateEditText", true)
+                        putString("post_description", content)
+                        putString("username", author?.username)
+                        putString("fullname", author?.fullName)
+                        putString("userAvatar", author?.profilePicture)
                     }
-
                     val navController = Navigation.findNavController(holder.itemView)
                     navController.navigate(R.id.detailFragment, bundle)
                 }
 
-                postIconHeartUserOwnTweet.setOnClickListener {
-                    Snackbar.make(userOwnRootLayout, R.string.in_progress, Snackbar.LENGTH_SHORT).show()
-                }
+                postIconHeartUserOwnTweet.setOnClickListener { Snackbar.make(userOwnRootLayout, R.string.in_progress, Snackbar.LENGTH_SHORT).show() }
 
                 postIconShareUserOwnTweet.setOnClickListener {
                     val intent = Intent(Intent.ACTION_SEND)
@@ -194,25 +150,25 @@ class TweetAdapter @Inject constructor(
                                 alertDialogBuilder.setTitle(context.resources.getString(R.string.delete_tweet_title))
                                 alertDialogBuilder.setMessage(context.resources.getString(R.string.delete_tweet_message))
                                 alertDialogBuilder.setPositiveButton(context.resources.getString(R.string.yes)) { _, _ ->
-                                    tweetViewModel.deleteTweet(/** this id is tweetId */ id,"Bearer ${sessionManager.getToken()}")
+                                    tweetViewModel.deleteTweet(/** this id is tweetId */ id,"Bearer ${SessionManager(context).getToken()}")
                                 }
 
                                 alertDialogBuilder.setNegativeButton(context.resources.getString(R.string.no)) { dialog, _ ->
                                     dialog.dismiss()
                                 }
 
-                                val alertDialog = alertDialogBuilder.create()
-                                alertDialog.show()
+
+                                alertDialogBuilder.create().show()
 
                                 tweetViewModel.deleteTweetResult.observe(parentLifecycleOwner) { result ->
 
                                     when(result){
                                         is TweetDelete.Success -> {
-                                            alertDialog.dismiss()
+                                            alertDialogBuilder.create().dismiss()
                                             Snackbar.make(userOwnRootLayout, R.string.deleted, Snackbar.LENGTH_SHORT).show()
                                         }
                                         is  TweetDelete.Error -> {
-                                            alertDialog.dismiss()
+                                            alertDialogBuilder.create().dismiss()
                                             Snackbar.make(userOwnRootLayout, result.message, Snackbar.LENGTH_SHORT).show()
                                         }
                                     }
@@ -225,18 +181,7 @@ class TweetAdapter @Inject constructor(
 
                     popupMenu.inflate(R.menu.popup_user_menu)
 
-                    try {
-                        val fieldMPopup = PopupMenu::class.java.getDeclaredField("mPopup")
-                        fieldMPopup.isAccessible = true
-                        val mPopup = fieldMPopup.get(popupMenu)
-                        mPopup.javaClass
-                            .getDeclaredMethod("setForceShowIcon", Boolean::class.java)
-                            .invoke(mPopup, true)
-                    } catch (e: Exception){
-                        Log.e("Main", "Error showing menu icons.", e)
-                    } finally {
-                        popupMenu.show()
-                    }
+                    popupMenu.converter(popupMenu)
                 }
 
                 // TODO { WRITE CODE HERE }

@@ -29,13 +29,7 @@ class PhotoPickerActivity : AppCompatActivity() {
                 if (it.resultCode != Activity.RESULT_OK) {
                     Toast.makeText(this, "Failed picking media.", Toast.LENGTH_SHORT).show()
                 } else {
-                    val uri = it.data?.data
-                    Toast.makeText(this, uri?.path, Toast.LENGTH_SHORT).show()
-//                    snackbarHelper.snackbar(
-//                        findViewById(R.id.photo_picker_root_layout),
-//                        findViewById(R.id.photo_picker_root_layout),
-//                        message = "SUCCESS: ${uri?.path}"
-//                    )
+                    Toast.makeText(this, it.data?.data?.path, Toast.LENGTH_SHORT).show()
                 }
             }
 
@@ -64,14 +58,14 @@ class PhotoPickerActivity : AppCompatActivity() {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
 
-//            binding.choosePictureBtn.setOnClickListener {
-//                pickSingleMediaLauncher.launch(
-//                    Intent(MediaStore.ACTION_PICK_IMAGES)
-//                        .apply {
-//                            type = "image/*"
-//                        }
-//                )
-//            }
+            binding.choosePictureBtn.setOnClickListener {
+                pickSingleMediaLauncher.launch(
+                    Intent(MediaStore.ACTION_PICK_IMAGES)
+                        .apply {
+                            type = "image/*"
+                        }
+                )
+            }
             binding.choosePictureBtn.setOnClickListener {
                 pickMultipleMediaLauncher.launch(
                     Intent(MediaStore.ACTION_PICK_IMAGES)

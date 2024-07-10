@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fillViewport="true"
     tools:context=".profile.presentation.fragments.EditProfileFragment">
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/edit_profile_root_layout"
@@ -19,64 +15,14 @@
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/edit_profile_page_toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
                 app:titleCentered="true"
                 app:title="@string/edit_profile"
                 app:menu="@menu/edit_profile_menu"
-                app:navigationIcon="@drawable/keyboard_backspace"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"/>
-
-<!--            <androidx.constraintlayout.widget.ConstraintLayout-->
-<!--                android:id="@+id/edit_profile_page_toolbar"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="?attr/actionBarSize"-->
-<!--                android:background="?attr/colorSurface"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toTopOf="parent">-->
-
-<!--                <ImageButton-->
-<!--                    android:id="@+id/edit_profile_back_btn"-->
-<!--                    android:layout_width="48dp"-->
-<!--                    android:layout_height="48dp"-->
-<!--                    android:layout_marginStart="16dp"-->
-<!--                    android:onClick="@{() -> editProfileFragment.fragmentManager.popBackStack()}"-->
-<!--                    android:background="@android:color/transparent"-->
-<!--                    android:src="@drawable/keyboard_backspace"-->
-<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                    app:layout_constraintStart_toStartOf="parent"-->
-<!--                    app:layout_constraintTop_toTopOf="parent"-->
-<!--                    tools:ignore="ContentDescription,SpeakableTextPresentCheck,TouchTargetSizeCheck" />-->
-
-<!--                <TextView-->
-<!--                    android:id="@+id/edit_profile_tv"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="@string/edit_profile"-->
-<!--                    android:textSize="18sp"-->
-<!--                    android:textStyle="bold"-->
-<!--                    android:textColor="?attr/colorOnSurface"-->
-<!--                    app:layout_constraintEnd_toEndOf="parent"-->
-<!--                    app:layout_constraintTop_toTopOf="parent"-->
-<!--                    app:layout_constraintStart_toStartOf="parent"-->
-<!--                    app:layout_constraintBottom_toBottomOf="parent"/>-->
-
-<!--                <Button-->
-<!--                    android:id="@+id/edit_profile_save_btn"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="@string/save"-->
-<!--                    android:onClick="@{() -> editProfileFragment.save()}"-->
-<!--                    android:textSize="14sp"-->
-<!--                    android:textColor="?attr/colorOnSurface"-->
-<!--                    android:background="@android:color/transparent"-->
-<!--                    app:layout_constraintEnd_toEndOf="parent"-->
-<!--                    app:layout_constraintTop_toTopOf="parent"-->
-<!--                    app:layout_constraintBottom_toBottomOf="parent"/>-->
-
-<!--            </androidx.constraintlayout.widget.ConstraintLayout>-->
+                android:layout_height="?attr/actionBarSize"
+                app:layout_constraintStart_toStartOf="parent"
+                app:navigationIcon="@drawable/keyboard_backspace"/>
 
             <LinearLayout
                 android:id="@+id/header_layout"
@@ -84,9 +30,9 @@
                 android:layout_height="105dp"
                 android:background="#044B76"
                 android:gravity="center_horizontal"
-                app:layout_constraintTop_toBottomOf="@id/edit_profile_page_toolbar"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent">
+                app:layout_constraintTop_toBottomOf="@id/edit_profile_page_toolbar">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -109,22 +55,14 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"/>
 
-            <LinearLayout
-                android:id="@+id/edit_texts_layout"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:gravity="center"
-                android:orientation="vertical"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/edit_profile_user_avatar">
-
                 <LinearLayout
                     android:id="@+id/fullname_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    app:layout_constraintTop_toBottomOf="@id/edit_profile_user_avatar"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -152,7 +90,10 @@
                     android:id="@+id/username_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/fullname_layout">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -180,15 +121,18 @@
                     android:id="@+id/bio_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/username_layout">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/biography"
-                        android:textAlignment="textStart"
                         android:layout_gravity="start"
                         android:layout_marginTop="24dp"
+                        android:textAlignment="textStart"
                         android:layout_marginStart="16dp"/>
 
                     <EditText
@@ -208,15 +152,18 @@
                     android:id="@+id/email_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/bio_layout">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/email"
-                        android:textAlignment="textStart"
                         android:layout_gravity="start"
                         android:layout_marginTop="24dp"
+                        android:textAlignment="textStart"
                         android:layout_marginStart="16dp"/>
 
                     <EditText
@@ -236,7 +183,10 @@
                     android:id="@+id/country_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/email_layout">
 
                     <TextView
                         android:id="@+id/country_tv"
@@ -252,10 +202,11 @@
                         android:id="@+id/country_et"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:ccp_defaultLanguage="ENGLISH"
+                        app:ccp_showFlag="true"
                         app:ccp_defaultNameCode="UZ"
                         app:ccp_showPhoneCode="false"
-                        app:ccp_showFlag="true"/>
+                        app:ccp_defaultLanguage="ENGLISH"
+                        android:layout_marginHorizontal="16dp"/>
 
                 </LinearLayout>
 
@@ -263,39 +214,37 @@
                     android:id="@+id/birthday_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/country_layout">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="start"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="15dp"
                         android:inputType="date"
-                        android:minHeight="48dp"
                         android:text="@string/birthday"
-                        android:textAlignment="textStart"
-                        tools:ignore="TextViewEdits" />
+                        tools:ignore="TextViewEdits"
+                        android:layout_marginTop="24dp"
+                        android:layout_marginStart="16dp"
+                        android:textAlignment="textStart"/>
 
                     <com.santalu.maskedittext.MaskEditText
                         android:id="@+id/edit_profile_birthday_et"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="16dp"
-                        android:layout_marginTop="3dp"
                         android:hint="yyyy-MM-dd"
                         android:inputType="date"
                         android:minHeight="48dp"
                         app:met_mask="####-##-##"
+                        tools:ignore="HardcodedText"
+                        android:layout_marginTop="3dp"
                         android:imeOptions="actionDone"
-                        tools:ignore="HardcodedText" />
+                        android:layout_marginHorizontal="16dp"/>
 
                 </LinearLayout>
 
-            </LinearLayout>
-
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </ScrollView>
-
-</LinearLayout>
+</androidx.core.widget.NestedScrollView>

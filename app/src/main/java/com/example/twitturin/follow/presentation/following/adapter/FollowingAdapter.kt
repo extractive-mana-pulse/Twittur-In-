@@ -63,9 +63,9 @@ class FollowingAdapter @Inject constructor(
                     .error(R.drawable.not_found)
                     .into(userFollowingAvatar)
 
-                fullNameFollowingTv.text = fullName ?: "Twittur User"
+                fullNameFollowingTv.text = fullName ?: R.string.default_user_fullname.toString()
                 usernameFollowingTv.text = "@$username"
-                userFollowingPostDescription.text = bio ?: "This user does not appear to have any biography."
+                userFollowingPostDescription.text = bio ?: R.string.empty_bio.toString()
 
                 unfollowBtn.setOnClickListener {
                     followViewModel.unFollowUser(id!!,"Bearer $token")

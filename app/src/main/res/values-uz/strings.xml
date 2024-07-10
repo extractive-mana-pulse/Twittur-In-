@@ -123,4 +123,6 @@
     <string name="profile_page_back_button">profile page back button</string>
     <string name="policy_agree_btn">I accept the Terms of Service</string>
     <string name="detail_page_bottom_sheet">This is detail page bottom sheet</string>
+    <string name="default_user_fullname">Twittur User</string>
+    <string name="empty_bio">This user does not appear to have any biography.</string>
 </resources>

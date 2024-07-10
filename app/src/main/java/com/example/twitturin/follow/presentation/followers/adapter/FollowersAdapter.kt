@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
@@ -68,9 +67,9 @@ class FollowersAdapter @Inject constructor(
                     .error(R.drawable.not_found)
                     .into(userFollowerAvatar)
 
-                fullNameFollowerTv.text = fullName ?: "Twittur User"
                 usernameFollowerTv.text = "@$username"
-                postDescription.text = bio ?: "This user does not appear to have any biography."
+                postDescription.text = bio ?: R.string.empty_bio.toString()
+                fullNameFollowerTv.text = fullName ?: R.string.default_user_fullname.toString()
 
                 followBtn.setOnClickListener { followViewModel.followUsers(id!!,"Bearer $token") }
 

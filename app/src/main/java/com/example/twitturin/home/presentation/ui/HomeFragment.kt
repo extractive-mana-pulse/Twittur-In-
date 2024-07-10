@@ -118,7 +118,7 @@ class HomeFragment : Fragment() {
                             .into(drawerIcon)
 
                         result.user.apply {
-                            headerFullname.text = fullName ?: "Twittur User"
+                            headerFullname.text = fullName ?: R.string.default_user_fullname.toString()
                             headerUsername.text = "@$username"
                             headerFollowing.text = followingCount.toString()
                             headingFollowers.text = followersCount.toString()

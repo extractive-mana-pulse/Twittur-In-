@@ -52,8 +52,8 @@ class ListOfLikesAdapter : RecyclerView.Adapter<ListOfLikesAdapter.ViewHolder>()
                     .into(userLolAvatar)
 
                 usernameLolTv.text = "@$username"
-                fullNameLolTv.text = fullName ?: "Twittur User"
                 Markwon.create(context).setMarkdown(postDescription, bio.toString())
+                fullNameLolTv.text = fullName ?: R.string.default_user_fullname.toString()
             }
         }
     }
