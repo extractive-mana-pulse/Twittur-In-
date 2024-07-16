@@ -14,20 +14,21 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresExtension
+import androidx.core.net.toFile
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.twitturin.R
 import com.example.twitturin.databinding.FragmentEditProfileBinding
 import com.example.twitturin.manager.SessionManager
 import com.example.twitturin.profile.presentation.sealed.EditUser
+import com.example.twitturin.profile.presentation.sealed.EditUserImageState
 import com.example.twitturin.profile.presentation.util.snackbarError
 import com.example.twitturin.profile.presentation.vm.ProfileViewModel
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class EditProfileFragment : Fragment() {
@@ -41,6 +42,7 @@ class EditProfileFragment : Fragment() {
         return binding.root
     }
 
+    @RequiresExtension(extension = Build.VERSION_CODES.R, version = 2)
     @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -51,9 +53,9 @@ class EditProfileFragment : Fragment() {
 
         val bio = arguments?.getString("profile_bio")
         val date = arguments?.getString("profile_date")
-        val fullname = arguments?.getString("profile_fullname")
+        val avatar = arguments?.getByteArray("profile_image")
         val username = arguments?.getString("profile_username")
-//        val userAvatar = arguments?.getByteArray("profile_image")
+        val fullname = arguments?.getString("profile_fullname")
 
         binding.apply {
 
@@ -63,45 +65,37 @@ class EditProfileFragment : Fragment() {
                 } else {
                     val sharedPreferences = requireActivity().getSharedPreferences("test", Context.MODE_PRIVATE)
                     sharedPreferences.edit().putString("image", it.data?.data.toString()).apply()
-
-                    it.data?.data.toString()
-
                     Log.d("image", it.data?.data.toString())
 
-                    Glide.with(requireContext())
-                        .load(it.data?.data.toString())
-                        .into(editProfileUserAvatar)
                 }
             }
 
             val sharedPreferences = requireActivity().getSharedPreferences("test", Context.MODE_PRIVATE)
             val imagePath = sharedPreferences.getString("image", null)
 
-            Log.d("image", imagePath.toString())
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+//
+//
+//            }
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                editProfileUserAvatar.setOnClickListener {
-                    pickSingleMediaLauncher.launch(Intent(MediaStore.ACTION_PICK_IMAGES).apply { type = "image/*" } )
-                    profileViewModel.editUserImage(imagePath!!, SessionManager(requireContext()).getUserId()!!, "Bearer ${SessionManager(requireContext()).getToken()}")
-                }
+            editProfileUserAvatar.setOnClickListener {
+                pickSingleMediaLauncher.launch(Intent(MediaStore.ACTION_PICK_IMAGES).apply { type = "image/*" } )
+                profileViewModel.editUserImage(SessionManager(requireContext()).getUserId()!!, imagePath!!, "Bearer ${SessionManager(requireContext()).getToken()}")
             }
 
-            viewLifecycleOwner.lifecycleScope.launch {
-                profileViewModel.editUserImageState.collect{
-                    when(it){
-                        is ProfileViewModel.EditUserImageState.Error -> {
-                            editProfileRootLayout.snackbarError(
-                                editProfileRootLayout,
-                                error = it.message,
-                                actionText = ""
-                            ) {}
-                        }
-                        ProfileViewModel.EditUserImageState.Loading -> {
-                            Toast.makeText(requireContext(), "Loading", Toast.LENGTH_SHORT).show()
-                        }
-                        is ProfileViewModel.EditUserImageState.Success -> {
-                            Snackbar.make(editProfileRootLayout, "Success", Snackbar.LENGTH_SHORT).show()
-                        }
+            profileViewModel.editUserImageState.observe(viewLifecycleOwner) { result ->
+
+                when(result) {
+                    is EditUserImageState.Success -> {
+                        Snackbar.make(editProfileRootLayout, "Success", Snackbar.LENGTH_SHORT).show()
+                    }
+
+                    is EditUserImageState.Error -> {
+                        editProfileRootLayout.snackbarError(
+                            editProfileRootLayout,
+                            error = result.message,
+                            actionText = ""
+                        ) {}
                     }
                 }
             }
@@ -115,6 +109,11 @@ class EditProfileFragment : Fragment() {
 
             editProfilePageToolbar.setNavigationOnClickListener { findNavController().navigateUp() }
 
+
+            Glide.with(requireContext())
+                .load(avatar)
+                .into(editProfileUserAvatar)
+
             editProfilePageToolbar.setOnMenuItemClickListener {
                 when (it.itemId) {
                     R.id.save_changes -> {
@@ -126,8 +125,6 @@ class EditProfileFragment : Fragment() {
                 }
             }
         }
-
-
     }
 
     private fun saveChanges() {

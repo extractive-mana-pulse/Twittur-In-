@@ -19,12 +19,11 @@ import com.example.twitturin.profile.presentation.sealed.UserCredentials
 import com.example.twitturin.profile.presentation.util.snackbarError
 import com.example.twitturin.profile.presentation.vm.ProfileViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class StayInFragment : Fragment() {
 
-    @Inject lateinit var sessionManager : SessionManager
     private val stayInViewModel: StayInViewModel by viewModels()
     private val profileViewModel : ProfileViewModel by viewModels()
     private val binding by lazy { FragmentStayInBinding.inflate(layoutInflater) }
@@ -39,20 +38,19 @@ class StayInFragment : Fragment() {
 
         binding.apply {
 
-            saveBtn.setOnClickListener { stayInViewModel.stayInUiEvent(StayInUiEvent.OnSavePressed) }
+            saveBtn.setOnClickListener { stayInViewModel.onSavePressed() }
 
-            notSaveBtn.setOnClickListener { stayInViewModel.stayInUiEvent(StayInUiEvent.OnNotSavePressed) }
+            notSaveBtn.setOnClickListener { stayInViewModel.onNotSavePressed() }
 
-            stayInProfileImage.setOnClickListener { stayInViewModel.stayInUiEvent(StayInUiEvent.FullScreenPressed) }
+            stayInProfileImage.setOnClickListener { stayInViewModel.onFullScreenPressed() }
 
-            profileViewModel.getUserCredentials(sessionManager.getUserId()!!)
+            profileViewModel.getUserCredentials(SessionManager(requireContext()).getUserId()!!)
 
             profileViewModel.getUserCredentials.observe(viewLifecycleOwner) { result ->
                 when (result) {
                     is UserCredentials.Success -> {
-                        val profileImage = "${result.user.profilePicture ?: R.drawable.person}"
                         Glide.with(requireContext())
-                            .load(profileImage)
+                            .load(result.user.profilePicture)
                             .error(R.drawable.not_found)
                             .into(stayInProfileImage)
                     }
@@ -67,7 +65,7 @@ class StayInFragment : Fragment() {
                 }
             }
 
-            lifecycleScope.launchWhenStarted {
+            viewLifecycleOwner.lifecycleScope.launch {
                 stayInViewModel.stayInEvent.collect {
                     when (it) {
 
@@ -101,8 +99,6 @@ class StayInFragment : Fragment() {
                                 "FullScreenImageFragment"
                             )
                         }
-
-                        StayInUiEvent.NothingState -> {}
                     }
                 }
             }

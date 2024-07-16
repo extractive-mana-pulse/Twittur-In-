@@ -2,6 +2,7 @@ package com.example.twitturin.home.presentation.ui
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -36,18 +37,16 @@ import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.util.Locale
-import javax.inject.Inject
 
 @Suppress("DEPRECATION")
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
 
-    @Inject lateinit var sessionManager: SessionManager
     private val homeViewModel : HomeViewModel by viewModels()
     private val tweetViewModel : TweetViewModel by viewModels()
     private val profileViewModel: ProfileViewModel by viewModels()
     private val binding by lazy { FragmentHomeBinding.inflate(layoutInflater) }
-    private val homeAdapter by lazy { HomeAdapter(homeViewModel, viewLifecycleOwner) }
+    private val homeAdapter by lazy { HomeAdapter(homeClickEvents = ::homeClickEvent) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return binding.root
@@ -91,7 +90,7 @@ class HomeFragment : Fragment() {
                 }
             }
 
-            profileViewModel.getUserCredentials(sessionManager.getUserId()!!)
+            profileViewModel.getUserCredentials(SessionManager(requireContext()).getUserId()!!)
 
             profileViewModel.getUserCredentials.observe(viewLifecycleOwner) { result ->
 
@@ -263,5 +262,52 @@ class HomeFragment : Fragment() {
         val editor = requireActivity().getSharedPreferences("Settings", Context.MODE_PRIVATE).edit()
         editor.putString("lang", lang)
         editor.apply()
+    }
+
+    private fun homeClickEvent(homeClickEvents: HomeAdapter.HomeClickEvents, tweet: Tweet) {
+
+        when(homeClickEvents) {
+
+            HomeAdapter.HomeClickEvents.ITEM -> {
+                val bundle = Bundle().apply {
+                    putString("userAvatar", tweet.author?.profilePicture)
+                    putString("fullname", tweet.author?.fullName)
+                    putString("username", tweet.author?.username)
+                    putString("post_description", tweet.content)
+                    putString("likes", tweet.likes.toString())
+                    putString("createdAt", tweet.createdAt)
+                    putString("updatedAt", tweet.updatedAt)
+                    putString("userId", tweet.author?.id)
+                    putString("id", tweet.id)
+                }
+                findNavController().navigate(R.id.detailFragment, bundle)
+            }
+
+            HomeAdapter.HomeClickEvents.HEART -> { Snackbar.make(binding.homeRootLayout, R.string.in_progress, Snackbar.LENGTH_SHORT).show() }
+
+            HomeAdapter.HomeClickEvents.SHARE -> {
+                val intent = Intent(Intent.ACTION_SEND)
+                val link = "https://twitturin.onrender.com/tweets/${tweet.id}"
+                intent.putExtra(Intent.EXTRA_TEXT, link)
+                intent.type = "text/plain"
+                context?.startActivity(Intent.createChooser(intent,"Choose app:"))
+            }
+
+            HomeAdapter.HomeClickEvents.REPLY -> {
+                val bundle = Bundle().apply {
+                    putString("userAvatar", tweet.author?.profilePicture)
+                    putString("fullname", tweet.author?.fullName)
+                    putString("username", tweet.author?.username)
+                    putString("post_description", tweet.content)
+                    putString("likes", tweet.likes.toString())
+                    putString("updatedAt", tweet.updatedAt)
+                    putString("createdAt", tweet.createdAt)
+                    putString("userId", tweet.author?.id)
+                    putBoolean("activateEditText", true)
+                    putString("id", tweet.id)
+                }
+                findNavController().navigate(R.id.detailFragment, bundle)
+            }
+        }
     }
 }

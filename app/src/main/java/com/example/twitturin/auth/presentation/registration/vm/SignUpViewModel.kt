@@ -15,17 +15,17 @@ import retrofit2.Response
 import javax.inject.Inject
 
 @HiltViewModel
-class SignUpViewModel @Inject constructor(
-    private val repository : AuthRepository
-) : ViewModel() {
+class SignUpViewModel @Inject constructor(private val repository : AuthRepository) : ViewModel() {
 
     private val _profRegResult = SingleLiveEvent<SignUpProfResult>()
     val profRegResult: LiveData<SignUpProfResult> = _profRegResult
 
     fun signUpProf(fullName: String, username: String, subject: String, password: String, kind: String) {
+
         val request = SignUpProf(fullName, username, subject, password, kind)
 
         repository.signUpProf(request).enqueue(object : Callback<SignUpProf> {
+
             override fun onResponse(call: Call<SignUpProf>, response: Response<SignUpProf>) {
 
                 if (response.isSuccessful) {
@@ -46,9 +46,13 @@ class SignUpViewModel @Inject constructor(
     val signUpStudentResult: LiveData<SignUpStudentResult> = _signUpStudentResult
 
     fun signUpStudent(fullName: String, username: String, studentId: String, major: String, password: String, kind: String) {
+
         val request = SignUpStudent(fullName, username, studentId, major, password, kind)
+
         repository.signUpStudent(request).enqueue(object : Callback<SignUpStudent> {
+
             override fun onResponse(call: Call<SignUpStudent>, response: Response<SignUpStudent>) {
+
                 if (response.isSuccessful) {
                     val signUpResponse = response.body()
                     _signUpStudentResult.value = signUpResponse?.let {
@@ -58,7 +62,6 @@ class SignUpViewModel @Inject constructor(
                     _signUpStudentResult.value = SignUpStudentResult.Error(response.code().toString())
                 }
             }
-
             override fun onFailure(call: Call<SignUpStudent>, t: Throwable) {
                 _signUpStudentResult.value = SignUpStudentResult.Error(t.message.toString())
             }

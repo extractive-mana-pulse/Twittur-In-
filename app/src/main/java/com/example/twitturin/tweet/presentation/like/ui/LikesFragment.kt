@@ -1,37 +1,34 @@
 package com.example.twitturin.tweet.presentation.like.ui
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.twitturin.R
 import com.example.twitturin.databinding.FragmentLikesBinding
+import com.example.twitturin.home.presentation.adapter.HomeAdapter
 import com.example.twitturin.manager.SessionManager
 import com.example.twitturin.profile.presentation.util.snackbarError
 import com.example.twitturin.tweet.domain.model.Tweet
-import com.example.twitturin.home.presentation.adapter.HomeAdapter
-import com.example.twitturin.home.presentation.vm.HomeViewModel
 import com.example.twitturin.tweet.presentation.tweet.vm.TweetViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class LikesFragment : Fragment() {
 
-    @Inject lateinit var sessionManager: SessionManager
-    private val homeViewModel : HomeViewModel by viewModels()
     private val tweetViewModel : TweetViewModel by viewModels()
     private val binding by lazy { FragmentLikesBinding.inflate(layoutInflater) }
-    private val homeAdapter by lazy { HomeAdapter(homeViewModel, viewLifecycleOwner) }
+    private val homeAdapter by lazy { HomeAdapter(homeClickEvents = ::homeClickEvent) }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        return binding.root
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View = binding.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -40,32 +37,88 @@ class LikesFragment : Fragment() {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun updateRecyclerView() {
-        val userId = sessionManager.getUserId()
-        binding.rcView.adapter = homeAdapter
-        binding.rcView.addItemDecoration(DividerItemDecoration(binding.rcView.context, DividerItemDecoration.VERTICAL))
-        binding.rcView.layoutManager = LinearLayoutManager(requireContext())
-        tweetViewModel.getLikedPosts(userId!!)
-        tweetViewModel.likedPosts.observe(requireActivity()) { response ->
-            if (response.isSuccessful) {
-                response.body()?.let { tweets ->
-                    val tweetList: MutableList<Tweet> = tweets.toMutableList()
-                    if (tweetList.isEmpty()) {
-                        binding.rcView.visibility = View.GONE
-                        binding.likesPageAnView.visibility = View.VISIBLE
-                        binding.lottieInfoTv.visibility = View.VISIBLE
-                    } else {
-                        binding.rcView.visibility = View.VISIBLE
-                        binding.likesPageAnView.visibility = View.GONE
-                        binding.lottieInfoTv.visibility = View.GONE
+        binding.apply {
+            val userId = SessionManager(requireContext()).getUserId()
+            rcView.adapter = homeAdapter
+            rcView.layoutManager = LinearLayoutManager(requireContext())
+            rcView.addItemDecoration(DividerItemDecoration(rcView.context, DividerItemDecoration.VERTICAL))
+
+            tweetViewModel.getLikedPosts(userId!!)
+
+            tweetViewModel.likedPosts.observe(requireActivity()) { response ->
+
+                if (response.isSuccessful) {
+
+                    response.body()?.let { tweets ->
+
+                        val tweetList: MutableList<Tweet> = tweets.toMutableList()
                         homeAdapter.differ.submitList(tweetList)
-                        tweetViewModel.getLikedPosts(userId)
+
+                        if (tweetList.isEmpty()) {
+                            rcView.visibility = View.GONE
+                            likesPageAnView.visibility = View.VISIBLE
+                            lottieInfoTv.visibility = View.VISIBLE
+                        } else {
+                            rcView.visibility = View.VISIBLE
+                            likesPageAnView.visibility = View.GONE
+                            lottieInfoTv.visibility = View.GONE
+                            tweetViewModel.getLikedPosts(userId)
+                        }
                     }
+                } else {
+                    likesRootLayout.snackbarError(
+                        likesRootLayout,
+                        error = response.body().toString(),
+                        ""){}
                 }
-            } else {
-                binding.likesRootLayout.snackbarError(
-                    requireActivity().findViewById(R.id.likes_root_layout),
-                    error = response.body().toString(),
-                    ""){}
+            }
+        }
+    }
+
+    private fun homeClickEvent(homeClickEvents: HomeAdapter.HomeClickEvents, tweet: Tweet) {
+
+        when(homeClickEvents) {
+
+            HomeAdapter.HomeClickEvents.ITEM -> {
+                val bundle = Bundle().apply {
+                    putString("userAvatar", tweet.author?.profilePicture)
+                    putString("fullname", tweet.author?.fullName)
+                    putString("username", tweet.author?.username)
+                    putString("post_description", tweet.content)
+                    putString("likes", tweet.likes.toString())
+                    putString("createdAt", tweet.createdAt)
+                    putString("updatedAt", tweet.updatedAt)
+                    putString("userId", tweet.author?.id)
+                    putString("id", tweet.id)
+                }
+                findNavController().navigate(R.id.detailFragment, bundle)
+            }
+
+            HomeAdapter.HomeClickEvents.HEART -> {
+                Toast.makeText(requireContext(), "In Progress", Toast.LENGTH_SHORT).show()/*Snackbar.make(binding.homeRootLayout, R.string.in_progress, Snackbar.LENGTH_SHORT).show()*/ }
+
+            HomeAdapter.HomeClickEvents.SHARE -> {
+                val intent = Intent(Intent.ACTION_SEND)
+                val link = "https://twitturin.onrender.com/tweets/${tweet.id}"
+                intent.putExtra(Intent.EXTRA_TEXT, link)
+                intent.type = "text/plain"
+                context?.startActivity(Intent.createChooser(intent,"Choose app:"))
+            }
+
+            HomeAdapter.HomeClickEvents.REPLY -> {
+                val bundle = Bundle().apply {
+                    putString("userAvatar", tweet.author?.profilePicture)
+                    putString("fullname", tweet.author?.fullName)
+                    putString("username", tweet.author?.username)
+                    putString("post_description", tweet.content)
+                    putString("likes", tweet.likes.toString())
+                    putString("updatedAt", tweet.updatedAt)
+                    putString("createdAt", tweet.createdAt)
+                    putString("userId", tweet.author?.id)
+                    putBoolean("activateEditText", true)
+                    putString("id", tweet.id)
+                }
+                findNavController().navigate(R.id.detailFragment, bundle)
             }
         }
     }

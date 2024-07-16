@@ -12,15 +12,7 @@ class StudentRegistrationViewModel: ViewModel() {
     private val channel = Channel<StudentRegistrationUiEvent>(Channel.BUFFERED)
     val validationEvents = channel.receiveAsFlow()
 
-    fun onStudentRegistrationClicked(){
-        viewModelScope.launch {
-            channel.send(StudentRegistrationUiEvent.OnRegisterPressed)
-        }
-    }
+    fun onStudentRegistrationClicked(){ viewModelScope.launch { channel.send(StudentRegistrationUiEvent.OnRegisterPressed) } }
 
-    fun onStudentBackPressed(){
-        viewModelScope.launch {
-            channel.send(StudentRegistrationUiEvent.OnBackPressed)
-        }
-    }
+    fun onStudentBackPressed(){ viewModelScope.launch { channel.send(StudentRegistrationUiEvent.OnBackPressed) } }
 }

@@ -6,7 +6,5 @@ sealed class StayInUiEvent {
 
     data object OnNotSavePressed: StayInUiEvent()
 
-    data object NothingState: StayInUiEvent()
-
     data object FullScreenPressed: StayInUiEvent()
 }

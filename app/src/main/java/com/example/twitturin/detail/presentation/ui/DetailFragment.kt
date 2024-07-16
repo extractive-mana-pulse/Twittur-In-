@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -25,7 +26,6 @@ import com.example.twitturin.detail.presentation.vm.DetailPageUIViewModel
 import com.example.twitturin.follow.presentation.followers.sealed.Follow
 import com.example.twitturin.follow.presentation.vm.FollowViewModel
 import com.example.twitturin.home.presentation.adapter.HomeAdapter
-import com.example.twitturin.home.presentation.vm.HomeViewModel
 import com.example.twitturin.manager.SessionManager
 import com.example.twitturin.profile.presentation.fragments.FullScreenImageFragment
 import com.example.twitturin.profile.presentation.util.snackbar
@@ -37,19 +37,16 @@ import io.noties.markwon.Markwon
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
-import javax.inject.Inject
 
 @Suppress("DEPRECATION")
 @AndroidEntryPoint
 class DetailFragment : Fragment() {
 
-    @Inject lateinit var sessionManager : SessionManager
-    private val homeViewModel : HomeViewModel by viewModels()
     private val tweetViewModel : TweetViewModel by viewModels()
     private val followingViewModel : FollowViewModel by viewModels()
     private val detailUiViewModel : DetailPageUIViewModel by viewModels()
     private val binding  by lazy { FragmentDetailBinding.inflate(layoutInflater) }
-    private val homeAdapter by lazy { HomeAdapter(homeViewModel, viewLifecycleOwner) }
+    private val homeAdapter by lazy { HomeAdapter(homeClickEvents = ::homeClickEvent) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return binding.root
@@ -83,7 +80,7 @@ class DetailFragment : Fragment() {
             if (activateEditText!!){ replyEt.showKeyboard() }
 
             // this condition done to manipulate with UI
-            if (userId == sessionManager.getUserId()) {
+            if (userId == SessionManager(requireContext()).getUserId()) {
                 followBtn.visibility = View.GONE
             } else {
                 followBtn.visibility = View.VISIBLE
@@ -140,13 +137,13 @@ class DetailFragment : Fragment() {
 
                         DetailPageUI.OnFollowPressed -> {
 
-                            followingViewModel.followUsers(userId!!, "Bearer ${sessionManager.getToken()}")
+                            followingViewModel.followUsers(userId!!, "Bearer ${SessionManager(requireContext()).getToken()}")
 
                             followingViewModel.follow.observe(viewLifecycleOwner) { result ->
                                 when (result) {
                                     is Follow.Success -> {
                                         detailRootLayout.snackbar(
-                                            requireActivity().findViewById(R.id.reply_layout),
+                                            replyLayout,
                                             message = "now you follow: ${username?.uppercase()}",
                                         )
                                     }
@@ -156,7 +153,7 @@ class DetailFragment : Fragment() {
                                             requireActivity().findViewById(R.id.reply_layout),
                                             error = result.message,
                                             ""
-                                        ) { /* actionCallBack ->  Unit */ }
+                                        ) {  }
                                     }
                                 }
                             }
@@ -171,7 +168,7 @@ class DetailFragment : Fragment() {
                         DetailPageUI.OnSendReplyPressed -> {
 
                             val reply = replyEt.text?.toString()?.trim()
-                            tweetViewModel.postReply(reply!!, id!!, "Bearer ${sessionManager.getToken()}")
+                            tweetViewModel.postReply(reply!!, id!!, "Bearer ${SessionManager(requireContext()).getToken()}")
                             sentReply.isEnabled = false
 
                             tweetViewModel.postReplyResult.observe(viewLifecycleOwner) { result ->
@@ -247,10 +244,13 @@ class DetailFragment : Fragment() {
             tweetViewModel.getRepliesOfPost(tweetId!!)
 
             tweetViewModel.repliesOfPosts.observe(viewLifecycleOwner) { response ->
+
                 if (response.isSuccessful) {
+
                     response.body()?.let { tweets ->
                         val tweetList: MutableList<Tweet> = tweets.toMutableList()
                         homeAdapter.differ.submitList(tweetList)
+
                         swipeToRefreshArticle.setOnRefreshListener {
                             homeAdapter.notifyDataSetChanged()
                             val freshList = tweetList.sortedByDescending { it.createdAt }
@@ -275,5 +275,53 @@ class DetailFragment : Fragment() {
 
         val date = inputFormat.parse(dateString)
         return outputFormat.format(date!!)
+    }
+
+    private fun homeClickEvent(homeClickEvents: HomeAdapter.HomeClickEvents, tweet: Tweet) {
+
+        when(homeClickEvents) {
+
+            HomeAdapter.HomeClickEvents.ITEM -> {
+                val bundle = Bundle().apply {
+                    putString("userAvatar", tweet.author?.profilePicture)
+                    putString("fullname", tweet.author?.fullName)
+                    putString("username", tweet.author?.username)
+                    putString("post_description", tweet.content)
+                    putString("likes", tweet.likes.toString())
+                    putString("createdAt", tweet.createdAt)
+                    putString("updatedAt", tweet.updatedAt)
+                    putString("userId", tweet.author?.id)
+                    putString("id", tweet.id)
+                }
+                findNavController().navigate(R.id.detailFragment, bundle)
+            }
+
+            HomeAdapter.HomeClickEvents.HEART -> {
+                Toast.makeText(requireContext(), "In progress", Toast.LENGTH_SHORT).show() /*Snackbar.make(binding.homeRootLayout, R.string.in_progress, Snackbar.LENGTH_SHORT).show()*/ }
+
+            HomeAdapter.HomeClickEvents.SHARE -> {
+                val intent = Intent(Intent.ACTION_SEND)
+                val link = "https://twitturin.onrender.com/tweets/${tweet.id}"
+                intent.putExtra(Intent.EXTRA_TEXT, link)
+                intent.type = "text/plain"
+                context?.startActivity(Intent.createChooser(intent,"Choose app:"))
+            }
+
+            HomeAdapter.HomeClickEvents.REPLY -> {
+                val bundle = Bundle().apply {
+                    putString("userAvatar", tweet.author?.profilePicture)
+                    putString("fullname", tweet.author?.fullName)
+                    putString("username", tweet.author?.username)
+                    putString("post_description", tweet.content)
+                    putString("likes", tweet.likes.toString())
+                    putString("updatedAt", tweet.updatedAt)
+                    putString("createdAt", tweet.createdAt)
+                    putString("userId", tweet.author?.id)
+                    putBoolean("activateEditText", true)
+                    putString("id", tweet.id)
+                }
+                findNavController().navigate(R.id.detailFragment, bundle)
+            }
+        }
     }
 }

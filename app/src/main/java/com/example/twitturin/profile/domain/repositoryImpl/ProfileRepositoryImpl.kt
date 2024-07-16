@@ -4,7 +4,9 @@ import com.example.twitturin.profile.domain.model.EditProfile
 import com.example.twitturin.profile.domain.model.User
 import com.example.twitturin.profile.data.remote.repository.ProfileRepository
 import com.example.twitturin.profile.data.remote.api.ProfileApi
+import com.example.twitturin.profile.data.remote.api.photoUrl
 import com.example.twitturin.profile.domain.model.ImageResource
+import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.Response
 
@@ -29,10 +31,10 @@ class ProfileRepositoryImpl(
     }
 
     override fun loadImage(
-        image: ImageResource,
         userId: String,
+        picture: MultipartBody.Part,
         token: String
-    ): Result<String> {
-        return profileApi.loadImage(image,userId,token)
+    ):  Call<photoUrl>/*Result<String>*/ {
+        return profileApi.loadImage(userId, picture, token)
     }
 }

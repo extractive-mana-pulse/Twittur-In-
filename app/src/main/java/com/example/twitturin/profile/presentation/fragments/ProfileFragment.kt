@@ -37,13 +37,11 @@ import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
-import javax.inject.Inject
 
 @Suppress("DEPRECATION")
 @AndroidEntryPoint
 class ProfileFragment : Fragment() {
 
-    @Inject lateinit var sessionManager: SessionManager
     private val stayInViewModel: StayInViewModel by viewModels()
     private val profileViewModel: ProfileViewModel by viewModels()
     private val profileUIViewModel: ProfileUIViewModel by viewModels()
@@ -63,11 +61,12 @@ class ProfileFragment : Fragment() {
 
         binding.apply {
 
-//            val profileImage = profileUserAvatar.drawable?.toBitmap()
-//
-//            val byteArrayOutputStream = ByteArrayOutputStream()
-//            profileImage?.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
-//            val profileImageByteArray = byteArrayOutputStream.toByteArray()
+            val profileImage = profileUserAvatar.drawable?.toBitmap()
+
+            val byteArrayOutputStream = ByteArrayOutputStream()
+            profileImage?.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
+            val profileImageByteArray = byteArrayOutputStream.toByteArray()
+
 
             /**
              * This code build to implement listener when user click's on profile image, to open it, in full screen size!
@@ -99,7 +98,7 @@ class ProfileFragment : Fragment() {
                                         putString("profile_username", profileUsername.text.toString())
                                         putString("profile_bio", profileBiography.text.toString())
                                         putString("profile_date", profileDateTv.text.toString())
-//                                        putByteArray("profile_image", profileImageByteArray)
+                                        putByteArray("profile_image", profileImageByteArray)
                                     }
                                     findNavController().navigate(R.id.action_profileFragment_to_editProfileFragment, bundle)
                                     true
@@ -138,7 +137,7 @@ class ProfileFragment : Fragment() {
                 }
             }
 
-            profileViewModel.getUserCredentials(sessionManager.getUserId()!!)
+            profileViewModel.getUserCredentials(SessionManager(requireContext()).getUserId()!!)
 
             profileViewModel.getUserCredentials.observe(viewLifecycleOwner) { result ->
 
@@ -200,7 +199,7 @@ class ProfileFragment : Fragment() {
     }
 
     private fun shareProfile() {
-        val userId = sessionManager.getUserId()
+        val userId = SessionManager(requireContext()).getUserId()
         val baseUserUrl = "https://twitturin.onrender.com/users"
         val intent = Intent(Intent.ACTION_SEND)
         val link = "$baseUserUrl/$userId"
@@ -278,7 +277,7 @@ class ProfileFragment : Fragment() {
             cancelBtn.setOnClickListener { alertDialog.dismiss() }
 
             deleteBtn.setOnClickListener {
-                profileViewModel.deleteUser(sessionManager.getUserId()!!, "Bearer ${sessionManager.getToken()}")
+                profileViewModel.deleteUser(SessionManager(requireContext()).getUserId()!!, "Bearer ${SessionManager(requireContext()).getToken()}")
                 alertDialog.dismiss()
             }
             alertDialog.show()
@@ -298,7 +297,7 @@ class ProfileFragment : Fragment() {
         alertDialogBuilder.setTitle(resources.getString(R.string.logout))
         alertDialogBuilder.setMessage(resources.getString(R.string.logout_message))
         alertDialogBuilder.setPositiveButton(resources.getString(R.string.yes)) { _, _ ->
-            sessionManager.clearToken()
+            SessionManager(requireContext()).clearToken()
             stayInViewModel.setUserLoggedIn(false)
             findNavController().navigate(R.id.action_profileFragment_to_signInFragment)
         }

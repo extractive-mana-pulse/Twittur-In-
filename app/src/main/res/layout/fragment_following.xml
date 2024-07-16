@@ -1,106 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/following_root_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".follow.presentation.following.ui.FollowingFragment">
 
-    <data>
-        <variable
-            name="followingFragment"
-            type="com.example.twitturin.follow.presentation.following.ui.FollowingFragment"/>
-    </data>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/following_root_layout"
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/following_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        app:title="@string/following"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="parent"
+        android:layout_height="?attr/actionBarSize"
+        app:navigationIcon="@drawable/keyboard_backspace"
+        app:titleTextAppearance="?attr/textAppearanceTitleLarge"/>
 
-        <!--        Toolbar         -->
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/following_layout_toolbar"
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/anView_following"
+        android:layout_width="282dp"
+        android:layout_height="282dp"
+        app:lottie_loop="false"
+        app:lottie_autoPlay="true"
+        android:visibility="visible"
+        app:layout_constraintWidth_percent="0.4"
+        app:layout_constraintDimensionRatio="1.1"
+        app:lottie_rawRes="@raw/empty_tweets_list"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/following_toolbar"/>
+
+    <TextView
+        android:id="@+id/empty_following_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/user_following_information"
+        android:textStyle="italic"
+        android:textSize="18sp"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:textColor="?attr/colorPrimaryInverse"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/anView_following"/>
+
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_to_refresh_layout_following_list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginVertical="8dp"
+        android:layout_marginHorizontal="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/following_toolbar">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rc_view_following"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorSurface"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            android:layout_height="0dp"/>
 
-            <ImageButton
-                android:id="@+id/back_btn_following_list"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:background="@android:color/transparent"
-                android:onClick="@{()-> followingFragment.fragmentManager.popBackStack()}"
-                android:src="@drawable/keyboard_backspace"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                tools:ignore="ContentDescription"/>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-            <TextView
-                android:id="@+id/following_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/following"
-                android:textSize="24sp"
-                android:textStyle="bold|italic"
-                android:textColor="?attr/colorOnSecondaryContainer"
-                android:layout_marginStart="16dp"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@id/back_btn_following_list"/>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/anView_following"
-            android:layout_width="282dp"
-            android:layout_height="282dp"
-            app:lottie_loop="false"
-            app:lottie_autoPlay="true"
-            android:visibility="visible"
-            app:layout_constraintWidth_percent="0.4"
-            app:layout_constraintDimensionRatio="1.1"
-            app:lottie_rawRes="@raw/empty_tweets_list"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/following_layout_toolbar"/>
-
-        <TextView
-            android:id="@+id/empty_following_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/user_following_information"
-            android:textStyle="italic"
-            android:textSize="18sp"
-            android:visibility="visible"
-            android:textColor="?attr/colorPrimaryInverse"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/anView_following"/>
-
-
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/swipe_to_refresh_layout_following_list"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginVertical="8dp"
-            android:layout_marginHorizontal="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/following_layout_toolbar">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rc_view_following"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"/>
-
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-</layout>
+</androidx.constraintlayout.widget.ConstraintLayout>

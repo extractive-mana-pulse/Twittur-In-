@@ -4,8 +4,6 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Paint
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,12 +28,10 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import io.noties.markwon.Markwon
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class PublicPostFragment : Fragment() {
 
-    @Inject lateinit var sessionManager: SessionManager
     private lateinit var sharedPreferences: SharedPreferences
     private val postTweetViewModel: PostTweetViewModel by viewModels()
     private val postTweetUIViewModel: PostTweetUIViewModel by viewModels()
@@ -85,7 +81,7 @@ class PublicPostFragment : Fragment() {
                     when(it){
                         PostTweetUI.OnPublishPressed -> {
                             btnTweet.isEnabled = false
-                            postTweetViewModel.postTheTweet(contentEt.text.toString(), "Bearer ${sessionManager.getToken()}")
+                            postTweetViewModel.postTheTweet(contentEt.text.toString(), "Bearer ${SessionManager(requireContext()).getToken()}")
                             postTweetViewModel.postTweetResult.observe(viewLifecycleOwner) { result ->
 
                                 when (result) {

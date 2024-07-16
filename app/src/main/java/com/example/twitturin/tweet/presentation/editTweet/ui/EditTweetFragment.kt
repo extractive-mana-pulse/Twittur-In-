@@ -15,14 +15,11 @@ import com.example.twitturin.manager.SessionManager
 import com.example.twitturin.profile.presentation.util.snackbarError
 import com.example.twitturin.tweet.presentation.editTweet.sealed.EditTweet
 import com.example.twitturin.tweet.presentation.editTweet.vm.EditTweetViewModel
-import com.example.twitturin.tweet.presentation.tweet.vm.TweetViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class EditTweetFragment : Fragment() {
 
-    @Inject lateinit var sessionManager : SessionManager
     private val editTweetViewModel: EditTweetViewModel by viewModels()
     private val binding by lazy { FragmentEditTweetBinding.inflate(layoutInflater) }
 
@@ -40,8 +37,6 @@ class EditTweetFragment : Fragment() {
 
         binding.apply {
 
-
-            val token = sessionManager.getToken()
             val tweetContent = arguments?.getString("description")
 
             editTweetContent.setText(tweetContent)
@@ -49,7 +44,7 @@ class EditTweetFragment : Fragment() {
             editTweetPublishBtn.setOnClickListener {
                 editTweetPublishBtn.isEnabled = false
                 val content = editTweetContent.text.toString()
-                editTweetViewModel.editTweet(content, tweetId!!, "Bearer $token")
+                editTweetViewModel.editTweet(content, tweetId!!, "Bearer ${SessionManager(requireContext()).getToken()}")
             }
 
             editTweetViewModel.editTweetResult.observe(viewLifecycleOwner) { result ->

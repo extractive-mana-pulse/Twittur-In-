@@ -4,9 +4,6 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -14,17 +11,13 @@ import com.bumptech.glide.Glide
 import com.example.twitturin.R
 import com.example.twitturin.databinding.RcViewFollowingBinding
 import com.example.twitturin.follow.domain.model.FollowUser
-import com.example.twitturin.follow.presentation.following.sealed.UnFollow
-import com.example.twitturin.follow.presentation.vm.FollowViewModel
-import com.example.twitturin.manager.SessionManager
-import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.flow.collectLatest
-import javax.inject.Inject
 
-class FollowingAdapter @Inject constructor(
-    private val lifecycleOwner : LifecycleOwner,
-    private val followViewModel: FollowViewModel
-) : RecyclerView.Adapter<FollowingAdapter.ViewHolder>() {
+class FollowingAdapter(private val clickEvent: (FollowingClickEvent, FollowUser) -> Unit) : RecyclerView.Adapter<FollowingAdapter.ViewHolder>() {
+
+    enum class FollowingClickEvent {
+        UNFOLLOW,
+        ITEM,
+    }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val binding = RcViewFollowingBinding.bind(itemView)
@@ -51,51 +44,23 @@ class FollowingAdapter @Inject constructor(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = differ.currentList[position]
         val context = holder.itemView.context
-        val token = SessionManager(context).getToken()
 
         item.apply {
             holder.binding.apply {
 
-                val profileImage = profilePicture
-
                 Glide.with(context)
-                    .load(profileImage)
+                    .load(profilePicture)
                     .error(R.drawable.not_found)
                     .into(userFollowingAvatar)
 
-                fullNameFollowingTv.text = fullName ?: R.string.default_user_fullname.toString()
                 usernameFollowingTv.text = "@$username"
+                fullNameFollowingTv.text = fullName ?: R.string.default_user_fullname.toString()
                 userFollowingPostDescription.text = bio ?: R.string.empty_bio.toString()
 
-                unfollowBtn.setOnClickListener {
-                    followViewModel.unFollowUser(id!!,"Bearer $token")
-                }
-                holder.itemView.setOnClickListener {
-                    Toast.makeText(context, context.resources.getString(R.string.in_progress), Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
-
-        followViewModel.unFollow.observe(lifecycleOwner) { result ->
-
-            when (result) {
-
-                is UnFollow.Success -> {
-                    lifecycleOwner.lifecycleScope.launchWhenStarted {
-                        followViewModel.sharedFlow.collectLatest {
-                            Snackbar.make(holder.itemView, "you unfollow $it", Snackbar.LENGTH_SHORT).show()
-                        }
-                    }
-                }
-
-                is UnFollow.Error -> {
-                    Toast.makeText(context, result.message, Toast.LENGTH_SHORT).show()
-                }
+                unfollowBtn.setOnClickListener { clickEvent(FollowingClickEvent.UNFOLLOW, item) }
+                holder.itemView.setOnClickListener { clickEvent(FollowingClickEvent.ITEM, item) }
             }
         }
     }
-
-    override fun getItemCount(): Int {
-        return differ.currentList.size
-    }
+    override fun getItemCount(): Int = differ.currentList.size
 }

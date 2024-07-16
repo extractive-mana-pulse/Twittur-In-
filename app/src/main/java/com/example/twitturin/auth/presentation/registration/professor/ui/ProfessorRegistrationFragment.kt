@@ -21,6 +21,7 @@ import com.example.twitturin.auth.presentation.registration.vm.SignUpViewModel
 import com.example.twitturin.databinding.FragmentProfessorRegistrationBinding
 import com.example.twitturin.profile.presentation.util.snackbarError
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ProfessorRegistrationFragment : Fragment() {
@@ -30,9 +31,8 @@ class ProfessorRegistrationFragment : Fragment() {
     private val professorRegistrationViewModel : ProfRegViewModel by viewModels()
     private val binding by lazy { FragmentProfessorRegistrationBinding.inflate(layoutInflater) }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        return binding.root
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View = binding.root
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -40,13 +40,13 @@ class ProfessorRegistrationFragment : Fragment() {
 
         binding.apply {
 
-            backBtnProf.setOnClickListener { professorRegistrationViewModel.sentProfRegEvent(ProfRegUiEvent.OnBackPressed) }
+            backBtnProf.setOnClickListener { professorRegistrationViewModel.onBackPressed() }
 
-            signUpProf.setOnClickListener { professorRegistrationViewModel.sentProfRegEvent(ProfRegUiEvent.OnAuthPressed) }
+            signUpProf.setOnClickListener { professorRegistrationViewModel.onRegPressed() }
 
             profUsernameEt.usernameRegistration(profUsernameInputLayout, signUpProf, requireContext())
 
-            lifecycleScope.launchWhenStarted {
+            viewLifecycleOwner.lifecycleScope.launch {
                 professorRegistrationViewModel.profRegEvent.collect{
                     when(it){
                         is ProfRegUiEvent.OnAuthPressed -> {
@@ -67,33 +67,26 @@ class ProfessorRegistrationFragment : Fragment() {
                                             requireActivity().findViewById(R.id.prof_reg_root_layout),
                                             error = result.message,
                                             ""
-                                        ){ /*Action CallBack*/ }
+                                        ){  }
                                     }
                                 }
                             }
                         }
                         ProfRegUiEvent.OnBackPressed -> { findNavController().navigateUp() }
-                        ProfRegUiEvent.NothingState -> {  }
                     }
                 }
             }
 
-            profEditTextList.add(binding.profFullnameEt)
-            profEditTextList.add(binding.profUsernameEt)
-            profEditTextList.add(binding.profSubjectEt)
-            profEditTextList.add(binding.profPasswordEt)
+            profEditTextList.add(profSubjectEt)
+            profEditTextList.add(profFullnameEt)
+            profEditTextList.add(profUsernameEt)
+            profEditTextList.add(profPasswordEt)
 
             profEditTextList.forEach { editText ->
                 editText.addTextChangedListener(object : TextWatcher {
-                    override fun beforeTextChanged(
-                        s: CharSequence?,
-                        start: Int,
-                        count: Int,
-                        after: Int
-                    ) {
-                    }
+                    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {  }
 
-                    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+                    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {  }
 
                     override fun afterTextChanged(s: Editable?) {
                         val allFieldsFilled = profEditTextList.all { editText ->

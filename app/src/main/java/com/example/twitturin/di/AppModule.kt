@@ -1,8 +1,6 @@
 package com.example.twitturin.di
 
-import android.app.Application
 import com.example.twitturin.BuildConfig
-import com.example.twitturin.manager.SessionManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,13 +13,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
-
-    @Provides
-    @Singleton
-    fun provideSessionManager(app: Application): SessionManager {
-        return SessionManager(app)
-    }
-
 
     @Provides
     @Singleton

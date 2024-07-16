@@ -29,13 +29,4 @@ class KindViewModel : ViewModel() {
             channel.send(KindUiEvent.NavigateToStudReg)
         }
     }
-
-    fun sendKindEvents(event: KindUiEvent) {
-        when(event){
-            is KindUiEvent.NavigateToStudReg -> { onStudPressed() }
-            is KindUiEvent.NavigateToProfReg -> { onProfPressed() }
-            is KindUiEvent.OnBackPressed -> { onBackPressedKind() }
-            is KindUiEvent.StateNoting -> {  }
-        }
-    }
 }

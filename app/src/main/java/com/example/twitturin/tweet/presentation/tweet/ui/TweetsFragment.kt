@@ -18,12 +18,10 @@ import com.example.twitturin.tweet.presentation.tweet.adapters.TweetAdapter
 import com.example.twitturin.tweet.presentation.tweet.vm.TweetViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Random
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class TweetsFragment : Fragment() {
 
-    @Inject lateinit var sessionManager: SessionManager
     private val tweetViewModel : TweetViewModel by viewModels()
     private val binding by lazy { FragmentTweetsBinding.inflate(layoutInflater) }
     private val userPostAdapter by lazy { TweetAdapter(tweetViewModel, viewLifecycleOwner) }
@@ -43,7 +41,7 @@ class TweetsFragment : Fragment() {
 
         binding.apply {
 
-            tweetViewModel.getUserTweet(sessionManager.getUserId()!!)
+            tweetViewModel.getUserTweet(SessionManager(requireContext()).getUserId()!!)
             rcView.adapter = userPostAdapter
             rcView.layoutManager = LinearLayoutManager(requireContext())
             rcView.addItemDecoration(DividerItemDecoration(rcView.context, DividerItemDecoration.VERTICAL))
@@ -55,7 +53,7 @@ class TweetsFragment : Fragment() {
                         val tweetList: MutableList<Tweet> = tweets.toMutableList()
                         swipeToRefreshLayoutTweets.setOnRefreshListener {
 
-                            tweetViewModel.getUserTweet(sessionManager.getUserId()!!)
+                            tweetViewModel.getUserTweet(SessionManager(requireContext()).getUserId()!!)
                             tweetList.shuffle(Random(System.currentTimeMillis()))
                             swipeToRefreshLayoutTweets.isRefreshing = false
                             userPostAdapter.notifyDataSetChanged()

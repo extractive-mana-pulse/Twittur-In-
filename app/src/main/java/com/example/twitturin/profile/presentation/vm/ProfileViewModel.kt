@@ -12,12 +12,17 @@ import com.example.twitturin.profile.domain.model.ImageResource
 import com.example.twitturin.profile.presentation.sealed.AccountDelete
 import com.example.twitturin.profile.presentation.sealed.EditUser
 import com.example.twitturin.profile.presentation.sealed.EditUserImage
+import com.example.twitturin.profile.presentation.sealed.EditUserImageState
 import com.example.twitturin.profile.presentation.sealed.UserCredentials
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -98,23 +103,37 @@ class ProfileViewModel @Inject constructor(
         })
     }
 
-    private val _editUserImageState = MutableStateFlow<EditUserImageState>(EditUserImageState.Loading)
-    val editUserImageState: StateFlow<EditUserImageState> = _editUserImageState.asStateFlow()
+    private val _editUserImageState = MutableLiveData<EditUserImageState>()
+    val editUserImageState: LiveData<EditUserImageState> = _editUserImageState
 
-    fun editUserImage(image: String, userId: String, token: String) {
-        viewModelScope.launch {
-            try {
-                val result = repository.loadImage(ImageResource(image), userId, token)
-                _editUserImageState.value = EditUserImageState.Success(result.toString())
-            } catch (e: Exception) {
-                _editUserImageState.value = EditUserImageState.Error(e.message.orEmpty())
+    fun editUserImage(userId: String, picture: String, token: String) {
+        val requestBody = RequestBody.create("multipart/form-data".toMediaTypeOrNull(), picture)
+        val imagePart = MultipartBody.Part.createFormData("picture", picture, requestBody)
+
+        val authRequest = repository.loadImage(userId, imagePart, "Bearer $token")
+
+        authRequest.enqueue(object : Callback<String> {
+            override fun onResponse(call: Call<String>, response: Response<String>) {
+                if (response.isSuccessful) {
+                    val editProfile = response.body()
+                    _editUserImageState.value = EditUserImageState.Success(editProfile!!)
+                } else {
+                    _editUserImageState.value = EditUserImageState.Error(response.code().toString())
+                }
             }
-        }
-    }
 
-    sealed class EditUserImageState {
-        data object Loading : EditUserImageState()
-        data class Success(val result: String) : EditUserImageState()
-        data class Error(val message: String) : EditUserImageState()
+            override fun onFailure(call: Call<String>, t: Throwable) {
+                _editUserImageState.value = EditUserImageState.Error(t.message.toString())
+            }
+        })
     }
 }
+
+//        viewModelScope.launch {
+//            try {
+//                val result = repository.loadImage(userId, ImageResource(image), token)
+//                _editUserImageState.value = EditUserImageState.Success(result)
+//            } catch (e: Exception) {
+//                _editUserImageState.value = EditUserImageState.Error(e.message.orEmpty())
+//            }
+//        }

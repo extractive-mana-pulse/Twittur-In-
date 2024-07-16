@@ -70,6 +70,7 @@ class MainActivity : AppCompatActivity() {
             R.id.publicPostPolicyFragment,
             R.id.newUpdatePatchNoteFragment,
             R.id.listOfLikesFragment,
+            R.id.observeProfileFragment,
 
         )
 

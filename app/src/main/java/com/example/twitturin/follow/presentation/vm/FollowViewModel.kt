@@ -1,6 +1,5 @@
 package com.example.twitturin.follow.presentation.vm
 
-
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,7 +11,6 @@ import com.example.twitturin.follow.presentation.followers.sealed.Follow
 import com.example.twitturin.follow.presentation.following.sealed.UnFollow
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import retrofit2.Call
@@ -21,9 +19,7 @@ import retrofit2.Response
 import javax.inject.Inject
 
 @HiltViewModel
-class FollowViewModel @Inject constructor(
-    private val repository: FollowRepository
-) : ViewModel() {
+class FollowViewModel @Inject constructor(private val repository: FollowRepository) : ViewModel() {
 
     var followersList: MutableLiveData<Response<List<FollowUser>>> = MutableLiveData()
     fun getFollowers(userId : String) {
@@ -35,6 +31,7 @@ class FollowViewModel @Inject constructor(
     }
 
     var followingList: MutableLiveData<Response<List<FollowUser>>> = MutableLiveData()
+
     fun getFollowing(userId : String) {
         viewModelScope.launch {
             val response = repository.getListOfFollowing(userId)
@@ -56,17 +53,20 @@ class FollowViewModel @Inject constructor(
     val follow: LiveData<Follow> = _follow
 
     fun followUsers(id : String, token: String) {
+
         repository.followUser(id, token).enqueue(object : Callback<FollowUser> {
+
             override fun onResponse(call: Call<FollowUser>, response: Response<FollowUser>) {
+
                 if (response.isSuccessful) {
                     val responseBody = response.body()
                     _follow.value = responseBody?.let { Follow.Success(it) }
                     triggerSharedFlow(value = responseBody?.username.toString())
+
                 } else {
                     _follow.value = Follow.Error(response.message().toString())
                 }
             }
-
             override fun onFailure(call: Call<FollowUser>, t: Throwable) {
                 _follow.value = Follow.Error("Failed to follow user")
             }
@@ -77,8 +77,11 @@ class FollowViewModel @Inject constructor(
     val unFollow: LiveData<UnFollow> = _unFollow
 
     fun unFollowUser(id : String, token: String) {
+
         repository.unFollowUser(id, token).enqueue(object : Callback<FollowUser> {
+
             override fun onResponse(call: Call<FollowUser>, response: Response<FollowUser>) {
+
                 if (response.isSuccessful) {
                     val responseBody = response.body()
                     _unFollow.value = responseBody?.let { UnFollow.Success(it) }

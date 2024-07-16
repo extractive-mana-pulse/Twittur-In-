@@ -4,9 +4,6 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.lifecycleScope
-import androidx.navigation.Navigation
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -14,21 +11,13 @@ import com.bumptech.glide.Glide
 import com.example.twitturin.R
 import com.example.twitturin.databinding.RcViewFollowersBinding
 import com.example.twitturin.follow.domain.model.FollowUser
-import com.example.twitturin.follow.presentation.followers.sealed.Follow
-import com.example.twitturin.follow.presentation.followers.sealed.FollowersUiEvent
-import com.example.twitturin.follow.presentation.followers.vm.FollowersUiViewModel
-import com.example.twitturin.follow.presentation.vm.FollowViewModel
-import com.example.twitturin.manager.SessionManager
-import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-class FollowersAdapter @Inject constructor(
-    private val lifecycleOwner : LifecycleOwner,
-    private val followViewModel: FollowViewModel,
-    private val followersUiViewModel : FollowersUiViewModel
-) : RecyclerView.Adapter<FollowersAdapter.ViewHolder>() {
+class FollowersAdapter(private val clickEvent: (ClickEvent, FollowUser) -> Unit) : RecyclerView.Adapter<FollowersAdapter.ViewHolder>() {
+
+    enum class ClickEvent {
+        FOLLOW,
+        ITEM_SELECTED,
+    }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val binding = RcViewFollowersBinding.bind(itemView)
@@ -55,15 +44,12 @@ class FollowersAdapter @Inject constructor(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = differ.currentList[position]
         val context = holder.itemView.context
-        val token = SessionManager(context).getToken()
 
         item.apply {
             holder.binding.apply {
 
-                val profileImage = profilePicture
-
                 Glide.with(context)
-                    .load(profileImage)
+                    .load(profilePicture)
                     .error(R.drawable.not_found)
                     .into(userFollowerAvatar)
 
@@ -71,46 +57,11 @@ class FollowersAdapter @Inject constructor(
                 postDescription.text = bio ?: R.string.empty_bio.toString()
                 fullNameFollowerTv.text = fullName ?: R.string.default_user_fullname.toString()
 
-                followBtn.setOnClickListener { followViewModel.followUsers(id!!,"Bearer $token") }
+                followBtn.setOnClickListener { clickEvent(ClickEvent.FOLLOW, item) }
 
-                holder.itemView.setOnClickListener { followersUiViewModel.sendUiEvent(FollowersUiEvent.OnItemPressed) }
-
-                lifecycleOwner.lifecycleScope.launch {
-                    followersUiViewModel.followersEvent.collect {event ->
-                        when (event) {
-                            is FollowersUiEvent.OnItemPressed -> {
-                                Navigation.findNavController(holder.itemView).navigate(R.id.observeProfileFragment)
-                            }
-                            is FollowersUiEvent.OnFollowPressed -> {
-
-                            }
-                            is FollowersUiEvent.NothingState -> {  }
-                        }
-                    }
-                }
-            }
-        }
-
-        followViewModel.follow.observe(lifecycleOwner) { result ->
-
-            when (result) {
-
-                is Follow.Success -> {
-                    lifecycleOwner.lifecycleScope.launchWhenStarted {
-                        followViewModel.sharedFlow.collectLatest {
-                            Snackbar.make(holder.itemView, "you follow $it",Snackbar.LENGTH_SHORT).show()
-                        }
-                    }
-                }
-
-                is Follow.Error -> {
-
-                }
+                holder.itemView.setOnClickListener { clickEvent(ClickEvent.ITEM_SELECTED, item) }
             }
         }
     }
-
-    override fun getItemCount(): Int {
-        return differ.currentList.size
-    }
+    override fun getItemCount(): Int = differ.currentList.size
 }

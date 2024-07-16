@@ -1,27 +1,18 @@
 package com.example.twitturin.follow.presentation.followers.vm
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.twitturin.follow.presentation.followers.sealed.FollowersUiEvent
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
 
 class FollowersUiViewModel : ViewModel() {
 
-    private val channel = MutableStateFlow<FollowersUiEvent>(FollowersUiEvent.NothingState)
-    val followersEvent = channel.asStateFlow()
+    private val channel = Channel<FollowersUiEvent>(Channel.BUFFERED)
+    val followersEvent = channel.receiveAsFlow()
 
-    private fun itemPressed() { channel.value = FollowersUiEvent.OnItemPressed }
+    fun itemPressed() { viewModelScope.launch { channel.send(FollowersUiEvent.OnItemPressed) } }
 
-    private fun followPressed() {
-
-    }
-
-
-    fun sendUiEvent(event : FollowersUiEvent) {
-        when(event) {
-            is FollowersUiEvent.NothingState -> {  }
-            is FollowersUiEvent.OnItemPressed -> { itemPressed() }
-            is FollowersUiEvent.OnFollowPressed -> { followPressed() }
-        }
-    }
+    fun followPressed() { viewModelScope.launch { channel.send(FollowersUiEvent.OnFollowPressed) } }
 }

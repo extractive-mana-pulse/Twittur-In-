@@ -12,15 +12,7 @@ class FeedbackViewModel: ViewModel() {
     private val uiEvent = Channel<FeedbackUIEvent>(Channel.BUFFERED)
     val feedbackUiEvent = uiEvent.receiveAsFlow()
 
-    fun onBackPressed() {
-        viewModelScope.launch {
-            uiEvent.send(FeedbackUIEvent.OnBackPressed)
-        }
-    }
+    fun onBackPressed() { viewModelScope.launch { uiEvent.send(FeedbackUIEvent.OnBackPressed) } }
 
-    fun onSendPressed() {
-        viewModelScope.launch {
-            uiEvent.send(FeedbackUIEvent.OnBackPressed)
-        }
-    }
+    fun onSendPressed() { viewModelScope.launch { uiEvent.send(FeedbackUIEvent.OnBackPressed) } }
 }

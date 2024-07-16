@@ -12,24 +12,22 @@ import android.widget.TextView
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
+import com.example.twitturin.detail.presentation.sealed.TweetDelete
 import com.example.twitturin.follow.presentation.followers.sealed.Follow
 import com.example.twitturin.follow.presentation.vm.FollowViewModel
 import com.example.twitturin.manager.SessionManager
 import com.example.twitturin.profile.presentation.util.snackbar
 import com.example.twitturin.profile.presentation.util.snackbarError
-import com.example.twitturin.detail.presentation.sealed.TweetDelete
 import com.example.twitturin.tweet.presentation.tweet.vm.TweetViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MoreSettingsDetailFragment : BottomSheetDialogFragment() {
 
-    @Inject lateinit var sessionManager: SessionManager
     private val tweetViewModel : TweetViewModel by viewModels()
     private val followViewModel : FollowViewModel by viewModels()
 
@@ -37,8 +35,7 @@ class MoreSettingsDetailFragment : BottomSheetDialogFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.bottom_sheet_layout, container, false)
 
-        val token = sessionManager.getToken()
-        val userId2 = sessionManager.getUserId()
+        val token = SessionManager(requireContext()).getToken()
 
         val mainLayout = view.findViewById<LinearLayout>(R.id.bottom_sheet_root_layout)
         val usernameTv = view.findViewById<TextView>(R.id.b_username_tv)
@@ -54,7 +51,7 @@ class MoreSettingsDetailFragment : BottomSheetDialogFragment() {
         val tweetId = sharedPreferences.getString("id", "")
 
         /**Checking user id. if match illustrate other ui otherwise don't. */
-        if (userId == userId2) {
+        if (userId == SessionManager(requireContext()).getUserId()) {
             followLayout.visibility = View.GONE
             editLayout.visibility = View.VISIBLE
             deleteLayout.visibility = View.VISIBLE

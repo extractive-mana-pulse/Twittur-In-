@@ -10,13 +10,7 @@ interface FollowRepository {
 
     suspend fun getListOfFollowing(userId : String) : Response<List<FollowUser>>
 
-    fun followUser(
-        id: String,
-        token: String
-    ) : Call<FollowUser>
+    fun followUser(id: String, token: String) : Call<FollowUser>
 
-    fun unFollowUser(
-        id: String,
-        token: String
-    ) : Call<FollowUser>
+    fun unFollowUser(id: String, token: String) : Call<FollowUser>
 }

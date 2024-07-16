@@ -2,8 +2,6 @@ package com.example.twitturin.auth.presentation.login.ui
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.text.InputType
-import android.text.method.PasswordTransformationMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,12 +21,10 @@ import com.example.twitturin.manager.SessionManager
 import com.example.twitturin.profile.presentation.util.snackbarError
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class SignInFragment : Fragment() {
 
-    @Inject lateinit var sessionManager: SessionManager
     private val signInViewModel : SignInViewModel by viewModels()
     private val stayInViewModel : StayInViewModel by viewModels()
     private val signInUiEventViewModel : SignInUiEventViewModel by viewModels()
@@ -44,21 +40,16 @@ class SignInFragment : Fragment() {
         binding.signInFragment = this
 
         binding.apply {
-
-            signIn.setOnClickListener { signInUiEventViewModel.onLoginPressed() }
-
-            signUpTv.setOnClickListener { signInUiEventViewModel.onKindPressed() }
-
+            passwordEt.login(usernameSignInEt, passwordEt, signIn)
             usernameSignInEt.login(usernameSignInEt, passwordEt, signIn)
 
-            passwordEt.login(usernameSignInEt, passwordEt, signIn)
-
-            // this code remove hide symbol
+            signIn.setOnClickListener { signInUiEventViewModel.onLoginPressed() }
+            signUpTv.setOnClickListener { signInUiEventViewModel.onKindPressed() }
+            /** represent that this code hide inputted password immediately */
 //            passwordEt.setInputType(InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD)
 //            passwordEt.transformationMethod = PasswordTransformationMethod()
         }
 
-        // Observe the signInEvent flow and handle the events
         viewLifecycleOwner.lifecycleScope.launch {
             signInUiEventViewModel.signInEvent.collect { event ->
                 when (event) {
@@ -74,8 +65,8 @@ class SignInFragment : Fragment() {
                                     val token = signInViewModel.token.value
                                     val userId = signInViewModel.userId.value
 
-                                    sessionManager.saveToken(token.toString())
-                                    sessionManager.saveUserID(userId.toString())
+                                    SessionManager(requireContext()).saveToken(token.toString())
+                                    SessionManager(requireContext()).saveUserID(userId.toString())
                                     findNavController().navigate(R.id.action_signInFragment_to_stayInFragment)
                                 }
 

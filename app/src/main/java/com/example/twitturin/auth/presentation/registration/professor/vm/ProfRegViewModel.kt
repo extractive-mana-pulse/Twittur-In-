@@ -1,28 +1,19 @@
 package com.example.twitturin.auth.presentation.registration.professor.vm
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.twitturin.auth.presentation.registration.professor.sealed.ProfRegUiEvent
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
 
 class ProfRegViewModel: ViewModel() {
 
-    private val channel = MutableStateFlow<ProfRegUiEvent>(ProfRegUiEvent.NothingState)
-    val profRegEvent = channel.asStateFlow()
+    private val channel = Channel<ProfRegUiEvent>(Channel.BUFFERED)
+    val profRegEvent = channel.receiveAsFlow()
 
-    private fun onRegPressed(){
-        channel.value = ProfRegUiEvent.OnAuthPressed
-    }
+    fun onRegPressed(){ viewModelScope.launch { channel.send(ProfRegUiEvent.OnAuthPressed) } }
 
-    private fun onBackPressed(){
-        channel.value = ProfRegUiEvent.OnBackPressed
-    }
+    fun onBackPressed(){ viewModelScope.launch { channel.send(ProfRegUiEvent.OnBackPressed) } }
 
-    fun sentProfRegEvent(event: ProfRegUiEvent) {
-        when(event) {
-            is ProfRegUiEvent.OnAuthPressed -> { onRegPressed() }
-            ProfRegUiEvent.NothingState -> {  }
-            ProfRegUiEvent.OnBackPressed -> { onBackPressed() }
-        }
-    }
 }

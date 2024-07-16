@@ -11,9 +11,7 @@ import retrofit2.Response
 import javax.inject.Inject
 
 @HiltViewModel
-class ListOfLikesViewModel @Inject constructor(
-    private val repository: ListOfLikesRepository
-): ViewModel() {
+class ListOfLikesViewModel @Inject constructor(private val repository: ListOfLikesRepository): ViewModel() {
 
     var listOfLikesToThePosts: MutableLiveData<Response<List<UserLikesAPost>>> = MutableLiveData()
 
@@ -23,5 +21,4 @@ class ListOfLikesViewModel @Inject constructor(
             listOfLikesToThePosts.value = response
         }
     }
-
 }

@@ -7,17 +7,24 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.twitturin.R
 import com.example.twitturin.databinding.FragmentFollowersBinding
 import com.example.twitturin.follow.domain.model.FollowUser
 import com.example.twitturin.follow.presentation.followers.adapter.FollowersAdapter
+import com.example.twitturin.follow.presentation.followers.adapter.FollowersAdapter.ClickEvent
+import com.example.twitturin.follow.presentation.followers.sealed.Follow
+import com.example.twitturin.follow.presentation.followers.sealed.FollowersUiEvent
 import com.example.twitturin.follow.presentation.followers.vm.FollowersUiViewModel
 import com.example.twitturin.follow.presentation.vm.FollowViewModel
 import com.example.twitturin.manager.SessionManager
 import com.example.twitturin.profile.presentation.util.snackbarError
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import java.util.Random
 
 @AndroidEntryPoint
@@ -26,49 +33,49 @@ class FollowersFragment : Fragment() {
     private val followViewModel: FollowViewModel by viewModels()
     private val followersUiViewModel : FollowersUiViewModel by viewModels()
     private val binding by lazy { FragmentFollowersBinding.inflate(layoutInflater) }
-    private val followersAdapter by lazy { FollowersAdapter(viewLifecycleOwner, followViewModel, followersUiViewModel) }
+    private val followersAdapter by lazy { FollowersAdapter(clickEvent = ::handleClickEvent) }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        return binding.root
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View = binding.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.followersFragment = this
+
+        binding.followersToolbar.setNavigationOnClickListener { findNavController().navigateUp() }
+
         updateRecyclerView()
     }
-
 
     @SuppressLint("NotifyDataSetChanged")
     private fun updateRecyclerView() {
         binding.apply {
 
             rcViewFollowers.adapter = followersAdapter
-            rcViewFollowers.addItemDecoration(DividerItemDecoration(rcViewFollowers.context, DividerItemDecoration.VERTICAL))
             rcViewFollowers.layoutManager = LinearLayoutManager(requireContext())
-            val userId = SessionManager(requireContext()).getUserId()
-            followViewModel.getFollowers(userId!!)
+            rcViewFollowers.addItemDecoration(DividerItemDecoration(rcViewFollowers.context, DividerItemDecoration.VERTICAL))
+
+            followViewModel.getFollowers(SessionManager(requireContext()).getUserId()!!)
+
             followViewModel.followersList.observe(requireActivity()) { response ->
+
                 if (response.isSuccessful) {
-                    response.body()?.let { tweets ->
-                        val followersList: MutableList<FollowUser> = tweets.toMutableList()
+
+                    response.body()?.let { followers ->
+
+                        val followersList: MutableList<FollowUser> = followers.toMutableList()
                         followersAdapter.differ.submitList(followersList)
+
                         swipeToRefreshLayoutFollowersList.setOnRefreshListener {
-
                             followersList.shuffle(Random(System.currentTimeMillis()))
-                            followViewModel.getFollowers(userId)
+                            followViewModel.getFollowers(SessionManager(requireContext()).getUserId()!!)
                             swipeToRefreshLayoutFollowersList.isRefreshing = false
-
                         }
 
                         if (followersList.isEmpty()) {
-
                             rcViewFollowers.visibility = View.GONE
                             anViewFollowers.visibility = View.VISIBLE
                             emptyFollowersTv.visibility = View.VISIBLE
 
                         } else {
-
                             rcViewFollowers.visibility = View.VISIBLE
                             anViewFollowers.visibility = View.GONE
                             emptyFollowersTv.visibility = View.GONE
@@ -77,10 +84,52 @@ class FollowersFragment : Fragment() {
                     }
                 } else {
                     followersRootLayout.snackbarError(
-                        requireActivity().findViewById(R.id.followers_root_layout),
-                        error = response.body().toString(),
+                        followersRootLayout,
+                        error = response.message(),
                         ""
                     ) {}
+                }
+            }
+        }
+    }
+
+    private fun handleClickEvent(clickEvent: ClickEvent, followUser: FollowUser) {
+        when(clickEvent) {
+            ClickEvent.FOLLOW -> { followersUiViewModel.followPressed() }
+            ClickEvent.ITEM_SELECTED -> { followersUiViewModel.itemPressed() }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            followersUiViewModel.followersEvent.collect{
+                when(it){
+                    FollowersUiEvent.OnFollowPressed ->  {
+                        followViewModel.followUsers(followUser.id!!,"Bearer ${SessionManager(requireContext()).getToken()}")
+                    }
+                    FollowersUiEvent.OnItemPressed -> {
+                        findNavController().navigate(R.id.observeProfileFragment)
+                    }
+                }
+            }
+        }
+
+        followViewModel.follow.observe(viewLifecycleOwner) { result ->
+
+            when (result) {
+
+                is Follow.Success -> {
+                    viewLifecycleOwner.lifecycleScope.launch {
+                        followViewModel.sharedFlow.collect {
+                            Snackbar.make(binding.followersRootLayout, "you follow $it", Snackbar.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+
+                is Follow.Error -> {
+                    binding.followersRootLayout.snackbarError(
+                        binding.followersRootLayout,
+                        error = result.message,
+                        actionText = R.string.retry.toString()
+                    ){}
                 }
             }
         }

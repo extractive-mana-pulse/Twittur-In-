@@ -12,19 +12,14 @@ import com.example.twitturin.R
 import com.example.twitturin.auth.presentation.kind.sealed.KindUiEvent
 import com.example.twitturin.auth.presentation.kind.vm.KindViewModel
 import com.example.twitturin.databinding.FragmentKindBinding
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-@Suppress("DEPRECATION")
 class KindFragment : Fragment() {
 
     private val kindViewModel : KindViewModel by viewModels()
     private val binding by lazy { FragmentKindBinding.inflate(layoutInflater) }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        return binding.root
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View = binding.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -41,20 +36,10 @@ class KindFragment : Fragment() {
                     }
                 }
             }
-//            lifecycleScope.launchWhenStarted {
-//                kindViewModel.kindEventResult.collect{ event ->
-//                    when(event) {
-//                        is KindUiEvent.NavigateToProfReg -> { findNavController().navigate(R.id.action_kindFragment_to_professorRegistrationFragment) }
-//                        is KindUiEvent.NavigateToStudReg -> { findNavController().navigate(R.id.action_kindFragment_to_studentRegistrationFragment) }
-//                        is KindUiEvent.OnBackPressed -> { findNavController().navigateUp() }
-//                        is KindUiEvent.StateNoting -> {  }
-//                    }
-//                }
-//            }
 
-            professorKindBtn.setOnClickListener { kindViewModel.onProfPressed() /*kindViewModel.sendKindEvents(KindUiEvent.NavigateToProfReg)*/ }
-            studentKindBtn.setOnClickListener { kindViewModel.onStudPressed() /*kindViewModel.sendKindEvents(KindUiEvent.NavigateToStudReg)*/ }
-            backBtnKind.setOnClickListener { kindViewModel.onBackPressedKind() /*kindViewModel.sendKindEvents(KindUiEvent.OnBackPressed)*/ }
+            studentKindBtn.setOnClickListener { kindViewModel.onStudPressed() }
+            backBtnKind.setOnClickListener { kindViewModel.onBackPressedKind() }
+            professorKindBtn.setOnClickListener { kindViewModel.onProfPressed() }
         }
     }
 }

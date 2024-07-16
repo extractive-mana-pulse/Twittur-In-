@@ -33,9 +33,7 @@ class StudentRegistrationFragment : Fragment() {
     private val studentUiEventViewModel : StudentRegistrationViewModel by viewModels()
     private val binding by lazy { FragmentStudentRegistrationBinding.inflate(layoutInflater) }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        return binding.root
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View = binding.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -76,10 +74,7 @@ class StudentRegistrationFragment : Fragment() {
                                 }
                             }
                         }
-
                         StudentRegistrationUiEvent.OnBackPressed ->  { findNavController().navigateUp() }
-
-                        StudentRegistrationUiEvent.NothingState -> {  }
                     }
                 }
             }
