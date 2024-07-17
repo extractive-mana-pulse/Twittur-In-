@@ -296,8 +296,7 @@ class DetailFragment : Fragment() {
                 findNavController().navigate(R.id.detailFragment, bundle)
             }
 
-            HomeAdapter.HomeClickEvents.HEART -> {
-                Toast.makeText(requireContext(), "In progress", Toast.LENGTH_SHORT).show() /*Snackbar.make(binding.homeRootLayout, R.string.in_progress, Snackbar.LENGTH_SHORT).show()*/ }
+            HomeAdapter.HomeClickEvents.HEART -> { Toast.makeText(requireContext(), "In progress", Toast.LENGTH_SHORT).show() }
 
             HomeAdapter.HomeClickEvents.SHARE -> {
                 val intent = Intent(Intent.ACTION_SEND)

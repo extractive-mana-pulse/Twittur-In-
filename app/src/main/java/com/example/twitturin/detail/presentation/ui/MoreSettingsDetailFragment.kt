@@ -37,12 +37,12 @@ class MoreSettingsDetailFragment : BottomSheetDialogFragment() {
 
         val token = SessionManager(requireContext()).getToken()
 
-        val mainLayout = view.findViewById<LinearLayout>(R.id.bottom_sheet_root_layout)
         val usernameTv = view.findViewById<TextView>(R.id.b_username_tv)
+        val editLayout = view.findViewById<LinearLayout>(R.id.edit_layout)
         val followLayout = view.findViewById<LinearLayout>(R.id.follow_layout)
         val deleteLayout = view.findViewById<LinearLayout>(R.id.delete_layout)
-        val editLayout = view.findViewById<LinearLayout>(R.id.edit_layout)
         val reportLayout = view.findViewById<LinearLayout>(R.id.report_post_layout)
+        val mainLayout = view.findViewById<LinearLayout>(R.id.bottom_sheet_root_layout)
 
         val sharedPreferences = requireActivity().getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
         val description = sharedPreferences.getString("post_description", "")
@@ -123,10 +123,6 @@ class MoreSettingsDetailFragment : BottomSheetDialogFragment() {
         }
 
         reportLayout.setOnClickListener {
-//            mainLayout.snackbar(
-//                requireActivity().findViewById(R.id.bottom_sheet_root_layout),
-//                message = resources.getString(R.string.in_progress)
-//            )
             findNavController().navigate(R.id.reportFragment)
             dismiss()
         }

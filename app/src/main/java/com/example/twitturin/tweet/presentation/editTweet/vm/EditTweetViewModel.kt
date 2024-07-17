@@ -19,9 +19,12 @@ class EditTweetViewModel @Inject constructor(private val repository: TweetReposi
     val editTweetResult: LiveData<EditTweet> = _editTweetResult
 
     fun editTweet(content: String, tweetId: String, token: String) {
-        val request = TweetContent(content,"")
+
+        val request = TweetContent(content, token)
         val authRequest = repository.editTweet(request, tweetId, token)
+
         authRequest.enqueue(object : Callback<TweetContent> {
+
             override fun onResponse(call: Call<TweetContent>, response: Response<TweetContent>) {
                 if (response.isSuccessful) {
                     val editTweet = response.body()

@@ -3,12 +3,11 @@ package com.example.twitturin.notification.presentation.fragments
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.example.twitturin.R
 import com.example.twitturin.databinding.FragmentNewUpdatePatchNoteBinding
 import io.noties.markwon.Markwon
 
@@ -23,8 +22,6 @@ class NewUpdatePatchNoteFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-//        val gitHubApiBaseUrl =  "https://api.github.com/repos/{owner}/{repo}/releases/latest"
 
         binding.apply {
 

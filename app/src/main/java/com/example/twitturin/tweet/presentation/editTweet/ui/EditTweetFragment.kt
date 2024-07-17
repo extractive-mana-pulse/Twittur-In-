@@ -23,21 +23,19 @@ class EditTweetFragment : Fragment() {
     private val editTweetViewModel: EditTweetViewModel by viewModels()
     private val binding by lazy { FragmentEditTweetBinding.inflate(layoutInflater) }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        return binding.root
-    }
-
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View = binding.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.tweetFragment = this
 
         val sharedPreferences = requireActivity().getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
-        val tweetId = sharedPreferences.getString("id","")
+        val tweetId = sharedPreferences.getString("id",null)
+
+        val testTweetId = arguments?.getString("id")
+        val tweetContent = arguments?.getString("description")
 
         binding.apply {
-
-            val tweetContent = arguments?.getString("description")
 
             editTweetContent.setText(tweetContent)
 
@@ -49,9 +47,7 @@ class EditTweetFragment : Fragment() {
 
             editTweetViewModel.editTweetResult.observe(viewLifecycleOwner) { result ->
                 when (result) {
-                    is EditTweet.Success -> {
-                        findNavController().popBackStack()
-                    }
+                    is EditTweet.Success -> { findNavController().navigateUp() }
 
                     is EditTweet.Error -> {
                         binding.editTweetPageRootLayout.snackbarError(

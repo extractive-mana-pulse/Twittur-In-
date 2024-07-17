@@ -12,15 +12,7 @@ class NotificationViewModel: ViewModel() {
     private val uiEvent = Channel<NotificationUIEvent>(Channel.BUFFERED)
     val notificationEvent = uiEvent.receiveAsFlow()
 
-    fun onDownloadPressed(){
-        viewModelScope.launch {
-            uiEvent.send(NotificationUIEvent.OnDownloadPressed)
-        }
-    }
+    fun onDownloadPressed() { viewModelScope.launch { uiEvent.send(NotificationUIEvent.OnDownloadPressed) } }
 
-    fun onItemPressed(){
-        viewModelScope.launch {
-            uiEvent.send(NotificationUIEvent.OnItemPressed)
-        }
-    }
+    fun onItemPressed() { viewModelScope.launch { uiEvent.send(NotificationUIEvent.OnItemPressed) } }
 }

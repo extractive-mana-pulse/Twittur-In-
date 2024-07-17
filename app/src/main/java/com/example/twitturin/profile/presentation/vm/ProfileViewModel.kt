@@ -1,6 +1,5 @@
 package com.example.twitturin.profile.presentation.vm
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,18 +7,12 @@ import androidx.lifecycle.viewModelScope
 import com.example.twitturin.event.SingleLiveEvent
 import com.example.twitturin.profile.data.remote.repository.ProfileRepository
 import com.example.twitturin.profile.domain.model.EditProfile
-import com.example.twitturin.profile.domain.model.ImageResource
 import com.example.twitturin.profile.presentation.sealed.AccountDelete
 import com.example.twitturin.profile.presentation.sealed.EditUser
-import com.example.twitturin.profile.presentation.sealed.EditUserImage
 import com.example.twitturin.profile.presentation.sealed.EditUserImageState
 import com.example.twitturin.profile.presentation.sealed.UserCredentials
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -29,9 +22,7 @@ import retrofit2.Response
 import javax.inject.Inject
 
 @HiltViewModel
-class ProfileViewModel @Inject constructor(
-    private val repository: ProfileRepository
-): ViewModel() {
+class ProfileViewModel @Inject constructor(private val repository: ProfileRepository): ViewModel() {
 
     private val _deleteResult = SingleLiveEvent<AccountDelete>()
     val deleteResult: LiveData<AccountDelete> = _deleteResult
@@ -128,12 +119,3 @@ class ProfileViewModel @Inject constructor(
         })
     }
 }
-
-//        viewModelScope.launch {
-//            try {
-//                val result = repository.loadImage(userId, ImageResource(image), token)
-//                _editUserImageState.value = EditUserImageState.Success(result)
-//            } catch (e: Exception) {
-//                _editUserImageState.value = EditUserImageState.Error(e.message.orEmpty())
-//            }
-//        }

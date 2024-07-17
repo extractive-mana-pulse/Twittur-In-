@@ -11,13 +11,19 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.twitturin.R
 import com.example.twitturin.databinding.FragmentSearchBinding
+import com.example.twitturin.follow.presentation.followers.sealed.Follow
 import com.example.twitturin.follow.presentation.vm.FollowViewModel
+import com.example.twitturin.manager.SessionManager
+import com.example.twitturin.profile.presentation.util.snackbarError
+import com.example.twitturin.search.domain.model.SearchUser
 import com.example.twitturin.search.presentation.adapters.SearchAdapter
 import com.example.twitturin.search.presentation.sealed.SearchResource
 import com.example.twitturin.search.presentation.vm.SearchViewModel
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
@@ -32,7 +38,7 @@ class SearchFragment : Fragment() {
     private val searchViewModel : SearchViewModel by viewModels()
     private val followViewModel : FollowViewModel by viewModels()
     private val binding by lazy { FragmentSearchBinding.inflate(layoutInflater) }
-    private val myAdapter by lazy { SearchAdapter(viewLifecycleOwner, followViewModel) }
+    private val myAdapter by lazy { SearchAdapter(searchCLickEvents = ::searchClickEvent) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return binding.root
@@ -121,6 +127,39 @@ class SearchFragment : Fragment() {
             i.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
             i.putExtra(RecognizerIntent.EXTRA_PROMPT,"Speak")
             startActivityForResult(i, rqSpeechRec)
+        }
+    }
+
+    private fun searchClickEvent(searchCLickEvents: SearchAdapter.SearchCLickEvents, searchUser : SearchUser) {
+        when(searchCLickEvents) {
+
+            SearchAdapter.SearchCLickEvents.FOLLOW -> { followViewModel.followUsers(searchUser.id, "Bearer${SessionManager(requireContext()).getToken()}") }
+
+            SearchAdapter.SearchCLickEvents.ITEM -> {
+                val bundle = Bundle().apply {
+                    putString("fullname", searchUser.fullName)
+                    putString("username", searchUser.username)
+                    putString("biography", searchUser.bio)
+                    putBoolean("activateEditText", true)
+                    putString("id", searchUser.id)
+                }
+                findNavController().navigate(R.id.observeProfileFragment, bundle)
+            }
+        }
+
+        followViewModel.follow.observe(viewLifecycleOwner) {
+            when(it) {
+                is Follow.Success -> {
+                    Snackbar.make(binding.searchRootLayout, searchUser.username, Snackbar.LENGTH_SHORT).show()
+                }
+                is Follow.Error -> {
+                    binding.searchRootLayout.snackbarError(
+                        binding.searchRootLayout,
+                        error = it.message,
+                        ""
+                    ){}
+                }
+            }
         }
     }
 }

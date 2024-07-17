@@ -1,6 +1,5 @@
 package com.example.twitturin.profile.presentation.vm
 
-import android.provider.ContactsContract.Profile
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.twitturin.profile.presentation.sealed.ProfileUIEvent
@@ -13,27 +12,11 @@ class ProfileUIViewModel: ViewModel() {
     private val uiEvent = Channel<ProfileUIEvent>(Channel.BUFFERED)
     val profileUiEvent = uiEvent.receiveAsFlow()
 
-    fun onBackPressed(){
-        viewModelScope.launch {
-            uiEvent.send(ProfileUIEvent.OnBackPressed)
-        }
-    }
+    fun onBackPressed() { viewModelScope.launch { uiEvent.send(ProfileUIEvent.OnBackPressed) } }
 
-    fun onAvatarPressed(){
-        viewModelScope.launch {
-            uiEvent.send(ProfileUIEvent.OnAvatarPressed)
-        }
-    }
+    fun onAvatarPressed() { viewModelScope.launch { uiEvent.send(ProfileUIEvent.OnAvatarPressed) } }
 
-    fun onFollowersPressed(){
-        viewModelScope.launch {
-            uiEvent.send(ProfileUIEvent.OnFollowersPressed)
-        }
-    }
+    fun onFollowersPressed() { viewModelScope.launch { uiEvent.send(ProfileUIEvent.OnFollowersPressed) } }
 
-    fun onFollowingPressed(){
-        viewModelScope.launch {
-            uiEvent.send(ProfileUIEvent.OnFollowingPressed)
-        }
-    }
+    fun onFollowingPressed() { viewModelScope.launch { uiEvent.send(ProfileUIEvent.OnFollowingPressed) } }
 }
