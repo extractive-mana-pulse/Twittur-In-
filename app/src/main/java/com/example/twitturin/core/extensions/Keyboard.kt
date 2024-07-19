@@ -1,4 +1,4 @@
-package com.example.twitturin.detail.presentation.util
+package com.example.twitturin.core.extensions
 
 import android.content.Context
 import android.view.View

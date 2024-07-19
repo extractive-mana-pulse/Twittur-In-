@@ -15,13 +15,13 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
+import com.example.twitturin.core.extensions.addTextButtonEnables
+import com.example.twitturin.core.extensions.snackbarError
+import com.example.twitturin.core.manager.SessionManager
 import com.example.twitturin.databinding.FragmentPublicPostBinding
-import com.example.twitturin.manager.SessionManager
-import com.example.twitturin.profile.presentation.util.snackbarError
 import com.example.twitturin.tweet.presentation.postTweet.sealed.PostTweet
 import com.example.twitturin.tweet.presentation.postTweet.sealed.PostTweetUI
 import com.example.twitturin.tweet.presentation.postTweet.util.Constants
-import com.example.twitturin.tweet.presentation.postTweet.util.addTextButtonEnables
 import com.example.twitturin.tweet.presentation.postTweet.vm.PostTweetUIViewModel
 import com.example.twitturin.tweet.presentation.postTweet.vm.PostTweetViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder

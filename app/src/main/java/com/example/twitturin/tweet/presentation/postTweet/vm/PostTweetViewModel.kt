@@ -2,7 +2,7 @@ package com.example.twitturin.tweet.presentation.postTweet.vm
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import com.example.twitturin.event.SingleLiveEvent
+import com.example.twitturin.core.event.SingleLiveEvent
 import com.example.twitturin.tweet.data.remote.repository.TweetRepository
 import com.example.twitturin.tweet.domain.model.TweetContent
 import com.example.twitturin.tweet.presentation.postTweet.sealed.PostTweet
@@ -15,11 +15,12 @@ import javax.inject.Inject
 @HiltViewModel
 class PostTweetViewModel @Inject constructor(private val repository: TweetRepository): ViewModel() {
 
-    private val _postTweet = SingleLiveEvent<PostTweet>()
+    private val _postTweet =
+        SingleLiveEvent<PostTweet>()
     val postTweetResult: LiveData<PostTweet> = _postTweet
 
     fun postTheTweet(content: String, authToken: String) {
-        val request = TweetContent(content,"")
+        val request = TweetContent(content)
         val authRequest = repository.postTweet(request, authToken)
 
         authRequest.enqueue(object : Callback<TweetContent> {

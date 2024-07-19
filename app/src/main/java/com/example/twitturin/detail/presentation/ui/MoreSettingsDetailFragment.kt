@@ -15,9 +15,9 @@ import com.example.twitturin.R
 import com.example.twitturin.detail.presentation.sealed.TweetDelete
 import com.example.twitturin.follow.presentation.followers.sealed.Follow
 import com.example.twitturin.follow.presentation.vm.FollowViewModel
-import com.example.twitturin.manager.SessionManager
-import com.example.twitturin.profile.presentation.util.snackbar
-import com.example.twitturin.profile.presentation.util.snackbarError
+import com.example.twitturin.core.manager.SessionManager
+import com.example.twitturin.core.extensions.snackbar
+import com.example.twitturin.core.extensions.snackbarError
 import com.example.twitturin.tweet.presentation.tweet.vm.TweetViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog

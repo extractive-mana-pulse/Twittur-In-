@@ -1,4 +1,4 @@
-package com.example.twitturin.di
+package com.example.twitturin.core.di
 
 import com.example.twitturin.BuildConfig
 import dagger.Module

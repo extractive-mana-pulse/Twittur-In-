@@ -1,8 +1,7 @@
-package com.example.twitturin.manager
+package com.example.twitturin.core.manager
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.example.twitturin.profile.presentation.util.sharedPreferences
 
 class SessionManager(private val context: Context) {
 

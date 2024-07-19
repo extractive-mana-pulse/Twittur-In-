@@ -2,7 +2,6 @@ package com.example.twitturin.home.presentation.ui
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -16,18 +15,18 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.twitturin.R
+import com.example.twitturin.core.extensions.shareUrl
+import com.example.twitturin.core.extensions.vertical
 import com.example.twitturin.databinding.FragmentHomeBinding
 import com.example.twitturin.home.presentation.adapter.HomeAdapter
 import com.example.twitturin.home.presentation.preferences.MyPreferences
 import com.example.twitturin.home.presentation.sealed.HomeUIEvent
 import com.example.twitturin.home.presentation.vm.HomeViewModel
-import com.example.twitturin.manager.SessionManager
+import com.example.twitturin.core.manager.SessionManager
 import com.example.twitturin.profile.presentation.sealed.UserCredentials
-import com.example.twitturin.profile.presentation.util.snackbarError
+import com.example.twitturin.core.extensions.snackbarError
 import com.example.twitturin.profile.presentation.vm.ProfileViewModel
 import com.example.twitturin.tweet.domain.model.Tweet
 import com.example.twitturin.tweet.presentation.tweet.vm.TweetViewModel
@@ -159,9 +158,7 @@ class HomeFragment : Fragment() {
 
         binding.apply {
 
-            rcView.adapter = homeAdapter
-            rcView.layoutManager = LinearLayoutManager(requireContext())
-            rcView.addItemDecoration(DividerItemDecoration(rcView.context, DividerItemDecoration.VERTICAL))
+            rcView.vertical().adapter = homeAdapter
 
             tweetViewModel.responseTweets.observe(requireActivity()) { response ->
 
@@ -285,13 +282,7 @@ class HomeFragment : Fragment() {
 
             HomeAdapter.HomeClickEvents.HEART -> { Snackbar.make(binding.homeRootLayout, R.string.in_progress, Snackbar.LENGTH_SHORT).show() }
 
-            HomeAdapter.HomeClickEvents.SHARE -> {
-                val intent = Intent(Intent.ACTION_SEND)
-                val link = "https://twitturin.onrender.com/tweets/${tweet.id}"
-                intent.putExtra(Intent.EXTRA_TEXT, link)
-                intent.type = "text/plain"
-                context?.startActivity(Intent.createChooser(intent,"Choose app:"))
-            }
+            HomeAdapter.HomeClickEvents.SHARE -> { requireContext().shareUrl("https://twitturin.onrender.com/tweets/${tweet.id}") }
 
             HomeAdapter.HomeClickEvents.REPLY -> {
                 val bundle = Bundle().apply {

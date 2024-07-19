@@ -9,9 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.twitturin.R
+import com.example.twitturin.core.extensions.vertical
 import com.example.twitturin.databinding.FragmentFollowingBinding
 import com.example.twitturin.follow.domain.model.FollowUser
 import com.example.twitturin.follow.presentation.following.adapter.FollowingAdapter
@@ -19,8 +18,8 @@ import com.example.twitturin.follow.presentation.following.sealed.FollowingUIEve
 import com.example.twitturin.follow.presentation.following.sealed.UnFollow
 import com.example.twitturin.follow.presentation.following.vm.FollowingUiViewModel
 import com.example.twitturin.follow.presentation.vm.FollowViewModel
-import com.example.twitturin.manager.SessionManager
-import com.example.twitturin.profile.presentation.util.snackbarError
+import com.example.twitturin.core.manager.SessionManager
+import com.example.twitturin.core.extensions.snackbarError
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -49,9 +48,8 @@ class FollowingFragment : Fragment() {
     @SuppressLint("NotifyDataSetChanged")
     private fun updateRecyclerView() {
         binding.apply {
-            rcViewFollowing.adapter = followingAdapter
-            rcViewFollowing.layoutManager = LinearLayoutManager(requireContext())
-            rcViewFollowing.addItemDecoration(DividerItemDecoration(rcViewFollowing.context, DividerItemDecoration.VERTICAL))
+
+            rcViewFollowing.vertical().adapter = followingAdapter
 
             followViewModel.getFollowing(SessionManager(requireContext()).getUserId()!!)
 

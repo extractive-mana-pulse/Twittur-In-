@@ -9,8 +9,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.twitturin.R
+import com.example.twitturin.core.extensions.formatCreatedAtPost
 import com.example.twitturin.databinding.RcViewBinding
-import com.example.twitturin.home.presentation.util.formatCreatedAtPost
 import com.example.twitturin.tweet.domain.model.Tweet
 import io.noties.markwon.Markwon
 

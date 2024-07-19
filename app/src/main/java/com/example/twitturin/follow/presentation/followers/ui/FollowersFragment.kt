@@ -9,9 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.twitturin.R
+import com.example.twitturin.core.extensions.vertical
 import com.example.twitturin.databinding.FragmentFollowersBinding
 import com.example.twitturin.follow.domain.model.FollowUser
 import com.example.twitturin.follow.presentation.followers.adapter.FollowersAdapter
@@ -20,8 +19,8 @@ import com.example.twitturin.follow.presentation.followers.sealed.Follow
 import com.example.twitturin.follow.presentation.followers.sealed.FollowersUiEvent
 import com.example.twitturin.follow.presentation.followers.vm.FollowersUiViewModel
 import com.example.twitturin.follow.presentation.vm.FollowViewModel
-import com.example.twitturin.manager.SessionManager
-import com.example.twitturin.profile.presentation.util.snackbarError
+import com.example.twitturin.core.manager.SessionManager
+import com.example.twitturin.core.extensions.snackbarError
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -49,13 +48,11 @@ class FollowersFragment : Fragment() {
     private fun updateRecyclerView() {
         binding.apply {
 
-            rcViewFollowers.adapter = followersAdapter
-            rcViewFollowers.layoutManager = LinearLayoutManager(requireContext())
-            rcViewFollowers.addItemDecoration(DividerItemDecoration(rcViewFollowers.context, DividerItemDecoration.VERTICAL))
+            rcViewFollowers.vertical().adapter = followersAdapter
 
             followViewModel.getFollowers(SessionManager(requireContext()).getUserId()!!)
 
-            followViewModel.followersList.observe(requireActivity()) { response ->
+            followViewModel.followersList.observe(viewLifecycleOwner) { response ->
 
                 if (response.isSuccessful) {
 

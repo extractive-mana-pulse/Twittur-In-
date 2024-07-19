@@ -7,7 +7,7 @@ import com.example.twitturin.auth.data.remote.repository.AuthRepository
 import com.example.twitturin.auth.domain.model.AuthUser
 import com.example.twitturin.auth.domain.model.Login
 import com.example.twitturin.auth.presentation.login.sealed.SignIn
-import com.example.twitturin.event.SingleLiveEvent
+import com.example.twitturin.core.event.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import retrofit2.Call
 import retrofit2.Callback
@@ -19,7 +19,8 @@ class SignInViewModel @Inject constructor(
     private val repository : AuthRepository
 ) : ViewModel() {
 
-    private val _signInResult = SingleLiveEvent<SignIn>()
+    private val _signInResult =
+        SingleLiveEvent<SignIn>()
     val signInResult: SingleLiveEvent<SignIn> = _signInResult
 
     private val _token = MutableLiveData<String>()

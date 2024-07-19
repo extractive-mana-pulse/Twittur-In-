@@ -11,6 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.twitturin.core.extensions.vertical
 import com.example.twitturin.databinding.FragmentListOfLikesBinding
 import com.example.twitturin.detail.domain.model.UserLikesAPost
 import com.example.twitturin.detail.presentation.adapter.ListOfLikesAdapter
@@ -44,9 +45,8 @@ class ListOfLikesFragment : Fragment() {
             val sharedPreferences = requireActivity().getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
             val tweetId = sharedPreferences.getString("id", null)
 
-            listOfLikesRcView.adapter = listOfLikesAdapter
-            listOfLikesRcView.layoutManager = LinearLayoutManager(requireContext())
-            listOfLikesRcView.addItemDecoration(DividerItemDecoration(listOfLikesRcView.context, DividerItemDecoration.VERTICAL))
+
+            listOfLikesRcView.vertical().adapter = listOfLikesAdapter
 
             listOfLikesViewModel.getListOfUsersLikesAPost(tweetId!!)
 

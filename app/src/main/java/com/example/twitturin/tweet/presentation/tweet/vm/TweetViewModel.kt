@@ -5,13 +5,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.twitturin.event.SingleLiveEvent
+import com.example.twitturin.core.event.SingleLiveEvent
 import com.example.twitturin.tweet.data.remote.repository.TweetRepository
 import com.example.twitturin.tweet.domain.model.ReplyContent
 import com.example.twitturin.tweet.domain.model.Tweet
-import com.example.twitturin.tweet.domain.model.TweetContent
 import com.example.twitturin.detail.presentation.sealed.PostReply
-import com.example.twitturin.tweet.presentation.postTweet.sealed.PostTweet
 import com.example.twitturin.detail.presentation.sealed.TweetDelete
 import com.facebook.shimmer.ShimmerFrameLayout
 import dagger.hilt.android.lifecycle.HiltViewModel

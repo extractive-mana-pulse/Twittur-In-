@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.twitturin.event.SingleLiveEvent
+import com.example.twitturin.core.event.SingleLiveEvent
 import com.example.twitturin.profile.data.remote.repository.ProfileRepository
 import com.example.twitturin.profile.domain.model.EditProfile
 import com.example.twitturin.profile.presentation.sealed.AccountDelete
@@ -24,7 +24,8 @@ import javax.inject.Inject
 @HiltViewModel
 class ProfileViewModel @Inject constructor(private val repository: ProfileRepository): ViewModel() {
 
-    private val _deleteResult = SingleLiveEvent<AccountDelete>()
+    private val _deleteResult =
+        SingleLiveEvent<AccountDelete>()
     val deleteResult: LiveData<AccountDelete> = _deleteResult
 
     fun deleteUser(userId: String, token : String) {
@@ -42,7 +43,8 @@ class ProfileViewModel @Inject constructor(private val repository: ProfileReposi
         }
     }
 
-    private val _getUserCredentials = SingleLiveEvent<UserCredentials>()
+    private val _getUserCredentials =
+        SingleLiveEvent<UserCredentials>()
     val getUserCredentials: LiveData<UserCredentials> = _getUserCredentials
 
     fun getUserCredentials(userId: String) {

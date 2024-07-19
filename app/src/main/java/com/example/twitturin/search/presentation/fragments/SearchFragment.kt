@@ -12,13 +12,13 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.twitturin.R
+import com.example.twitturin.core.extensions.vertical
 import com.example.twitturin.databinding.FragmentSearchBinding
 import com.example.twitturin.follow.presentation.followers.sealed.Follow
 import com.example.twitturin.follow.presentation.vm.FollowViewModel
-import com.example.twitturin.manager.SessionManager
-import com.example.twitturin.profile.presentation.util.snackbarError
+import com.example.twitturin.core.manager.SessionManager
+import com.example.twitturin.core.extensions.snackbarError
 import com.example.twitturin.search.domain.model.SearchUser
 import com.example.twitturin.search.presentation.adapters.SearchAdapter
 import com.example.twitturin.search.presentation.sealed.SearchResource
@@ -75,16 +75,13 @@ class SearchFragment : Fragment() {
                 true
             }
 
-            searchRcView.layoutManager = LinearLayoutManager(requireContext())
-            searchRcView.adapter = myAdapter
+            searchRcView.vertical().adapter = myAdapter
 
             searchViewModel.searchNews.observe(viewLifecycleOwner) { response ->
                 when (response) {
                     is SearchResource.Success -> {
                         hideProgressBar()
-                        response.data?.let { newsResponse ->
-                            myAdapter.differ.submitList(newsResponse.users)
-                        }
+                        response.data?.let { newsResponse -> myAdapter.differ.submitList(newsResponse.users) }
                     }
 
                     is SearchResource.Error -> {

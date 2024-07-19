@@ -1,7 +1,6 @@
-package com.example.twitturin.profile.presentation.util
+package com.example.twitturin.core.extensions
 
 import android.content.Context
-import androidx.activity.ComponentActivity
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 

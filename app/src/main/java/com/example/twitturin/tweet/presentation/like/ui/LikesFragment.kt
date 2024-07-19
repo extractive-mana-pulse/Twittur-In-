@@ -1,7 +1,6 @@
 package com.example.twitturin.tweet.presentation.like.ui
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,13 +9,13 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.twitturin.R
+import com.example.twitturin.core.extensions.shareUrl
+import com.example.twitturin.core.extensions.vertical
 import com.example.twitturin.databinding.FragmentLikesBinding
 import com.example.twitturin.home.presentation.adapter.HomeAdapter
-import com.example.twitturin.manager.SessionManager
-import com.example.twitturin.profile.presentation.util.snackbarError
+import com.example.twitturin.core.manager.SessionManager
+import com.example.twitturin.core.extensions.snackbarError
 import com.example.twitturin.tweet.domain.model.Tweet
 import com.example.twitturin.tweet.presentation.tweet.vm.TweetViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -39,9 +38,8 @@ class LikesFragment : Fragment() {
     private fun updateRecyclerView() {
         binding.apply {
             val userId = SessionManager(requireContext()).getUserId()
-            rcView.adapter = homeAdapter
-            rcView.layoutManager = LinearLayoutManager(requireContext())
-            rcView.addItemDecoration(DividerItemDecoration(rcView.context, DividerItemDecoration.VERTICAL))
+
+            rcView.vertical().adapter = homeAdapter
 
             tweetViewModel.getLikedPosts(userId!!)
 
@@ -97,13 +95,7 @@ class LikesFragment : Fragment() {
             HomeAdapter.HomeClickEvents.HEART -> {
                 Toast.makeText(requireContext(), "In Progress", Toast.LENGTH_SHORT).show()/*Snackbar.make(binding.homeRootLayout, R.string.in_progress, Snackbar.LENGTH_SHORT).show()*/ }
 
-            HomeAdapter.HomeClickEvents.SHARE -> {
-                val intent = Intent(Intent.ACTION_SEND)
-                val link = "https://twitturin.onrender.com/tweets/${tweet.id}"
-                intent.putExtra(Intent.EXTRA_TEXT, link)
-                intent.type = "text/plain"
-                context?.startActivity(Intent.createChooser(intent,"Choose app:"))
-            }
+            HomeAdapter.HomeClickEvents.SHARE -> { requireContext().shareUrl("https://twitturin.onrender.com/tweets/${tweet.id}") }
 
             HomeAdapter.HomeClickEvents.REPLY -> {
                 val bundle = Bundle().apply {

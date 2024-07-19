@@ -13,10 +13,10 @@ import com.example.twitturin.R
 import com.example.twitturin.auth.presentation.stayIn.sealed.StayInUiEvent
 import com.example.twitturin.auth.presentation.stayIn.vm.StayInViewModel
 import com.example.twitturin.databinding.FragmentStayInBinding
-import com.example.twitturin.manager.SessionManager
+import com.example.twitturin.core.manager.SessionManager
 import com.example.twitturin.profile.presentation.fragments.FullScreenImageFragment
 import com.example.twitturin.profile.presentation.sealed.UserCredentials
-import com.example.twitturin.profile.presentation.util.snackbarError
+import com.example.twitturin.core.extensions.snackbarError
 import com.example.twitturin.profile.presentation.vm.ProfileViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch

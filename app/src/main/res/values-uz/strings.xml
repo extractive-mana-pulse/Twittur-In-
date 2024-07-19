@@ -125,4 +125,5 @@
     <string name="detail_page_bottom_sheet">This is detail page bottom sheet</string>
     <string name="default_user_fullname">Twittur User</string>
     <string name="empty_bio">This user does not appear to have any biography.</string>
+    <string name="loading">Loading\n</string>
 </resources>

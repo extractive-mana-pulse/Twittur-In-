@@ -1,10 +1,7 @@
 package com.example.twitturin
 
 import android.annotation.SuppressLint
-import android.app.Activity
-import android.content.Context
 import android.content.Intent
-import android.content.res.Configuration
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -13,16 +10,15 @@ import android.util.Log
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import com.example.twitturin.core.extensions.bottomNavigationUI
+import com.example.twitturin.core.extensions.checkTheme
+import com.example.twitturin.core.extensions.loadLocale
 import com.example.twitturin.databinding.ActivityMainBinding
-import com.example.twitturin.home.presentation.preferences.MyPreferences
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.Locale
 
-@Suppress("DEPRECATION")
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
@@ -34,86 +30,18 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        val fragmentToOpen = intent.getStringExtra("fragment")
-        if (fragmentToOpen == "notifications") {
-            navController.navigate(R.id.action_homeFragment_to_notificationFragment)
-        }
-
         if (Build.VERSION.SDK_INT >= 33) {
             notificationPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
         } else {
             hasNotificationPermissionGranted = true
         }
 
-        checkTheme()
-        loadLocale()
+        this.checkTheme()
+        this.loadLocale()
 
         binding.bottomNavView.setupWithNavController(navController)
 
-        val fragmentsToHideBottomNav = setOf(
-            R.id.detailFragment,
-            R.id.signInFragment,
-            R.id.studentRegistrationFragment,
-            R.id.professorRegistrationFragment,
-            R.id.editProfileFragment,
-            R.id.kindFragment,
-            R.id.profileFragment,
-            R.id.followersListFragment,
-            R.id.followingListFragment,
-            R.id.publicPostFragment,
-            R.id.fullScreenImageFragment,
-            R.id.reportFragment,
-            R.id.editTweetFragment,
-            R.id.stayInFragment,
-            R.id.noInternetFragment,
-            R.id.feedbackFragment,
-            R.id.publicPostPolicyFragment,
-            R.id.newUpdatePatchNoteFragment,
-            R.id.listOfLikesFragment,
-            R.id.observeProfileFragment,
-
-        )
-
-        navController.addOnDestinationChangedListener { _, destination, _ ->
-            if (destination.id in fragmentsToHideBottomNav) {
-                binding.bottomNavView.visibility = View.GONE
-            } else {
-                binding.bottomNavView.visibility = View.VISIBLE
-            }
-        }
-    }
-
-    private fun checkTheme() {
-        when (MyPreferences(this).darkMode) {
-            0 -> {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            }
-            1 -> {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            }
-            2 -> {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-            }
-        }
-    }
-
-    @SuppressLint("CommitPrefEdits")
-    private fun setLocale(lang : String) {
-        val locale = Locale(lang)
-        Locale.setDefault(locale)
-        val config = Configuration()
-        config.setLocale(locale)
-        baseContext.resources.updateConfiguration(config, baseContext.resources.displayMetrics)
-
-        val editor = getSharedPreferences("Settings", Context.MODE_PRIVATE).edit()
-        editor.putString("lang", lang)
-        editor.apply()
-    }
-
-    private fun loadLocale() {
-        val sharedPref = getSharedPreferences("Settings", Activity.MODE_PRIVATE)
-        val language = sharedPref.getString("lang","")
-        language?.let { setLocale(it) }
+        bottomNavigationUI(binding.bottomNavView)
     }
 
     private fun showSettingDialog() {

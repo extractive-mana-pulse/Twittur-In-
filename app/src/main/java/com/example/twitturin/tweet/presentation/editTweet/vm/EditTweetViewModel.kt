@@ -20,7 +20,7 @@ class EditTweetViewModel @Inject constructor(private val repository: TweetReposi
 
     fun editTweet(content: String, tweetId: String, token: String) {
 
-        val request = TweetContent(content, token)
+        val request = TweetContent(content)
         val authRequest = repository.editTweet(request, tweetId, token)
 
         authRequest.enqueue(object : Callback<TweetContent> {

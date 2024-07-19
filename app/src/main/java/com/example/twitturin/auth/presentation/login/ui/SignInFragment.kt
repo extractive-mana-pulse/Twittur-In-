@@ -12,13 +12,13 @@ import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
 import com.example.twitturin.auth.presentation.login.sealed.SignIn
 import com.example.twitturin.auth.presentation.login.sealed.SignInUiEvent
-import com.example.twitturin.auth.presentation.login.util.login
 import com.example.twitturin.auth.presentation.login.vm.SignInUiEventViewModel
 import com.example.twitturin.auth.presentation.login.vm.SignInViewModel
 import com.example.twitturin.auth.presentation.stayIn.vm.StayInViewModel
+import com.example.twitturin.core.extensions.login
+import com.example.twitturin.core.manager.SessionManager
 import com.example.twitturin.databinding.FragmentSignInBinding
-import com.example.twitturin.manager.SessionManager
-import com.example.twitturin.profile.presentation.util.snackbarError
+import com.example.twitturin.core.extensions.snackbarError
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 

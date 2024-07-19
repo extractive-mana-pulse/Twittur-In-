@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.twitturin.event.SingleLiveEvent
+import com.example.twitturin.core.event.SingleLiveEvent
 import com.example.twitturin.follow.data.remote.repository.FollowRepository
 import com.example.twitturin.follow.domain.model.FollowUser
 import com.example.twitturin.follow.presentation.followers.sealed.Follow
@@ -49,7 +49,8 @@ class FollowViewModel @Inject constructor(private val repository: FollowReposito
         }
     }
 
-    private val _follow = SingleLiveEvent<Follow>()
+    private val _follow =
+        SingleLiveEvent<Follow>()
     val follow: LiveData<Follow> = _follow
 
     fun followUsers(id : String, token: String) {
@@ -73,7 +74,8 @@ class FollowViewModel @Inject constructor(private val repository: FollowReposito
         })
     }
 
-    private val _unFollow = SingleLiveEvent<UnFollow>()
+    private val _unFollow =
+        SingleLiveEvent<UnFollow>()
     val unFollow: LiveData<UnFollow> = _unFollow
 
     fun unFollowUser(id : String, token: String) {

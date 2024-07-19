@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import com.example.twitturin.tweet.domain.model.LikeTweet
 import com.example.twitturin.tweet.data.remote.repository.TweetRepository
 import com.example.twitturin.tweet.presentation.like.sealed.PostLike
-import com.example.twitturin.event.SingleLiveEvent
+import com.example.twitturin.core.event.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import retrofit2.Call
 import retrofit2.Callback

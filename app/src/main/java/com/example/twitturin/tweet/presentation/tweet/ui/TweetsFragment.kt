@@ -1,7 +1,6 @@
 package com.example.twitturin.tweet.presentation.tweet.ui
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,14 +11,14 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.twitturin.R
+import com.example.twitturin.core.extensions.shareUrl
+import com.example.twitturin.core.extensions.vertical
 import com.example.twitturin.databinding.FragmentTweetsBinding
 import com.example.twitturin.detail.presentation.sealed.TweetDelete
-import com.example.twitturin.manager.SessionManager
-import com.example.twitturin.profile.presentation.util.converter
-import com.example.twitturin.profile.presentation.util.snackbarError
+import com.example.twitturin.core.manager.SessionManager
+import com.example.twitturin.core.extensions.converter
+import com.example.twitturin.core.extensions.snackbarError
 import com.example.twitturin.tweet.domain.model.Tweet
 import com.example.twitturin.tweet.presentation.tweet.adapters.TweetAdapter
 import com.example.twitturin.tweet.presentation.tweet.sealed.TweetUIEvents
@@ -54,10 +53,8 @@ class TweetsFragment : Fragment() {
 
         binding.apply {
 
-            rcView.adapter = userPostAdapter
-            rcView.layoutManager = LinearLayoutManager(requireContext())
+            rcView.vertical().adapter =userPostAdapter
             tweetViewModel.getUserTweet(SessionManager(requireContext()).getUserId()!!)
-            rcView.addItemDecoration(DividerItemDecoration(rcView.context, DividerItemDecoration.VERTICAL))
 
             tweetViewModel.userTweets.observe(requireActivity()) { response ->
                 if (response.isSuccessful) {
@@ -101,7 +98,6 @@ class TweetsFragment : Fragment() {
     }
 
     private fun tweetClickEvents(clickEvents: TweetAdapter.TweetClickEvents, tweet: Tweet) {
-        val baseUrl = "https://twitturin.onrender.com/tweets"
         when(clickEvents) {
             TweetAdapter.TweetClickEvents.ITEM -> { tweetUIViewModel.onItemPressed() }
             TweetAdapter.TweetClickEvents.REPLY -> { tweetUIViewModel.onReplyPressed() }
@@ -203,16 +199,7 @@ class TweetsFragment : Fragment() {
                         }
                         findNavController().navigate(R.id.detailFragment, bundle)
                     }
-
-                    TweetUIEvents.OnSharePressed -> {
-                        val intent = Intent(Intent.ACTION_SEND)
-                        val link = baseUrl+"/"+tweet.id
-
-                        intent.putExtra(Intent.EXTRA_TEXT, link)
-                        intent.type = "text/plain"
-
-                        context?.startActivity(Intent.createChooser(intent,"Choose app:"))
-                    }
+                    TweetUIEvents.OnSharePressed -> { requireContext().shareUrl("https://twitturin.onrender.com/tweets/${tweet.id}") }
                 }
             }
         }
