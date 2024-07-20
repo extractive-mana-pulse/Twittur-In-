@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -107,6 +108,8 @@ class HomeFragment : Fragment() {
                             .error(R.drawable.not_found)
                             .placeholder(R.drawable.person)
                             .into(headerViewAvatar)
+
+                        Log.d("Hello world", "Hello world!")
 
                         // top bar navigation icon
                         Glide.with(requireContext())
