@@ -81,7 +81,6 @@ class HomeFragment : Fragment() {
 
             addPost.setOnClickListener { homeViewModel.onAddButtonPressed() }
 
-            Log.d("test", "test")
             viewLifecycleOwner.lifecycleScope.launch {
                 homeViewModel.homeEvent.collect {  event ->
                     when(event){
