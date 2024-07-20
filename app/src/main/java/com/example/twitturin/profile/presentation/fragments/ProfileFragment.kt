@@ -28,6 +28,9 @@ import com.example.twitturin.profile.presentation.sealed.AccountDelete
 import com.example.twitturin.profile.presentation.sealed.ProfileUIEvent
 import com.example.twitturin.profile.presentation.sealed.UserCredentials
 import com.example.twitturin.core.extensions.converter
+import com.example.twitturin.core.extensions.fullScreenImage
+import com.example.twitturin.core.extensions.repeatOnStarted
+import com.example.twitturin.core.extensions.shareUrl
 import com.example.twitturin.core.extensions.snackbarError
 import com.example.twitturin.profile.presentation.vm.ProfileUIViewModel
 import com.example.twitturin.profile.presentation.vm.ProfileViewModel
@@ -35,6 +38,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
 
@@ -82,7 +86,7 @@ class ProfileFragment : Fragment() {
             profileToolbar.setOnMenuItemClickListener { menuItem ->
                 when (menuItem.itemId) {
                     R.id.share_profile -> {
-                        shareProfile()
+                        requireContext().shareUrl("https://twitturin.onrender.com/users/${SessionManager(requireContext()).getUserId()}")
                         true
                     }
                     R.id.three_dot_menu -> {
@@ -129,8 +133,8 @@ class ProfileFragment : Fragment() {
             viewLifecycleOwner.lifecycleScope.launch {
                 profileUIViewModel.profileUiEvent.collect {
                     when(it){
-                        ProfileUIEvent.OnAvatarPressed -> { fullScreenAvatar() }
                         ProfileUIEvent.OnBackPressed -> { findNavController().navigateUp() }
+                        ProfileUIEvent.OnAvatarPressed -> { fullScreenImage(profileUserAvatar) }
                         ProfileUIEvent.OnFollowersPressed -> { findNavController().navigate(R.id.action_profileFragment_to_followersListFragment) }
                         ProfileUIEvent.OnFollowingPressed -> { findNavController().navigate(R.id.action_profileFragment_to_followingListFragment) }
                     }
@@ -198,48 +202,26 @@ class ProfileFragment : Fragment() {
         }
     }
 
-    private fun shareProfile() {
-        val userId = SessionManager(requireContext()).getUserId()
-        val baseUserUrl = "https://twitturin.onrender.com/users"
-        val intent = Intent(Intent.ACTION_SEND)
-        val link = "$baseUserUrl/$userId"
-
-        intent.putExtra(Intent.EXTRA_TEXT, link)
-        intent.type = "text/plain"
-
-        requireContext().startActivity(Intent.createChooser(intent,"Choose app:"))
-    }
-
-    private fun fullScreenAvatar() {
-        val fullScreenImageFragment = FullScreenImageFragment()
-
-        binding.profileUserAvatar.buildDrawingCache()
-        val originalBitmap = binding.profileUserAvatar.drawingCache
-        val image = originalBitmap.copy(originalBitmap.config, true)
-
-        val extras = Bundle()
-        extras.putParcelable("image", image)
-        fullScreenImageFragment.arguments = extras
-
-        fullScreenImageFragment.show(requireActivity().supportFragmentManager, "FullScreenImageFragment")
-    }
-
     private fun deleteAccount() {
 
         deleteDialog()
 
-        profileViewModel.deleteResult.observe(viewLifecycleOwner) { result ->
-            when (result) {
+        repeatOnStarted {
+            profileViewModel.deleteResult.collectLatest { result ->
+                when (result) {
 
-                is AccountDelete.Success -> {
-                    findNavController().navigate(R.id.action_profileFragment_to_signInFragment)
-                }
+                    is AccountDelete.Success -> {
+                        findNavController().navigate(R.id.action_profileFragment_to_signInFragment)
+                    }
 
-                is AccountDelete.Error -> {
-                    binding.profileRootLayout.snackbarError(
-                        requireActivity().findViewById(R.id.profile_root_layout),
-                        error = result.message,
-                        ""){}
+                    is AccountDelete.Error -> {
+                        binding.profileRootLayout.snackbarError(
+                            binding.profileRootLayout,
+                            error = result.message,
+                            ""){}
+                    }
+
+                    AccountDelete.Loading -> {  }
                 }
             }
         }

@@ -7,8 +7,9 @@ import com.example.twitturin.auth.data.remote.repository.AuthRepository
 import com.example.twitturin.auth.domain.model.AuthUser
 import com.example.twitturin.auth.domain.model.Login
 import com.example.twitturin.auth.presentation.login.sealed.SignIn
-import com.example.twitturin.core.event.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -19,9 +20,8 @@ class SignInViewModel @Inject constructor(
     private val repository : AuthRepository
 ) : ViewModel() {
 
-    private val _signInResult =
-        SingleLiveEvent<SignIn>()
-    val signInResult: SingleLiveEvent<SignIn> = _signInResult
+    private val _signIn = MutableStateFlow<SignIn>(SignIn.Loading)
+    val signInResponse = _signIn.asStateFlow()
 
     private val _token = MutableLiveData<String>()
     val token: LiveData<String> = _token
@@ -43,14 +43,14 @@ class SignInViewModel @Inject constructor(
                     val userId = signInResponse?.id
                     _token.value = token!!
                     _userId.value = userId!!
-                    _signInResult.value = signInResponse.let { SignIn.Success(it) }
+                    _signIn.value = signInResponse.let { SignIn.Success(it) }
                 } else {
-                    _signInResult.value = SignIn.Error("User doesn't exist")
+                    _signIn.value = SignIn.Error("User doesn't exist")
                 }
             }
 
             override fun onFailure(call: Call<AuthUser>, t: Throwable) {
-                _signInResult.value = SignIn.Error("Network error")
+                _signIn.value = SignIn.Error("Network error")
             }
         })
     }

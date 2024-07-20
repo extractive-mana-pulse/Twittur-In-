@@ -12,15 +12,7 @@ class SignInUiEventViewModel : ViewModel() {
     private val _signInEventChannel = Channel<SignInUiEvent>(Channel.BUFFERED)
     val signInEvent = _signInEventChannel.receiveAsFlow()
 
-    fun onLoginPressed() {
-        viewModelScope.launch {
-            _signInEventChannel.send(SignInUiEvent.OnLoginPressed)
-        }
-    }
+    fun onLoginPressed() { viewModelScope.launch { _signInEventChannel.send(SignInUiEvent.OnLoginPressed) } }
 
-    fun onKindPressed() {
-        viewModelScope.launch {
-            _signInEventChannel.send(SignInUiEvent.OnKindPressed)
-        }
-    }
+    fun onKindPressed() { viewModelScope.launch { _signInEventChannel.send(SignInUiEvent.OnKindPressed) } }
 }

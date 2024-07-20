@@ -1,9 +1,9 @@
 package com.example.twitturin.tweet.data.remote.api
 
 import com.example.twitturin.tweet.domain.model.LikeTweet
-import com.example.twitturin.tweet.domain.model.TweetContent
 import com.example.twitturin.tweet.domain.model.ReplyContent
 import com.example.twitturin.tweet.domain.model.Tweet
+import com.example.twitturin.tweet.domain.model.TweetContent
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
@@ -16,7 +16,6 @@ import retrofit2.http.Path
 
 interface TweetApi {
 
-
     @GET("tweets")
     suspend fun getTweet(): Response<List<Tweet>>
 
@@ -26,14 +25,12 @@ interface TweetApi {
         @Header("Authorization") token: String
     ): Call<TweetContent>
 
-    /** This function get all tweets(posts) published by the user*/
     @GET("users/{id}/tweets")
     suspend fun getPostsByUser(@Path("id") userId: String): Response<List<Tweet>>
 
     @GET("tweets/{id}/replies")
     suspend fun getRepliesOfPost(@Path("id") tweetId: String): Response<List<Tweet>>
 
-    /** This function tries to publish a reply(comment) to the existing tweet(post) */
     @POST("tweets/{id}/replies")
     fun postReply(
         @Body reply: ReplyContent,
@@ -54,7 +51,12 @@ interface TweetApi {
         @Header("Authorization") token: String
     ): Response<Unit>
 
-    /** This async function do the job in likesFragment. Get all tweets(posts) liked by the user with the given ID*/
+    @DELETE("replies/{id}")
+    suspend fun deleteReply(
+        @Path("id") replyId: String,
+        @Header("Authorization") token: String
+    ): Response<Unit>
+
     @GET("users/{id}/likes")
     suspend fun getListOfLikedPosts(@Path("id") userId: String): Response<List<Tweet>>
 

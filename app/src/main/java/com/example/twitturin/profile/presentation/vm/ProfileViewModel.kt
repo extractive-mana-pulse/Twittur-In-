@@ -12,6 +12,8 @@ import com.example.twitturin.profile.presentation.sealed.EditUser
 import com.example.twitturin.profile.presentation.sealed.EditUserImageState
 import com.example.twitturin.profile.presentation.sealed.UserCredentials
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -24,9 +26,8 @@ import javax.inject.Inject
 @HiltViewModel
 class ProfileViewModel @Inject constructor(private val repository: ProfileRepository): ViewModel() {
 
-    private val _deleteResult =
-        SingleLiveEvent<AccountDelete>()
-    val deleteResult: LiveData<AccountDelete> = _deleteResult
+    private val _deleteResult = MutableStateFlow<AccountDelete>(AccountDelete.Loading)
+    val deleteResult = _deleteResult.asStateFlow()
 
     fun deleteUser(userId: String, token : String) {
         viewModelScope.launch {
@@ -43,8 +44,7 @@ class ProfileViewModel @Inject constructor(private val repository: ProfileReposi
         }
     }
 
-    private val _getUserCredentials =
-        SingleLiveEvent<UserCredentials>()
+    private val _getUserCredentials = SingleLiveEvent<UserCredentials>()
     val getUserCredentials: LiveData<UserCredentials> = _getUserCredentials
 
     fun getUserCredentials(userId: String) {

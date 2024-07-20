@@ -10,6 +10,9 @@
             type="com.example.twitturin.profile.presentation.fragments.ProfileFragment"/>
     </data>
 
+    <!--    Rebuild this page. When tweets scroll bottom all above tab layout should be collapsable.
+        Note this is not toolbar to collapse but other UI elements-->
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/profile_root_layout"
         android:layout_width="match_parent"

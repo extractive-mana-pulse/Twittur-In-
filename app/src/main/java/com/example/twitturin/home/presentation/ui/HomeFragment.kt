@@ -76,7 +76,7 @@ class HomeFragment : Fragment() {
             val headingFollowers: TextView = headerView.findViewById(R.id.nav_followers_counter_tv)
             val layout: ShimmerFrameLayout = headerView.findViewById(R.id.navigation_drawer_shimmer)
 
-            drawerIcon.setOnClickListener { homeViewModel.onDrawerPressed() }
+            homePageToolbar.setNavigationOnClickListener { homeViewModel.onDrawerPressed() }
 
             addPost.setOnClickListener { homeViewModel.onAddButtonPressed() }
 
@@ -113,7 +113,7 @@ class HomeFragment : Fragment() {
                             .load(result.user.profilePicture)
                             .error(R.drawable.not_found)
                             .placeholder(R.drawable.person)
-                            .into(drawerIcon)
+                            .into(homePageToolbar.navigationIcon as ImageView)
 
                         result.user.apply {
                             headerFullname.text = fullName ?: R.string.default_user_fullname.toString()
@@ -125,7 +125,7 @@ class HomeFragment : Fragment() {
 
                     is UserCredentials.Error -> {
                         homeRootLayout.snackbarError(
-                            view.findViewById<TextView>(R.id.tv_for_snackbar),
+                            addPost,
                             error = result.message,
                             ""){}
                     }

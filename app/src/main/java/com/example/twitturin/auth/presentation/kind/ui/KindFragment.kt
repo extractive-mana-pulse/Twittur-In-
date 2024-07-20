@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 
 class KindFragment : Fragment() {
 
-    private val kindViewModel : KindViewModel by viewModels()
+    private val kindViewModel by viewModels<KindViewModel>()
     private val binding by lazy { FragmentKindBinding.inflate(layoutInflater) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View = binding.root

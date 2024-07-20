@@ -1,5 +1,6 @@
 package com.example.twitturin.core.extensions
 
+import androidx.fragment.app.Fragment
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.TimeZone
@@ -59,4 +60,12 @@ fun String.formatCreatedAtPost(): String {
     } catch (e: Exception) {
         "Invalid date"
     }
+}
+
+fun Fragment.convertDateFormat(dateString: String): String {
+    val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.getDefault())
+    val outputFormat = SimpleDateFormat("dd.MM.yyyy, HH:mm:ss", Locale.getDefault())
+
+    val date = inputFormat.parse(dateString)
+    return outputFormat.format(date!!)
 }

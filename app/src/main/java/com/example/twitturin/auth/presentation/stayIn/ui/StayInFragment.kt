@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide
 import com.example.twitturin.R
 import com.example.twitturin.auth.presentation.stayIn.sealed.StayInUiEvent
 import com.example.twitturin.auth.presentation.stayIn.vm.StayInViewModel
+import com.example.twitturin.core.extensions.fullScreenImage
 import com.example.twitturin.databinding.FragmentStayInBinding
 import com.example.twitturin.core.manager.SessionManager
 import com.example.twitturin.profile.presentation.fragments.FullScreenImageFragment
@@ -79,26 +80,7 @@ class StayInFragment : Fragment() {
                             findNavController().navigate(R.id.action_stayInFragment_to_homeFragment)
                         }
 
-                        StayInUiEvent.FullScreenPressed -> {
-                            val fullScreenImageFragment = FullScreenImageFragment()
-
-                            stayInProfileImage.buildDrawingCache()
-
-                            val extras = Bundle()
-                            extras.putParcelable(
-                                "image",
-                                stayInProfileImage.drawingCache.copy(
-                                    stayInProfileImage.drawingCache.config,
-                                    true
-                                )
-                            )
-                            fullScreenImageFragment.arguments = extras
-
-                            fullScreenImageFragment.show(
-                                requireActivity().supportFragmentManager,
-                                "FullScreenImageFragment"
-                            )
-                        }
+                        StayInUiEvent.FullScreenPressed -> { fullScreenImage(stayInProfileImage) }
                     }
                 }
             }

@@ -10,6 +10,7 @@
             type="com.example.twitturin.auth.presentation.login.ui.SignInFragment"/>
     </data>
 
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/sign_in_root_layout"
         android:layout_width="match_parent"

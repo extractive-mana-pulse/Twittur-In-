@@ -12,12 +12,12 @@ import android.widget.TextView
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
+import com.example.twitturin.core.extensions.snackbar
+import com.example.twitturin.core.extensions.snackbarError
+import com.example.twitturin.core.manager.SessionManager
 import com.example.twitturin.detail.presentation.sealed.TweetDelete
 import com.example.twitturin.follow.presentation.followers.sealed.Follow
 import com.example.twitturin.follow.presentation.vm.FollowViewModel
-import com.example.twitturin.core.manager.SessionManager
-import com.example.twitturin.core.extensions.snackbar
-import com.example.twitturin.core.extensions.snackbarError
 import com.example.twitturin.tweet.presentation.tweet.vm.TweetViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -92,7 +92,7 @@ class MoreSettingsDetailFragment : BottomSheetDialogFragment() {
             alertDialogBuilder.setMessage(resources.getString(R.string.delete_tweet_message))
             alertDialogBuilder.setPositiveButton(resources.getString(R.string.yes)) { _, _ ->
                 tweetViewModel.deleteTweet(tweetId!!, "Bearer $token")
-                findNavController().popBackStack()
+                findNavController().navigateUp()
                 dismiss()
             }
 

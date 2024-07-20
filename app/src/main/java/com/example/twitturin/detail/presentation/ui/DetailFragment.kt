@@ -14,36 +14,36 @@ import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.twitturin.R
 import com.example.twitturin.core.extensions.addAutoResizeTextWatcher
+import com.example.twitturin.core.extensions.convertDateFormat
+import com.example.twitturin.core.extensions.formatCreatedAt
+import com.example.twitturin.core.extensions.fullScreenImage
+import com.example.twitturin.core.extensions.repeatOnStarted
+import com.example.twitturin.core.extensions.shareUrl
+import com.example.twitturin.core.extensions.showKeyboard
+import com.example.twitturin.core.extensions.snackbar
+import com.example.twitturin.core.extensions.snackbarError
 import com.example.twitturin.core.extensions.vertical
+import com.example.twitturin.core.manager.SessionManager
 import com.example.twitturin.databinding.FragmentDetailBinding
 import com.example.twitturin.detail.presentation.sealed.DetailPageUI
 import com.example.twitturin.detail.presentation.sealed.PostReply
-import com.example.twitturin.core.extensions.formatCreatedAt
-import com.example.twitturin.core.extensions.shareUrl
-import com.example.twitturin.core.extensions.showKeyboard
 import com.example.twitturin.detail.presentation.vm.DetailPageUIViewModel
 import com.example.twitturin.follow.presentation.followers.sealed.Follow
 import com.example.twitturin.follow.presentation.vm.FollowViewModel
 import com.example.twitturin.home.presentation.adapter.HomeAdapter
-import com.example.twitturin.core.manager.SessionManager
-import com.example.twitturin.profile.presentation.fragments.FullScreenImageFragment
-import com.example.twitturin.core.extensions.snackbar
-import com.example.twitturin.core.extensions.snackbarError
 import com.example.twitturin.tweet.domain.model.Tweet
 import com.example.twitturin.tweet.presentation.tweet.vm.TweetViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import io.noties.markwon.Markwon
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.Locale
 
-@Suppress("DEPRECATION")
 @AndroidEntryPoint
 class DetailFragment : Fragment() {
 
-    private val tweetViewModel : TweetViewModel by viewModels()
-    private val followingViewModel : FollowViewModel by viewModels()
-    private val detailUiViewModel : DetailPageUIViewModel by viewModels()
+    private val tweetViewModel by viewModels<TweetViewModel>()
+    private val followingViewModel by viewModels<FollowViewModel>()
+    private val detailUiViewModel by viewModels<DetailPageUIViewModel>()
     private val binding  by lazy { FragmentDetailBinding.inflate(layoutInflater) }
     private val homeAdapter by lazy { HomeAdapter(homeClickEvents = ::homeClickEvent) }
 
@@ -193,20 +193,7 @@ class DetailFragment : Fragment() {
 
                         DetailPageUI.OnSharePressed ->  { requireContext().shareUrl("https://twitturin.onrender.com/tweets/${id}") }
 
-                        DetailPageUI.OnImagePressed -> {
-
-                            val fullScreenImageFragment = FullScreenImageFragment()
-
-                            authorAvatar.buildDrawingCache()
-                            val originalBitmap = authorAvatar.drawingCache
-                            val image = originalBitmap.copy(originalBitmap.config, true)
-
-                            val extras = Bundle()
-                            Bundle().putParcelable("image", image)
-                            fullScreenImageFragment.arguments = extras
-
-                            fullScreenImageFragment.show(requireActivity().supportFragmentManager, "FullScreenImageFragment")
-                        }
+                        DetailPageUI.OnImagePressed -> { fullScreenImage(authorAvatar) }
                     }
                 }
             }
@@ -226,38 +213,36 @@ class DetailFragment : Fragment() {
 
             tweetViewModel.getRepliesOfPost(tweetId!!)
 
-            tweetViewModel.repliesOfPosts.observe(viewLifecycleOwner) { response ->
+            repeatOnStarted {
 
-                if (response.isSuccessful) {
+                tweetViewModel.repliesOfPosts.collectLatest { response ->
 
-                    response.body()?.let { tweets ->
-                        val tweetList: MutableList<Tweet> = tweets.toMutableList()
-                        homeAdapter.differ.submitList(tweetList)
+                    if (response != null) {
+                        if (response.isSuccessful) {
 
-                        swipeToRefreshArticle.setOnRefreshListener {
-                            homeAdapter.notifyDataSetChanged()
-                            val freshList = tweetList.sortedByDescending { it.createdAt }
-                            tweetList.clear()
-                            tweetList.addAll(freshList)
-                            swipeToRefreshArticle.isRefreshing = false
+                            response.body()?.let { tweets ->
+                                val tweetList: MutableList<Tweet> = tweets.toMutableList()
+                                homeAdapter.differ.submitList(tweetList)
+
+                                swipeToRefreshArticle.setOnRefreshListener {
+                                    homeAdapter.notifyDataSetChanged()
+                                    val freshList = tweetList.sortedByDescending { it.createdAt }
+                                    tweetList.clear()
+                                    tweetList.addAll(freshList)
+                                    swipeToRefreshArticle.isRefreshing = false
+                                }
+                            }
+
+                        } else {
+                            detailRootLayout.snackbarError(
+                                replyLayout,
+                                response.body().toString(),
+                                "") {  }
                         }
                     }
-                } else {
-                    detailRootLayout.snackbarError(
-                        requireActivity().findViewById(R.id.reply_layout),
-                        response.body().toString(),
-                        "") {  }
                 }
             }
         }
-    }
-
-    private fun convertDateFormat(dateString: String): String {
-        val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.getDefault())
-        val outputFormat = SimpleDateFormat("dd.MM.yyyy, HH:mm:ss", Locale.getDefault())
-
-        val date = inputFormat.parse(dateString)
-        return outputFormat.format(date!!)
     }
 
     private fun homeClickEvent(homeClickEvents: HomeAdapter.HomeClickEvents, tweet: Tweet) {

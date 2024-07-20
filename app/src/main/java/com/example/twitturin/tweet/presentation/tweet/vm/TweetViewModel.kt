@@ -6,13 +6,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.twitturin.core.event.SingleLiveEvent
+import com.example.twitturin.detail.presentation.sealed.PostReply
+import com.example.twitturin.detail.presentation.sealed.TweetDelete
 import com.example.twitturin.tweet.data.remote.repository.TweetRepository
 import com.example.twitturin.tweet.domain.model.ReplyContent
 import com.example.twitturin.tweet.domain.model.Tweet
-import com.example.twitturin.detail.presentation.sealed.PostReply
-import com.example.twitturin.detail.presentation.sealed.TweetDelete
 import com.facebook.shimmer.ShimmerFrameLayout
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
@@ -20,9 +22,7 @@ import retrofit2.Response
 import javax.inject.Inject
 
 @HiltViewModel
-class TweetViewModel @Inject constructor(
-    private val repository: TweetRepository
-) : ViewModel() {
+class TweetViewModel @Inject constructor(private val repository: TweetRepository) : ViewModel() {
 
     var responseTweets: MutableLiveData<Response<List<Tweet>>> = MutableLiveData()
 
@@ -45,14 +45,16 @@ class TweetViewModel @Inject constructor(
         }
     }
 
-    var repliesOfPosts: MutableLiveData<Response<List<Tweet>>> = MutableLiveData()
+    private val _repliesOfPosts = MutableStateFlow<Response<List<Tweet>>?>(null)
+    val repliesOfPosts: StateFlow<Response<List<Tweet>>?> = _repliesOfPosts
 
-    fun getRepliesOfPost(tweetId : String) {
+    fun getRepliesOfPost(tweetId: String) {
         viewModelScope.launch {
             val response = repository.getRepliesOfPost(tweetId)
-            repliesOfPosts.value = response
+            _repliesOfPosts.value = response
         }
     }
+
 
     var likedPosts: MutableLiveData<Response<List<Tweet>>> = MutableLiveData()
     fun getLikedPosts(userId : String) {
@@ -62,8 +64,7 @@ class TweetViewModel @Inject constructor(
         }
     }
 
-    private val _deleteTweetResult =
-        SingleLiveEvent<TweetDelete>()
+    private val _deleteTweetResult = SingleLiveEvent<TweetDelete>()
     val deleteTweetResult: LiveData<TweetDelete> = _deleteTweetResult
 
     fun deleteTweet(tweetId: String, token : String) {
@@ -83,8 +84,7 @@ class TweetViewModel @Inject constructor(
 
 
 
-    private val _postReply =
-        SingleLiveEvent<PostReply>()
+    private val _postReply = SingleLiveEvent<PostReply>()
     val postReplyResult: LiveData<PostReply> = _postReply
 
     fun postReply(content: String, tweetId: String, authToken: String) {

@@ -7,7 +7,7 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
-import android.view.View
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
@@ -28,6 +28,7 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("PrivateResource")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         setContentView(binding.root)
 
         if (Build.VERSION.SDK_INT >= 33) {
@@ -58,6 +59,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private val notificationPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+
         hasNotificationPermissionGranted = isGranted
         if (!isGranted) {
             if (Build.VERSION.SDK_INT >= 33) {
