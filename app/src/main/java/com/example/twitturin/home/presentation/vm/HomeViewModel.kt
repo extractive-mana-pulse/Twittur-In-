@@ -12,15 +12,7 @@ class HomeViewModel : ViewModel() {
     private val _event = Channel<HomeUIEvent>(Channel.BUFFERED)
     val homeEvent = _event.receiveAsFlow()
 
-    fun onAddButtonPressed() {
-        viewModelScope.launch {
-            _event.send(HomeUIEvent.NavigateToPublicPost)
-        }
-    }
+    fun onAddButtonPressed() { viewModelScope.launch { _event.send(HomeUIEvent.NavigateToPublicPost) } }
 
-    fun onDrawerPressed() {
-        viewModelScope.launch {
-            _event.send(HomeUIEvent.OpenDrawer)
-        }
-    }
+    fun onDrawerPressed() { viewModelScope.launch { _event.send(HomeUIEvent.OpenDrawer) } }
 }

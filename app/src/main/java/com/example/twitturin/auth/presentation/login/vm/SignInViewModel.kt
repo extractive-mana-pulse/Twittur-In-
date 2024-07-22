@@ -16,9 +16,7 @@ import retrofit2.Response
 import javax.inject.Inject
 
 @HiltViewModel
-class SignInViewModel @Inject constructor(
-    private val repository : AuthRepository
-) : ViewModel() {
+class SignInViewModel @Inject constructor(private val repository : AuthRepository) : ViewModel() {
 
     private val _signIn = MutableStateFlow<SignIn>(SignIn.Loading)
     val signInResponse = _signIn.asStateFlow()

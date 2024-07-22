@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.twitturin.core.event.SingleLiveEvent
+import com.example.twitturin.core.extensions.beGone
 import com.example.twitturin.detail.presentation.sealed.PostReply
 import com.example.twitturin.detail.presentation.sealed.TweetDelete
 import com.example.twitturin.tweet.data.remote.repository.TweetRepository
@@ -15,6 +16,7 @@ import com.facebook.shimmer.ShimmerFrameLayout
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
@@ -24,7 +26,8 @@ import javax.inject.Inject
 @HiltViewModel
 class TweetViewModel @Inject constructor(private val repository: TweetRepository) : ViewModel() {
 
-    var responseTweets: MutableLiveData<Response<List<Tweet>>> = MutableLiveData()
+    private val responseTweets =  MutableStateFlow<Response<List<Tweet>>?>(null)
+    val responseOfTweet: StateFlow<Response<List<Tweet>>?> = responseTweets.asStateFlow()
 
     fun getTweet(shimmerLayout: ShimmerFrameLayout) {
         shimmerLayout.startShimmer()
@@ -33,7 +36,7 @@ class TweetViewModel @Inject constructor(private val repository: TweetRepository
             val response = repository.getTweet()
             responseTweets.value = response
             shimmerLayout.stopShimmer()
-            shimmerLayout.visibility = View.GONE
+            shimmerLayout.beGone()
         }
     }
 
@@ -82,10 +85,8 @@ class TweetViewModel @Inject constructor(private val repository: TweetRepository
         }
     }
 
-
-
-    private val _postReply = SingleLiveEvent<PostReply>()
-    val postReplyResult: LiveData<PostReply> = _postReply
+    private val _postReply = MutableStateFlow<PostReply>(PostReply.Loading)
+    val postReplyResult = _postReply.asStateFlow()
 
     fun postReply(content: String, tweetId: String, authToken: String) {
         val reply = ReplyContent(content)
@@ -96,7 +97,7 @@ class TweetViewModel @Inject constructor(private val repository: TweetRepository
 
                 if (response.isSuccessful) {
                     val postReply = response.body()
-                    _postReply.value = postReply?.let { PostReply.Success(it) }
+                    _postReply.value = postReply?.let { PostReply.Success(it) }!!
                 } else {
                     _postReply.value = PostReply.Error(response.code().toString())
                 }

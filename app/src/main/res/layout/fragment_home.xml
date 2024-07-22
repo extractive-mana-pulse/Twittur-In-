@@ -33,43 +33,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:titleTextAppearance="?attr/textAppearanceTitleMedium"/>
 
-            <!--        Toolbar         -->
-<!--            <androidx.constraintlayout.widget.ConstraintLayout-->
-<!--                android:id="@+id/home_page_toolbar"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="?attr/actionBarSize"-->
-<!--                android:background="?attr/colorSurface"-->
-<!--                app:layout_constraintTop_toTopOf="parent"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintEnd_toEndOf="parent">-->
-
-<!--                <de.hdodenhof.circleimageview.CircleImageView-->
-<!--                    android:id="@+id/drawer_icon"-->
-<!--                    android:layout_width="32dp"-->
-<!--                    android:layout_height="32dp"-->
-<!--                    android:layout_marginStart="16dp"-->
-<!--                    android:src="@drawable/avatar"-->
-<!--                    app:layout_constraintTop_toTopOf="parent"-->
-<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                    app:layout_constraintStart_toStartOf="parent"-->
-<!--                    tools:ignore="ContentDescription"/>-->
-
-<!--                <TextView-->
-<!--                    android:id="@+id/app_name_tv"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="@string/app_name"-->
-<!--                    android:textColor="?attr/colorOnSecondaryContainer"-->
-<!--                    android:textSize="18sp"-->
-<!--                    android:textStyle="italic"-->
-<!--                    app:layout_constraintTop_toTopOf="parent"-->
-<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                    app:layout_constraintStart_toStartOf="parent"-->
-<!--                    app:layout_constraintEnd_toEndOf="parent"-->
-<!--                    tools:ignore="ContentDescription"/>-->
-
-<!--            </androidx.constraintlayout.widget.ConstraintLayout>-->
-
             <com.facebook.shimmer.ShimmerFrameLayout
                 android:id="@+id/shimmer_layout"
                 android:layout_width="0dp"
