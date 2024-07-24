@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.twitturin.R
+import com.example.twitturin.core.extensions.loadImagesWithGlideExt
 import com.example.twitturin.databinding.ListOfLikesLayoutBinding
 import com.example.twitturin.detail.domain.model.UserLikesAPost
 import io.noties.markwon.Markwon
@@ -44,21 +44,13 @@ class ListOfLikesAdapter : RecyclerView.Adapter<ListOfLikesAdapter.ViewHolder>()
         holder.binding.apply {
             item.apply {
 
-                Glide.with(context)
-                    .load(profilePicture)
-                    .error(R.drawable.not_found)
-                    .placeholder(R.drawable.loading)
-                    .centerCrop()
-                    .into(userLolAvatar)
-
                 usernameLolTv.text = "@$username"
-                Markwon.create(context).setMarkdown(postDescription, bio.toString())
+                userLolAvatar.loadImagesWithGlideExt(profilePicture)
                 fullNameLolTv.text = fullName ?: R.string.default_user_fullname.toString()
+                Markwon.create(context).setMarkdown(postDescription, bio.toString())
             }
         }
     }
 
-    override fun getItemCount(): Int {
-        return differ.currentList.size
-    }
+    override fun getItemCount(): Int = differ.currentList.size
 }

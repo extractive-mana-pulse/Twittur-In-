@@ -21,6 +21,7 @@ fun ImageView.loadImagesWithGlideExt(url: String?) {
 fun MaterialToolbar.loadToolbarImage(url: String?, view: MaterialToolbar) {
     Glide.with(this)
         .load(url)
+        .error(R.drawable.sync_problem)
         .override(64,64)
         .circleCrop()
         .into(object : CustomTarget<Drawable>() {

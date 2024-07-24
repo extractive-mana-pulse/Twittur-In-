@@ -12,6 +12,8 @@ import android.widget.TextView
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
+import com.example.twitturin.core.extensions.beGone
+import com.example.twitturin.core.extensions.beVisible
 import com.example.twitturin.core.extensions.snackbar
 import com.example.twitturin.core.extensions.snackbarError
 import com.example.twitturin.core.manager.SessionManager
@@ -52,13 +54,13 @@ class MoreSettingsDetailFragment : BottomSheetDialogFragment() {
 
         /**Checking user id. if match illustrate other ui otherwise don't. */
         if (userId == SessionManager(requireContext()).getUserId()) {
-            followLayout.visibility = View.GONE
-            editLayout.visibility = View.VISIBLE
-            deleteLayout.visibility = View.VISIBLE
+            followLayout.beGone()
+            editLayout.beVisible()
+            deleteLayout.beVisible()
         } else {
-            followLayout.visibility = View.VISIBLE
-            deleteLayout.visibility = View.GONE
-            editLayout.visibility = View.GONE
+            followLayout.beVisible()
+            deleteLayout.beGone()
+            editLayout.beGone()
         }
 
         usernameTv.text = "@$username"

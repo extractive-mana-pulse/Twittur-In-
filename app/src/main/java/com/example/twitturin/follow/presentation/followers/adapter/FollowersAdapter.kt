@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.twitturin.R
+import com.example.twitturin.core.extensions.loadImagesWithGlideExt
 import com.example.twitturin.databinding.RcViewFollowersBinding
 import com.example.twitturin.follow.domain.model.FollowUser
 
@@ -43,19 +43,14 @@ class FollowersAdapter(private val clickEvent: (ClickEvent, FollowUser) -> Unit)
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = differ.currentList[position]
-        val context = holder.itemView.context
 
         item.apply {
             holder.binding.apply {
 
-                Glide.with(context)
-                    .load(profilePicture)
-                    .error(R.drawable.not_found)
-                    .into(userFollowerAvatar)
-
                 usernameFollowerTv.text = "@$username"
-                postDescription.text = bio ?: R.string.empty_bio.toString()
+                userFollowerAvatar.loadImagesWithGlideExt(profilePicture)
                 fullNameFollowerTv.text = fullName ?: R.string.default_user_fullname.toString()
+                postDescription.text = bio ?: R.string.empty_bio.toString()
 
                 followBtn.setOnClickListener { clickEvent(ClickEvent.FOLLOW, item) }
 

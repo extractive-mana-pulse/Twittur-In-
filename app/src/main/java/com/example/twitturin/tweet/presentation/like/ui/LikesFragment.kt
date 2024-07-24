@@ -84,8 +84,8 @@ class LikesFragment : Fragment() {
                     putString("username", tweet.author?.username)
                     putString("post_description", tweet.content)
                     putString("likes", tweet.likes.toString())
-                    putString("createdAt", tweet.createdAt)
                     putString("updatedAt", tweet.updatedAt)
+                    putString("createdAt", tweet.createdAt)
                     putString("userId", tweet.author?.id)
                     putString("id", tweet.id)
                 }

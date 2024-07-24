@@ -6,13 +6,10 @@
     android:orientation="vertical"
     android:background="@drawable/bottom_sheet_bg">
 
-    <View
-        android:id="@+id/drag_handler"
-        android:layout_width="40dp"
-        android:layout_height="4dp"
-        android:layout_margin="8dp"
-        android:background="@drawable/bottom_sheet_drag"
-        android:layout_gravity="center_horizontal" />
+    <com.google.android.material.bottomsheet.BottomSheetDragHandleView
+        android:id="@+id/drag_handle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
     <LinearLayout
         android:id="@+id/follow_layout"
@@ -24,32 +21,31 @@
         android:layout_marginVertical="8dp">
 
         <ImageView
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_gravity="center"
-            android:src="@drawable/person_add"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:layout_margin="16dp"
-            tools:ignore="ContentDescription" />
+            android:src="@drawable/person_add"
+            android:contentDescription="@null"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/follow"
-            android:textSize="18sp"
-            android:textColor="@color/black"
             android:textStyle="bold"
             android:layout_gravity="center"
-            android:layout_marginStart="16dp"/>
+            android:textColor="@color/black"
+            android:layout_marginStart="8dp"
+            android:textAppearance="?attr/textAppearanceBodyLarge"/>
 
         <TextView
             android:id="@+id/b_username_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/username"
-            android:textSize="18sp"
+            android:layout_gravity="center"
             android:textStyle="italic|bold"
-            android:layout_marginStart="2.5dp"
-            android:layout_gravity="center"/>
+            android:layout_marginStart="3dp"
+            android:textAppearance="?attr/textAppearanceBodyMedium"/>
 
     </LinearLayout>
 
@@ -60,11 +56,11 @@
         android:orientation="horizontal"
         android:background="@drawable/bottom_sheet_item_bg"
         android:layout_marginHorizontal="16dp"
-        android:layout_marginVertical="8dp">
+        >
 
         <ImageView
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:layout_gravity="center"
             android:src="@drawable/delete"
             android:layout_margin="16dp"

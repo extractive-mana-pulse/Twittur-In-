@@ -1,7 +1,6 @@
 package com.example.twitturin.core.extensions
 
 import android.content.Context
-import androidx.fragment.app.Fragment
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 

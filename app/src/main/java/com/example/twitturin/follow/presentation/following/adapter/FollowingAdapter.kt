@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.twitturin.R
+import com.example.twitturin.core.extensions.loadImagesWithGlideExt
 import com.example.twitturin.databinding.RcViewFollowingBinding
 import com.example.twitturin.follow.domain.model.FollowUser
 
@@ -48,12 +48,8 @@ class FollowingAdapter(private val clickEvent: (FollowingClickEvent, FollowUser)
         item.apply {
             holder.binding.apply {
 
-                Glide.with(context)
-                    .load(profilePicture)
-                    .error(R.drawable.not_found)
-                    .into(userFollowingAvatar)
-
                 usernameFollowingTv.text = "@$username"
+                userFollowingAvatar.loadImagesWithGlideExt(profilePicture)
                 fullNameFollowingTv.text = fullName ?: R.string.default_user_fullname.toString()
                 userFollowingPostDescription.text = bio ?: R.string.empty_bio.toString()
 

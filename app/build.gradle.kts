@@ -1,14 +1,12 @@
-import java.util.Properties
-
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    // add
+    // implemented plugins
     id ("kotlin-kapt")
     id ("kotlin-parcelize")
-    id("androidx.navigation.safeargs.kotlin")
     id ("dagger.hilt.android.plugin")
     id("com.google.gms.google-services")
+    id("androidx.navigation.safeargs.kotlin")
 }
 
 android {
@@ -17,7 +15,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.twitturin"
-        minSdk = 24
+        minSdk = 25
         targetSdk = 34
         versionCode = 1
         versionName = "2.0.3"
@@ -31,6 +29,9 @@ android {
 //           buildConfigField("String", "BASE_URL", "\"https://twitturin-api.onrender.com/api/\"")
         }
         release {
+            // this 2 block of code, prepare application for release. Basically optimize code and remove unused elements.
+            isShrinkResources = true
+            isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
             buildConfigField("String", "BASE_URL", "\"https://twitturin-dev.onrender.com/api/\"")
 //            buildConfigField("String", "BASE_URL", "\"https://twitturin-api.onrender.com/api/\"")
@@ -143,5 +144,8 @@ dependencies {
 
     // Edge-to-edge
     implementation("androidx.activity:activity-ktx:1.9.0")
+
+    // leak canary
+    debugImplementation ("com.squareup.leakcanary:leakcanary-android:2.14")
 
 }

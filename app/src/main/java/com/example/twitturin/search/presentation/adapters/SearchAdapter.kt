@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.twitturin.R
+import com.example.twitturin.core.extensions.loadImagesWithGlideExt
 import com.example.twitturin.databinding.RcViewSearchBinding
 import com.example.twitturin.search.domain.model.SearchUser
 
@@ -43,21 +43,14 @@ class SearchAdapter(private val searchCLickEvents:(SearchCLickEvents, SearchUser
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = differ.currentList[position]
-        val context = holder.itemView.context
 
         holder.binding.apply {
             item.apply {
 
-                Glide.with(context)
-                    .load(profilePicture)
-                    .error(R.drawable.not_found)
-                    .placeholder(R.drawable.loading)
-                    .centerCrop()
-                    .into(searchUserAvatar)
-
                 searchFullNameTv.text = fullName
-                searchUsernameTv.text = "@$username"
                 searchPostDescriptionTv.text = bio
+                searchUsernameTv.text = "@$username"
+                searchUserAvatar.loadImagesWithGlideExt(profilePicture)
 
                 holder.itemView.setOnClickListener { searchCLickEvents(SearchCLickEvents.ITEM, item) }
 

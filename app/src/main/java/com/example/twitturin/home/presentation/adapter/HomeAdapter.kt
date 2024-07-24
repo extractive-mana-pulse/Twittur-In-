@@ -7,9 +7,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.twitturin.R
 import com.example.twitturin.core.extensions.formatCreatedAtPost
+import com.example.twitturin.core.extensions.loadImagesWithGlideExt
 import com.example.twitturin.databinding.RcViewBinding
 import com.example.twitturin.tweet.domain.model.Tweet
 import io.noties.markwon.Markwon
@@ -51,20 +51,13 @@ class HomeAdapter(private val homeClickEvents: (HomeClickEvents, Tweet) -> Unit)
 
         holder.binding.apply {
             item.apply {
-
-                Glide.with(context)
-                    .load(author?.profilePicture)
-                    .error(R.drawable.not_found)
-                    .placeholder(R.drawable.loading)
-                    .centerCrop()
-                    .into(userAvatar)
-
                 usernameTv.text = "@" + author?.username
                 postHeartCounter.text = likes.toString()
                 postCommentsCounter.text = replyCount.toString()
-                createdAtTv.text = createdAt.formatCreatedAtPost()
+                createdAtTv.text = createdAt?.formatCreatedAtPost()
+                userAvatar.loadImagesWithGlideExt(author?.profilePicture)
+                Markwon.create(context).setMarkdown(postDescription, content!!)
                 fullNameTv.text = author?.fullName ?: R.string.default_user_fullname.toString()
-                Markwon.create(context).setMarkdown(postDescription, content)
 
                 holder.itemView.setOnClickListener { homeClickEvents(HomeClickEvents.ITEM, item) }
 

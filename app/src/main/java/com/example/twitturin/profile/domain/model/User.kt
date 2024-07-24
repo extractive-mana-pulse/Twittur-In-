@@ -1,8 +1,11 @@
 package com.example.twitturin.profile.domain.model
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
+import java.io.Serializable
 
-
+@Parcelize
 data class User (
 
   @SerializedName("major"     ) var major     : String? = null,
@@ -21,4 +24,4 @@ data class User (
   @SerializedName("id"        ) var id        : String? = null,
   @SerializedName("token"     ) var token     : String? = null,
 
-)
+): Parcelable

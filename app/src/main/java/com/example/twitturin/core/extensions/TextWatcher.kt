@@ -78,17 +78,13 @@ fun TextView.addAutoResizeTextWatcher(sentReply : ImageButton) {
 
     val textWatcher = object : TextWatcher {
 
-        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            //
-        }
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {  }
 
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             sentReply.isEnabled = !s.isNullOrBlank()
         }
 
-        override fun afterTextChanged(s: Editable?) {
-            //
-        }
+        override fun afterTextChanged(s: Editable?) {  }
     }
     this.addTextChangedListener(textWatcher)
 }
@@ -97,17 +93,13 @@ fun TextView.deleteDialogEmailWatcher(emailConfirmBtn : ImageButton, emailEt : E
 
     val textWatcher = object : TextWatcher {
 
-        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            //
-        }
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {  }
 
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             emailConfirmBtn.isEnabled = !emailEt.text.isNullOrBlank()
         }
 
-        override fun afterTextChanged(s: Editable?) {
-            //
-        }
+        override fun afterTextChanged(s: Editable?) {  }
     }
     this.addTextChangedListener(textWatcher)
 }
@@ -116,36 +108,28 @@ fun TextView.deleteDialogCodeWatcher(deleteBtn : LinearLayout, codeEt : EditText
 
     val textWatcher = object : TextWatcher {
 
-        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            //
-        }
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {  }
 
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             deleteBtn.isEnabled = !codeEt.text.isNullOrBlank()
         }
 
-        override fun afterTextChanged(s: Editable?) {
-            //
-        }
+        override fun afterTextChanged(s: Editable?) {  }
     }
     this.addTextChangedListener(textWatcher)
 }
 
-fun TextView.addTextButtonEnables(tweetBtn : Button, contentEt : EditText) {
+fun TextView.btnEnables(button : Button, editText : EditText) {
 
     val textWatcher = object : TextWatcher {
 
-        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            //
-        }
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            tweetBtn.isEnabled = !contentEt.text.isNullOrBlank()
+            button.isEnabled = !editText.text.isNullOrBlank()
         }
 
-        override fun afterTextChanged(s: Editable?) {
-            //
-        }
+        override fun afterTextChanged(s: Editable?) {}
     }
     this.addTextChangedListener(textWatcher)
 }

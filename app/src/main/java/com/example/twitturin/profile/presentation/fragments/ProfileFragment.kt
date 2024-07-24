@@ -1,7 +1,6 @@
 package com.example.twitturin.profile.presentation.fragments
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -16,22 +15,24 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.bumptech.glide.Glide
 import com.example.twitturin.R
 import com.example.twitturin.auth.presentation.stayIn.vm.StayInViewModel
+import com.example.twitturin.core.extensions.beGone
+import com.example.twitturin.core.extensions.beVisible
+import com.example.twitturin.core.extensions.converter
 import com.example.twitturin.core.extensions.deleteDialogCodeWatcher
 import com.example.twitturin.core.extensions.deleteDialogEmailWatcher
+import com.example.twitturin.core.extensions.fullScreenImage
+import com.example.twitturin.core.extensions.loadImagesWithGlideExt
+import com.example.twitturin.core.extensions.repeatOnStarted
+import com.example.twitturin.core.extensions.shareUrl
+import com.example.twitturin.core.extensions.snackbarError
 import com.example.twitturin.core.manager.SessionManager
 import com.example.twitturin.databinding.FragmentProfileBinding
 import com.example.twitturin.profile.presentation.adapters.ProfileViewPagerAdapter
 import com.example.twitturin.profile.presentation.sealed.AccountDelete
 import com.example.twitturin.profile.presentation.sealed.ProfileUIEvent
 import com.example.twitturin.profile.presentation.sealed.UserCredentials
-import com.example.twitturin.core.extensions.converter
-import com.example.twitturin.core.extensions.fullScreenImage
-import com.example.twitturin.core.extensions.repeatOnStarted
-import com.example.twitturin.core.extensions.shareUrl
-import com.example.twitturin.core.extensions.snackbarError
 import com.example.twitturin.profile.presentation.vm.ProfileUIViewModel
 import com.example.twitturin.profile.presentation.vm.ProfileViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -42,18 +43,15 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
 
-@Suppress("DEPRECATION")
 @AndroidEntryPoint
 class ProfileFragment : Fragment() {
 
-    private val stayInViewModel: StayInViewModel by viewModels()
-    private val profileViewModel: ProfileViewModel by viewModels()
-    private val profileUIViewModel: ProfileUIViewModel by viewModels()
+    private val stayInViewModel by viewModels<StayInViewModel>()
+    private val profileViewModel by viewModels<ProfileViewModel>()
+    private val profileUIViewModel by viewModels<ProfileUIViewModel>()
     private val binding by lazy { FragmentProfileBinding.inflate(layoutInflater) }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        return binding.root
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View = binding.root
 
     @SuppressLint("DiscouragedPrivateApi", "SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -71,10 +69,6 @@ class ProfileFragment : Fragment() {
             profileImage?.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
             val profileImageByteArray = byteArrayOutputStream.toByteArray()
 
-
-            /**
-             * This code build to implement listener when user click's on profile image, to open it, in full screen size!
-             * */
             profileUserAvatar.setOnClickListener { profileUIViewModel.onAvatarPressed() }
 
             followersTv.setOnClickListener { profileUIViewModel.onFollowersPressed() }
@@ -152,12 +146,6 @@ class ProfileFragment : Fragment() {
                         profileShimmerLayout.stopShimmer()
                         profileShimmerLayout.visibility = View.GONE
 
-
-                        Glide.with(requireContext())
-                            .load("${result.user.profilePicture ?: R.drawable.person}")
-                            .error(R.drawable.not_found)
-                            .into(profileUserAvatar)
-
                         result.apply {
 
                             profileKind.text = user.kind
@@ -167,24 +155,20 @@ class ProfileFragment : Fragment() {
                             followersCounterTv.text = user.followersCount.toString()
                             profileFullName.text = (user.fullName ?: R.string.default_user_fullname).toString()
                             profileBiography.text = (user.bio ?: R.string.empty_bio).toString()
+                            profileUserAvatar.loadImagesWithGlideExt("${user.profilePicture ?: R.drawable.person}")
 
                             // location
                             if (user.country.isNullOrEmpty()) {
-                                profileLocationIcon.visibility = View.INVISIBLE
-                                profileLocationTv.visibility = View.GONE
+                                profileLocationIcon.beGone()
+                                profileLocationTv.beGone()
                             } else {
-                                profileLocationIcon.visibility = View.VISIBLE
-                                profileLocationTv.text = user.country
+                                profileLocationIcon.beVisible()
+                                profileLocationTv.beVisible()
                             }
                         }
                     }
 
-                    is UserCredentials.Error -> {
-                        binding.profileRootLayout.snackbarError(
-                            requireActivity().findViewById(R.id.profile_root_layout),
-                            error = result.message,
-                            ""){}
-                    }
+                    is UserCredentials.Error -> { binding.profileRootLayout.snackbarError(profileRootLayout, error = result.message, ""){} }
                 }
             }
 
@@ -210,18 +194,11 @@ class ProfileFragment : Fragment() {
             profileViewModel.deleteResult.collectLatest { result ->
                 when (result) {
 
-                    is AccountDelete.Success -> {
-                        findNavController().navigate(R.id.action_profileFragment_to_signInFragment)
-                    }
+                    is AccountDelete.Success -> { findNavController().navigate(R.id.action_profileFragment_to_signInFragment) }
 
-                    is AccountDelete.Error -> {
-                        binding.profileRootLayout.snackbarError(
-                            binding.profileRootLayout,
-                            error = result.message,
-                            ""){}
-                    }
+                    is AccountDelete.Error -> { binding.profileRootLayout.snackbarError(binding.profileRootLayout, error = result.message, ""){} }
 
-                    AccountDelete.Loading -> {  }
+                    is AccountDelete.Loading -> {  }
                 }
             }
         }

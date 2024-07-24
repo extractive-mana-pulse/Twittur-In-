@@ -15,7 +15,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
-import com.example.twitturin.core.extensions.addTextButtonEnables
+import com.example.twitturin.core.extensions.btnEnables
 import com.example.twitturin.core.extensions.snackbarError
 import com.example.twitturin.core.manager.SessionManager
 import com.example.twitturin.databinding.FragmentPublicPostBinding
@@ -59,7 +59,7 @@ class PublicPostFragment : Fragment() {
 
         binding.apply {
 
-            contentEt.addTextButtonEnables(btnTweet, contentEt)
+            contentEt.btnEnables(btnTweet, contentEt)
 
             Markwon.create(requireContext()).setMarkdown(contentEt, contentEt.text.toString())
 

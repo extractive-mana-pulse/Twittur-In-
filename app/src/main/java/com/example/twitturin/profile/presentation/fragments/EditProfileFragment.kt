@@ -18,13 +18,13 @@ import androidx.annotation.RequiresExtension
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.bumptech.glide.Glide
 import com.example.twitturin.R
-import com.example.twitturin.databinding.FragmentEditProfileBinding
+import com.example.twitturin.core.extensions.loadImagesWithGlideExt
+import com.example.twitturin.core.extensions.snackbarError
 import com.example.twitturin.core.manager.SessionManager
+import com.example.twitturin.databinding.FragmentEditProfileBinding
 import com.example.twitturin.profile.presentation.sealed.EditUser
 import com.example.twitturin.profile.presentation.sealed.EditUserImageState
-import com.example.twitturin.core.extensions.snackbarError
 import com.example.twitturin.profile.presentation.vm.ProfileViewModel
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -68,14 +68,8 @@ class EditProfileFragment : Fragment() {
 
                 }
             }
-
             val sharedPreferences = requireActivity().getSharedPreferences("test", Context.MODE_PRIVATE)
             val imagePath = sharedPreferences.getString("image", null)
-
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-//
-//
-//            }
 
             editProfileUserAvatar.setOnClickListener {
                 pickSingleMediaLauncher.launch(Intent(MediaStore.ACTION_PICK_IMAGES).apply { type = "image/*" } )
@@ -108,10 +102,7 @@ class EditProfileFragment : Fragment() {
 
             editProfilePageToolbar.setNavigationOnClickListener { findNavController().navigateUp() }
 
-
-            Glide.with(requireContext())
-                .load(avatar)
-                .into(editProfileUserAvatar)
+            editProfileUserAvatar.loadImagesWithGlideExt(avatar.toString())
 
             editProfilePageToolbar.setOnMenuItemClickListener {
                 when (it.itemId) {

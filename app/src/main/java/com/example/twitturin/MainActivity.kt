@@ -7,7 +7,6 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
-import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
@@ -18,6 +17,7 @@ import com.example.twitturin.core.extensions.loadLocale
 import com.example.twitturin.databinding.ActivityMainBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
+import leakcanary.LeakCanary
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -28,7 +28,6 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("PrivateResource")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContentView(binding.root)
 
         if (Build.VERSION.SDK_INT >= 33) {
@@ -36,6 +35,8 @@ class MainActivity : AppCompatActivity() {
         } else {
             hasNotificationPermissionGranted = true
         }
+
+        Log.d("leak", LeakCanary.toString())
 
         this.checkTheme()
         this.loadLocale()

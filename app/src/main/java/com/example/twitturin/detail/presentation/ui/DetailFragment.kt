@@ -1,29 +1,28 @@
 package com.example.twitturin.detail.presentation.ui
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.bumptech.glide.Glide
 import com.example.twitturin.R
 import com.example.twitturin.core.extensions.addAutoResizeTextWatcher
+import com.example.twitturin.core.extensions.beGone
+import com.example.twitturin.core.extensions.beVisible
 import com.example.twitturin.core.extensions.convertDateFormat
 import com.example.twitturin.core.extensions.formatCreatedAt
 import com.example.twitturin.core.extensions.fullScreenImage
+import com.example.twitturin.core.extensions.loadImagesWithGlideExt
 import com.example.twitturin.core.extensions.repeatOnStarted
 import com.example.twitturin.core.extensions.shareUrl
 import com.example.twitturin.core.extensions.sharedPreferences
 import com.example.twitturin.core.extensions.showKeyboard
 import com.example.twitturin.core.extensions.snackbar
 import com.example.twitturin.core.extensions.snackbarError
+import com.example.twitturin.core.extensions.stateDisabled
 import com.example.twitturin.core.extensions.vertical
 import com.example.twitturin.core.manager.SessionManager
 import com.example.twitturin.databinding.FragmentDetailBinding
@@ -38,12 +37,10 @@ import com.example.twitturin.tweet.presentation.tweet.vm.TweetViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import io.noties.markwon.Markwon
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class DetailFragment : Fragment() {
 
-//    private var tweetId by sharedPreferences("name")
     private val tweetViewModel by viewModels<TweetViewModel>()
     private val followingViewModel by viewModels<FollowViewModel>()
     private val detailUiViewModel by viewModels<DetailPageUIViewModel>()
@@ -56,57 +53,42 @@ class DetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.detailFragment = this
+
+        var tweetId by requireActivity().sharedPreferences("tweetId")
+
         binding.apply {
-
-            val id = arguments?.getString("id")
-//            tweetId = id!!
-//
-//            Log.d("tweetId", tweetId.toString())
-            val likes = arguments?.getString("likes")
-            val userId = arguments?.getString("userId")
-            val username = arguments?.getString("username")
-            val updatedAt = arguments?.getString("updatedAt")
-            val createdAt = arguments?.getString("createdAt")
-            val userFullname = arguments?.getString("fullname")
-            val profileImage = arguments?.getString("userAvatar")
-            val postDescription = arguments?.getString("post_description")
             val activateEditText = arguments?.getBoolean("activateEditText", false)
-
-            val sharedPreferences = requireActivity().getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
-            sharedPreferences.edit().putString("post_description", postDescription).apply()
-            sharedPreferences.edit().putString("userImage", profileImage).apply()
-            sharedPreferences.edit().putString("username", username).apply()
-            sharedPreferences.edit().putString("fullname", userFullname).apply()
-            sharedPreferences.edit().putString("userId", userId).apply()
-            sharedPreferences.edit().putString("id", id).apply()
-
             if (activateEditText!!){ replyEt.showKeyboard() }
 
-            // this condition done to manipulate with UI
-            if (userId == SessionManager(requireContext()).getUserId()) {
-                followBtn.visibility = View.GONE
-            } else {
-                followBtn.visibility = View.VISIBLE
+            val data = arguments?.getParcelable("tweet") as? Tweet
+            val id = data?.id
+            if(id != null) { tweetId = id }
+
+            data?.apply {
+                authorUsername.text = "@${author?.username}"
+                articlePageLikesCounter.text = likes.toString()
+                whenCreated.text = createdAt?.formatCreatedAt()
+                authorAvatar.loadImagesWithGlideExt(author?.profilePicture)
+                authorFullname.text = author?.fullName ?: R.string.default_user_fullname.toString()
+                Markwon.create(requireContext()).setMarkdown(detailPostDescription, content.toString())
+
+                val dateConverter = convertDateFormat(updatedAt.toString())
+                whenUpdated.text = dateConverter
+
+                if (author?.id == SessionManager(requireContext()).getUserId()) { followBtn.beGone() } else { followBtn.beVisible() }
             }
 
-            Glide.with(requireContext())
-                .load(profileImage)
-                .error(R.drawable.not_found)
-                .centerCrop()
-                .into(authorAvatar)
+//            val sharedPreferences = requireActivity().getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
+//            sharedPreferences.edit().putString("post_description", postDescription).apply()
+//            sharedPreferences.edit().putString("userImage", profileImage).apply()
+//            sharedPreferences.edit().putString("username", username).apply()
+//            sharedPreferences.edit().putString("fullname", fullName).apply()
+//            sharedPreferences.edit().putString("userId", id).apply()
+//            sharedPreferences.edit().putString("id", id).apply()
 
-            authorFullname.text = userFullname ?: R.string.default_user_fullname.toString()
-            authorUsername.text = "@$username"
-            Markwon.create(requireContext()).setMarkdown(detailPostDescription, postDescription.toString())
-            articlePageLikesCounter.text = likes
+            sentReply.stateDisabled()
 
             replyEt.addAutoResizeTextWatcher(sentReply)
-
-            whenCreated.text = createdAt?.formatCreatedAt()
-            val dateConverter = convertDateFormat(updatedAt.toString())
-            whenUpdated.text = dateConverter
-
-            sentReply.isEnabled = false
 
             authorAvatar.setOnLongClickListener {
                 detailUiViewModel.onAvatarLongPressed()
@@ -129,9 +111,9 @@ class DetailFragment : Fragment() {
 
             detailPageToolbar.setNavigationOnClickListener { detailUiViewModel.onBackPressed() }
 
-            viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnStarted {
 
-                detailUiViewModel.detailPageEvent.collect{
+                detailUiViewModel.detailPageEvent.collect {
 
                     when(it){
                         DetailPageUI.OnBackPressed -> { findNavController().navigateUp() }
@@ -140,20 +122,20 @@ class DetailFragment : Fragment() {
 
                         DetailPageUI.OnFollowPressed -> {
 
-                            followingViewModel.followUsers(userId!!, "Bearer ${SessionManager(requireContext()).getToken()}")
+                            followingViewModel.followUsers(data?.author?.id.toString(), "Bearer ${SessionManager(requireContext()).getToken()}")
 
                             followingViewModel.follow.observe(viewLifecycleOwner) { result ->
                                 when (result) {
                                     is Follow.Success -> {
                                         detailRootLayout.snackbar(
                                             replyLayout,
-                                            message = "now you follow: ${username?.uppercase()}",
+                                            message = "now you follow: ${data?.author?.username?.uppercase()}",
                                         )
                                     }
 
                                     is Follow.Error -> {
                                         detailRootLayout.snackbarError(
-                                            requireActivity().findViewById(R.id.reply_layout),
+                                            replyLayout,
                                             error = result.message,
                                             ""
                                         ) {  }
@@ -162,7 +144,7 @@ class DetailFragment : Fragment() {
                             }
                         }
 
-                        DetailPageUI.OnLikePressed -> { detailRootLayout.snackbar(requireActivity().findViewById(R.id.reply_layout), resources.getString(R.string.in_progress)) }
+                        DetailPageUI.OnLikePressed -> { detailRootLayout.snackbar(replyLayout, resources.getString(R.string.in_progress)) }
 
                         DetailPageUI.OnListOfLikesPressed -> { findNavController().navigate(R.id.action_detailFragment_to_listOfLikesFragment) }
 
@@ -171,7 +153,7 @@ class DetailFragment : Fragment() {
                         DetailPageUI.OnSendReplyPressed -> {
 
                             val reply = replyEt.text?.toString()?.trim()
-                            tweetViewModel.postReply(reply!!, id!!, "Bearer ${SessionManager(requireContext()).getToken()}")
+                            tweetViewModel.postReply(reply!!, id.toString(), "Bearer ${SessionManager(requireContext()).getToken()}")
                             sentReply.isEnabled = false
                         }
 
@@ -182,18 +164,19 @@ class DetailFragment : Fragment() {
                 }
 
                 repeatOnStarted {
+
                     tweetViewModel.postReplyResult.collectLatest { result ->
                         when (result) {
                             is PostReply.Success -> {
                                 replyEt.text?.clear()
-                                tweetViewModel.getRepliesOfPost(id!!)
+                                tweetViewModel.getRepliesOfPost(id.toString())
                                 homeAdapter.notifyDataSetChanged()
                                 replyEt.addAutoResizeTextWatcher(sentReply)
                             }
 
                             is PostReply.Error -> {
                                 detailRootLayout.snackbarError(
-                                    requireActivity().findViewById(R.id.reply_layout),
+                                    replyLayout,
                                     result.message,
                                     ""){}
                                 replyEt.addAutoResizeTextWatcher(sentReply)
@@ -212,12 +195,11 @@ class DetailFragment : Fragment() {
 
         binding.apply {
 
-            val sharedPreferences = requireActivity().getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
-            val tweetId = sharedPreferences.getString("id", null)
+            val tweetId by requireActivity().sharedPreferences("tweetId")
 
             articleRcView.vertical().adapter = homeAdapter
 
-            tweetViewModel.getRepliesOfPost(tweetId!!)
+            tweetViewModel.getRepliesOfPost(tweetId)
 
             repeatOnStarted {
 
@@ -262,30 +244,22 @@ class DetailFragment : Fragment() {
                     putString("username", tweet.author?.username)
                     putString("post_description", tweet.content)
                     putString("likes", tweet.likes.toString())
-                    putString("createdAt", tweet.createdAt)
                     putString("updatedAt", tweet.updatedAt)
+                    putString("createdAt", tweet.createdAt)
                     putString("userId", tweet.author?.id)
                     putString("id", tweet.id)
                 }
                 findNavController().navigate(R.id.detailFragment, bundle)
             }
 
-            HomeAdapter.HomeClickEvents.HEART -> { Toast.makeText(requireContext(), "In progress", Toast.LENGTH_SHORT).show() }
+            HomeAdapter.HomeClickEvents.HEART -> { binding.replyLayout.snackbar(binding.replyLayout, R.string.in_progress.toString()) }
 
             HomeAdapter.HomeClickEvents.SHARE -> { requireContext().shareUrl("https://twitturin.onrender.com/tweets/${tweet.id}") }
 
             HomeAdapter.HomeClickEvents.REPLY -> {
                 val bundle = Bundle().apply {
-                    putString("userAvatar", tweet.author?.profilePicture)
-                    putString("fullname", tweet.author?.fullName)
-                    putString("username", tweet.author?.username)
-                    putString("post_description", tweet.content)
-                    putString("likes", tweet.likes.toString())
-                    putString("updatedAt", tweet.updatedAt)
-                    putString("createdAt", tweet.createdAt)
-                    putString("userId", tweet.author?.id)
+                    putParcelable("tweet", tweet)
                     putBoolean("activateEditText", true)
-                    putString("id", tweet.id)
                 }
                 findNavController().navigate(R.id.detailFragment, bundle)
             }

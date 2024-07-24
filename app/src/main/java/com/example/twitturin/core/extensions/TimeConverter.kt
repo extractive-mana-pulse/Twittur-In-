@@ -67,5 +67,9 @@ fun Fragment.convertDateFormat(dateString: String): String {
     val outputFormat = SimpleDateFormat("dd.MM.yyyy, HH:mm:ss", Locale.getDefault())
 
     val date = inputFormat.parse(dateString)
-    return outputFormat.format(date!!)
+    return (if (date != null) {
+        outputFormat.format(date)
+    } else {
+        ExceptionInInitializerError("Date format is invalid")
+    }).toString()
 }

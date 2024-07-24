@@ -151,7 +151,7 @@ class TweetsFragment : Fragment() {
                                     alertDialogBuilder.setMessage(requireContext().resources.getString(R.string.delete_tweet_message))
 
                                     alertDialogBuilder.setPositiveButton(requireContext().resources.getString(R.string.yes)) { _, _ ->
-                                        tweetViewModel.deleteTweet(tweet.id,"Bearer ${SessionManager(requireContext()).getToken()}")
+                                        tweetViewModel.deleteTweet(tweet.id!!,"Bearer ${SessionManager(requireContext()).getToken()}")
                                     }
 
                                     alertDialogBuilder.setNegativeButton(requireContext().resources.getString(R.string.no)) { dialog, _ ->
