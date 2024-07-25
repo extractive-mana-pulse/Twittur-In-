@@ -366,13 +366,6 @@
             app:destination="@id/profileFragment" />
     </fragment>
 
-    <dialog
-        android:id="@+id/myBottomSheetDialogFragment"
-        android:name="com.example.twitturin.detail.presentation.ui.MoreSettingsDetailFragment"
-        android:label="MyBottomSheetDialogFragment" >
-        
-    </dialog>
-
     <fragment
         android:id="@+id/detailFragment"
         android:name="com.example.twitturin.detail.presentation.ui.DetailFragment"
@@ -390,6 +383,9 @@
         <argument
             android:name="tweet"
             app:argType="com.example.twitturin.tweet.domain.model.Tweet" />
+        <action
+            android:id="@+id/action_detailFragment_to_moreSettingsDetailFragment"
+            app:destination="@id/moreSettingsDetailFragment" />
     </fragment>
 
     <fragment
@@ -473,5 +469,13 @@
             android:id="@+id/action_listOfLikesFragment_to_detailFragment"
             app:destination="@id/detailFragment" />
     </fragment>
+    <dialog
+        android:id="@+id/moreSettingsDetailFragment"
+        android:name="com.example.twitturin.detail.presentation.ui.MoreSettingsDetailFragment"
+        android:label="MoreSettingsDetailFragment" >
+        <argument
+            android:name="tweet"
+            app:argType="com.example.twitturin.tweet.domain.model.Tweet" />
+    </dialog>
 
 </navigation>

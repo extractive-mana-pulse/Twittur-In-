@@ -12,13 +12,13 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
+import com.example.twitturin.core.extensions.converter
 import com.example.twitturin.core.extensions.shareUrl
+import com.example.twitturin.core.extensions.snackbarError
 import com.example.twitturin.core.extensions.vertical
+import com.example.twitturin.core.manager.SessionManager
 import com.example.twitturin.databinding.FragmentTweetsBinding
 import com.example.twitturin.detail.presentation.sealed.TweetDelete
-import com.example.twitturin.core.manager.SessionManager
-import com.example.twitturin.core.extensions.converter
-import com.example.twitturin.core.extensions.snackbarError
 import com.example.twitturin.tweet.domain.model.Tweet
 import com.example.twitturin.tweet.presentation.tweet.adapters.TweetAdapter
 import com.example.twitturin.tweet.presentation.tweet.sealed.TweetUIEvents
@@ -116,17 +116,9 @@ class TweetsFragment : Fragment() {
 
                     TweetUIEvents.OnItemPressed -> {
                         val bundle = Bundle().apply {
-                        putString("id", tweet.id)
-                        putString("userId", tweet.author?.id)
-                        putString("createdAt", tweet.createdAt)
-                        putString("updatedAt", tweet.updatedAt)
-                        putString("likes", tweet.likes.toString())
-                        putString("post_description", tweet.content)
-                        putString("username", tweet.author?.username)
-                        putString("fullname", tweet.author?.fullName)
-                        putString("userAvatar", tweet.author?.profilePicture)
+                            putParcelable("tweet", tweet)
                         }
-                        findNavController().navigate(R.id.detailFragment,bundle)
+                        findNavController().navigate(R.id.detailFragment, bundle)
                     }
 
                     TweetUIEvents.OnMorePressed -> {
@@ -186,16 +178,8 @@ class TweetsFragment : Fragment() {
 
                     TweetUIEvents.OnReplyPressed -> {
                         val bundle = Bundle().apply {
-                            putString("id", tweet.id)
-                            putString("userId", tweet.author?.id)
-                            putString("updatedAt", tweet.updatedAt)
-                            putString("createdAt", tweet.createdAt)
-                            putString("likes", tweet.likes.toString())
+                            putParcelable("tweet", tweet)
                             putBoolean("activateEditText", true)
-                            putString("post_description", tweet.content)
-                            putString("username", tweet.author?.username)
-                            putString("fullname", tweet.author?.fullName)
-                            putString("userAvatar", tweet.author?.profilePicture)
                         }
                         findNavController().navigate(R.id.detailFragment, bundle)
                     }

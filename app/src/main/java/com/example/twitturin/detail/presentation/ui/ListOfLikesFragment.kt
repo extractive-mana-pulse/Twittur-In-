@@ -1,7 +1,6 @@
 package com.example.twitturin.detail.presentation.ui
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,8 +8,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.twitturin.core.extensions.vertical
 import com.example.twitturin.databinding.FragmentListOfLikesBinding
 import com.example.twitturin.detail.domain.model.UserLikesAPost
@@ -26,15 +23,11 @@ class ListOfLikesFragment : Fragment() {
     private val listOfLikesViewModel : ListOfLikesViewModel by viewModels()
     private val binding by lazy { FragmentListOfLikesBinding.inflate(layoutInflater) }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return binding.root
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View = binding.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.apply {
-            listOfLikesToolbar.setNavigationOnClickListener { findNavController().navigateUp() }
-        }
+        binding.listOfLikesToolbar.setNavigationOnClickListener { findNavController().navigateUp() }
         updateRecyclerView()
     }
 
@@ -42,9 +35,7 @@ class ListOfLikesFragment : Fragment() {
     private fun updateRecyclerView() {
 
         binding.apply {
-            val sharedPreferences = requireActivity().getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
-            val tweetId = sharedPreferences.getString("id", null)
-
+            val tweetId = arguments?.getString("id", "")
 
             listOfLikesRcView.vertical().adapter = listOfLikesAdapter
 

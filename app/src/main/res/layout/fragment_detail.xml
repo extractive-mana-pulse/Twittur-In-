@@ -291,7 +291,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/layout_article_icons"/>
 
-            <!--            RecyclerView Layout         -->
             <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
                 android:id="@+id/swipe_to_refresh_article"
                 android:layout_width="match_parent"

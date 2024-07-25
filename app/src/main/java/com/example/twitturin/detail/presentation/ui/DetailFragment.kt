@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
 import com.example.twitturin.core.extensions.addAutoResizeTextWatcher
@@ -37,6 +38,7 @@ import com.example.twitturin.tweet.presentation.tweet.vm.TweetViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import io.noties.markwon.Markwon
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class DetailFragment : Fragment() {
@@ -78,14 +80,6 @@ class DetailFragment : Fragment() {
                 if (author?.id == SessionManager(requireContext()).getUserId()) { followBtn.beGone() } else { followBtn.beVisible() }
             }
 
-//            val sharedPreferences = requireActivity().getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
-//            sharedPreferences.edit().putString("post_description", postDescription).apply()
-//            sharedPreferences.edit().putString("userImage", profileImage).apply()
-//            sharedPreferences.edit().putString("username", username).apply()
-//            sharedPreferences.edit().putString("fullname", fullName).apply()
-//            sharedPreferences.edit().putString("userId", id).apply()
-//            sharedPreferences.edit().putString("id", id).apply()
-
             sentReply.stateDisabled()
 
             replyEt.addAutoResizeTextWatcher(sentReply)
@@ -111,7 +105,7 @@ class DetailFragment : Fragment() {
 
             detailPageToolbar.setNavigationOnClickListener { detailUiViewModel.onBackPressed() }
 
-            repeatOnStarted {
+            viewLifecycleOwner.lifecycleScope.launch {
 
                 detailUiViewModel.detailPageEvent.collect {
 
@@ -146,43 +140,50 @@ class DetailFragment : Fragment() {
 
                         DetailPageUI.OnLikePressed -> { detailRootLayout.snackbar(replyLayout, resources.getString(R.string.in_progress)) }
 
-                        DetailPageUI.OnListOfLikesPressed -> { findNavController().navigate(R.id.action_detailFragment_to_listOfLikesFragment) }
+                        DetailPageUI.OnListOfLikesPressed -> {
+                            val bundle = Bundle()
+                            bundle.putString("id", id.toString())
+                            findNavController().navigate(R.id.action_detailFragment_to_listOfLikesFragment, bundle)
+                        }
 
-                        DetailPageUI.OnMorePressed ->  { MoreSettingsDetailFragment().show(requireActivity().supportFragmentManager, R.string.detail_page_bottom_sheet.toString()) }
+                        DetailPageUI.OnMorePressed ->  {
+                            val action = DetailFragmentDirections.actionDetailFragmentToMoreSettingsDetailFragment(data!!)
+                            findNavController().navigate(action)
+                        }
 
                         DetailPageUI.OnSendReplyPressed -> {
 
+                            sentReply.stateDisabled()
                             val reply = replyEt.text?.toString()?.trim()
                             tweetViewModel.postReply(reply!!, id.toString(), "Bearer ${SessionManager(requireContext()).getToken()}")
-                            sentReply.isEnabled = false
+
+                            repeatOnStarted {
+
+                                tweetViewModel.postReplyResult.collect { result ->
+                                    when (result) {
+                                        is PostReply.Success -> {
+                                            replyEt.text?.clear()
+                                            homeAdapter.notifyDataSetChanged()
+                                            replyEt.addAutoResizeTextWatcher(sentReply)
+                                            tweetViewModel.getRepliesOfPost(id.toString())
+                                        }
+
+                                        is PostReply.Error -> {
+                                            detailRootLayout.snackbarError(
+                                                replyLayout,
+                                                result.message,
+                                                ""){}
+                                            replyEt.addAutoResizeTextWatcher(sentReply)
+                                        }
+                                        PostReply.Loading -> {  }
+                                    }
+                                }
+                            }
                         }
 
                         DetailPageUI.OnSharePressed ->  { requireContext().shareUrl("https://twitturin.onrender.com/tweets/${id}") }
 
                         DetailPageUI.OnImagePressed -> { fullScreenImage(authorAvatar) }
-                    }
-                }
-
-                repeatOnStarted {
-
-                    tweetViewModel.postReplyResult.collectLatest { result ->
-                        when (result) {
-                            is PostReply.Success -> {
-                                replyEt.text?.clear()
-                                tweetViewModel.getRepliesOfPost(id.toString())
-                                homeAdapter.notifyDataSetChanged()
-                                replyEt.addAutoResizeTextWatcher(sentReply)
-                            }
-
-                            is PostReply.Error -> {
-                                detailRootLayout.snackbarError(
-                                    replyLayout,
-                                    result.message,
-                                    ""){}
-                                replyEt.addAutoResizeTextWatcher(sentReply)
-                            }
-                            PostReply.Loading -> {  }
-                        }
                     }
                 }
             }
@@ -239,15 +240,8 @@ class DetailFragment : Fragment() {
 
             HomeAdapter.HomeClickEvents.ITEM -> {
                 val bundle = Bundle().apply {
-                    putString("userAvatar", tweet.author?.profilePicture)
-                    putString("fullname", tweet.author?.fullName)
-                    putString("username", tweet.author?.username)
-                    putString("post_description", tweet.content)
-                    putString("likes", tweet.likes.toString())
-                    putString("updatedAt", tweet.updatedAt)
-                    putString("createdAt", tweet.createdAt)
-                    putString("userId", tweet.author?.id)
-                    putString("id", tweet.id)
+                    putParcelable("tweet", tweet)
+                    putBoolean("activateEditText", false)
                 }
                 findNavController().navigate(R.id.detailFragment, bundle)
             }

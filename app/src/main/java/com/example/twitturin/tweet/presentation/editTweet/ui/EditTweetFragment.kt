@@ -8,9 +8,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.example.twitturin.databinding.FragmentEditTweetBinding
-import com.example.twitturin.core.manager.SessionManager
 import com.example.twitturin.core.extensions.snackbarError
+import com.example.twitturin.core.extensions.stateDisabled
+import com.example.twitturin.core.manager.SessionManager
+import com.example.twitturin.databinding.FragmentEditTweetBinding
 import com.example.twitturin.tweet.presentation.editTweet.sealed.EditTweet
 import com.example.twitturin.tweet.presentation.editTweet.vm.EditTweetViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -37,7 +38,7 @@ class EditTweetFragment : Fragment() {
             editTweetContent.setText(tweetContent)
 
             editTweetPublishBtn.setOnClickListener {
-                editTweetPublishBtn.isEnabled = false
+                editTweetPublishBtn.stateDisabled()
                 val content = editTweetContent.text.toString()
                 editTweetViewModel.editTweet(content, tweetId!!, "Bearer ${SessionManager(requireContext()).getToken()}")
             }
