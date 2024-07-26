@@ -18,7 +18,11 @@ class SettingsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.settingsToolbar.setNavigationOnClickListener { findNavController().navigateUp() }
+        binding.apply {
+            settingsToolbar.setNavigationOnClickListener { findNavController().navigateUp() }
+            testBtn.setOnClickListener { /*change main theme to custom theme.*/ }
+        }
+
 
         /**
          * TODO. Build options to user change UI elements.

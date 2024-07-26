@@ -11,9 +11,17 @@
         android:id="@+id/settings_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        app:navigationIcon="@drawable/keyboard_backspace"
         app:title="@string/settings"
+        app:navigationIcon="@drawable/keyboard_backspace"
         app:titleTextAppearance="?attr/textAppearanceTitleMedium"/>
+
+    <Button
+        android:id="@+id/test_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="48dp"
+        android:text="custom theme"
+        android:layout_gravity="bottom|center"/>
 
     <com.airbnb.lottie.LottieAnimationView
         android:layout_width="252dp"

@@ -145,7 +145,10 @@ dependencies {
     // Edge-to-edge
     implementation("androidx.activity:activity-ktx:1.9.0")
 
-    // leak canary
+    // LeakCanary
     debugImplementation ("com.squareup.leakcanary:leakcanary-android:2.14")
+
+    // Blur
+    implementation ("com.github.Dimezis:BlurView:version-2.0.3")
 
 }

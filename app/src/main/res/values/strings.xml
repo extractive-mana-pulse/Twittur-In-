@@ -17,9 +17,9 @@
     <string name="student_id">Student ID</string>
     <string name="username">Username</string>
     <string name="kind">kind</string>
-    <string name="following_counter_tv">123</string>
+    <string name="following_counter_tv" translatable="false">123</string>
     <string name="following">Following</string>
-    <string name="followers_counter_tv">88</string>
+    <string name="followers_counter_tv" translatable="false">88</string>
     <string name="followers">Followers</string>
     <string name="profile_page">Profile Page</string>
     <string name="birthday">Birthday</string>
@@ -80,7 +80,7 @@
     <string name="reply">Reply…</string>
     <string name="createdat">createdAt</string>
     <string name="updatedat">updatedAt</string>
-    <string name="integer_string">999</string>
+    <string name="integer_string" translatable="false">999</string>
     <string name="post_description">Post description will be shown here!</string>
     <string name="profile_page_tweet_info">You Don\'t Have Tweets</string>
     <string name="page_not_available">The page is not available due to technical work.</string>
@@ -114,7 +114,7 @@
     <string name="Home">Home</string>
     <string name="Search">Search</string>
     <string name="invalid_date">Invalid date</string>
-    <string name="gratitude">Thank you for leaving report. We will definetily take into account your report</string>
+    <string name="gratitude">Thank you for leaving report. We will definitely take into account your report</string>
     <string name="feedback">Feedback</string>
     <string name="set_off">Set off!</string>
     <string name="detail_page_reply_btn_content_description">in detail page send to reply button.</string>
@@ -124,11 +124,11 @@
     <string name="other">Other</string>
     <string name="policy_agree_btn">I accept the Terms of Service</string>
     <string name="detail_page_bottom_sheet">This is detail page bottom sheet</string>
-    <string name="italiano">Italiano</string>
-    <string name="russian">Русский</string>
-    <string name="english">English</string>
-    <string name="o_zbek">O\'zbek</string>
-    <string name="default_user_fullname">Twittur User</string>
+    <string name="italiano" translatable="false">Italiano</string>
+    <string name="russian" translatable="false">Русский</string>
+    <string name="english" translatable="false">English</string>
+    <string name="o_zbek" translatable="false">O\'zbek</string>
+    <string name="default_user_fullname" translatable="false">Twittur User</string>
     <string name="empty_bio">This user does not appear to have any biography.</string>
     <string name="loading">Loading\n</string>
     <string name="short_label">Create a post</string>

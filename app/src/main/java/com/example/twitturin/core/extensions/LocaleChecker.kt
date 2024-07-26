@@ -26,15 +26,15 @@ fun AppCompatActivity.loadLocale() {
     language?.let { this.checkLocale(it) }
 }
 
-fun Activity.setLocale(lang : String) {
-    val locale = Locale(lang)
+fun Activity.setLocale(language : String) {
+    val locale = Locale(language)
     Locale.setDefault(locale)
     val config = Configuration()
     config.setLocale(locale)
     baseContext.resources.updateConfiguration(config, baseContext.resources.displayMetrics)
 
     val editor = getSharedPreferences("Settings", Context.MODE_PRIVATE).edit()
-    editor.putString("lang", lang)
+    editor.putString("language", language)
     editor.apply()
 }
 
