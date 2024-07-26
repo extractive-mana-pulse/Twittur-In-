@@ -131,6 +131,7 @@ class TweetsFragment : Fragment() {
                                 R.id.edit_user_own_tweet -> {
                                     val bundle = Bundle()
                                     bundle.putString("description", tweet.content)
+                                    bundle.putString("tweetId", tweet.id)
                                     findNavController().navigate(R.id.editTweetFragment, bundle)
                                     true
                                 }

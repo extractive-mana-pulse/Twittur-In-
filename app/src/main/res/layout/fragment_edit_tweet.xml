@@ -15,39 +15,47 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/header_edit_tweet_layout"
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/edit_tweet_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="55dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_height="?attr/actionBarSize"
+            app:menu="@menu/edit_tweet_menu"
+            app:layout_constraintTop_toTopOf="parent"
+            app:navigationIcon="@drawable/keyboard_backspace"/>
 
-            <Button
-                android:id="@+id/edit_tweet_cancel_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:text="@string/cancel"
-                android:textColor="#13BCA9"
-                android:onClick="@{()-> tweetFragment.fragmentManager.popBackStack()}"
-                android:background="@android:color/transparent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+<!--        <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--            android:id="@+id/header_edit_tweet_layout"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="55dp"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent">-->
 
-            <Button
-                android:id="@+id/edit_tweet_publish_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:layout_marginEnd="16dp"
-                android:background="@drawable/publish_btn_bg"
-                android:text="@string/update_post"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+<!--            <Button-->
+<!--                android:id="@+id/edit_tweet_cancel_btn"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginStart="16dp"-->
+<!--                android:text="@string/cancel"-->
+<!--                android:textColor="#13BCA9"-->
+<!--                android:onClick="@{()-> tweetFragment.fragmentManager.popBackStack()}"-->
+<!--                android:background="@android:color/transparent"-->
+<!--                app:layout_constraintTop_toTopOf="parent"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintBottom_toBottomOf="parent"/>-->
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+<!--            <Button-->
+<!--                android:id="@+id/edit_tweet_publish_btn"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="40dp"-->
+<!--                android:layout_marginEnd="16dp"-->
+<!--                android:background="@drawable/publish_btn_bg"-->
+<!--                android:text="@string/update_post"-->
+<!--                app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintTop_toTopOf="parent"/>-->
+
+<!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
 
         <View
             android:id="@+id/public_post_divider"
@@ -56,7 +64,7 @@
             android:background="?attr/colorOutlineVariant"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/header_edit_tweet_layout"/>
+            app:layout_constraintTop_toBottomOf="@id/edit_tweet_toolbar"/>
 
         <EditText
             android:id="@+id/edit_tweet_content"

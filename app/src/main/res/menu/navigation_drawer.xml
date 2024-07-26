@@ -42,4 +42,16 @@
 
     </group>
 
+    <group
+        android:id="@+id/tertiary_group"
+        android:checkableBehavior="all">
+
+        <item
+            android:id="@+id/settings_item"
+            android:icon="@drawable/settings_application"
+            android:title="@string/settings"
+            android:checked="false"/>
+
+    </group>
+
 </menu>

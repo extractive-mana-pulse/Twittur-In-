@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    tools:context=".home.presentation.ui.SettingsFragment">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/settings_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:navigationIcon="@drawable/keyboard_backspace"
+        app:title="@string/settings"
+        app:titleTextAppearance="?attr/textAppearanceTitleMedium"/>
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:layout_width="252dp"
+        android:layout_height="252dp"
+        android:layout_gravity="center"
+        app:lottie_loop="true"
+        app:lottie_autoPlay="true"
+        app:layout_constraintWidth_percent="0.8"
+        app:layout_constraintDimensionRatio="1.5"
+        app:lottie_rawRes="@raw/technical_works"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:layout_gravity="bottom|center"
+        android:text="@string/page_not_available"
+        android:textAppearance="?attr/textAppearanceBodyLarge"/>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

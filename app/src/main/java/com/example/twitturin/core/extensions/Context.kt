@@ -1,7 +1,10 @@
 package com.example.twitturin.core.extensions
 
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
+import android.widget.Toast
 
 fun Context.shareUrl(text: String) {
     try {
@@ -12,4 +15,11 @@ fun Context.shareUrl(text: String) {
     } catch (t: Throwable) {
         t.printStackTrace()
     }
+}
+
+fun Context.copyToClipboard(text: String) {
+    val clipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+    val clipData = ClipData.newPlainText("Copied Text", text)
+    clipboardManager.setPrimaryClip(clipData)
+    Toast.makeText(this, "Copied to clipboard", Toast.LENGTH_SHORT).show()
 }

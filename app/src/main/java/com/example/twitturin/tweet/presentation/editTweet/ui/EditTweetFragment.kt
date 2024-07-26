@@ -1,6 +1,5 @@
 package com.example.twitturin.tweet.presentation.editTweet.ui
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,8 +7,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.example.twitturin.R
 import com.example.twitturin.core.extensions.snackbarError
-import com.example.twitturin.core.extensions.stateDisabled
 import com.example.twitturin.core.manager.SessionManager
 import com.example.twitturin.databinding.FragmentEditTweetBinding
 import com.example.twitturin.tweet.presentation.editTweet.sealed.EditTweet
@@ -28,32 +27,38 @@ class EditTweetFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.tweetFragment = this
 
-        val sharedPreferences = requireActivity().getSharedPreferences("my_shared_prefs", Context.MODE_PRIVATE)
-        val tweetId = sharedPreferences.getString("id",null)
-
         val tweetContent = arguments?.getString("description")
+        val tweetId = arguments?.getString("tweetId")
 
         binding.apply {
 
             editTweetContent.setText(tweetContent)
 
-            editTweetPublishBtn.setOnClickListener {
-                editTweetPublishBtn.stateDisabled()
-                val content = editTweetContent.text.toString()
-                editTweetViewModel.editTweet(content, tweetId!!, "Bearer ${SessionManager(requireContext()).getToken()}")
-            }
+            editTweetToolbar.setNavigationOnClickListener { findNavController().navigateUp() }
 
-            editTweetViewModel.editTweetResult.observe(viewLifecycleOwner) { result ->
-                when (result) {
-                    is EditTweet.Success -> { findNavController().navigateUp() }
+            editTweetToolbar.setOnMenuItemClickListener {
+                when(it.itemId) {
+                    R.id.update_tweet -> {
+                        it.isEnabled = false
+                        val content = editTweetContent.text.toString()
+                        editTweetViewModel.editTweet(content, tweetId!!, "Bearer ${SessionManager(requireContext()).getToken()}")
 
-                    is EditTweet.Error -> {
-                        editTweetPageRootLayout.snackbarError(
-                            editTweetTvForSnackbar,
-                            error = result.error,
-                            ""){}
-                        editTweetPublishBtn.isEnabled = true
+                        editTweetViewModel.editTweetResult.observe(viewLifecycleOwner) { result ->
+                            when (result) {
+                                is EditTweet.Success -> { findNavController().navigateUp() }
+
+                                is EditTweet.Error -> {
+                                    editTweetPageRootLayout.snackbarError(
+                                        editTweetTvForSnackbar,
+                                        error = result.error,
+                                        ""){}
+                                    it.isEnabled = true
+                                }
+                            }
+                        }
+                        true
                     }
+                    else -> false
                 }
             }
         }

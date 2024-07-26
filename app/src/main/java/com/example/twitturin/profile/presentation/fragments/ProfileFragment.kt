@@ -25,7 +25,6 @@ import com.example.twitturin.core.extensions.deleteDialogEmailWatcher
 import com.example.twitturin.core.extensions.fullScreenImage
 import com.example.twitturin.core.extensions.loadImagesWithGlideExt
 import com.example.twitturin.core.extensions.repeatOnStarted
-import com.example.twitturin.core.extensions.shareUrl
 import com.example.twitturin.core.extensions.snackbarError
 import com.example.twitturin.core.manager.SessionManager
 import com.example.twitturin.databinding.FragmentProfileBinding
@@ -80,7 +79,7 @@ class ProfileFragment : Fragment() {
             profileToolbar.setOnMenuItemClickListener { menuItem ->
                 when (menuItem.itemId) {
                     R.id.share_profile -> {
-                        requireContext().shareUrl("https://twitturin.onrender.com/users/${SessionManager(requireContext()).getUserId()}")
+                        findNavController().navigate(R.id.action_profileFragment_to_shareProfileBottomSheetFragment)
                         true
                     }
                     R.id.three_dot_menu -> {
@@ -149,13 +148,13 @@ class ProfileFragment : Fragment() {
                         result.apply {
 
                             profileKind.text = user.kind
-                            profileDateTv.text = user.birthday
+                            profileDateTv.text = user.studentId
                             profileUsername.text = user.username
                             followingCounterTv.text = user.followingCount.toString()
                             followersCounterTv.text = user.followersCount.toString()
+                            profileUserAvatar.loadImagesWithGlideExt(user.profilePicture)
                             profileFullName.text = (user.fullName ?: R.string.default_user_fullname).toString()
                             profileBiography.text = (user.bio ?: R.string.empty_bio).toString()
-                            profileUserAvatar.loadImagesWithGlideExt("${user.profilePicture ?: R.drawable.person}")
 
                             // location
                             if (user.country.isNullOrEmpty()) {

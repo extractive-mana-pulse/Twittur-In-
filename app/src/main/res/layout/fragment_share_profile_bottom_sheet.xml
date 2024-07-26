@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/standard_bottom_sheet"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".profile.presentation.fragments.ShareProfileBottomSheetFragment">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/profile_share_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:navigationIcon="@drawable/close"
+        app:title="@string/share"
+        app:titleTextAppearance="?attr/textAppearanceTitleMedium"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="140dp"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:background="@drawable/share_custom_bg">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/info_layout"
+            android:layout_width="match_parent"
+            android:layout_height="450dp"
+            android:background="@drawable/inner_share_custom_bg"
+            android:layout_marginHorizontal="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <TextView
+                android:id="@id/kind_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:text="Kind"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:textAppearance="?attr/textAppearanceBodyMedium"
+                app:layout_constraintBottom_toTopOf="@id/horiz_divider_top"/>
+
+            <View
+                android:id="@+id/horiz_divider_top"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="56dp"
+                android:background="@color/black"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <View
+                android:id="@+id/vert_divider_left"
+                android:layout_width="1dp"
+                android:layout_height="0dp"
+                android:layout_marginEnd="56dp"
+                android:background="@color/black"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/horiz_divider_top"
+                app:layout_constraintBottom_toTopOf="@id/horiz_divider_bottom"/>
+
+            <TextView
+                android:id="@+id/student_id_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="48dp"
+                android:rotation="90"
+                android:text="@string/student_id"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:textAppearance="?attr/textAppearanceBodyMedium"
+                app:layout_constraintStart_toEndOf="@id/vert_divider_left"
+                app:layout_constraintTop_toBottomOf="@id/horiz_divider_top"/>
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/user_avatar_share"
+                android:layout_width="124dp"
+                android:layout_height="124dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="24dp"
+                android:contentDescription="@null"
+                android:src="@drawable/avatar"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/horiz_divider_top"/>
+
+            <TextView
+                android:id="@+id/share_profile_full_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="24sp"
+                android:layout_marginTop="16dp"
+                android:text="@string/full_name"
+                android:layout_marginStart="16dp"
+                app:layout_constraintStart_toStartOf="parent"
+                android:textAppearance="?attr/textAppearanceBodyLarge"
+                app:layout_constraintTop_toBottomOf="@id/user_avatar_share"/>
+
+            <TextView
+                android:id="@+id/share_profile_username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:layout_marginTop="8dp"
+                android:text="@string/username"
+                android:layout_marginStart="16dp"
+                app:layout_constraintStart_toStartOf="parent"
+                android:textAppearance="?attr/textAppearanceBodyMedium"
+                app:layout_constraintTop_toBottomOf="@id/share_profile_full_name"/>
+
+            <View
+                android:id="@+id/horiz_divider_bottom"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="56dp"
+                android:background="@color/black"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:id="@+id/link_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_marginBottom="56dp"
+        android:layout_marginHorizontal="16dp">
+
+        <LinearLayout
+            android:id="@+id/copy_link_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginEnd="48dp"
+            android:layout_gravity="center">
+
+            <ImageView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/link_thin"
+                android:contentDescription="@null"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Copy link"
+                android:textAppearance="?attr/textAppearanceBodySmall"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/share_profile_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_gravity="center"
+            tools:ignore="UseCompoundDrawables">
+
+            <ImageView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/share_thin"
+                android:contentDescription="@null"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Share link"
+                android:textAppearance="?attr/textAppearanceBodySmall"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</FrameLayout>

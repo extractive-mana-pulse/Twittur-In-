@@ -33,13 +33,11 @@ import kotlinx.coroutines.launch
 class PublicPostFragment : Fragment() {
 
     private lateinit var sharedPreferences: SharedPreferences
-    private val postTweetViewModel: PostTweetViewModel by viewModels()
-    private val postTweetUIViewModel: PostTweetUIViewModel by viewModels()
+    private val postTweetViewModel by viewModels<PostTweetViewModel>()
+    private val postTweetUIViewModel by viewModels<PostTweetUIViewModel>()
     private val binding by lazy { FragmentPublicPostBinding.inflate(layoutInflater) }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        return binding.root
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View = binding.root
 
     init {
         lifecycleScope.launchWhenStarted {
@@ -117,9 +115,7 @@ class PublicPostFragment : Fragment() {
             .setView(dialogView)
             .create()
 
-        dialogButton.setOnClickListener {
-            dialog.dismiss()
-        }
+        dialogButton.setOnClickListener { dialog.dismiss() }
 
         dialogReadPolicyTV.setOnClickListener {
             dialog.dismiss()

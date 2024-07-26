@@ -31,6 +31,8 @@ import com.example.twitturin.profile.presentation.vm.ProfileViewModel
 import com.example.twitturin.tweet.domain.model.Tweet
 import com.example.twitturin.tweet.presentation.tweet.vm.TweetViewModel
 import com.facebook.shimmer.ShimmerFrameLayout
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.shape.CornerFamily
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -109,16 +111,16 @@ class HomeFragment : Fragment() {
             }
 
             navigationView.setNavigationItemSelectedListener { menuItem ->
+
                 when(menuItem.itemId){
                     R.id.language_item -> requireActivity().appLanguage()
                     R.id.change_mode -> requireActivity().appThemeDialog()
                     R.id.time_table -> findNavController().navigate(R.id.action_homeFragment_to_webViewFragment)
                     R.id.profile_item -> findNavController().navigate(R.id.action_homeFragment_to_profileFragment)
-                    R.id.feedback_item -> {
-                        findNavController().navigate(R.id.action_homeFragment_to_feedbackFragment)
-                        drawerLayout.close()
-                    }
+                    R.id.feedback_item -> findNavController().navigate(R.id.action_homeFragment_to_feedbackFragment)
+                    R.id.settings_item -> findNavController().navigate(R.id.action_homeFragment_to_settingsFragment)
                 }
+
                 menuItem.isChecked = true
                 drawerLayout.close()
                 true
@@ -192,5 +194,13 @@ class HomeFragment : Fragment() {
                 findNavController().navigate(R.id.detailFragment, bundle)
             }
         }
+    }
+
+    private fun changeFabShape() {
+        val fabSize = resources.getDimensionPixelSize(com.google.android.material.R.dimen.design_fab_size_normal)
+        val fab = requireActivity().findViewById<FloatingActionButton>(R.id.add_post)
+        fab.shapeAppearanceModel = fab.shapeAppearanceModel.toBuilder()
+            .setAllCorners(CornerFamily.ROUNDED, fabSize / 2f) // Set the corner radius to half the FAB size
+            .build()
     }
 }

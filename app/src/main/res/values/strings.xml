@@ -134,6 +134,8 @@
     <string name="short_label">Create a post</string>
     <string name="long_label">Create a post long label</string>
     <string name="disabled_message">create a post disable label</string>
+    <string name="settings">Settings</string>
+    <string name="share">Share</string>
 
     <string-array name="major_array">
         <item>SE</item>

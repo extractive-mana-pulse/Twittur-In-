@@ -49,6 +49,9 @@
             app:enterAnim="@anim/from_left"
             app:popEnterAnim="@anim/from_left"
             app:popExitAnim="@anim/to_right" />
+        <action
+            android:id="@+id/action_homeFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
     </fragment>
 
 <!--  privateMessagesFragment  -->
@@ -141,6 +144,9 @@
         <action
             android:id="@+id/action_profileFragment_to_followingListFragment"
             app:destination="@id/followingListFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_shareProfileBottomSheetFragment"
+            app:destination="@id/shareProfileBottomSheetFragment" />
     </fragment>
 
 <!--  publicPostFragment  -->
@@ -476,6 +482,24 @@
         <argument
             android:name="tweet"
             app:argType="com.example.twitturin.tweet.domain.model.Tweet" />
+    </dialog>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.twitturin.home.presentation.ui.SettingsFragment"
+        android:label="fragment_settings"
+        tools:layout="@layout/fragment_settings" >
+        <action
+            android:id="@+id/action_settingsFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <dialog
+        android:id="@+id/shareProfileBottomSheetFragment"
+        android:name="com.example.twitturin.profile.presentation.fragments.ShareProfileBottomSheetFragment"
+        android:label="fragment_share_profile_bottom_sheet"
+        tools:layout="@layout/fragment_share_profile_bottom_sheet" >
+        <action
+            android:id="@+id/action_shareProfileBottomSheetFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
     </dialog>
 
 </navigation>

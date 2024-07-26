@@ -131,6 +131,7 @@ class MoreSettingsDetailFragment : BottomSheetDialogFragment() {
         binding.editLayout.setOnClickListener {
             val bundle = Bundle().apply {
                 putString("description", args.tweet.content)
+                putString("tweetId", args.tweet.id)
             }
             findNavController().navigate(R.id.editTweetFragment, bundle)
             dismiss()
