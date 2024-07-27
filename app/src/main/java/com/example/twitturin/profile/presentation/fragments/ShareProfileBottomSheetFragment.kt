@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import com.example.twitturin.core.extensions.copyToClipboard
 import com.example.twitturin.core.extensions.loadImagesWithGlideExt
 import com.example.twitturin.core.extensions.shareUrl
+import com.example.twitturin.core.extensions.sharedPreferences
 import com.example.twitturin.core.extensions.snackbarError
 import com.example.twitturin.core.manager.SessionManager
 import com.example.twitturin.databinding.FragmentShareProfileBottomSheetBinding
@@ -31,11 +32,17 @@ class ShareProfileBottomSheetFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val color by requireActivity().sharedPreferences("color")
         val userId = SessionManager(requireContext()).getUserId()
 
         // TODO: outer layout of share UI should be linked with color of user chosen from colorPickerDialog.
 
         binding.apply {
+
+            blurView.setBlurEnabled(true)
+            blurView.setBlurRadius(10f)
+
+            outerLayout.setBackgroundColor(color.toInt())
 
             profileShareToolbar.setNavigationOnClickListener { dismiss() }
 

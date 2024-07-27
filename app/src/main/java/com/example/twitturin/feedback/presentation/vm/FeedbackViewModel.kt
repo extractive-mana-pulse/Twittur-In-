@@ -14,5 +14,5 @@ class FeedbackViewModel: ViewModel() {
 
     fun onBackPressed() { viewModelScope.launch { uiEvent.send(FeedbackUIEvent.OnBackPressed) } }
 
-    fun onSendPressed() { viewModelScope.launch { uiEvent.send(FeedbackUIEvent.OnBackPressed) } }
+    fun onSendPressed() { viewModelScope.launch { uiEvent.send(FeedbackUIEvent.OnSendPressed) } }
 }

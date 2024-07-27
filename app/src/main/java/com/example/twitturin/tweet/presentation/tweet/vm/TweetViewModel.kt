@@ -40,6 +40,7 @@ class TweetViewModel @Inject constructor(private val repository: TweetRepository
     }
 
     var userTweets: MutableLiveData<Response<List<Tweet>>> = MutableLiveData()
+
     fun getUserTweet(userId : String) {
         viewModelScope.launch {
             val response = repository.getPostsByUser(userId)
@@ -59,6 +60,7 @@ class TweetViewModel @Inject constructor(private val repository: TweetRepository
 
 
     var likedPosts: MutableLiveData<Response<List<Tweet>>> = MutableLiveData()
+
     fun getLikedPosts(userId : String) {
         viewModelScope.launch {
             val response = repository.getListOfLikedPosts(userId)
@@ -103,7 +105,7 @@ class TweetViewModel @Inject constructor(private val repository: TweetRepository
             }
 
             override fun onFailure(call: Call<ReplyContent>, t: Throwable) {
-                _postReply.value = PostReply.Error("Network error")
+                _postReply.value = PostReply.Error(t.message.toString())
             }
         })
     }

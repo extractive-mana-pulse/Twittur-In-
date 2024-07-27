@@ -11,7 +11,7 @@ inline fun View.snackbarError(
     actionText: String,
     crossinline actionCallback: () -> Unit
 ) {
-    val duration = Snackbar.LENGTH_SHORT
+    val duration = Snackbar.ANIMATION_MODE_SLIDE
 
     val snackbar = Snackbar
         .make(this, error, duration)
@@ -29,12 +29,14 @@ fun View.snackbar(
     anchorView: View,
     message : String
 ) {
-    val duration = Snackbar.LENGTH_SHORT
+    val duration = Snackbar.ANIMATION_MODE_SLIDE
 
     val snackbar = Snackbar
         .make(this, message, duration)
         .setBackgroundTint(resources.getColor(R.color.md_theme_light_inverseSurface))
         .setTextColor(resources.getColor(R.color.md_theme_light_inverseOnSurface))
         .setAnchorView(anchorView)
+        .setDuration(5000)
+
     snackbar.show()
 }

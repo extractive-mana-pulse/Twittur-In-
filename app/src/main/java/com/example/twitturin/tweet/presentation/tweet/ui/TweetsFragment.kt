@@ -12,6 +12,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
+import com.example.twitturin.core.extensions.beGone
+import com.example.twitturin.core.extensions.beVisible
 import com.example.twitturin.core.extensions.converter
 import com.example.twitturin.core.extensions.shareUrl
 import com.example.twitturin.core.extensions.snackbarError
@@ -38,9 +40,7 @@ class TweetsFragment : Fragment() {
     private val binding by lazy { FragmentTweetsBinding.inflate(layoutInflater) }
     private val userPostAdapter by lazy { TweetAdapter(clickEvents = ::tweetClickEvents) }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        return binding.root
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View = binding.root
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -72,26 +72,23 @@ class TweetsFragment : Fragment() {
 
                         if (tweetList.isEmpty()) {
 
-                            rcView.visibility = View.GONE
-                            tweetsPageAnView.visibility = View.VISIBLE
-                            lottieInfoTv.visibility = View.VISIBLE
+                            rcView.beGone()
+                            tweetsPageAnView.beVisible()
+                            lottieInfoTv.beVisible()
 
                         } else {
 
-                            rcView.visibility = View.VISIBLE
-                            tweetsPageAnView.visibility = View.GONE
-                            lottieInfoTv.visibility = View.GONE
-                            userPostAdapter.differ.submitList(tweetList)
+                            rcView.beVisible()
+                            tweetsPageAnView.beGone()
+                            lottieInfoTv.beGone()
                             userPostAdapter.notifyDataSetChanged()
+                            userPostAdapter.differ.submitList(tweetList)
 
                         }
                     }
 
                 } else {
-                    tweetsRootLayout.snackbarError(
-                        requireActivity().findViewById(R.id.tweets_root_layout),
-                        error = response.message(),
-                        ""){}
+                    tweetsRootLayout.snackbarError(tweetsRootLayout, error = response.message(), ""){}
                 }
             }
         }
@@ -140,29 +137,31 @@ class TweetsFragment : Fragment() {
 
                                     val alertDialogBuilder = MaterialAlertDialogBuilder(requireContext(), R.style.ThemeOverlay_App_MaterialAlertDialog)
 
-                                    alertDialogBuilder.setTitle(requireContext().resources.getString(R.string.delete_tweet_title))
-                                    alertDialogBuilder.setMessage(requireContext().resources.getString(R.string.delete_tweet_message))
+                                    alertDialogBuilder.apply {
+                                        setTitle(requireContext().resources.getString(R.string.delete_tweet_title))
+                                        setMessage(requireContext().resources.getString(R.string.delete_tweet_message))
 
-                                    alertDialogBuilder.setPositiveButton(requireContext().resources.getString(R.string.yes)) { _, _ ->
-                                        tweetViewModel.deleteTweet(tweet.id!!,"Bearer ${SessionManager(requireContext()).getToken()}")
-                                    }
+                                        setPositiveButton(requireContext().resources.getString(R.string.yes)) { _, _ ->
+                                            tweetViewModel.deleteTweet(tweet.id!!,"Bearer ${SessionManager(requireContext()).getToken()}")
+                                        }
 
-                                    alertDialogBuilder.setNegativeButton(requireContext().resources.getString(R.string.no)) { dialog, _ ->
-                                        dialog.dismiss()
-                                    }
+                                        setNegativeButton(requireContext().resources.getString(R.string.no)) { dialog, _ ->
+                                            dialog.dismiss()
+                                        }
 
-                                    alertDialogBuilder.create().show()
+                                        create().show()
 
-                                    tweetViewModel.deleteTweetResult.observe(viewLifecycleOwner) { result ->
+                                        tweetViewModel.deleteTweetResult.observe(viewLifecycleOwner) { result ->
 
-                                        when(result){
-                                            is TweetDelete.Success -> {
-                                                alertDialogBuilder.create().dismiss()
-                                                Snackbar.make(binding.tweetsRootLayout, R.string.deleted, Snackbar.LENGTH_SHORT).show()
-                                            }
-                                            is  TweetDelete.Error -> {
-                                                alertDialogBuilder.create().dismiss()
-                                                Snackbar.make(binding.tweetsRootLayout, result.message, Snackbar.LENGTH_SHORT).show()
+                                            when(result){
+                                                is TweetDelete.Success -> {
+                                                    create().dismiss()
+                                                    Snackbar.make(binding.tweetsRootLayout, R.string.deleted, Snackbar.LENGTH_SHORT).show()
+                                                }
+                                                is  TweetDelete.Error -> {
+                                                    create().dismiss()
+                                                    Snackbar.make(binding.tweetsRootLayout, result.message, Snackbar.LENGTH_SHORT).show()
+                                                }
                                             }
                                         }
                                     }

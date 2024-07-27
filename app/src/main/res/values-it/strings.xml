@@ -127,4 +127,6 @@
     <string name="disabled_message">creare un\'etichetta di disabilitazione post</string>
     <string name="settings">Impostazioni</string>
     <string name="share">Condividere</string>
+    <string name="success">Success</string>
+    <string name="info">Your email will not be displayed due to tech. works on server side. After fixing issue, we will add visibility to your email.</string>
 </resources>

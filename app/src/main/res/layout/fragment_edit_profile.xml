@@ -5,10 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
+    android:id="@+id/edit_profile_root_layout"
     tools:context=".profile.presentation.fragments.EditProfileFragment">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/edit_profile_root_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -166,16 +166,39 @@
                         android:textAlignment="textStart"
                         android:layout_marginStart="16dp"/>
 
-                    <EditText
-                        android:id="@+id/edit_profile_email_et"
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/edit_profile_email_et_layout"
+                        style="?attr/textInputFilledStyle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="textEmailAddress"
-                        android:minHeight="48dp"
-                        android:layout_marginTop="3dp"
-                        android:imeOptions="actionNext"
-                        android:layout_marginHorizontal="16dp"
-                        tools:ignore="Autofill,LabelFor,SpeakableTextPresentCheck" />
+                        app:endIconCheckable="true"
+                        app:endIconMode="custom"
+                        app:endIconDrawable="@drawable/info"
+                        android:layout_marginVertical="8dp"
+                        android:layout_marginHorizontal="16dp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edit_profile_email_et"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@android:color/transparent"
+                            android:imeOptions="actionNext"
+                            android:inputType="text|textCapSentences|textMultiLine"
+                            android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"/>
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+<!--                    <EditText-->
+<!--                        android:id="@+id/edit_profile_email_et"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:inputType="textEmailAddress"-->
+<!--                        android:minHeight="48dp"-->
+<!--                        android:layout_marginTop="3dp"-->
+<!--                        android:imeOptions="actionNext"-->
+<!--                        android:layout_marginHorizontal="16dp"-->
+<!--                        tools:ignore="Autofill,LabelFor,SpeakableTextPresentCheck"/>-->
 
                 </LinearLayout>
 
@@ -244,6 +267,12 @@
                         android:layout_marginHorizontal="16dp"/>
 
                 </LinearLayout>
+
+            <View
+                android:id="@+id/snackar_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

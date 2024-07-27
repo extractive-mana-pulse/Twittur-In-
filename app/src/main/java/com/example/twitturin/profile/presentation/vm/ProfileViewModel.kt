@@ -103,7 +103,7 @@ class ProfileViewModel @Inject constructor(private val repository: ProfileReposi
         val requestBody = RequestBody.create("multipart/form-data".toMediaTypeOrNull(), picture)
         val imagePart = MultipartBody.Part.createFormData("picture", picture, requestBody)
 
-        val authRequest = repository.loadImage(userId, imagePart, "Bearer $token")
+        val authRequest = repository.loadImage(userId, imagePart, token)
 
         authRequest.enqueue(object : Callback<String> {
             override fun onResponse(call: Call<String>, response: Response<String>) {

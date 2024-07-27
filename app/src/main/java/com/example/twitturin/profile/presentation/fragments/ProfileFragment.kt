@@ -26,6 +26,7 @@ import com.example.twitturin.core.extensions.fullScreenImage
 import com.example.twitturin.core.extensions.loadImagesWithGlideExt
 import com.example.twitturin.core.extensions.repeatOnStarted
 import com.example.twitturin.core.extensions.snackbarError
+import com.example.twitturin.core.extensions.stateDisabled
 import com.example.twitturin.core.manager.SessionManager
 import com.example.twitturin.databinding.FragmentProfileBinding
 import com.example.twitturin.profile.presentation.adapters.ProfileViewPagerAdapter
@@ -148,7 +149,8 @@ class ProfileFragment : Fragment() {
                         result.apply {
 
                             profileKind.text = user.kind
-                            profileDateTv.text = user.studentId
+                            profileStudentIdTv.text = user.studentId
+                            profileDateTv.text = user.birthday
                             profileUsername.text = user.username
                             followingCounterTv.text = user.followingCount.toString()
                             followersCounterTv.text = user.followersCount.toString()
@@ -167,7 +169,7 @@ class ProfileFragment : Fragment() {
                         }
                     }
 
-                    is UserCredentials.Error -> { binding.profileRootLayout.snackbarError(profileRootLayout, error = result.message, ""){} }
+                    is UserCredentials.Error -> { profileRootLayout.snackbarError(profileRootLayout, error = result.message, ""){} }
                 }
             }
 
@@ -206,66 +208,69 @@ class ProfileFragment : Fragment() {
     @SuppressLint("ResourceAsColor")
     private fun deleteDialog(){
         val alertDialogBuilder = MaterialAlertDialogBuilder(requireActivity(), R.style.ThemeOverlay_App_MaterialAlertDialog)
-        alertDialogBuilder.setTitle(resources.getString(R.string.delete_account_title))
-        alertDialogBuilder.setMessage(resources.getString(R.string.delete_account_message))
-        alertDialogBuilder.setPositiveButton(resources.getString(R.string.yes)) { _, _ ->
+        alertDialogBuilder.apply {
+            setTitle(resources.getString(R.string.delete_account_title))
+            setMessage(resources.getString(R.string.delete_account_message))
+            setPositiveButton(resources.getString(R.string.yes)) { _, _ ->
 
-            val builder = MaterialAlertDialogBuilder(requireActivity(), R.style.ThemeOverlay_App_MaterialAlertDialog)
-            val inflater = layoutInflater
-            val dialogView = inflater.inflate(R.layout.custom_dialog, null)
-            builder.setView(dialogView)
-            val alertDialog = builder.create()
+                val builder = MaterialAlertDialogBuilder(requireActivity(), R.style.ThemeOverlay_App_MaterialAlertDialog)
+                val inflater = layoutInflater
+                val dialogView = inflater.inflate(R.layout.custom_dialog, null)
+                builder.setView(dialogView)
+                val alertDialog = builder.create()
 
-            val cancelBtn = dialogView.findViewById<LinearLayout>(R.id.cancel_btn)
-            val deleteBtn = dialogView.findViewById<LinearLayout>(R.id.delete_btn)
-            val emailEt = dialogView.findViewById<EditText>(R.id.email_confirm_et)
-            val codeEt = dialogView.findViewById<EditText>(R.id.code_sent_from_email_et)
-            val emailConfirmBtn = dialogView.findViewById<ImageButton>(R.id.email_confirm_btn)
+                val cancelBtn = dialogView.findViewById<LinearLayout>(R.id.cancel_btn)
+                val deleteBtn = dialogView.findViewById<LinearLayout>(R.id.delete_btn)
+                val emailEt = dialogView.findViewById<EditText>(R.id.email_confirm_et)
+                val codeEt = dialogView.findViewById<EditText>(R.id.code_sent_from_email_et)
+                val emailConfirmBtn = dialogView.findViewById<ImageButton>(R.id.email_confirm_btn)
 
-            emailConfirmBtn.isEnabled = false
+                emailConfirmBtn.stateDisabled()
 
-            codeEt.deleteDialogCodeWatcher(deleteBtn, codeEt)
+                codeEt.deleteDialogCodeWatcher(deleteBtn, codeEt)
 
-            emailEt.deleteDialogEmailWatcher(emailConfirmBtn, emailEt)
+                emailEt.deleteDialogEmailWatcher(emailConfirmBtn, emailEt)
 
-            emailConfirmBtn.setOnClickListener { Snackbar.make(binding.profileRootLayout, R.string.in_progress,Snackbar.LENGTH_SHORT).show() }
+                emailConfirmBtn.setOnClickListener { Snackbar.make(binding.profileRootLayout, R.string.in_progress,Snackbar.LENGTH_SHORT).show() }
 
-            deleteBtn.isEnabled = false
+                deleteBtn.stateDisabled()
 
-            cancelBtn.setOnClickListener { alertDialog.dismiss() }
+                cancelBtn.setOnClickListener { alertDialog.dismiss() }
 
-            deleteBtn.setOnClickListener {
-                profileViewModel.deleteUser(SessionManager(requireContext()).getUserId()!!, "Bearer ${SessionManager(requireContext()).getToken()}")
-                alertDialog.dismiss()
+                deleteBtn.setOnClickListener {
+                    profileViewModel.deleteUser(SessionManager(requireContext()).getUserId()!!, "Bearer ${SessionManager(requireContext()).getToken()}")
+                    alertDialog.dismiss()
+                }
+                alertDialog.show()
             }
+
+            setNegativeButton(resources.getString(R.string.no)) { dialog, _ ->
+                dialog.dismiss()
+            }
+
+            setCancelable(true)
+            val alertDialog = create()
             alertDialog.show()
         }
-
-        alertDialogBuilder.setNegativeButton(resources.getString(R.string.no)) { dialog, _ ->
-            dialog.dismiss()
-        }
-
-        alertDialogBuilder.setCancelable(true)
-        val alertDialog = alertDialogBuilder.create()
-        alertDialog.show()
     }
 
     private fun logoutDialog() {
         val alertDialogBuilder = MaterialAlertDialogBuilder(requireActivity(), R.style.ThemeOverlay_App_MaterialAlertDialog)
-        alertDialogBuilder.setTitle(resources.getString(R.string.logout))
-        alertDialogBuilder.setMessage(resources.getString(R.string.logout_message))
-        alertDialogBuilder.setPositiveButton(resources.getString(R.string.yes)) { _, _ ->
-            SessionManager(requireContext()).clearToken()
-            stayInViewModel.setUserLoggedIn(false)
-            findNavController().navigate(R.id.action_profileFragment_to_signInFragment)
-        }
+        alertDialogBuilder.apply {
+            setTitle(resources.getString(R.string.logout))
+            setMessage(resources.getString(R.string.logout_message))
 
-        alertDialogBuilder.setNegativeButton(resources.getString(R.string.no)) { dialog, _ ->
-            dialog.dismiss()
-        }
+            setPositiveButton(resources.getString(R.string.yes)) { _, _ ->
+                SessionManager(requireContext()).clearToken()
+                stayInViewModel.setUserLoggedIn(false)
+                findNavController().navigate(R.id.action_profileFragment_to_signInFragment)
+            }
 
-        alertDialogBuilder.setCancelable(true)
-        val alertDialog = alertDialogBuilder.create()
-        alertDialog.show()
+            setNegativeButton(resources.getString(R.string.no)) { dialog, _ -> dialog.dismiss() }
+
+            setCancelable(true)
+            val alertDialog = create()
+            alertDialog.show()
+        }
     }
 }

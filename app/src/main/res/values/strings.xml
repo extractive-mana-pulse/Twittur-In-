@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <string name="app_name">Twittur(In)</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -48,7 +48,7 @@
     <string name="report_desc_tv">Please describe why you want to report this tweet</string>
     <string name="next">Next</string>
     <string name="profile">Profile</string>
-    <string name="in_progress">In Progress</string>
+    <string name="in_progress" tools:ignore="PrivateResource">In Progress</string>
     <string name="language">Language</string>
     <string name="open">open</string>
     <string name="close">close</string>
@@ -104,7 +104,7 @@
     <string name="not_now">Not now</string>
     <string name="microphone">Microphone</string>
     <string name="internet_status_description">It seems there is something wrong with your internet connection. Please connect to the internet and try again.</string>
-    <string name="ooops">Ooops!</string>
+    <string name="ooops" translatable="false">Ooops!</string>
     <string name="try_again">TRY AGAIN</string>
     <string name="retry">Retry</string>
     <string name="no_spaces_allowed">No spaces allowed</string>
@@ -136,6 +136,8 @@
     <string name="disabled_message">create a post disable label</string>
     <string name="settings">Settings</string>
     <string name="share">Share</string>
+    <string name="success">Success</string>
+    <string name="info">Your email will not be displayed due to tech. works on server side. After fixing issue, we will add visibility to your email.</string>
 
     <string-array name="major_array">
         <item>SE</item>

@@ -38,19 +38,19 @@
     </style>
 
     <!-- Light Theme -->
-    <style name="Custom.LightTheme" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
-        <item name="colorPrimary">#FFFFFF</item>
+    <style name="Custom.LightTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/white</item>
         <item name="colorPrimaryVariant">#F2F2F2</item>
-        <item name="colorOnPrimary">#000000</item>
+        <item name="colorOnPrimary">@color/black</item>
         <item name="colorSecondary">#EBEBEB</item>
         <item name="colorSecondaryVariant">#DEDEDE</item>
-        <item name="colorOnSecondary">#000000</item>
+        <item name="colorOnSecondary">@color/black</item>
         <item name="colorTertiary">#CCCCCC</item>
-        <item name="colorOnTertiary">#000000</item>
-        <item name="colorSurface">#FFFFFF</item>
-        <item name="colorOnSurface">#000000</item>
-        <item name="backgroundColor">#FFFFFF</item>
-        <item name="colorOnBackground">#000000</item>
+        <item name="colorOnTertiary">@color/black</item>
+        <item name="colorSurface">@color/white</item>
+        <item name="colorOnSurface">@color/white</item>
+        <item name="backgroundColor">@color/white</item>
+        <item name="colorOnBackground">@color/black</item>
     </style>
 
     <!--        Snackbar        -->

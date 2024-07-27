@@ -11,11 +11,11 @@
         android:id="@+id/report_page_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        app:navigationIcon="@drawable/keyboard_backspace"
         app:title="Report"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:navigationIcon="@drawable/keyboard_backspace"
         app:titleTextAppearance="?attr/textAppearanceTitleLarge"/>
 
     <TextView
@@ -24,12 +24,13 @@
         android:layout_height="wrap_content"
         android:text="@string/report_desc_tv"
         android:textStyle="bold"
-        android:textSize="26sp"
+        android:textSize="24sp"
         android:layout_marginTop="8dp"
         android:paddingHorizontal="16dp"
         android:textAlignment="textStart"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        android:textAppearance="?attr/textAppearanceBodyLarge"
         app:layout_constraintTop_toBottomOf="@id/report_page_toolbar"/>
 
     <TextView
@@ -37,14 +38,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/report_expl_desc"
-        android:textSize="16sp"
+        android:textSize="18sp"
         android:layout_marginTop="8dp"
         android:paddingHorizontal="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        android:textAppearance="?attr/textAppearanceBodyMedium"
         app:layout_constraintTop_toBottomOf="@+id/report_desc_tv"/>
 
-    <!--  Layout of Radio Buttons  -->
     <LinearLayout
         android:id="@+id/list_of_reports_layout"
         android:layout_width="wrap_content"
@@ -77,7 +78,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/scam_desc"
-                android:textAlignment="textStart"/>
+                android:textAlignment="textStart"
+                android:textAppearance="?attr/textAppearanceBodySmall"/>
 
             <!--      PRIVACY      -->
             <RadioButton
@@ -91,7 +93,8 @@
                 android:id="@+id/privacy_desc_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/privacy_desc"/>
+                android:text="@string/privacy_desc"
+                android:textAppearance="?attr/textAppearanceBodySmall"/>
 
             <!--      ABUSE      -->
             <RadioButton
@@ -105,7 +108,8 @@
                 android:id="@+id/abuse_and_harassment_desc_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/abuse_and_harassment_desc"/>
+                android:text="@string/abuse_and_harassment_desc"
+                android:textAppearance="?attr/textAppearanceBodySmall"/>
 
             <RadioButton
                 android:id="@+id/radio_other"
@@ -119,7 +123,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Describe issue..."
-                android:visibility="invisible"/>
+                android:visibility="invisible"
+                android:textAppearance="?attr/textAppearanceBodySmall"/>
 
         </RadioGroup>
 

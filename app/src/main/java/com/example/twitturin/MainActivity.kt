@@ -1,6 +1,7 @@
 package com.example.twitturin
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -9,11 +10,13 @@ import android.provider.Settings
 import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.twitturin.core.extensions.bottomNavigationUI
 import com.example.twitturin.core.extensions.checkTheme
 import com.example.twitturin.core.extensions.loadLocale
+import com.example.twitturin.core.extensions.sharedPreferences
 import com.example.twitturin.databinding.ActivityMainBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,6 +32,10 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
+//        val sharedPreferences = getSharedPreferences("theme_preferences", Context.MODE_PRIVATE)
+//        val themeMode = sharedPreferences.getInt("theme_mode", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+//        AppCompatDelegate.setDefaultNightMode(themeMode)
 
         if (Build.VERSION.SDK_INT >= 33) {
             notificationPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
