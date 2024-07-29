@@ -74,7 +74,7 @@
                 android:textStyle="bold"/>
 
             <TextView
-                android:id="@+id/scam_desc_tv"
+                android:id="@+id/spam_desc_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/scam_desc"
@@ -129,6 +129,12 @@
         </RadioGroup>
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/test_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/report_next_btn"/>
 
     <Button
         android:id="@+id/report_next_btn"
