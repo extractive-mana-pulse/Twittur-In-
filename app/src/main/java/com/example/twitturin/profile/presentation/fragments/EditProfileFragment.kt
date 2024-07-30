@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.twitturin.R
 import com.example.twitturin.core.extensions.loadImagesWithGlideExt
+import com.example.twitturin.core.extensions.repeatOnStarted
 import com.example.twitturin.core.extensions.sharedPreferences
 import com.example.twitturin.core.extensions.snackbar
 import com.example.twitturin.core.extensions.snackbarError
@@ -32,6 +33,7 @@ import com.example.twitturin.profile.presentation.util.GridSpacingItemDecoration
 import com.example.twitturin.profile.presentation.vm.ProfileViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 
 @AndroidEntryPoint
 class EditProfileFragment : Fragment() {
@@ -46,14 +48,9 @@ class EditProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val sessionManager = SessionManager(requireContext())
-        val userId = sessionManager.getUserId()
-        val token = sessionManager.getToken()
-        var imagePath by requireActivity().sharedPreferences("imagePath")
+        // TODO: Rework this page.
 
-        /** TODO
-         * Rebuild. When  user navigates from profile to edit profile page. @ sign username.
-         * */
+//        var imagePath by requireActivity().sharedPreferences("imagePath")
 
         val bio = arguments?.getString("profile_bio")
         val date = arguments?.getString("profile_date")
@@ -65,23 +62,22 @@ class EditProfileFragment : Fragment() {
 
             headerLayout.setOnClickListener { showColorPickerDialog() }
 
-            editProfileEmailEtLayout.setEndIconOnClickListener { snackarView.snackbar(snackarView, R.string.info.toString()) }
+            editProfileEmailEtLayout.setEndIconOnClickListener { snackarView.snackbar(snackarView, resources.getString(R.string.info)) }
 
             pickSingleMediaLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
                 if (it.resultCode != Activity.RESULT_OK) {
                     Toast.makeText(requireContext(), "Failed picking media.", Toast.LENGTH_SHORT).show()
                 } else {
-                    imagePath = it.data?.dataString.toString()
-                    profileViewModel.editUserImage(userId!!, imagePath, "Bearer $token")
+                    val stream = requireActivity().contentResolver.openInputStream(it.data?.data!!)
+                    profileViewModel.editUserImage(stream!!, SessionManager(requireContext()).getUserId()!!, "Bearer ${SessionManager(requireContext()).getToken()}")
 
-                    profileViewModel.editUserImageState.observe(viewLifecycleOwner) { result ->
+                    repeatOnStarted {
+                        profileViewModel.editUserImageState.collectLatest { result ->
 
-                        when(result) {
-                            is EditUserImageState.Success -> { editProfileRootLayout.snackbar(editProfileRootLayout, R.string.success.toString()) }
-
-                            is EditUserImageState.Error -> {
-                                Toast.makeText(requireContext(), result.message, Toast.LENGTH_LONG).show()
-                                Log.d("error", result.message)
+                            when(result) {
+                                is EditUserImageState.Success -> { editProfileRootLayout.snackbar(editProfileRootLayout, R.string.success.toString()) }
+                                is EditUserImageState.Error -> { Log.d("error", result.message) }
+                                is EditUserImageState.Loading -> {}
                             }
                         }
                     }
@@ -94,7 +90,6 @@ class EditProfileFragment : Fragment() {
             editProfileBirthdayEt.setText(date)
             editProfileFullnameEt.setText(fullname)
             editProfileUsernameEt.setText(username)
-
 
             editProfilePageToolbar.setNavigationOnClickListener { findNavController().navigateUp() }
 
@@ -194,8 +189,5 @@ class EditProfileFragment : Fragment() {
             .create()
         colorPickerDialog.show()
     }
-
-    private fun dpToPx(dp: Int): Int {
-        return (dp * resources.displayMetrics.density).toInt()
-    }
+    private fun dpToPx(dp: Int): Int =  (dp * resources.displayMetrics.density).toInt()
 }

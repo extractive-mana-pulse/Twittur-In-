@@ -184,6 +184,9 @@
         <action
             android:id="@+id/action_searchFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_searchFragment_to_observeProfileFragment"
+            app:destination="@id/observeProfileFragment" />
 
     </fragment>
 
@@ -425,11 +428,6 @@
 
     </fragment>
     <fragment
-        android:id="@+id/observeProfileFragment"
-        android:name="com.example.twitturin.profile.presentation.fragments.ObserveProfileFragment"
-        android:label="fragment_observe_profile"
-        tools:layout="@layout/fragment_observe_profile" />
-    <fragment
         android:id="@+id/noInternetFragment"
         android:name="com.example.twitturin.connection.presentation.ui.NoInternetFragment"
         android:label="fragment_no_internet"
@@ -501,5 +499,17 @@
             android:id="@+id/action_shareProfileBottomSheetFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
     </dialog>
+    <fragment
+        android:id="@+id/observeProfileFragment"
+        android:name="com.example.twitturin.profile.presentation.fragments.ObserveProfileFragment"
+        android:label="fragment_observe_profile"
+        tools:layout="@layout/fragment_observe_profile" >
+        <action
+            android:id="@+id/action_observeProfileFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+        <argument
+            android:name="searchResult"
+            app:argType="com.example.twitturin.search.domain.model.SearchUser" />
+    </fragment>
 
 </navigation>

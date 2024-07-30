@@ -13,21 +13,25 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
+import com.example.twitturin.core.extensions.beGone
+import com.example.twitturin.core.extensions.beVisible
+import com.example.twitturin.core.extensions.repeatOnStarted
+import com.example.twitturin.core.extensions.snackbar
+import com.example.twitturin.core.extensions.snackbarError
 import com.example.twitturin.core.extensions.vertical
+import com.example.twitturin.core.manager.SessionManager
 import com.example.twitturin.databinding.FragmentSearchBinding
 import com.example.twitturin.follow.presentation.followers.sealed.Follow
 import com.example.twitturin.follow.presentation.vm.FollowViewModel
-import com.example.twitturin.core.manager.SessionManager
-import com.example.twitturin.core.extensions.snackbarError
 import com.example.twitturin.search.domain.model.SearchUser
 import com.example.twitturin.search.presentation.adapters.SearchAdapter
 import com.example.twitturin.search.presentation.sealed.SearchResource
 import com.example.twitturin.search.presentation.vm.SearchViewModel
-import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.util.Locale
 
@@ -40,9 +44,7 @@ class SearchFragment : Fragment() {
     private val binding by lazy { FragmentSearchBinding.inflate(layoutInflater) }
     private val myAdapter by lazy { SearchAdapter(searchCLickEvents = ::searchClickEvent) }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        return binding.root
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View = binding.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -80,30 +82,20 @@ class SearchFragment : Fragment() {
             searchViewModel.searchNews.observe(viewLifecycleOwner) { response ->
                 when (response) {
                     is SearchResource.Success -> {
-                        hideProgressBar()
-                        response.data?.let { newsResponse -> myAdapter.differ.submitList(newsResponse.users) }
+                        searchPaginationProgressBar.beGone()
+                        response.data?.let { searchResult -> myAdapter.differ.submitList(searchResult.users) }
                     }
 
                     is SearchResource.Error -> {
-                        hideProgressBar()
-                        response.message?.let { message ->
-                            Toast.makeText(requireContext(), "Error: $message", Toast.LENGTH_SHORT).show()
-                        }
+                        searchPaginationProgressBar.beGone()
+                        response.message?.let { message -> searchRootLayout.snackbarError(searchRootLayout, message,""){} }
                     }
                     is SearchResource.Loading -> {
-                        showProgressBar()
+                        searchPaginationProgressBar.beVisible()
                     }
                 }
             }
         }
-    }
-
-    private fun showProgressBar() {
-        binding.searchPaginationProgressBar.visibility = View.VISIBLE
-    }
-
-    private fun hideProgressBar(){
-        binding.searchPaginationProgressBar.visibility = View.INVISIBLE
     }
 
     @Deprecated("Deprecated in Java")
@@ -130,31 +122,23 @@ class SearchFragment : Fragment() {
     private fun searchClickEvent(searchCLickEvents: SearchAdapter.SearchCLickEvents, searchUser : SearchUser) {
         when(searchCLickEvents) {
 
-            SearchAdapter.SearchCLickEvents.FOLLOW -> { followViewModel.followUsers(searchUser.id, "Bearer${SessionManager(requireContext()).getToken()}") }
-
             SearchAdapter.SearchCLickEvents.ITEM -> {
                 val bundle = Bundle().apply {
-                    putString("fullname", searchUser.fullName)
-                    putString("username", searchUser.username)
-                    putString("biography", searchUser.bio)
-                    putBoolean("activateEditText", true)
-                    putString("id", searchUser.id)
+                    putParcelable("item", searchUser)
                 }
                 findNavController().navigate(R.id.observeProfileFragment, bundle)
             }
-        }
 
-        followViewModel.follow.observe(viewLifecycleOwner) {
-            when(it) {
-                is Follow.Success -> {
-                    Snackbar.make(binding.searchRootLayout, searchUser.username, Snackbar.LENGTH_SHORT).show()
-                }
-                is Follow.Error -> {
-                    binding.searchRootLayout.snackbarError(
-                        binding.searchRootLayout,
-                        error = it.message,
-                        ""
-                    ){}
+            SearchAdapter.SearchCLickEvents.FOLLOW -> {
+                followViewModel.followUsers(searchUser.id!!, "Bearer${SessionManager(requireContext()).getToken()}")
+                repeatOnStarted {
+                    followViewModel.follow.collectLatest {
+                        when(it) {
+                            is Follow.Success -> { binding.searchRootLayout.snackbar(binding.searchRootLayout, searchUser.username.toString()) }
+                            is Follow.Error -> { binding.searchRootLayout.snackbarError(binding.searchRootLayout, it.message, ""){} }
+                            Follow.Loading -> {}
+                        }
+                    }
                 }
             }
         }

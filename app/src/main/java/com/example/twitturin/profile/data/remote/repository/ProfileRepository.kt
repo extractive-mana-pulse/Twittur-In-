@@ -20,8 +20,8 @@ interface ProfileRepository {
     suspend fun deleteUser(userId: String, token: String): Response<Unit>
 
     fun loadImage(
-        userId : String,
         picture : MultipartBody.Part,
+        userId : String,
         token : String
-    ) : Call<photoUrl> /*Result<String>*/
+    ) : Call<photoUrl>
 }

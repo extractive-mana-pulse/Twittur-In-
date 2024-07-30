@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
 import com.example.twitturin.core.extensions.beGone
 import com.example.twitturin.core.extensions.beVisible
+import com.example.twitturin.core.extensions.repeatOnStarted
 import com.example.twitturin.core.extensions.snackbar
 import com.example.twitturin.core.extensions.snackbarError
 import com.example.twitturin.core.manager.SessionManager
@@ -26,6 +27,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 
 @AndroidEntryPoint
 class MoreSettingsDetailFragment : BottomSheetDialogFragment() {
@@ -50,91 +52,78 @@ class MoreSettingsDetailFragment : BottomSheetDialogFragment() {
         val args = MoreSettingsDetailFragmentArgs.fromBundle(requireArguments())
         val token = SessionManager(requireContext()).getToken()
 
-        /**Checking user id. if match illustrate other ui otherwise don't. */
-        if (args.tweet.author?.id == SessionManager(requireContext()).getUserId()) {
-            binding.followLayout.beGone()
-            binding.editLayout.beVisible()
-            binding.deleteLayout.beVisible()
-        } else {
-            binding.followLayout.beVisible()
-            binding.editLayout.beGone()
-            binding.deleteLayout.beGone()
-        }
-
-        binding.bUsernameTv.text = "@${args.tweet.author?.username}"
-
-        binding.followLayout.setOnClickListener {
-            followViewModel.followUsers(args.tweet.author?.id!!, "Bearer $token")
-            followViewModel.follow.observe(viewLifecycleOwner) { result ->
-                when (result) {
-                    is Follow.Success -> {
-                        dismiss()
-                        replyLayout.snackbar(
-                            replyLayout,
-                            message = "now you follow: ${args.tweet.author?.username?.uppercase()}"
-                        )
-                    }
-                    is Follow.Error -> {
-                        replyLayout.snackbarError(
-                            replyLayout,
-                            error = result.message,
-                            ""){}
-                    }
-                }
+        binding.apply {
+            /**Checking user id. if match illustrate other ui otherwise don't. */
+            if (args.tweet.author?.id == SessionManager(requireContext()).getUserId()) {
+                followLayout.beGone()
+                editLayout.beVisible()
+                deleteLayout.beVisible()
+            } else {
+                followLayout.beVisible()
+                editLayout.beGone()
+                deleteLayout.beGone()
             }
-        }
+            bUsernameTv.text = "@${args.tweet.author?.username}"
 
-        // delete not working properly.
-        binding.deleteLayout.setOnClickListener {
-
-            val alertDialogBuilder = MaterialAlertDialogBuilder(requireActivity(), R.style.ThemeOverlay_App_MaterialAlertDialog)
-            alertDialogBuilder.apply {
-                setTitle(resources.getString(R.string.delete_tweet_title))
-                setMessage(resources.getString(R.string.delete_tweet_message))
-
-                setPositiveButton(resources.getString(R.string.yes)) { _, _ ->
-                    tweetViewModel.deleteTweet(args.tweet.id!!, "Bearer $token")
-                    findNavController().navigateUp()
-                    tweetViewModel.deleteTweetResult.observe(viewLifecycleOwner){ result ->
-                        when(result){
-
-                            is TweetDelete.Success -> {
-                                replyLayout.snackbar(
-                                    replyLayout,
-                                    message = resources.getString(R.string.deleted)
-                                )
+            followLayout.setOnClickListener {
+                followViewModel.followUsers(args.tweet.author?.id!!, "Bearer $token")
+                repeatOnStarted {
+                    followViewModel.follow.collectLatest { result ->
+                        when (result) {
+                            is Follow.Success -> {
                                 dismiss()
+                                replyLayout.snackbar(replyLayout, "now you follow: ${args.tweet.author?.username?.uppercase()}")
                             }
+                            is Follow.Error -> { replyLayout.snackbarError(replyLayout, result.message, ""){} }
 
-                            is  TweetDelete.Error -> {
-                                replyLayout.snackbarError(
-                                    replyLayout,
-                                    error = result.message,
-                                    ""){}
-                            }
+                            Follow.Loading -> {}
                         }
                     }
                 }
-
-                setNegativeButton(resources.getString(R.string.no)) { _, _ -> dismiss() }
-
-                val alertDialog = create()
-                alertDialog.show()
             }
-        }
 
-        binding.reportPostLayout.setOnClickListener {
-            findNavController().navigate(R.id.reportFragment)
-            dismiss()
-        }
+            // delete not working properly.
+            deleteLayout.setOnClickListener {
 
-        binding.editLayout.setOnClickListener {
-            val bundle = Bundle().apply {
-                putString("description", args.tweet.content)
-                putString("tweetId", args.tweet.id)
+                val alertDialogBuilder = MaterialAlertDialogBuilder(requireActivity(), R.style.ThemeOverlay_App_MaterialAlertDialog)
+                alertDialogBuilder.apply {
+                    setTitle(resources.getString(R.string.delete_tweet_title))
+                    setMessage(resources.getString(R.string.delete_tweet_message))
+
+                    setPositiveButton(resources.getString(R.string.yes)) { _, _ ->
+                        tweetViewModel.deleteTweet(args.tweet.id!!, "Bearer $token")
+                        tweetViewModel.deleteTweetResult.observe(viewLifecycleOwner){ result ->
+                            when(result){
+
+                                is TweetDelete.Success -> { replyLayout.snackbar(replyLayout, message = resources.getString(R.string.deleted))
+                                    dismiss()
+                                }
+                                is  TweetDelete.Error -> { replyLayout.snackbarError(replyLayout, result.message, ""){} }
+                            }
+                        }
+                        findNavController().navigateUp()
+                    }
+
+                    setNegativeButton(resources.getString(R.string.no)) { _, _ -> dismiss() }
+
+                    val alertDialog = create()
+                    alertDialog.show()
+                }
             }
-            findNavController().navigate(R.id.editTweetFragment, bundle)
-            dismiss()
+
+            reportPostLayout.setOnClickListener {
+                findNavController().navigate(R.id.reportFragment)
+                dismiss()
+            }
+
+            editLayout.setOnClickListener {
+                val bundle = Bundle().apply {
+                    putString("description", args.tweet.content)
+                    putString("tweetId", args.tweet.id)
+                }
+                findNavController().navigate(R.id.editTweetFragment, bundle)
+                dismiss()
+            }
         }
 
         dialog?.setOnShowListener {

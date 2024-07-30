@@ -1,7 +1,6 @@
 package com.example.twitturin.profile.data.remote.api
 
 import com.example.twitturin.profile.domain.model.EditProfile
-import com.example.twitturin.profile.domain.model.ImageResource
 import com.example.twitturin.profile.domain.model.User
 import okhttp3.MultipartBody
 import retrofit2.Call
@@ -29,16 +28,15 @@ interface ProfileApi {
 
     @GET("users/{id}")
     suspend fun getLoggedInUserData(@Path("id") userId : String) : Response<User>
-
-
+    
     @DELETE("users/{id}")
     suspend fun deleteUser(@Path("id") userId: String, @Header("Authorization") token: String): Response<Unit>
 
     @Multipart
     @POST("users/{id}/profilePicture")
     fun loadImage(
-        @Path("id") userId : String,
         @Part picture : MultipartBody.Part,
+        @Path("id") userId : String,
         @Header("Authorization") token : String
-    ) : Call<photoUrl> /*Result<photoUrl>*/
+    ) : Call<photoUrl>
 }

@@ -10,6 +10,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
+import com.example.twitturin.core.extensions.repeatOnStarted
+import com.example.twitturin.core.extensions.snackbar
 import com.example.twitturin.core.extensions.vertical
 import com.example.twitturin.databinding.FragmentFollowersBinding
 import com.example.twitturin.follow.domain.model.FollowUser
@@ -23,6 +25,7 @@ import com.example.twitturin.core.manager.SessionManager
 import com.example.twitturin.core.extensions.snackbarError
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.util.Random
 
@@ -101,32 +104,18 @@ class FollowersFragment : Fragment() {
                 when(it){
                     FollowersUiEvent.OnFollowPressed ->  {
                         followViewModel.followUsers(followUser.id!!,"Bearer ${SessionManager(requireContext()).getToken()}")
-                    }
-                    FollowersUiEvent.OnItemPressed -> {
-                        findNavController().navigate(R.id.observeProfileFragment)
-                    }
-                }
-            }
-        }
+                        repeatOnStarted {
+                            followViewModel.follow.collectLatest { result ->
+                                when (result) {
 
-        followViewModel.follow.observe(viewLifecycleOwner) { result ->
-
-            when (result) {
-
-                is Follow.Success -> {
-                    viewLifecycleOwner.lifecycleScope.launch {
-                        followViewModel.sharedFlow.collect {
-                            Snackbar.make(binding.followersRootLayout, "you follow $it", Snackbar.LENGTH_SHORT).show()
+                                    is Follow.Success -> { binding.followersRootLayout.snackbar(binding.followersRootLayout, "you follow: ${result.user.username.toString()}") }
+                                    is Follow.Error -> { binding.followersRootLayout.snackbarError(binding.followersRootLayout, result.message, R.string.retry.toString()){} }
+                                    Follow.Loading -> {}
+                                }
+                            }
                         }
                     }
-                }
-
-                is Follow.Error -> {
-                    binding.followersRootLayout.snackbarError(
-                        binding.followersRootLayout,
-                        error = result.message,
-                        actionText = R.string.retry.toString()
-                    ){}
+                    FollowersUiEvent.OnItemPressed -> { findNavController().navigate(R.id.observeProfileFragment) }
                 }
             }
         }

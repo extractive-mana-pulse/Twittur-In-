@@ -13,6 +13,7 @@ fun ImageView.loadImagesWithGlideExt(url: String?) {
     Glide.with(this)
         .load(url)
         .centerCrop()
+        .placeholder(R.drawable.person)
         .error(R.drawable.sync_problem)
         .diskCacheStrategy(DiskCacheStrategy.ALL)
         .into(this)
@@ -21,6 +22,7 @@ fun ImageView.loadImagesWithGlideExt(url: String?) {
 fun MaterialToolbar.loadToolbarImage(url: String?, view: MaterialToolbar) {
     Glide.with(this)
         .load(url)
+        .placeholder(R.drawable.person)
         .error(R.drawable.sync_problem)
         .override(64,64)
         .circleCrop()

@@ -143,7 +143,7 @@ dependencies {
     implementation ("io.noties.markwon:core:4.6.2")
 
     // Edge-to-edge
-    implementation("androidx.activity:activity-ktx:1.9.0")
+    implementation("androidx.activity:activity-ktx:1.9.1")
 
     // LeakCanary
     debugImplementation ("com.squareup.leakcanary:leakcanary-android:2.14")

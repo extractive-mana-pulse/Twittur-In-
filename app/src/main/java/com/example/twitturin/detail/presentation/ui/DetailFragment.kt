@@ -118,21 +118,12 @@ class DetailFragment : Fragment() {
 
                             followingViewModel.followUsers(data?.author?.id.toString(), "Bearer ${SessionManager(requireContext()).getToken()}")
 
-                            followingViewModel.follow.observe(viewLifecycleOwner) { result ->
-                                when (result) {
-                                    is Follow.Success -> {
-                                        detailRootLayout.snackbar(
-                                            replyLayout,
-                                            message = "now you follow: ${data?.author?.username?.uppercase()}",
-                                        )
-                                    }
-
-                                    is Follow.Error -> {
-                                        detailRootLayout.snackbarError(
-                                            replyLayout,
-                                            error = result.message,
-                                            ""
-                                        ) {  }
+                            repeatOnStarted {
+                                followingViewModel.follow.collectLatest { result ->
+                                    when (result) {
+                                        is Follow.Success -> { detailRootLayout.snackbar(replyLayout, message = "now you follow: ${data?.author?.username?.uppercase()}",) }
+                                        is Follow.Error -> { detailRootLayout.snackbarError(replyLayout, error = result.message, "") {  } }
+                                        Follow.Loading -> {}
                                     }
                                 }
                             }

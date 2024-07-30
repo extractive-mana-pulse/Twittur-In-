@@ -21,6 +21,7 @@ import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.InputStream
 import javax.inject.Inject
 
 @HiltViewModel
@@ -96,14 +97,16 @@ class ProfileViewModel @Inject constructor(private val repository: ProfileReposi
         })
     }
 
-    private val _editUserImageState = MutableLiveData<EditUserImageState>()
-    val editUserImageState: LiveData<EditUserImageState> = _editUserImageState
+    private val _editUserImageState = MutableStateFlow<EditUserImageState>(EditUserImageState.Loading)
+    val editUserImageState = _editUserImageState.asStateFlow()
 
-    fun editUserImage(userId: String, picture: String, token: String) {
-        val requestBody = RequestBody.create("multipart/form-data".toMediaTypeOrNull(), picture)
-        val imagePart = MultipartBody.Part.createFormData("picture", picture, requestBody)
+    fun editUserImage(picture: InputStream, userId: String, token: String) {
 
-        val authRequest = repository.loadImage(userId, imagePart, token)
+        val requestBody = RequestBody.create("image/jpeg".toMediaTypeOrNull(), picture.readBytes())
+        val imagePart = MultipartBody.Part.createFormData("picture", picture.toString(), requestBody)
+
+
+        val authRequest = repository.loadImage(imagePart, userId, token)
 
         authRequest.enqueue(object : Callback<String> {
             override fun onResponse(call: Call<String>, response: Response<String>) {

@@ -129,4 +129,5 @@
     <string name="share">Condividere</string>
     <string name="success">Success</string>
     <string name="info">Your email will not be displayed due to tech. works on server side. After fixing issue, we will add visibility to your email.</string>
+    <string name="developing">Developing...</string>
 </resources>

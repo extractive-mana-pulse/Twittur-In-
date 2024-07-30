@@ -31,10 +31,10 @@ class ProfileRepositoryImpl(
     }
 
     override fun loadImage(
-        userId: String,
         picture: MultipartBody.Part,
+        userId: String,
         token: String
-    ):  Call<photoUrl>/*Result<String>*/ {
-        return profileApi.loadImage(userId, picture, token)
+    ):  Call<photoUrl> {
+        return profileApi.loadImage(picture, userId, token)
     }
 }

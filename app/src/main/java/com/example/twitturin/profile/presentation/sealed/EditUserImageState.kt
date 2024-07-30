@@ -7,4 +7,5 @@ sealed class EditUserImageState {
     data class Success(val result: photoUrl) : EditUserImageState()
 
     data class Error(val message: String) : EditUserImageState()
+    data object Loading: EditUserImageState()
 }
