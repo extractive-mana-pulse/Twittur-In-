@@ -120,9 +120,7 @@
 
         <action
             android:id="@+id/action_profileFragment_to_editProfileFragment"
-            app:destination="@id/editProfileFragment"
-            app:popUpTo="@id/profileFragment"
-            app:popUpToInclusive="false"/>
+            app:destination="@id/editProfileFragment"/>
 
         <action
             android:id="@+id/action_profileFragment_to_signInFragment"
@@ -265,13 +263,11 @@
         android:name="com.example.twitturin.profile.presentation.fragments.EditProfileFragment"
         android:label="fragment_edit_profile"
         tools:layout="@layout/fragment_edit_profile">
-
         <action
             android:id="@+id/action_editProfileFragment_to_profileFragment"
             app:destination="@id/profileFragment"
             app:popUpTo="@id/editProfileFragment"
-            app:popUpToInclusive="false"/>
-
+            app:popUpToInclusive="true"/>
     </fragment>
 
 <!--    kind fragment    -->

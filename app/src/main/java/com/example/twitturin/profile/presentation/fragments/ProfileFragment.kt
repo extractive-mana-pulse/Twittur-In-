@@ -1,7 +1,6 @@
 package com.example.twitturin.profile.presentation.fragments
 
 import android.annotation.SuppressLint
-import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +9,6 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.PopupMenu
-import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -25,6 +23,7 @@ import com.example.twitturin.core.extensions.deleteDialogEmailWatcher
 import com.example.twitturin.core.extensions.fullScreenImage
 import com.example.twitturin.core.extensions.loadImagesWithGlideExt
 import com.example.twitturin.core.extensions.repeatOnStarted
+import com.example.twitturin.core.extensions.snackbar
 import com.example.twitturin.core.extensions.snackbarError
 import com.example.twitturin.core.extensions.stateDisabled
 import com.example.twitturin.core.manager.SessionManager
@@ -36,12 +35,10 @@ import com.example.twitturin.profile.presentation.sealed.UserCredentials
 import com.example.twitturin.profile.presentation.vm.ProfileUIViewModel
 import com.example.twitturin.profile.presentation.vm.ProfileViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import java.io.ByteArrayOutputStream
 
 @AndroidEntryPoint
 class ProfileFragment : Fragment() {
@@ -63,61 +60,28 @@ class ProfileFragment : Fragment() {
 
         binding.apply {
 
-            val profileImage = profileUserAvatar.drawable?.toBitmap()
-
-            val byteArrayOutputStream = ByteArrayOutputStream()
-            profileImage?.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
-            val profileImageByteArray = byteArrayOutputStream.toByteArray()
-
-            profileUserAvatar.setOnClickListener { profileUIViewModel.onAvatarPressed() }
-
             followersTv.setOnClickListener { profileUIViewModel.onFollowersPressed() }
-
             followingTv.setOnClickListener { profileUIViewModel.onFollowingPressed() }
-
+            profileUserAvatar.setOnClickListener { profileUIViewModel.onAvatarPressed() }
             profileToolbar.setNavigationOnClickListener { profileUIViewModel.onBackPressed() }
 
             profileToolbar.setOnMenuItemClickListener { menuItem ->
                 when (menuItem.itemId) {
-                    R.id.share_profile -> {
-                        findNavController().navigate(R.id.action_profileFragment_to_shareProfileBottomSheetFragment)
-                        true
-                    }
+                    R.id.share_profile -> { findNavController().navigate(R.id.action_profileFragment_to_shareProfileBottomSheetFragment); true }
                     R.id.three_dot_menu -> {
 
-                        val popupMenu = PopupMenu(requireContext(), threeDotMenuView)
-
-                        popupMenu.setOnMenuItemClickListener { item ->
-                            when (item.itemId) {
-
-                                R.id.edit_profile -> {
-                                    val bundle = Bundle().apply {
-                                        putString("profile_fullname", profileFullName.text.toString())
-                                        putString("profile_username", profileUsername.text.toString())
-                                        putString("profile_bio", profileBiography.text.toString())
-                                        putString("profile_date", profileDateTv.text.toString())
-                                        putByteArray("profile_image", profileImageByteArray)
-                                    }
-                                    findNavController().navigate(R.id.action_profileFragment_to_editProfileFragment, bundle)
-                                    true
+                        PopupMenu(requireContext(), threeDotMenuView).apply {
+                            setOnMenuItemClickListener { item ->
+                                when (item.itemId) {
+                                    R.id.logout -> { logoutDialog(); true }
+                                    R.id.delete_account -> { deleteAccount(); true }
+                                    R.id.edit_profile -> { findNavController().navigate(R.id.action_profileFragment_to_editProfileFragment); true }
+                                    else -> false
                                 }
-
-                                R.id.logout -> {
-                                    logoutDialog()
-                                    true
-                                }
-
-                                R.id.delete_account -> {
-                                    deleteAccount()
-                                    true
-                                }
-                                else -> false
                             }
+                            inflate(R.menu.popup_menu_profile)
+                            converter(this)
                         }
-
-                        popupMenu.inflate(R.menu.popup_menu_profile)
-
-                        popupMenu.converter(popupMenu)
                         true
                     }
                     else -> false
@@ -154,8 +118,8 @@ class ProfileFragment : Fragment() {
                                 followingCounterTv.text = followingCount.toString()
                                 followersCounterTv.text = followersCount.toString()
                                 profileUserAvatar.loadImagesWithGlideExt(profilePicture)
-                                profileFullName.text = (fullName ?: R.string.default_user_fullname).toString()
-                                profileBiography.text = (bio ?: R.string.empty_bio).toString()
+                                profileBiography.text = (bio ?: resources.getString(R.string.empty_bio))
+                                profileFullName.text = (fullName ?: resources.getString(R.string.default_user_fullname))
 
                                 // location
                                 if (country.isNullOrEmpty()) {
@@ -194,12 +158,9 @@ class ProfileFragment : Fragment() {
         repeatOnStarted {
             profileViewModel.deleteResult.collectLatest { result ->
                 when (result) {
-
                     is AccountDelete.Success -> { findNavController().navigate(R.id.action_profileFragment_to_signInFragment) }
-
                     is AccountDelete.Error -> { binding.profileRootLayout.snackbarError(binding.profileRootLayout, error = result.message, ""){} }
-
-                    is AccountDelete.Loading -> {  }
+                    is AccountDelete.Loading -> {}
                 }
             }
         }
@@ -231,7 +192,7 @@ class ProfileFragment : Fragment() {
 
                 emailEt.deleteDialogEmailWatcher(emailConfirmBtn, emailEt)
 
-                emailConfirmBtn.setOnClickListener { Snackbar.make(binding.profileRootLayout, R.string.in_progress,Snackbar.LENGTH_SHORT).show() }
+                emailConfirmBtn.setOnClickListener { binding.profileRootLayout.snackbar(binding.profileRootLayout, resources.getString(R.string.in_progress)) }
 
                 deleteBtn.stateDisabled()
 
@@ -244,11 +205,9 @@ class ProfileFragment : Fragment() {
                 alertDialog.show()
             }
 
-            setNegativeButton(resources.getString(R.string.no)) { dialog, _ ->
-                dialog.dismiss()
-            }
+            setNegativeButton(resources.getString(R.string.no)) { dialog, _ -> dialog.dismiss() }
 
-            setCancelable(true)
+            setCancelable(false)
             val alertDialog = create()
             alertDialog.show()
         }

@@ -256,27 +256,24 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginVertical="8dp"
-                    android:background="@android:color/transparent"
                     android:src="@drawable/heart"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:contentDescription="@null"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.5"
-                    tools:ignore="ContentDescription" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:background="@android:color/transparent" />
 
                 <ImageButton
                     android:id="@+id/article_page_share_icon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginVertical="8dp"
-                    android:background="@android:color/transparent"
                     android:src="@drawable/share"
-                    tools:ignore="ContentDescription"
-
+                    android:contentDescription="@null"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
+                    android:background="@android:color/transparent"
                     app:layout_constraintBottom_toBottomOf="parent"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>

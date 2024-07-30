@@ -57,14 +57,12 @@ class DetailFragment : Fragment() {
         binding.detailFragment = this
 
         var tweetId by requireActivity().sharedPreferences("tweetId")
+        val data = arguments?.getParcelable("tweet") as? Tweet
 
         binding.apply {
             val activateEditText = arguments?.getBoolean("activateEditText", false)
+            val id = data?.id; if(id != null) { tweetId = id }
             if (activateEditText!!){ replyEt.showKeyboard() }
-
-            val data = arguments?.getParcelable("tweet") as? Tweet
-            val id = data?.id
-            if(id != null) { tweetId = id }
 
             data?.apply {
                 authorUsername.text = "@${author?.username}"
@@ -84,64 +82,44 @@ class DetailFragment : Fragment() {
 
             replyEt.addAutoResizeTextWatcher(sentReply)
 
-            authorAvatar.setOnLongClickListener {
-                detailUiViewModel.onAvatarLongPressed()
-                true
-            }
-
             followBtn.setOnClickListener { detailUiViewModel.onFollowPressed() }
-
             moreSettings.setOnClickListener { detailUiViewModel.onMorePressed() }
-
             sentReply.setOnClickListener { detailUiViewModel.onSendReplyPressed() }
-
             articlePageHeartIcon.setOnClickListener { detailUiViewModel.onLikePressed() }
-
             articlePageShareIcon.setOnClickListener { detailUiViewModel.onSharePressed() }
-
             detailLikesLayout.setOnClickListener { detailUiViewModel.onListOfLikesPressed() }
-
             detailPageCommentsIcon.setOnClickListener { detailUiViewModel.onCommentsPressed() }
-
             detailPageToolbar.setNavigationOnClickListener { detailUiViewModel.onBackPressed() }
+            authorAvatar.setOnLongClickListener { detailUiViewModel.onAvatarLongPressed(); true }
 
             viewLifecycleOwner.lifecycleScope.launch {
-
                 detailUiViewModel.detailPageEvent.collect {
-
                     when(it){
                         DetailPageUI.OnBackPressed -> { findNavController().navigateUp() }
-
                         DetailPageUI.OnCommentPressed -> { replyEt.showKeyboard() }
-
                         DetailPageUI.OnFollowPressed -> {
 
                             followingViewModel.followUsers(data?.author?.id.toString(), "Bearer ${SessionManager(requireContext()).getToken()}")
-
                             repeatOnStarted {
                                 followingViewModel.follow.collectLatest { result ->
                                     when (result) {
                                         is Follow.Success -> { detailRootLayout.snackbar(replyLayout, message = "now you follow: ${data?.author?.username?.uppercase()}",) }
-                                        is Follow.Error -> { detailRootLayout.snackbarError(replyLayout, error = result.message, "") {  } }
+                                        is Follow.Error -> { detailRootLayout.snackbarError(replyLayout, error = result.message, "") {} }
                                         Follow.Loading -> {}
                                     }
                                 }
                             }
                         }
-
                         DetailPageUI.OnLikePressed -> { detailRootLayout.snackbar(replyLayout, resources.getString(R.string.in_progress)) }
-
                         DetailPageUI.OnListOfLikesPressed -> {
                             val bundle = Bundle()
                             bundle.putString("id", id.toString())
                             findNavController().navigate(R.id.action_detailFragment_to_listOfLikesFragment, bundle)
                         }
-
                         DetailPageUI.OnMorePressed ->  {
                             val action = DetailFragmentDirections.actionDetailFragmentToMoreSettingsDetailFragment(data!!)
                             findNavController().navigate(action)
                         }
-
                         DetailPageUI.OnSendReplyPressed -> {
 
                             sentReply.stateDisabled()
@@ -149,7 +127,6 @@ class DetailFragment : Fragment() {
                             tweetViewModel.postReply(reply!!, id.toString(), "Bearer ${SessionManager(requireContext()).getToken()}")
 
                             repeatOnStarted {
-
                                 tweetViewModel.postReplyResult.collectLatest { result ->
                                     when (result) {
                                         is PostReply.Success -> {
@@ -168,9 +145,7 @@ class DetailFragment : Fragment() {
                                 }
                             }
                         }
-
                         DetailPageUI.OnSharePressed ->  { requireContext().shareUrl("https://twitturin.onrender.com/tweets/${id}") }
-
                         DetailPageUI.OnImagePressed -> { fullScreenImage(authorAvatar) }
                     }
                 }

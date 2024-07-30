@@ -33,10 +33,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-//        val sharedPreferences = getSharedPreferences("theme_preferences", Context.MODE_PRIVATE)
-//        val themeMode = sharedPreferences.getInt("theme_mode", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-//        AppCompatDelegate.setDefaultNightMode(themeMode)
-
         if (Build.VERSION.SDK_INT >= 33) {
             notificationPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
         } else {

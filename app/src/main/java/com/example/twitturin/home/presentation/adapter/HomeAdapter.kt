@@ -28,14 +28,8 @@ class HomeAdapter(private val homeClickEvents: (HomeClickEvents, Tweet) -> Unit)
     }
 
     private val differCallback = object : DiffUtil.ItemCallback<Tweet>(){
-
-        override fun areItemsTheSame(oldItem: Tweet, newItem: Tweet): Boolean {
-            return oldItem.id == newItem.id
-        }
-
-        override fun areContentsTheSame(oldItem: Tweet, newItem: Tweet): Boolean {
-            return oldItem.id == newItem.id
-        }
+        override fun areItemsTheSame(oldItem: Tweet, newItem: Tweet): Boolean = oldItem.id == newItem.id
+        override fun areContentsTheSame(oldItem: Tweet, newItem: Tweet): Boolean = oldItem.id == newItem.id
     }
     val differ = AsyncListDiffer(this,differCallback)
 
@@ -59,12 +53,9 @@ class HomeAdapter(private val homeClickEvents: (HomeClickEvents, Tweet) -> Unit)
                 Markwon.create(context).setMarkdown(postDescription, content!!)
                 fullNameTv.text = author?.fullName ?: R.string.default_user_fullname.toString()
 
-                holder.itemView.setOnClickListener { homeClickEvents(HomeClickEvents.ITEM, item) }
-
                 postIconHeart.setOnClickListener { homeClickEvents(HomeClickEvents.HEART, item) }
-
                 postIconShare.setOnClickListener { homeClickEvents(HomeClickEvents.SHARE, item) }
-
+                holder.itemView.setOnClickListener { homeClickEvents(HomeClickEvents.ITEM, item) }
                 postIconComments.setOnClickListener { homeClickEvents(HomeClickEvents.REPLY, item) }
             }
         }

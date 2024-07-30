@@ -49,7 +49,7 @@ class EditProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.apply {
-
+            // TODO: Fix navigation. When edit profile done successfully and navigated back to ProfileFragment and after in ProfileFragment press back button. user navigates to EditProfileFragment again!
             headerLayout.setOnClickListener { showColorPickerDialog() }
 
             editProfileEmailEtLayout.setEndIconOnClickListener { snackbarView.snackbar(snackbarView, resources.getString(R.string.info)) }
@@ -111,20 +111,13 @@ class EditProfileFragment : Fragment() {
 
         binding.apply {
 
-            val bio = editProfileBioEt.text.toString()
-            val country = countryEt.selectedCountryName
-            val email = editProfileEmailEt.text.toString()
-            val fullName = editProfileFullnameEt.text.toString()
-            val username = editProfileUsernameEt.text.toString()
-            val birthday = editProfileBirthdayEt.text.toString()
-
             profileViewModel.editUser(
-                fullName,
-                username,
-                email,
-                bio,
-                country.toString(),
-                birthday,
+                editProfileFullnameEt.text.toString(),
+                editProfileUsernameEt.text.toString(),
+                editProfileEmailEt.text.toString(),
+                editProfileBioEt.text.toString(),
+                countryEt.selectedCountryName.toString(),
+                editProfileBirthdayEt.text.toString(),
                 SessionManager(requireContext()).getUserId()!!,
                 "Bearer ${SessionManager(requireContext()).getToken()}"
             )
@@ -132,7 +125,7 @@ class EditProfileFragment : Fragment() {
             repeatOnStarted {
                 profileViewModel.editUserResult.collectLatest { result ->
                     when (result) {
-                        is EditUser.Success -> { findNavController().navigate(R.id.action_editProfileFragment_to_profileFragment) }
+                        is EditUser.Success -> { findNavController().navigate(R.id.profileFragment) }
                         is EditUser.Error -> { snackbarView.snackbarError(snackbarView, error = result.error, "") {} }
                         is EditUser.Loading -> {}
                     }

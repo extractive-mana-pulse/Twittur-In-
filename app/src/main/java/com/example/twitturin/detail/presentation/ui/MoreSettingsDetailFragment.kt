@@ -94,14 +94,14 @@ class MoreSettingsDetailFragment : BottomSheetDialogFragment() {
                         tweetViewModel.deleteTweet(args.tweet.id!!, "Bearer $token")
                         tweetViewModel.deleteTweetResult.observe(viewLifecycleOwner){ result ->
                             when(result){
-
-                                is TweetDelete.Success -> { replyLayout.snackbar(replyLayout, message = resources.getString(R.string.deleted))
+                                is TweetDelete.Success -> {
                                     dismiss()
+                                    findNavController().navigate(R.id.homeFragment)
+                                    bottomNavLayout.snackbar(bottomNavLayout, message = resources.getString(R.string.deleted))
                                 }
                                 is  TweetDelete.Error -> { replyLayout.snackbarError(replyLayout, result.message, ""){} }
                             }
                         }
-                        findNavController().navigateUp()
                     }
 
                     setNegativeButton(resources.getString(R.string.no)) { _, _ -> dismiss() }

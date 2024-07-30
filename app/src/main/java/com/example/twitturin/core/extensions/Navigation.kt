@@ -30,6 +30,8 @@ fun AppCompatActivity.bottomNavigationUI(view: View) {
         R.id.listOfLikesFragment,
         R.id.observeProfileFragment,
         R.id.settingsFragment,
+        R.id.moreSettingsDetailFragment,
+        R.id.shareProfileBottomSheetFragment,
 
         )
 
