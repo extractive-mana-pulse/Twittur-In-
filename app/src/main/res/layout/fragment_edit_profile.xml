@@ -182,23 +182,12 @@
                             android:id="@+id/edit_profile_email_et"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@android:color/transparent"
                             android:imeOptions="actionNext"
+                            android:background="@android:color/transparent"
                             android:inputType="text|textCapSentences|textMultiLine"
                             android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"/>
 
                     </com.google.android.material.textfield.TextInputLayout>
-
-<!--                    <EditText-->
-<!--                        android:id="@+id/edit_profile_email_et"-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:inputType="textEmailAddress"-->
-<!--                        android:minHeight="48dp"-->
-<!--                        android:layout_marginTop="3dp"-->
-<!--                        android:imeOptions="actionNext"-->
-<!--                        android:layout_marginHorizontal="16dp"-->
-<!--                        tools:ignore="Autofill,LabelFor,SpeakableTextPresentCheck"/>-->
 
                 </LinearLayout>
 
@@ -246,12 +235,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="start"
-                        android:inputType="date"
-                        android:text="@string/birthday"
-                        tools:ignore="TextViewEdits"
-                        android:layout_marginTop="24dp"
                         android:layout_marginStart="16dp"
-                        android:textAlignment="textStart"/>
+                        android:layout_marginTop="24dp"
+                        android:inputType="date"
+                        android:minHeight="48dp"
+                        android:text="@string/birthday"
+                        android:textAlignment="textStart"
+                        tools:ignore="TextViewEdits" />
 
                     <com.santalu.maskedittext.MaskEditText
                         android:id="@+id/edit_profile_birthday_et"
@@ -264,12 +254,13 @@
                         tools:ignore="HardcodedText"
                         android:layout_marginTop="3dp"
                         android:imeOptions="actionDone"
+                        android:layout_marginBottom="8dp"
                         android:layout_marginHorizontal="16dp"/>
 
                 </LinearLayout>
 
             <View
-                android:id="@+id/snackar_view"
+                android:id="@+id/snackbar_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintBottom_toBottomOf="parent"/>

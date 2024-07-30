@@ -9,6 +9,7 @@ import android.widget.FrameLayout
 import androidx.fragment.app.viewModels
 import com.example.twitturin.core.extensions.copyToClipboard
 import com.example.twitturin.core.extensions.loadImagesWithGlideExt
+import com.example.twitturin.core.extensions.repeatOnStarted
 import com.example.twitturin.core.extensions.shareUrl
 import com.example.twitturin.core.extensions.sharedPreferences
 import com.example.twitturin.core.extensions.snackbarError
@@ -19,11 +20,12 @@ import com.example.twitturin.profile.presentation.vm.ProfileViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 
 @AndroidEntryPoint
 class ShareProfileBottomSheetFragment : BottomSheetDialogFragment() {
 
-    private val profileViewModel : ProfileViewModel by viewModels()
+    private val profileViewModel by viewModels<ProfileViewModel>()
     private val binding by lazy { FragmentShareProfileBottomSheetBinding.inflate(layoutInflater) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View = binding.root
@@ -38,27 +40,25 @@ class ShareProfileBottomSheetFragment : BottomSheetDialogFragment() {
         // TODO: outer layout of share UI should be linked with color of user chosen from colorPickerDialog.
 
         binding.apply {
-
-            blurView.setBlurEnabled(true)
-            blurView.setBlurRadius(10f)
-
             outerLayout.setBackgroundColor(color.toInt())
 
             profileShareToolbar.setNavigationOnClickListener { dismiss() }
 
             profileViewModel.getUserCredentials(userId!!)
-            profileViewModel.getUserCredentials.observe(viewLifecycleOwner) { result ->
-                when (result) {
-                    is UserCredentials.Success -> {
+            repeatOnStarted {
+                profileViewModel.getUserCredentials.collectLatest { result ->
+                    when (result) {
+                        is UserCredentials.Success -> {
+                            kindTv.text = result.user.kind
+                            studentIdTv.text = result.user.studentId
+                            shareProfileFullName.text = result.user.fullName
+                            shareProfileUsername.text = "@${result.user.username}"
+                            userAvatarShare.loadImagesWithGlideExt(result.user.profilePicture)
+                        }
 
-                        kindTv.text = result.user.kind
-                        studentIdTv.text = result.user.studentId
-                        shareProfileFullName.text = result.user.fullName
-                        shareProfileUsername.text = "@${result.user.username}"
-                        userAvatarShare.loadImagesWithGlideExt(result.user.profilePicture)
+                        is UserCredentials.Error -> { standardBottomSheet.snackbarError(standardBottomSheet, result.message, "") { } }
+                        is UserCredentials.Loading -> {}
                     }
-
-                    is UserCredentials.Error -> { standardBottomSheet.snackbarError(standardBottomSheet, error = result.message, "") { } }
                 }
             }
 
@@ -71,14 +71,14 @@ class ShareProfileBottomSheetFragment : BottomSheetDialogFragment() {
 
         bottomSheet.layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
         val behavior = BottomSheetBehavior.from(bottomSheet)
+
         behavior.apply {
+            isDraggable = false
             peekHeight = resources.displayMetrics.heightPixels
             state = BottomSheetBehavior.STATE_EXPANDED
 
             addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
-                override fun onStateChanged(bottomSheet: View, newState: Int) {
-                }
-
+                override fun onStateChanged(bottomSheet: View, newState: Int) {}
                 override fun onSlide(bottomSheet: View, slideOffset: Float) {}
             })
         }

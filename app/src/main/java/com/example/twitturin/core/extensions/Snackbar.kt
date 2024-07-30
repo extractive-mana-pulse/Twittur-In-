@@ -36,6 +36,7 @@ fun View.snackbar(
         .setBackgroundTint(resources.getColor(R.color.md_theme_light_inverseSurface))
         .setTextColor(resources.getColor(R.color.md_theme_light_inverseOnSurface))
         .setAnchorView(anchorView)
+        .setTextMaxLines(5)
         .setDuration(5000)
 
     snackbar.show()

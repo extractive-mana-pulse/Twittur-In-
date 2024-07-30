@@ -79,35 +79,27 @@ class HomeFragment : Fragment() {
             }
 
             profileViewModel.getUserCredentials(SessionManager(requireContext()).getUserId()!!)
+            repeatOnStarted {
+                profileViewModel.getUserCredentials.collectLatest { result ->
+                    layout.startShimmer()
+                    when (result) {
 
-            profileViewModel.getUserCredentials.observe(viewLifecycleOwner) { result ->
+                        is UserCredentials.Success -> {
+                            layout.stopShimmer()
+                            layout.beGone()
 
-                layout.startShimmer()
+                            result.user.apply {
+                                headerFullname.text = fullName ?: R.string.default_user_fullname.toString()
+                                headerUsername.text = "@$username"
+                                headerFollowing.text = followingCount.toString()
+                                headingFollowers.text = followersCount.toString()
 
-                when (result) {
-
-                    is UserCredentials.Success -> {
-
-                        layout.stopShimmer()
-                        layout.beGone()
-
-                        result.user.apply {
-
-                            headerFullname.text = fullName ?: R.string.default_user_fullname.toString()
-                            headerUsername.text = "@$username"
-                            headerFollowing.text = followingCount.toString()
-                            headingFollowers.text = followersCount.toString()
-
-                            headerViewAvatar.loadImagesWithGlideExt(profilePicture)
-                            homePageToolbar.loadToolbarImage(profilePicture, homePageToolbar)
+                                headerViewAvatar.loadImagesWithGlideExt(profilePicture)
+                                homePageToolbar.loadToolbarImage(profilePicture, homePageToolbar)
+                            }
                         }
-                    }
-
-                    is UserCredentials.Error -> {
-                        homeRootLayout.snackbarError(
-                            addPost,
-                            error = result.message,
-                            ""){}
+                        is UserCredentials.Error -> { homeRootLayout.snackbarError(addPost, result.message, ""){} }
+                        is UserCredentials.Loading -> {}
                     }
                 }
             }

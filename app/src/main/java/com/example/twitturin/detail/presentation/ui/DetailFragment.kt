@@ -150,7 +150,7 @@ class DetailFragment : Fragment() {
 
                             repeatOnStarted {
 
-                                tweetViewModel.postReplyResult.collect { result ->
+                                tweetViewModel.postReplyResult.collectLatest { result ->
                                     when (result) {
                                         is PostReply.Success -> {
                                             replyEt.text?.clear()
@@ -160,13 +160,10 @@ class DetailFragment : Fragment() {
                                         }
 
                                         is PostReply.Error -> {
-                                            detailRootLayout.snackbarError(
-                                                replyLayout,
-                                                result.message,
-                                                ""){}
+                                            detailRootLayout.snackbarError(replyLayout, result.message, ""){}
                                             replyEt.addAutoResizeTextWatcher(sentReply)
                                         }
-                                        PostReply.Loading -> {  }
+                                        PostReply.Loading -> {}
                                     }
                                 }
                             }
@@ -214,10 +211,7 @@ class DetailFragment : Fragment() {
                             }
 
                         } else {
-                            detailRootLayout.snackbarError(
-                                replyLayout,
-                                response.body().toString(),
-                                "") {  }
+                            detailRootLayout.snackbarError(replyLayout, response.body().toString(), ""){}
                         }
                     }
                 }
@@ -237,7 +231,7 @@ class DetailFragment : Fragment() {
                 findNavController().navigate(R.id.detailFragment, bundle)
             }
 
-            HomeAdapter.HomeClickEvents.HEART -> { binding.replyLayout.snackbar(binding.replyLayout, R.string.in_progress.toString()) }
+            HomeAdapter.HomeClickEvents.HEART -> { binding.replyLayout.snackbar(binding.replyLayout, resources.getString(R.string.developing)) }
 
             HomeAdapter.HomeClickEvents.SHARE -> { requireContext().shareUrl("https://twitturin.onrender.com/tweets/${tweet.id}") }
 

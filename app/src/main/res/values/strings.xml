@@ -140,6 +140,9 @@
     <string name="info">Your email will not be displayed due to tech. works on server side. After fixing issue, we will add visibility to your email.</string>
     <string name="dot_splitter" translatable="false">•</string>
     <string name="developing">Developing...</string>
+    <string name="failed_to_pick_media">"Failed to pick media from Gallery. "</string>
+    <string name="copy_link">Copy link</string>
+    <string name="share_link">Share link</string>
 
     <string-array name="major_array">
         <item>SE</item>

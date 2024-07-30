@@ -10,7 +10,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
@@ -24,11 +23,13 @@ import com.example.twitturin.core.extensions.repeatOnStarted
 import com.example.twitturin.core.extensions.sharedPreferences
 import com.example.twitturin.core.extensions.snackbar
 import com.example.twitturin.core.extensions.snackbarError
+import com.example.twitturin.core.extensions.toastCustom
 import com.example.twitturin.core.manager.SessionManager
 import com.example.twitturin.databinding.FragmentEditProfileBinding
 import com.example.twitturin.profile.presentation.adapters.ColorAdapter
 import com.example.twitturin.profile.presentation.sealed.EditUser
 import com.example.twitturin.profile.presentation.sealed.EditUserImageState
+import com.example.twitturin.profile.presentation.sealed.UserCredentials
 import com.example.twitturin.profile.presentation.util.GridSpacingItemDecoration
 import com.example.twitturin.profile.presentation.vm.ProfileViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -38,7 +39,7 @@ import kotlinx.coroutines.flow.collectLatest
 @AndroidEntryPoint
 class EditProfileFragment : Fragment() {
 
-    private val profileViewModel: ProfileViewModel by viewModels()
+    private val profileViewModel by viewModels<ProfileViewModel>()
     private lateinit var pickSingleMediaLauncher: ActivityResultLauncher<Intent>
     private val binding by lazy { FragmentEditProfileBinding.inflate(layoutInflater) }
 
@@ -47,35 +48,23 @@ class EditProfileFragment : Fragment() {
     @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        // TODO: Rework this page.
-
-//        var imagePath by requireActivity().sharedPreferences("imagePath")
-
-        val bio = arguments?.getString("profile_bio")
-        val date = arguments?.getString("profile_date")
-        val avatar = arguments?.getByteArray("profile_image")
-        val username = arguments?.getString("profile_username")
-        val fullname = arguments?.getString("profile_fullname")
-
         binding.apply {
 
             headerLayout.setOnClickListener { showColorPickerDialog() }
 
-            editProfileEmailEtLayout.setEndIconOnClickListener { snackarView.snackbar(snackarView, resources.getString(R.string.info)) }
+            editProfileEmailEtLayout.setEndIconOnClickListener { snackbarView.snackbar(snackbarView, resources.getString(R.string.info)) }
 
             pickSingleMediaLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
                 if (it.resultCode != Activity.RESULT_OK) {
-                    Toast.makeText(requireContext(), "Failed picking media.", Toast.LENGTH_SHORT).show()
+                    requireContext().toastCustom(resources.getString(R.string.failed_to_pick_media))
                 } else {
                     val stream = requireActivity().contentResolver.openInputStream(it.data?.data!!)
                     profileViewModel.editUserImage(stream!!, SessionManager(requireContext()).getUserId()!!, "Bearer ${SessionManager(requireContext()).getToken()}")
 
                     repeatOnStarted {
                         profileViewModel.editUserImageState.collectLatest { result ->
-
                             when(result) {
-                                is EditUserImageState.Success -> { editProfileRootLayout.snackbar(editProfileRootLayout, R.string.success.toString()) }
+                                is EditUserImageState.Success -> { snackbarView.snackbar(snackbarView, resources.getString(R.string.success)) }
                                 is EditUserImageState.Error -> { Log.d("error", result.message) }
                                 is EditUserImageState.Loading -> {}
                             }
@@ -86,22 +75,32 @@ class EditProfileFragment : Fragment() {
 
             editProfileUserAvatar.setOnClickListener { pickSingleMediaLauncher.launch(Intent(MediaStore.ACTION_PICK_IMAGES).apply { type = "image/*" } ) }
 
-            editProfileBioEt.setText(bio)
-            editProfileBirthdayEt.setText(date)
-            editProfileFullnameEt.setText(fullname)
-            editProfileUsernameEt.setText(username)
+            profileViewModel.getUserCredentials(SessionManager(requireContext()).getUserId()!!)
+
+            repeatOnStarted {
+                profileViewModel.getUserCredentials.collectLatest {
+                    when(it){
+                        is UserCredentials.Error -> { snackbarView.snackbarError(snackbarView, it.message, ""){} }
+                        is UserCredentials.Success -> { it.user.apply {
+                            editProfileBioEt.setText(bio)
+                            editProfileBirthdayEt.setText(birthday)
+                            editProfileFullnameEt.setText(fullName)
+                            editProfileUsernameEt.setText(username)
+                            editProfileUserAvatar.loadImagesWithGlideExt(profilePicture)
+                            }
+                        }
+                        is UserCredentials.Loading -> {}
+                    }
+                }
+            }
 
             editProfilePageToolbar.setNavigationOnClickListener { findNavController().navigateUp() }
-
-            editProfileUserAvatar.loadImagesWithGlideExt(avatar.toString())
-
             editProfilePageToolbar.setOnMenuItemClickListener {
                 when (it.itemId) {
                     R.id.save_changes -> {
                         saveChanges()
                         true
                     }
-
                     else -> false
                 }
             }
@@ -130,11 +129,13 @@ class EditProfileFragment : Fragment() {
                 "Bearer ${SessionManager(requireContext()).getToken()}"
             )
 
-            profileViewModel.editUserResult.observe(viewLifecycleOwner) { result ->
-                when (result) {
-                    is EditUser.Success -> { findNavController().navigate(R.id.action_editProfileFragment_to_profileFragment) }
-
-                    is EditUser.Error -> { snackarView.snackbarError(snackarView, error = result.error, "") {} }
+            repeatOnStarted {
+                profileViewModel.editUserResult.collectLatest { result ->
+                    when (result) {
+                        is EditUser.Success -> { findNavController().navigate(R.id.action_editProfileFragment_to_profileFragment) }
+                        is EditUser.Error -> { snackbarView.snackbarError(snackbarView, error = result.error, "") {} }
+                        is EditUser.Loading -> {}
+                    }
                 }
             }
         }

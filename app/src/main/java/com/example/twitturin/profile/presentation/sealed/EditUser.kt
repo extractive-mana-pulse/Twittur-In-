@@ -16,4 +16,5 @@ sealed class EditUser {
                 else -> "Unknown Error"
             }
     }
+    data object Loading : EditUser()
 }

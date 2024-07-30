@@ -13,12 +13,14 @@ import com.example.twitturin.auth.presentation.stayIn.sealed.StayInUiEvent
 import com.example.twitturin.auth.presentation.stayIn.vm.StayInViewModel
 import com.example.twitturin.core.extensions.fullScreenImage
 import com.example.twitturin.core.extensions.loadImagesWithGlideExt
+import com.example.twitturin.core.extensions.repeatOnStarted
 import com.example.twitturin.core.extensions.snackbarError
 import com.example.twitturin.core.manager.SessionManager
 import com.example.twitturin.databinding.FragmentStayInBinding
 import com.example.twitturin.profile.presentation.sealed.UserCredentials
 import com.example.twitturin.profile.presentation.vm.ProfileViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -40,11 +42,13 @@ class StayInFragment : Fragment() {
             stayInProfileImage.setOnClickListener { stayInViewModel.onFullScreenPressed() }
 
             profileViewModel.getUserCredentials(SessionManager(requireContext()).getUserId()!!)
-            profileViewModel.getUserCredentials.observe(viewLifecycleOwner) { result ->
-                when (result) {
-                    is UserCredentials.Success -> { stayInProfileImage.loadImagesWithGlideExt(result.user.profilePicture) }
-
-                    is UserCredentials.Error -> { stayInRootLayout.snackbarError(stayInRootLayout, error = result.message, "") { } }
+            repeatOnStarted {
+                profileViewModel.getUserCredentials.collectLatest { result ->
+                    when (result) {
+                        is UserCredentials.Success -> { stayInProfileImage.loadImagesWithGlideExt(result.user.profilePicture) }
+                        is UserCredentials.Error -> { stayInRootLayout.snackbarError(stayInRootLayout, error = result.message, "") { } }
+                        is UserCredentials.Loading -> {}
+                    }
                 }
             }
 

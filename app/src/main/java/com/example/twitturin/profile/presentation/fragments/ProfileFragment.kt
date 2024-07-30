@@ -136,40 +136,40 @@ class ProfileFragment : Fragment() {
             }
 
             profileViewModel.getUserCredentials(SessionManager(requireContext()).getUserId()!!)
+            repeatOnStarted {
+                profileViewModel.getUserCredentials.collectLatest { result ->
+                    profileShimmerLayout.startShimmer()
+                    when (result) {
+                        is UserCredentials.Success -> {
 
-            profileViewModel.getUserCredentials.observe(viewLifecycleOwner) { result ->
+                            profileShimmerLayout.stopShimmer()
+                            profileShimmerLayout.beGone()
 
-                profileShimmerLayout.startShimmer()
-                when (result) {
-                    is UserCredentials.Success -> {
+                            result.user.apply {
 
-                        profileShimmerLayout.stopShimmer()
-                        profileShimmerLayout.visibility = View.GONE
+                                profileKind.text = kind
+                                profileStudentIdTv.text = studentId
+                                profileDateTv.text = birthday
+                                profileUsername.text = username
+                                followingCounterTv.text = followingCount.toString()
+                                followersCounterTv.text = followersCount.toString()
+                                profileUserAvatar.loadImagesWithGlideExt(profilePicture)
+                                profileFullName.text = (fullName ?: R.string.default_user_fullname).toString()
+                                profileBiography.text = (bio ?: R.string.empty_bio).toString()
 
-                        result.apply {
-
-                            profileKind.text = user.kind
-                            profileStudentIdTv.text = user.studentId
-                            profileDateTv.text = user.birthday
-                            profileUsername.text = user.username
-                            followingCounterTv.text = user.followingCount.toString()
-                            followersCounterTv.text = user.followersCount.toString()
-                            profileUserAvatar.loadImagesWithGlideExt(user.profilePicture)
-                            profileFullName.text = (user.fullName ?: R.string.default_user_fullname).toString()
-                            profileBiography.text = (user.bio ?: R.string.empty_bio).toString()
-
-                            // location
-                            if (user.country.isNullOrEmpty()) {
-                                profileLocationIcon.beGone()
-                                profileLocationTv.beGone()
-                            } else {
-                                profileLocationIcon.beVisible()
-                                profileLocationTv.beVisible()
+                                // location
+                                if (country.isNullOrEmpty()) {
+                                    profileLocationIcon.beGone()
+                                    profileLocationTv.beGone()
+                                } else {
+                                    profileLocationIcon.beVisible()
+                                    profileLocationTv.beVisible()
+                                }
                             }
                         }
+                        is UserCredentials.Error -> { profileRootLayout.snackbarError(profileRootLayout, result.message, ""){} }
+                        is UserCredentials.Loading -> {}
                     }
-
-                    is UserCredentials.Error -> { profileRootLayout.snackbarError(profileRootLayout, error = result.message, ""){} }
                 }
             }
 

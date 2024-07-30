@@ -1,10 +1,7 @@
 package com.example.twitturin.profile.presentation.vm
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.twitturin.core.event.SingleLiveEvent
 import com.example.twitturin.profile.data.remote.repository.ProfileRepository
 import com.example.twitturin.profile.domain.model.EditProfile
 import com.example.twitturin.profile.presentation.sealed.AccountDelete
@@ -45,16 +42,15 @@ class ProfileViewModel @Inject constructor(private val repository: ProfileReposi
         }
     }
 
-    private val _getUserCredentials = SingleLiveEvent<UserCredentials>()
-    val getUserCredentials: LiveData<UserCredentials> = _getUserCredentials
+    private val _getUserCredentials = MutableStateFlow<UserCredentials>(UserCredentials.Loading)
+    val getUserCredentials = _getUserCredentials.asStateFlow()
 
     fun getUserCredentials(userId: String) {
         viewModelScope.launch {
             try {
                 val response = repository.getLoggedInUserData(userId)
                 if (response.isSuccessful) {
-                    val user = response.body()
-                    _getUserCredentials.value = user?.let { UserCredentials.Success(it) }
+                    response.body()?.let { _getUserCredentials.value = UserCredentials.Success(it) }
                 } else {
                     _getUserCredentials.value = UserCredentials.Error(response.code().toString())
                 }
@@ -64,8 +60,8 @@ class ProfileViewModel @Inject constructor(private val repository: ProfileReposi
         }
     }
 
-    private val _editUserResult = MutableLiveData<EditUser>()
-    val editUserResult: LiveData<EditUser> = _editUserResult
+    private val _editUserResult = MutableStateFlow<EditUser>(EditUser.Loading)
+    val editUserResult = _editUserResult.asStateFlow()
 
     fun editUser(
         fullName: String,
@@ -81,14 +77,13 @@ class ProfileViewModel @Inject constructor(private val repository: ProfileReposi
         val authRequest = repository.editUser(request, userId, token)
         authRequest.enqueue(object : Callback<EditProfile> {
             override fun onResponse(call: Call<EditProfile>, response: Response<EditProfile>) {
+
                 if (response.isSuccessful) {
-                    val editProfile = response.body()
-                    if (editProfile != null) {
-                        _editUserResult.value = EditUser.Success(editProfile)
-                    }
+                    response.body()?.let { _editUserResult.value = EditUser.Success(it) }
                 } else {
                     _editUserResult.value = EditUser.Error(response.code())
                 }
+
             }
 
             override fun onFailure(call: Call<EditProfile>, t: Throwable) {
@@ -97,6 +92,7 @@ class ProfileViewModel @Inject constructor(private val repository: ProfileReposi
         })
     }
 
+    /** Somehow this code works. do not touch if you are not sure what the hell are you want to do with this block of code */
     private val _editUserImageState = MutableStateFlow<EditUserImageState>(EditUserImageState.Loading)
     val editUserImageState = _editUserImageState.asStateFlow()
 
@@ -104,7 +100,6 @@ class ProfileViewModel @Inject constructor(private val repository: ProfileReposi
 
         val requestBody = RequestBody.create("image/jpeg".toMediaTypeOrNull(), picture.readBytes())
         val imagePart = MultipartBody.Part.createFormData("picture", picture.toString(), requestBody)
-
 
         val authRequest = repository.loadImage(imagePart, userId, token)
 

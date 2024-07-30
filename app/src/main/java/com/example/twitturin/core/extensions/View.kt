@@ -12,7 +12,6 @@ fun Fragment.retry(view:View, editText: EditText,editText1: EditText) {
     editText1.text?.clear()
 }
 
-// use this for follow & unfollow btn.
 fun View.beVisibleIf(isVisible: Boolean) = if (isVisible) beVisible() else beGone()
 
 fun View.beVisible() {

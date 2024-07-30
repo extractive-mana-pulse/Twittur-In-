@@ -23,3 +23,5 @@ fun Context.copyToClipboard(text: String) {
     clipboardManager.setPrimaryClip(clipData)
     Toast.makeText(this, "Copied to clipboard", Toast.LENGTH_SHORT).show()
 }
+
+fun Context.toastCustom(text: String) { Toast.makeText(this, text, Toast.LENGTH_SHORT).show() }
