@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    tools:context=".home.presentation.settings.onBoarding.UnlabeledFragment"
+    tools:context=".home.presentation.settings.bottom_bar.onBoarding.UnlabeledFragment"
     tools:ignore="UseCompoundDrawables">
 
     <ImageView

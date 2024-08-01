@@ -3,7 +3,7 @@ package com.example.twitturin.core.extensions
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import com.example.twitturin.R
-import com.example.twitturin.home.presentation.preferences.MyPreferences
+import com.example.twitturin.core.preferences.MyPreferences
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 fun AppCompatActivity.checkTheme() {

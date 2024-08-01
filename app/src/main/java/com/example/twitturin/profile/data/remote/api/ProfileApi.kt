@@ -1,6 +1,7 @@
 package com.example.twitturin.profile.data.remote.api
 
 import com.example.twitturin.profile.domain.model.EditProfile
+import com.example.twitturin.profile.domain.model.ImageResource
 import com.example.twitturin.profile.domain.model.User
 import okhttp3.MultipartBody
 import retrofit2.Call
@@ -14,8 +15,6 @@ import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Part
 import retrofit2.http.Path
-
-typealias photoUrl = String
 
 interface ProfileApi {
 
@@ -38,5 +37,5 @@ interface ProfileApi {
         @Part picture : MultipartBody.Part,
         @Path("id") userId : String,
         @Header("Authorization") token : String
-    ) : Call<photoUrl>
+    ) : Call<ImageResource>
 }

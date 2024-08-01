@@ -1,4 +1,4 @@
-package com.example.twitturin.home.presentation.settings.onBoarding
+package com.example.twitturin.home.presentation.settings.bottom_bar.onBoarding
 
 import android.os.Bundle
 import android.view.LayoutInflater

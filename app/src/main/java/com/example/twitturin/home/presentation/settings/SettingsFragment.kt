@@ -1,4 +1,4 @@
-package com.example.twitturin.home.presentation.ui
+package com.example.twitturin.home.presentation.settings
 
 import android.content.Context
 import android.os.Bundle
@@ -27,8 +27,8 @@ class SettingsFragment : Fragment() {
 
             settingsToolbar.setNavigationOnClickListener { findNavController().navigateUp() }
             inactiveLayout.setOnClickListener { snackbarView.snackbar(snackbarView, resources.getString(R.string.developing)) }
-            fabCustomizationLayout.setOnClickListener { snackbarView.snackbar(snackbarView, resources.getString(R.string.developing)) }
             themeCustomizationLayout.setOnClickListener { snackbarView.snackbar(snackbarView, resources.getString(R.string.developing)) }
+            fabCustomizationLayout.setOnClickListener { findNavController().navigate(R.id.action_settingsFragment_to_customizeFABFragment) }
             bottomNavigationViewCustomizationLayout.setOnClickListener { findNavController().navigate(R.id.action_settingsFragment_to_customBNVFragment) }
 
         }
@@ -37,7 +37,8 @@ class SettingsFragment : Fragment() {
          * TODO. Build options to user change UI elements.
          * UI elements such as ->
          * Bottom navigation view with 3 options. e.g. labeled, unlabeled, without label at all.
-         * FAB 3 options. change corners. Make Circled. Rounded, or as chat icon.
+         * TODO: FAB 3 options. change corners. Make Circled. Rounded, or as chat icon. DO IT LATER.
+         * FAB 2 options. Extended, Default
          * Theme. 2 options. Material3 or custom private colors.
          * Option to auto-delete user's account & auto-sign out. after 3,6,12 months.
          * Add more......

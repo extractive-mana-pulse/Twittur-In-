@@ -484,7 +484,7 @@
     </dialog>
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.example.twitturin.home.presentation.ui.SettingsFragment"
+        android:name="com.example.twitturin.home.presentation.settings.SettingsFragment"
         android:label="fragment_settings"
         tools:layout="@layout/fragment_settings" >
         <action
@@ -493,6 +493,9 @@
         <action
             android:id="@+id/action_settingsFragment_to_customBNVFragment"
             app:destination="@id/customBNVFragment" />
+        <action
+            android:id="@+id/action_settingsFragment_to_customizeFABFragment"
+            app:destination="@id/customizeFABFragment" />
     </fragment>
     <dialog
         android:id="@+id/shareProfileBottomSheetFragment"
@@ -517,8 +520,13 @@
     </fragment>
     <dialog
         android:id="@+id/customBNVFragment"
-        android:name="com.example.twitturin.home.presentation.settings.CustomBNVFragment"
+        android:name="com.example.twitturin.home.presentation.settings.bottom_bar.CustomBNVFragment"
         android:label="fragment_custom_b_n_v"
         tools:layout="@layout/fragment_custom_b_n_v" />
+    <dialog
+        android:id="@+id/customizeFABFragment"
+        android:name="com.example.twitturin.home.presentation.settings.fab.CustomizeFABFragment"
+        android:label="fragment_customize_f_a_b"
+        tools:layout="@layout/fragment_customize_f_a_b" />
 
 </navigation>

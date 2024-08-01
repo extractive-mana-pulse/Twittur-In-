@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.twitturin.profile.data.remote.repository.ProfileRepository
 import com.example.twitturin.profile.domain.model.EditProfile
+import com.example.twitturin.profile.domain.model.ImageResource
 import com.example.twitturin.profile.presentation.sealed.AccountDelete
 import com.example.twitturin.profile.presentation.sealed.EditUser
 import com.example.twitturin.profile.presentation.sealed.EditUserImageState
@@ -103,19 +104,12 @@ class ProfileViewModel @Inject constructor(private val repository: ProfileReposi
 
         val authRequest = repository.loadImage(imagePart, userId, token)
 
-        authRequest.enqueue(object : Callback<String> {
-            override fun onResponse(call: Call<String>, response: Response<String>) {
-                if (response.isSuccessful) {
-                    val editProfile = response.body()
-                    _editUserImageState.value = EditUserImageState.Success(editProfile!!)
-                } else {
-                    _editUserImageState.value = EditUserImageState.Error(response.code().toString())
-                }
+        authRequest.enqueue(object : Callback<ImageResource> {
+            override fun onResponse(call: Call<ImageResource>, response: Response<ImageResource>) {
+                if (response.isSuccessful) { response.body()?.let { _editUserImageState.value = EditUserImageState.Success(it) } }
+                else _editUserImageState.value = EditUserImageState.Error(response.code().toString())
             }
-
-            override fun onFailure(call: Call<String>, t: Throwable) {
-                _editUserImageState.value = EditUserImageState.Error(t.message.toString())
-            }
+            override fun onFailure(call: Call<ImageResource>, t: Throwable) { _editUserImageState.value = EditUserImageState.Error(t.message.toString()) }
         })
     }
 }

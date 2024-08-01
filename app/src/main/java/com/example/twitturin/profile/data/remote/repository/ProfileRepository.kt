@@ -1,7 +1,7 @@
 package com.example.twitturin.profile.data.remote.repository
 
-import com.example.twitturin.profile.data.remote.api.photoUrl
 import com.example.twitturin.profile.domain.model.EditProfile
+import com.example.twitturin.profile.domain.model.ImageResource
 import com.example.twitturin.profile.domain.model.User
 import okhttp3.MultipartBody
 import retrofit2.Call
@@ -23,5 +23,5 @@ interface ProfileRepository {
         picture : MultipartBody.Part,
         userId : String,
         token : String
-    ) : Call<photoUrl>
+    ) : Call<ImageResource>
 }

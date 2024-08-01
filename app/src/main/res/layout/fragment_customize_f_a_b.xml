@@ -4,10 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".home.presentation.settings.bottom_bar.CustomBNVFragment">
+    tools:context=".home.presentation.settings.fab.CustomizeFABFragment">
 
     <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/custom_bnv_toolbar"
+        android:id="@+id/custom_fab_toolbar"
         android:layout_width="match_parent"
         app:navigationIcon="@drawable/close"
         android:layout_height="?attr/actionBarSize"/>
@@ -23,31 +23,36 @@
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:text="Change your navigation bar UI"
             app:layout_constraintStart_toStartOf="parent"
+            android:text="Change your Floating Action Button UI"
             android:textAppearance="?attr/textAppearanceTitleLarge"/>
 
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/vp2"
+        <ImageView
+            android:id="@+id/extended_fab_image"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginTop="8dp"
+            android:layout_height="150dp"
+            android:src="@drawable/fab"
+            android:elevation="4dp"
+            android:layout_marginTop="24dp"
+            android:contentDescription="@null"
+            android:background="@drawable/shadow"
             android:layout_marginHorizontal="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/tb"
             app:layout_constraintTop_toBottomOf="@id/customize_title"/>
 
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tb"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:tabMode="fixed"
+        <ImageView
+            android:id="@+id/fab_image"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:src="@drawable/fab_f"
+            android:layout_marginTop="24dp"
+            android:contentDescription="@null"
+            android:background="@drawable/shadow"
+            android:layout_marginHorizontal="16dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:tabBackground="@drawable/tab_pager_bg"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/vp2"
-            app:layout_constraintBottom_toTopOf="@id/customize_btn"/>
+            app:layout_constraintTop_toBottomOf="@id/extended_fab_image"/>
 
         <Button
             android:id="@+id/customize_btn"

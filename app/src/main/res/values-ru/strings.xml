@@ -133,4 +133,8 @@
     <string name="failed_to_pick_media">"Failed to pick media from Gallery. "</string>
     <string name="copy_link">Copy link</string>
     <string name="share_link">Share link</string>
+    <string name="notification_message">Notification permission is required, Please allow notification permission from setting</string>
+    <string name="notification_title">Notification Permission</string>
+    <string name="notification_require_message">Notification permission is required, to show notification</string>
+    <string name="alert">Alert</string>
 </resources>

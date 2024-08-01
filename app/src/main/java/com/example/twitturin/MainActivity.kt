@@ -29,6 +29,7 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("PrivateResource")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+//        enableEdgeToEdge()
         setContentView(binding.root)
 
         if (Build.VERSION.SDK_INT >= 33) {
@@ -47,14 +48,14 @@ class MainActivity : AppCompatActivity() {
 
     private fun showSettingDialog() {
         MaterialAlertDialogBuilder(this, com.google.android.material.R.style.MaterialAlertDialog_Material3)
-            .setTitle("Notification Permission")
-            .setMessage("Notification permission is required, Please allow notification permission from setting")
-            .setPositiveButton("Ok") { _, _ ->
+            .setTitle(resources.getString(R.string.notification_title))
+            .setMessage(resources.getString(R.string.notification_message))
+            .setPositiveButton(resources.getString(R.string.yes)) { _, _ ->
                 val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
                 intent.data = Uri.parse("package: TwitturIn")
                 startActivity(intent)
             }
-            .setNegativeButton("Cancel", null)
+            .setNegativeButton(resources.getString(R.string.cancel), null)
             .show()
     }
 
@@ -77,14 +78,14 @@ class MainActivity : AppCompatActivity() {
     private fun showNotificationPermissionRationale() {
 
         MaterialAlertDialogBuilder(this, com.google.android.material.R.style.MaterialAlertDialog_Material3)
-            .setTitle("Alert")
-            .setMessage("Notification permission is required, to show notification")
-            .setPositiveButton("Ok") { _, _ ->
+            .setTitle(resources.getString(R.string.alert))
+            .setMessage(resources.getString(R.string.notification_require_message))
+            .setPositiveButton(resources.getString(R.string.yes)) { _, _ ->
                 if (Build.VERSION.SDK_INT >= 33) {
                     notificationPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
                 }
             }
-            .setNegativeButton("Cancel", null)
+            .setNegativeButton(resources.getString(R.string.cancel), null)
             .show()
     }
     private var hasNotificationPermissionGranted = false

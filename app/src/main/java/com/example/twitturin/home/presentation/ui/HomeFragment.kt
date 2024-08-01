@@ -56,8 +56,6 @@ class HomeFragment : Fragment() {
 
         binding.apply {
 
-
-
             val headerView: View = navigationView.getHeaderView(0)
             val headerViewAvatar: ImageView = headerView.findViewById(R.id.nav_avatar)
             val headerUsername: TextView = headerView.findViewById(R.id.nav_username_tv)

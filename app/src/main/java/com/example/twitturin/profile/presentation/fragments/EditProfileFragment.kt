@@ -65,7 +65,7 @@ class EditProfileFragment : Fragment() {
                         profileViewModel.editUserImageState.collectLatest { result ->
                             when(result) {
                                 is EditUserImageState.Success -> { snackbarView.snackbar(snackbarView, resources.getString(R.string.success)) }
-                                is EditUserImageState.Error -> { Log.d("error", result.message) }
+                                is EditUserImageState.Error -> { Log.d("image error", result.message) }
                                 is EditUserImageState.Loading -> {}
                             }
                         }

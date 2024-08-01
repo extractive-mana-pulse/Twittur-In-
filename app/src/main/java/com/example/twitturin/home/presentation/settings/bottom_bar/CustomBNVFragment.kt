@@ -1,4 +1,4 @@
-package com.example.twitturin.home.presentation.settings
+package com.example.twitturin.home.presentation.settings.bottom_bar
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,6 +9,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
 import com.example.twitturin.core.extensions.appBNVDialog
 import com.example.twitturin.databinding.FragmentCustomBNVBinding
+import com.example.twitturin.home.presentation.settings.bottom_bar.adapter.BottomNavViewAdapter
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment

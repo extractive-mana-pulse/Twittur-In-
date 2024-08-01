@@ -2,7 +2,7 @@ package com.example.twitturin.core.extensions
 
 import androidx.appcompat.app.AppCompatActivity
 import com.example.twitturin.R
-import com.example.twitturin.home.presentation.preferences.MyPreferences
+import com.example.twitturin.core.preferences.MyPreferences
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationBarView
