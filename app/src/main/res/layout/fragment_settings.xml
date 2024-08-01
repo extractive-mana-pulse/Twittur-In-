@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
+    android:id="@+id/settings_root_layout"
     tools:context=".home.presentation.ui.SettingsFragment">
 
     <com.google.android.material.appbar.MaterialToolbar
@@ -12,33 +13,142 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         app:title="@string/settings"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:navigationIcon="@drawable/keyboard_backspace"
-        app:titleTextAppearance="?attr/textAppearanceTitleMedium"/>
+        app:titleTextAppearance="?attr/textAppearanceTitleMedium" />
 
-    <Button
-        android:id="@+id/test_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="48dp"
-        android:text="custom theme"
-        android:layout_gravity="bottom|center"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:layout_marginVertical="8dp"
+        android:layout_marginHorizontal="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/settings_toolbar">
 
-    <com.airbnb.lottie.LottieAnimationView
-        android:layout_width="252dp"
-        android:layout_height="252dp"
-        android:layout_gravity="center"
-        app:lottie_loop="true"
-        app:lottie_autoPlay="true"
-        app:layout_constraintWidth_percent="0.8"
-        app:layout_constraintDimensionRatio="1.5"
-        app:lottie_rawRes="@raw/technical_works"/>
+        <RelativeLayout
+            android:id="@+id/bottom_navigation_view_customization_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="8dp"
+            android:layout_marginVertical="8dp"
+            android:background="@drawable/custom_settings_layout_bg">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
-        android:layout_gravity="bottom|center"
-        android:text="@string/page_not_available"
-        android:textAppearance="?attr/textAppearanceBodyLarge"/>
+            <ImageView
+                android:id="@+id/bottom_nav_view_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@null"
+                android:layout_centerVertical="true"
+                android:src="@drawable/bottom_app_bar"
+                android:layout_marginStart="16dp"/>
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Customize your bottom bar"
+                android:layout_marginStart="16dp"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@id/bottom_nav_view_icon"
+                android:textAppearance="?attr/textAppearanceBodySmall"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/theme_customization_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="8dp"
+            android:background="@drawable/custom_settings_layout_bg">
+
+            <ImageView
+                android:id="@+id/theme_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@null"
+                android:layout_centerVertical="true"
+                android:src="@drawable/theme_style"
+                android:layout_marginStart="16dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Customize colors of app"
+                android:layout_toEndOf="@id/theme_style"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="16dp"
+                android:textAppearance="?attr/textAppearanceBodySmall"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/fab_customization_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="8dp"
+            android:layout_marginVertical="8dp"
+            android:background="@drawable/custom_settings_layout_bg">
+
+            <ImageView
+                android:id="@+id/fab_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@null"
+                android:layout_centerVertical="true"
+                android:src="@drawable/fab_alter_button"
+                android:layout_marginStart="16dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Customize your FAB"
+                android:layout_marginStart="16dp"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@id/fab_icon"
+                android:textAppearance="?attr/textAppearanceBodySmall"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/inactive_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="8dp"
+            android:background="@drawable/custom_settings_layout_bg">
+
+            <ImageView
+                android:id="@+id/inactive_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@null"
+                android:layout_centerVertical="true"
+                android:src="@drawable/inactive"
+                android:layout_marginStart="16dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="If away for..."
+                android:layout_marginStart="16dp"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@id/inactive_icon"
+                android:textAppearance="?attr/textAppearanceBodySmall"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/snackbar_view"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        android:layout_marginBottom="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

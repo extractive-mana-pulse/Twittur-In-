@@ -32,6 +32,7 @@ fun AppCompatActivity.bottomNavigationUI(view: View) {
         R.id.settingsFragment,
         R.id.moreSettingsDetailFragment,
         R.id.shareProfileBottomSheetFragment,
+        R.id.customBNVFragment,
 
         )
 

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    tools:context=".home.presentation.settings.onBoarding.UnlabeledFragment"
+    tools:ignore="UseCompoundDrawables">
+
+    <ImageView
+        android:layout_width="350dp"
+        android:layout_height="550dp"
+        android:contentDescription="@null"
+        android:src="@drawable/unlabeled"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="8dp"
+        android:layout_marginHorizontal="16dp"
+        android:textAppearance="?attr/textAppearanceBodyLarge"
+        android:text="This view represents a bottom navigation view in UN LABELED state."/>
+
+</LinearLayout>

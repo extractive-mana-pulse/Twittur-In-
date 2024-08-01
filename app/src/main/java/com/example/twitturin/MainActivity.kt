@@ -1,7 +1,6 @@
 package com.example.twitturin
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -10,13 +9,12 @@ import android.provider.Settings
 import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.twitturin.core.extensions.bottomNavigationUI
+import com.example.twitturin.core.extensions.checkStatus
 import com.example.twitturin.core.extensions.checkTheme
 import com.example.twitturin.core.extensions.loadLocale
-import com.example.twitturin.core.extensions.sharedPreferences
 import com.example.twitturin.databinding.ActivityMainBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
@@ -39,14 +37,12 @@ class MainActivity : AppCompatActivity() {
             hasNotificationPermissionGranted = true
         }
 
-        Log.d("leak", LeakCanary.toString())
-
         this.checkTheme()
         this.loadLocale()
-
-        binding.bottomNavView.setupWithNavController(navController)
-
+        this.checkStatus(binding.bottomNavView)
+        Log.d("leak", LeakCanary.toString())
         bottomNavigationUI(binding.bottomNavView)
+        binding.bottomNavView.setupWithNavController(navController)
     }
 
     private fun showSettingDialog() {

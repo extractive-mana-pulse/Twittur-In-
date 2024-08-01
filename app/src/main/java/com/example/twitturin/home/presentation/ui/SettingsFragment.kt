@@ -9,7 +9,10 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
+import com.example.twitturin.core.extensions.snackbar
 import com.example.twitturin.databinding.FragmentSettingsBinding
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.shape.CornerFamily
 
 class SettingsFragment : Fragment() {
 
@@ -21,10 +24,13 @@ class SettingsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.apply {
+
             settingsToolbar.setNavigationOnClickListener { findNavController().navigateUp() }
-            testBtn.setOnClickListener {
-                changeAppTheme()
-            }
+            inactiveLayout.setOnClickListener { snackbarView.snackbar(snackbarView, resources.getString(R.string.developing)) }
+            fabCustomizationLayout.setOnClickListener { snackbarView.snackbar(snackbarView, resources.getString(R.string.developing)) }
+            themeCustomizationLayout.setOnClickListener { snackbarView.snackbar(snackbarView, resources.getString(R.string.developing)) }
+            bottomNavigationViewCustomizationLayout.setOnClickListener { findNavController().navigate(R.id.action_settingsFragment_to_customBNVFragment) }
+
         }
 
         /**
@@ -33,6 +39,7 @@ class SettingsFragment : Fragment() {
          * Bottom navigation view with 3 options. e.g. labeled, unlabeled, without label at all.
          * FAB 3 options. change corners. Make Circled. Rounded, or as chat icon.
          * Theme. 2 options. Material3 or custom private colors.
+         * Option to auto-delete user's account & auto-sign out. after 3,6,12 months.
          * Add more......
          * */
 
@@ -51,5 +58,13 @@ class SettingsFragment : Fragment() {
         val editor = sharedPreferences.edit()
         editor.putInt("theme_mode", currentTheme)
         editor.apply()
+    }
+
+    private fun changeFabShape() {
+        val fabSize = resources.getDimensionPixelSize(com.google.android.material.R.dimen.design_fab_size_normal)
+        val fab = requireActivity().findViewById<FloatingActionButton>(R.id.add_post)
+        fab.shapeAppearanceModel = fab.shapeAppearanceModel.toBuilder()
+            .setAllCorners(CornerFamily.ROUNDED, fabSize / 2f) // Set the corner radius to half the FAB size
+            .build()
     }
 }

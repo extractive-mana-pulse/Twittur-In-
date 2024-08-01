@@ -42,13 +42,13 @@ class EditProfileFragment : Fragment() {
     private val profileViewModel by viewModels<ProfileViewModel>()
     private lateinit var pickSingleMediaLauncher: ActivityResultLauncher<Intent>
     private val binding by lazy { FragmentEditProfileBinding.inflate(layoutInflater) }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View = binding.root
 
     @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.apply {
+
             // TODO: Fix navigation. When edit profile done successfully and navigated back to ProfileFragment and after in ProfileFragment press back button. user navigates to EditProfileFragment again!
             headerLayout.setOnClickListener { showColorPickerDialog() }
 
@@ -76,7 +76,6 @@ class EditProfileFragment : Fragment() {
             editProfileUserAvatar.setOnClickListener { pickSingleMediaLauncher.launch(Intent(MediaStore.ACTION_PICK_IMAGES).apply { type = "image/*" } ) }
 
             profileViewModel.getUserCredentials(SessionManager(requireContext()).getUserId()!!)
-
             repeatOnStarted {
                 profileViewModel.getUserCredentials.collectLatest {
                     when(it){
@@ -137,6 +136,12 @@ class EditProfileFragment : Fragment() {
     private fun showColorPickerDialog() {
 
         val colors = listOf(
+            Color.TRANSPARENT,
+            Color.BLACK,
+            Color.DKGRAY,
+            Color.GRAY,
+            Color.LTGRAY,
+            Color.WHITE,
             Color.CYAN,
             Color.MAGENTA,
             Color.YELLOW,

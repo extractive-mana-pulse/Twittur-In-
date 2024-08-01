@@ -19,6 +19,7 @@ import com.example.twitturin.core.extensions.loadImagesWithGlideExt
 import com.example.twitturin.core.extensions.loadToolbarImage
 import com.example.twitturin.core.extensions.repeatOnStarted
 import com.example.twitturin.core.extensions.shareUrl
+import com.example.twitturin.core.extensions.snackbar
 import com.example.twitturin.core.extensions.snackbarError
 import com.example.twitturin.core.extensions.vertical
 import com.example.twitturin.core.manager.SessionManager
@@ -166,6 +167,8 @@ class HomeFragment : Fragment() {
 
     private fun homeClickEvent(homeClickEvents: HomeAdapter.HomeClickEvents, tweet: Tweet) {
 
+        val bottomNavView = requireActivity().findViewById<View>(R.id.bottom_nav_view)
+
         when(homeClickEvents) {
 
             HomeAdapter.HomeClickEvents.ITEM -> {
@@ -176,7 +179,7 @@ class HomeFragment : Fragment() {
                 findNavController().navigate(R.id.detailFragment, bundle)
             }
 
-            HomeAdapter.HomeClickEvents.HEART -> { Snackbar.make(binding.homeRootLayout, R.string.in_progress, Snackbar.LENGTH_SHORT).show() }
+            HomeAdapter.HomeClickEvents.HEART -> { binding.homeRootLayout.snackbar(bottomNavView, resources.getString(R.string.developing)) }
 
             HomeAdapter.HomeClickEvents.SHARE -> { requireContext().shareUrl("https://twitturin.onrender.com/tweets/${tweet.id}") }
 
@@ -188,13 +191,5 @@ class HomeFragment : Fragment() {
                 findNavController().navigate(R.id.detailFragment, bundle)
             }
         }
-    }
-
-    private fun changeFabShape() {
-        val fabSize = resources.getDimensionPixelSize(com.google.android.material.R.dimen.design_fab_size_normal)
-        val fab = requireActivity().findViewById<FloatingActionButton>(R.id.add_post)
-        fab.shapeAppearanceModel = fab.shapeAppearanceModel.toBuilder()
-            .setAllCorners(CornerFamily.ROUNDED, fabSize / 2f) // Set the corner radius to half the FAB size
-            .build()
     }
 }

@@ -28,6 +28,7 @@ import com.example.twitturin.core.extensions.snackbarError
 import com.example.twitturin.core.extensions.stateDisabled
 import com.example.twitturin.core.manager.SessionManager
 import com.example.twitturin.databinding.FragmentProfileBinding
+import com.example.twitturin.profile.domain.model.User
 import com.example.twitturin.profile.presentation.adapters.ProfileViewPagerAdapter
 import com.example.twitturin.profile.presentation.sealed.AccountDelete
 import com.example.twitturin.profile.presentation.sealed.ProfileUIEvent
