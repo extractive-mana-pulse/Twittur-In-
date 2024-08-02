@@ -34,7 +34,6 @@ class SignInViewModel @Inject constructor(private val repository : AuthRepositor
         repository.signInUser(request).enqueue(object : Callback<AuthUser> {
 
             override fun onResponse(call: Call<AuthUser>, response: Response<AuthUser>) {
-
                 if (response.isSuccessful) {
                     val signInResponse = response.body()
                     val token = signInResponse?.token
@@ -42,14 +41,10 @@ class SignInViewModel @Inject constructor(private val repository : AuthRepositor
                     _token.value = token!!
                     _userId.value = userId!!
                     _signIn.value = signInResponse.let { SignIn.Success(it) }
-                } else {
-                    _signIn.value = SignIn.Error("User doesn't exist")
-                }
-            }
 
-            override fun onFailure(call: Call<AuthUser>, t: Throwable) {
-                _signIn.value = SignIn.Error("Network error")
+                } else _signIn.value = SignIn.Error(response.code().toString())
             }
+            override fun onFailure(call: Call<AuthUser>, t: Throwable) { _signIn.value = SignIn.Error(t.message.toString()) }
         })
     }
 }

@@ -13,8 +13,6 @@ class KindViewModel : ViewModel() {
     val kindEventResult = channel.receiveAsFlow()
 
     fun onBackPressedKind(){ viewModelScope.launch { channel.send(KindUiEvent.OnBackPressed) } }
-
     fun onProfPressed(){ viewModelScope.launch { channel.send(KindUiEvent.NavigateToProfReg) } }
-
     fun onStudPressed(){ viewModelScope.launch { channel.send(KindUiEvent.NavigateToStudReg) } }
 }

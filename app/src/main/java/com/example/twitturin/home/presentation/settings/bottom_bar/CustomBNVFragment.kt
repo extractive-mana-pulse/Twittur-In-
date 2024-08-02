@@ -8,12 +8,12 @@ import android.widget.FrameLayout
 import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
 import com.example.twitturin.core.extensions.appBNVDialog
+import com.example.twitturin.core.extensions.setupWithAdapter
 import com.example.twitturin.databinding.FragmentCustomBNVBinding
 import com.example.twitturin.home.presentation.settings.bottom_bar.adapter.BottomNavViewAdapter
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.google.android.material.tabs.TabLayoutMediator
 
 class CustomBNVFragment : BottomSheetDialogFragment() {
 
@@ -23,24 +23,23 @@ class CustomBNVFragment : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         val bottomNavView = requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav_view)
-        binding.customizeBtn.setOnClickListener { requireActivity().appBNVDialog(bottomNavView) }
 
-        binding.customBnvToolbar.setNavigationOnClickListener { findNavController().navigateUp() }
-
-        binding.vp2.adapter = BottomNavViewAdapter(childFragmentManager, lifecycle)
-        TabLayoutMediator(binding.tb, binding.vp2) { _, pos ->
-            when (pos) {
-                0 -> {}
-                1 -> {}
-                2 -> {}
-            }
-        }.attach()
-
+        binding.apply {
+            customizeBtn.setOnClickListener { requireActivity().appBNVDialog(bottomNavView) }
+            customBnvToolbar.setNavigationOnClickListener { findNavController().navigateUp() }
+            vp2.setupWithAdapter(tb, childFragmentManager, lifecycle, { fm, lc -> BottomNavViewAdapter(fm, lc) },
+                { _, pos ->
+                    when (pos) {
+                        0 -> {}
+                        1 -> {}
+                        2 -> {}
+                    }
+                }
+            )
+        }
 
         val bottomSheet : FrameLayout? = dialog?.findViewById(com.google.android.material.R.id.design_bottom_sheet)!!
-
         bottomSheet?.layoutParams?.height = ViewGroup.LayoutParams.MATCH_PARENT
         val behavior = BottomSheetBehavior.from(bottomSheet!!)
 

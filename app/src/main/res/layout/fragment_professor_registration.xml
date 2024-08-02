@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
@@ -15,7 +15,7 @@
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/professor_toolbar"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="152dp"
             app:title="@string/registration"
             app:titleCentered="true"
@@ -26,7 +26,7 @@
 
         <LinearLayout
             android:id="@+id/prof_reg_eds_layout"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="0dp"
             android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
@@ -45,7 +45,7 @@
                 app:startIconCheckable="true"
                 android:layout_marginTop="48dp"
                 android:layout_marginHorizontal="16dp"
-                app:startIconDrawable="@drawable/person"
+                app:startIconDrawable="@drawable/full_name"
                 android:background="@drawable/edit_text_bg2"
                 app:hintTextColor="?attr/colorOnPrimaryContainer">
 
@@ -71,7 +71,7 @@
                 app:startIconCheckable="true"
                 android:layout_marginTop="15dp"
                 android:layout_marginHorizontal="16dp"
-                app:startIconDrawable="@drawable/person"
+                app:startIconDrawable="@drawable/username_icon"
                 android:background="@drawable/edit_text_bg2"
                 app:hintTextColor="?attr/colorOnPrimaryContainer">
 
@@ -97,7 +97,7 @@
                 app:startIconCheckable="true"
                 android:layout_marginTop="15dp"
                 android:layout_marginHorizontal="16dp"
-                app:startIconDrawable="@drawable/subject"
+                app:startIconDrawable="@drawable/book"
                 android:background="@drawable/edit_text_bg2"
                 app:hintTextColor="?attr/colorOnPrimaryContainer">
 
@@ -155,4 +155,4 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-</ScrollView>
+</androidx.core.widget.NestedScrollView>

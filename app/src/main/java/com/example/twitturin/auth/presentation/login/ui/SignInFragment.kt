@@ -17,7 +17,6 @@ import com.example.twitturin.auth.presentation.stayIn.vm.StayInViewModel
 import com.example.twitturin.core.extensions.login
 import com.example.twitturin.core.extensions.repeatOnStarted
 import com.example.twitturin.core.extensions.retry
-import com.example.twitturin.core.extensions.showKeyboard
 import com.example.twitturin.core.extensions.snackbarError
 import com.example.twitturin.core.manager.SessionManager
 import com.example.twitturin.databinding.FragmentSignInBinding
@@ -45,7 +44,7 @@ class SignInFragment : Fragment() {
             signIn.setOnClickListener { signInUiEventViewModel.onLoginPressed() }
             signUpTv.setOnClickListener { signInUiEventViewModel.onKindPressed() }
 
-            /** represent that this code hide inputted password immediately */
+            /** code hide inputted password immediately */
 //            passwordEt.setInputType(InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD)
 //            passwordEt.transformationMethod = PasswordTransformationMethod()
         }
@@ -58,11 +57,7 @@ class SignInFragment : Fragment() {
                         val password = binding.passwordEt.text.toString().trim()
                         signInViewModel.signIn(username, password)
                     }
-
-                    is SignInUiEvent.OnKindPressed -> {
-                        findNavController().navigate(R.id.action_signInFragment_to_kindFragment)
-                    }
-
+                    is SignInUiEvent.OnKindPressed -> { findNavController().navigate(R.id.action_signInFragment_to_kindFragment) }
                     is SignInUiEvent.StateNoting -> {}
                 }
             }
@@ -80,14 +75,8 @@ class SignInFragment : Fragment() {
                         SessionManager(requireContext()).saveUserID(userId.toString())
                         findNavController().navigate(R.id.action_signInFragment_to_stayInFragment)
                     }
-
                     is SignIn.Error -> {
-
-                        binding.signInRootLayout.snackbarError(
-                            view.findViewById(R.id.sign_in),
-                            error = result.message,
-                            resources.getString(R.string.retry)
-                        ) {
+                        binding.signInRootLayout.snackbarError(binding.signIn, result.message, resources.getString(R.string.retry)) {
                             retry(
                                 binding.usernameSignInEt,
                                 binding.usernameSignInEt,
@@ -95,12 +84,10 @@ class SignInFragment : Fragment() {
                             )
                         }
                     }
-
-                    SignIn.Loading -> {}
+                    is SignIn.Loading -> {}
                 }
             }
         }
-        
         if (stayInViewModel.isUserLoggedIn()) {
             findNavController().navigate(R.id.action_signInFragment_to_homeFragment)
         }

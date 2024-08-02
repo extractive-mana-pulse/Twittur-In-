@@ -29,7 +29,6 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("PrivateResource")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        enableEdgeToEdge()
         setContentView(binding.root)
 
         if (Build.VERSION.SDK_INT >= 33) {

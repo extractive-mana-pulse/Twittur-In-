@@ -72,7 +72,7 @@
     <string name="kind_picker_tv">Какой ваш тип?</string>
     <string name="messages">Сообщения</string>
     <string name="notifications">Уведомления</string>
-    <string name="deleting_account_activity_context">Примечание. Когда вы удаляете свою аккаунт, все действия, такие как: лайки, ответы, комментарии, чаты, публикации, также будут удалены без возможности их восстановления!</string>
+    <string name="deleting_account_activity_context">Примечание. Когда вы удаляете свой аккаунт, все действия, такие как: лайки, ответы, комментарии, чаты, публикации, также будут удалены без возможности их восстановления!</string>
     <string name="deleting_account_password_input_context">Пожалуйста, введите свой адрес электронной почты, чтобы мы могли отправить вам код подтверждения на ваш адрес электронной почты!</string>
     <string name="delete">Удалить</string>
     <string name="reply">Ответить…</string>

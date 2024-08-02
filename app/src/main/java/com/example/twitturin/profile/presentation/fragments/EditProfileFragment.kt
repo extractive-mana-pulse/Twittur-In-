@@ -42,6 +42,7 @@ class EditProfileFragment : Fragment() {
     private val profileViewModel by viewModels<ProfileViewModel>()
     private lateinit var pickSingleMediaLauncher: ActivityResultLauncher<Intent>
     private val binding by lazy { FragmentEditProfileBinding.inflate(layoutInflater) }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View = binding.root
 
     @SuppressLint("SetTextI18n")

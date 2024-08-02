@@ -130,7 +130,7 @@
     <string name="o_zbek" translatable="false">O\'zbek</string>
     <string name="default_user_fullname" translatable="false">Twittur User</string>
     <string name="empty_bio">This user does not appear to have any biography.</string>
-    <string name="loading">Loading\n</string>
+    <string name="loading">Loading...</string>
     <string name="short_label">Create a post</string>
     <string name="long_label">Create a post long label</string>
     <string name="disabled_message">create a post disable label</string>

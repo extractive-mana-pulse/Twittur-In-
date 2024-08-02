@@ -1,238 +1,226 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/profile_root_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/profile_layout_bg"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".profile.presentation.fragments.ProfileFragment">
-
-    <data>
-        <variable
-            name="profileFragment"
-            type="com.example.twitturin.profile.presentation.fragments.ProfileFragment"/>
-    </data>
 
     <!--    Rebuild this page. When tweets scroll bottom all above tab layout should be collapsable.
         Note this is not toolbar to collapse but other UI elements-->
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/profile_root_layout"
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/profile_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/profile_layout_bg">
+        android:layout_height="152dp"
+        app:titleCentered="true"
+        app:title="@string/profile_page"
+        app:menu="@menu/profile_toolbar_menu"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:navigationIcon="@drawable/keyboard_backspace"
+        app:titleTextColor="?attr/colorOnPrimaryContainer"
+        app:titleTextAppearance="?attr/textAppearanceTitleLarge"/>
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/profile_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="152dp"
-            app:titleCentered="true"
-            app:title="@string/profile_page"
-            app:menu="@menu/profile_toolbar_menu"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:navigationIcon="@drawable/keyboard_backspace"
-            app:titleTextColor="?attr/colorOnPrimaryContainer"
-            app:titleTextAppearance="?attr/textAppearanceTitleLarge"/>
+    <View
+        android:id="@+id/three_dot_menu_view"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
-        <View
-            android:id="@+id/three_dot_menu_view"
-            android:layout_width="1dp"
-            android:layout_height="1dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginTop="24dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
-
-        <com.facebook.shimmer.ShimmerFrameLayout
-            android:id="@+id/profile_shimmer_layout"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            tools:visibility="gone"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <include layout="@layout/profile_shimmer"/>
-
-            </LinearLayout>
-
-        </com.facebook.shimmer.ShimmerFrameLayout>
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/profile_user_avatar"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:layout_marginTop="110dp"
-            android:layout_marginStart="16dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
-
-        <TextView
-            android:id="@+id/profile_kind"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textStyle="italic"
-            android:layout_marginTop="4dp"
-            android:layout_marginStart="3dp"
-            app:layout_constraintTop_toBottomOf="@id/profile_toolbar"
-            app:layout_constraintStart_toEndOf="@id/profile_user_avatar"/>
-
-        <TextView
-            android:id="@+id/profile_full_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:layout_marginTop="10dp"
-            android:layout_marginStart="16dp"
-            android:textColor="?attr/colorOnSurface"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/profile_user_avatar"/>
-
-        <TextView
-            android:id="@+id/profile_username"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
-            android:layout_marginStart="16dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/profile_full_name"/>
-
-        <TextView
-            android:id="@+id/profile_biography"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:maxLines="3"
-            android:ellipsize="end"
-            android:layout_marginTop="18dp"
-            android:layout_marginHorizontal="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/profile_username"/>
-
-        <ImageView
-            android:id="@+id/profile_location_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/location"
-            android:layout_marginTop="8dp"
-            android:layout_marginStart="16dp"
-            android:contentDescription="@string/location"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/profile_biography"/>
-
-        <TextView
-            android:id="@+id/profile_location_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="11dp"
-            android:layout_marginStart="3dp"
-            app:layout_constraintTop_toBottomOf="@id/profile_biography"
-            app:layout_constraintStart_toEndOf="@id/profile_location_icon"/>
-
-        <TextView
-            android:id="@+id/profile_date_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            tools:ignore="MissingConstraints"/>
-
-        <TextView
-            android:id="@+id/profile_student_id_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            tools:ignore="MissingConstraints"/>
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/profile_shimmer_layout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        tools:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <LinearLayout
-            android:id="@+id/foll_info_layout"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginTop="4dp"
-            android:orientation="horizontal"
-            android:layout_marginHorizontal="16dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/profile_location_tv">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/following_counter_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:text="@string/integer_string"
-                android:layout_marginStart="4dp"
-                android:layout_gravity="center"
-                android:textColor="?attr/colorOnSurface"/>
-
-            <TextView
-                android:id="@+id/following_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/following"
-                android:layout_gravity="center"
-                android:layout_marginStart="4dp"/>
-
-            <TextView
-                android:id="@+id/dot_2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="•"
-                android:layout_gravity="center"
-                android:layout_marginStart="8dp"/>
-
-            <TextView
-                android:id="@+id/followers_counter_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:text="@string/integer_string"
-                android:layout_gravity="center"
-                android:layout_marginStart="8dp"/>
-
-            <TextView
-                android:id="@+id/followers_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/followers"
-                android:layout_gravity="center"
-                android:layout_marginStart="3dp"/>
+            <include layout="@layout/profile_shimmer"/>
 
         </LinearLayout>
 
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tb"
-            android:layout_width="0dp"
-            android:layout_height="45dp"
-            app:tabMode="fixed"
-            app:tabMaxWidth="0dp"
-            android:layout_marginTop="4dp"
-            app:tabIndicatorHeight="4.5dp"
-            app:tabBackground="@drawable/tab_bg"
-            app:tabIndicatorAnimationMode="linear"
-            app:tabTextColor="?attr/colorOnSurface"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:tabIndicatorColor="?attr/colorPrimary"
-            app:tabSelectedTextColor="?attr/colorPrimary"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/foll_info_layout"
-            app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget"/>
+    </com.facebook.shimmer.ShimmerFrameLayout>
 
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/vp2"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tb"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/profile_user_avatar"
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        android:layout_marginTop="110dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+        android:id="@+id/profile_kind"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="italic"
+        android:layout_marginTop="34dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintTop_toBottomOf="@id/profile_toolbar"
+        app:layout_constraintStart_toEndOf="@id/profile_user_avatar"/>
 
-</layout>
+    <TextView
+        android:id="@+id/profile_full_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="16dp"
+        android:textColor="?attr/colorOnSurface"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/profile_user_avatar"/>
+
+    <TextView
+        android:id="@+id/profile_username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/profile_full_name"/>
+
+    <TextView
+        android:id="@+id/profile_biography"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:maxLines="3"
+        android:ellipsize="end"
+        android:layout_marginTop="18dp"
+        android:layout_marginHorizontal="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/profile_username"/>
+
+    <ImageView
+        android:id="@+id/profile_location_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/location"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="16dp"
+        android:contentDescription="@string/location"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/profile_biography"/>
+
+    <TextView
+        android:id="@+id/profile_location_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="11dp"
+        android:layout_marginStart="3dp"
+        app:layout_constraintTop_toBottomOf="@id/profile_biography"
+        app:layout_constraintStart_toEndOf="@id/profile_location_icon"/>
+
+    <TextView
+        android:id="@+id/profile_date_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        tools:ignore="MissingConstraints"/>
+
+    <TextView
+        android:id="@+id/profile_student_id_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        tools:ignore="MissingConstraints"/>
+
+    <LinearLayout
+        android:id="@+id/foll_info_layout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="4dp"
+        android:orientation="horizontal"
+        android:layout_marginHorizontal="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/profile_location_tv">
+
+        <TextView
+            android:id="@+id/following_counter_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:layout_marginStart="4dp"
+            android:layout_gravity="center"
+            android:textColor="?attr/colorOnSurface"/>
+
+        <TextView
+            android:id="@+id/following_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/following"
+            android:layout_gravity="center"
+            android:layout_marginStart="4dp"/>
+
+        <TextView
+            android:id="@+id/dot_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="•"
+            android:layout_gravity="center"
+            android:layout_marginStart="8dp"/>
+
+        <TextView
+            android:id="@+id/followers_counter_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            android:layout_marginStart="8dp"/>
+
+        <TextView
+            android:id="@+id/followers_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/followers"
+            android:layout_gravity="center"
+            android:layout_marginStart="3dp"/>
+
+    </LinearLayout>
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tb"
+        android:layout_width="0dp"
+        android:layout_height="45dp"
+        app:tabMode="fixed"
+        app:tabMaxWidth="0dp"
+        android:layout_marginTop="8dp"
+        app:tabIndicatorHeight="4.5dp"
+        app:tabBackground="@drawable/tab_bg"
+        app:tabIndicatorAnimationMode="linear"
+        app:tabTextColor="?attr/colorOnSurface"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tabIndicatorColor="?attr/colorPrimary"
+        app:tabSelectedTextColor="?attr/colorPrimary"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/foll_info_layout"
+        app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget"/>
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/vp2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tb"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

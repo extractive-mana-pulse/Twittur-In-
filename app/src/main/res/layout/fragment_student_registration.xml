@@ -45,7 +45,7 @@
                     app:startIconCheckable="true"
                     android:layout_marginTop="48dp"
                     android:layout_marginHorizontal="16dp"
-                    app:startIconDrawable="@drawable/person"
+                    app:startIconDrawable="@drawable/full_name"
                     android:background="@drawable/edit_text_bg2"
                     app:hintTextColor="?attr/colorOnPrimaryContainer">
 
@@ -71,7 +71,7 @@
                     app:startIconCheckable="true"
                     android:layout_marginTop="16dp"
                     android:layout_marginHorizontal="16dp"
-                    app:startIconDrawable="@drawable/person"
+                    app:startIconDrawable="@drawable/username_icon"
                     android:background="@drawable/edit_text_bg2"
                     app:hintTextColor="?attr/colorOnPrimaryContainer">
 
