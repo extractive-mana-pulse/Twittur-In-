@@ -1,4 +1,4 @@
-package com.example.twitturin.connection.presentation.ui
+package com.example.twitturin.core.connection.presentation.ui
 
 import android.content.Context
 import android.net.ConnectivityManager

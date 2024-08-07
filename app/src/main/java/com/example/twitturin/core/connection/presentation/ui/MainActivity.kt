@@ -1,4 +1,4 @@
-package com.example.twitturin
+package com.example.twitturin.core.connection.presentation.ui
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -11,6 +11,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import com.example.twitturin.R
+import com.example.twitturin.core.connection.observer.ConnectivityObservable
 import com.example.twitturin.core.extensions.bottomNavigationUI
 import com.example.twitturin.core.extensions.checkStatus
 import com.example.twitturin.core.extensions.checkTheme
@@ -18,18 +20,30 @@ import com.example.twitturin.core.extensions.loadLocale
 import com.example.twitturin.databinding.ActivityMainBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
 import leakcanary.LeakCanary
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
+    private val connectivityObservable by lazy { ConnectivityObservable(this) }
+    private var isConnected = false
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     private val navController by lazy { (supportFragmentManager.findFragmentById(R.id.nav_host_fragment_container) as NavHostFragment).navController }
 
-    @SuppressLint("PrivateResource")
+    @SuppressLint("PrivateResource", "CheckResult")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
+        connectivityObservable.observe()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { connected ->
+                isConnected = connected
+                if (isConnected) { Log.d("internet", "co") } else { navController.navigate(R.id.noInternetFragment) }
+            }
 
         if (Build.VERSION.SDK_INT >= 33) {
             notificationPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
@@ -37,12 +51,14 @@ class MainActivity : AppCompatActivity() {
             hasNotificationPermissionGranted = true
         }
 
+        binding.apply {
+            bottomNavigationUI(bottomNavView)
+            this@MainActivity.checkStatus(bottomNavView)
+            bottomNavView.setupWithNavController(navController)
+        }
+        LeakCanary
         this.checkTheme()
         this.loadLocale()
-        this.checkStatus(binding.bottomNavView)
-        Log.d("leak", LeakCanary.toString())
-        bottomNavigationUI(binding.bottomNavView)
-        binding.bottomNavView.setupWithNavController(navController)
     }
 
     private fun showSettingDialog() {
@@ -88,4 +104,6 @@ class MainActivity : AppCompatActivity() {
             .show()
     }
     private var hasNotificationPermissionGranted = false
+
+    override fun onDestroy() { super.onDestroy();connectivityObservable.stopObserving() }
 }

@@ -1,6 +1,7 @@
 package com.example.twitturin.profile.domain.model
 
 import android.os.Parcelable
+import com.example.twitturin.tweet.domain.model.Tweet
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 import java.io.Serializable

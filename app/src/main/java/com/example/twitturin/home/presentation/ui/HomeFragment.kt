@@ -1,6 +1,8 @@
 package com.example.twitturin.home.presentation.ui
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,9 +10,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.view.GravityCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -124,8 +123,10 @@ class HomeFragment : Fragment() {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun updateRecyclerView() {
-
+//        var isLastPage: Boolean
         binding.apply {
+
+            rcView.vertical().adapter = homeAdapter
 
             tweetViewModel.getTweet(shimmerLayout)
 
@@ -143,7 +144,8 @@ class HomeFragment : Fragment() {
                                 homeAdapter.differ.submitList(tweetList)
 
                                 swipeToRefreshLayout.setOnRefreshListener {
-                                    val freshList = tweetList.sortedByDescending { time -> time.createdAt }
+                                    val freshList =
+                                        tweetList.sortedByDescending { time -> time.createdAt }
                                     tweetList.clear()
                                     tweetList.addAll(freshList)
                                     homeAdapter.notifyDataSetChanged()
@@ -155,12 +157,81 @@ class HomeFragment : Fragment() {
                             homeRootLayout.snackbarError(
                                 requireActivity().findViewById(R.id.bottom_nav_view),
                                 error = response.message().toString(),
-                                ""){}
+                                ""
+                            ) {}
                         }
                     }
                 }
             }
         }
+    }
+//            rcView.addOnScrollListener(this@HomeFragment.scrollListener)
+
+//            tweetViewModel.responseTweets.observe(viewLifecycleOwner) { response ->
+//                when(response) {
+//                    is Resource.Success -> {
+//                        homeProgressBar.beGone()
+//                        isLoading = false
+//                        isError = false
+//                        response.data?.let { newsResponse ->
+//                            homeAdapter.differ.submitList(newsResponse.tweets.toList())
+//                            val totalPages = newsResponse.totalResults / /*Constants.QUERY_PAGE_SIZE*/10 + 2
+//                            isLastPage = tweetViewModel.pageNumber == totalPages
+//                            if (isLastPage) { rcView.setPadding(0,0,0,0) }
+//                        }
+//                    }
+//                    is  Resource.Loading -> { homeProgressBar.beVisible(); isLoading = true }
+//
+//                    is Resource.Error -> {
+//                        homeProgressBar.beGone()
+//                        response.message?.let { root.snackbarError(homeProgressBar,it,"Refresh"){}; isError = true;Log.d("error", it) }
+//                    }
+//                }
+//            }
+//        }
+//    }
+//
+//    var isError = false
+//    var isLoading = false
+//    var isLastPage = false
+//    var isScrolling = false
+//
+//    val scrollListener = object : RecyclerView.OnScrollListener() {
+//        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+//            super.onScrolled(recyclerView, dx, dy)
+//
+//            val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+//            val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
+//            val visibleItemCount = layoutManager.childCount
+//            val totalItemCount = layoutManager.itemCount
+//
+//            val isNotLoadingAndNotLastPage = !isLoading && !isLastPage
+//            val isAtLastItem = firstVisibleItemPosition + visibleItemCount >= totalItemCount
+//            val isNotAtBeginning = firstVisibleItemPosition >= 0
+//            val isTotalMoreThanVisible = totalItemCount >= /*Constants.QUERY_PAGE_SIZE*/ 10
+//            val shouldPaginate = isNotLoadingAndNotLastPage &&
+//                    isAtLastItem &&
+//                    isNotAtBeginning &&
+//                    isTotalMoreThanVisible &&
+//                    isScrolling
+//            if(shouldPaginate) {
+//                tweetViewModel.getAllTweets()
+//                isScrolling = false
+//            }
+//        }
+//
+//        override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+//            super.onScrollStateChanged(recyclerView, newState)
+//            if(newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) { isScrolling = true }
+//        }
+//    }
+
+
+
+    private fun isNetworkAvailable(): Boolean {
+        val connectivityManager = requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val networkInfo = connectivityManager.activeNetworkInfo
+        return networkInfo != null && networkInfo.isConnected
     }
 
     private fun homeClickEvent(homeClickEvents: HomeAdapter.HomeClickEvents, tweet: Tweet) {

@@ -15,6 +15,6 @@ data class Tweet (
     @SerializedName("likes"      ) var likes      : Int? = null,
     @SerializedName("likesBy"    ) val likedBy    : List<String>? = null,
     @SerializedName("replyCount" ) val replyCount : Int? = null,
-    @SerializedName("id"         ) val id         : String? = null
+    @SerializedName("id"         ) val id         : String? = null,
 
 ) : Parcelable

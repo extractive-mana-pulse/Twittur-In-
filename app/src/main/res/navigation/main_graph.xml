@@ -430,7 +430,7 @@
     </fragment>
     <fragment
         android:id="@+id/noInternetFragment"
-        android:name="com.example.twitturin.connection.presentation.ui.NoInternetFragment"
+        android:name="com.example.twitturin.core.connection.presentation.ui.NoInternetFragment"
         android:label="fragment_no_internet"
         tools:layout="@layout/fragment_no_internet" />
     <fragment
