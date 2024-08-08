@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe { connected ->
                 isConnected = connected
-                if (isConnected) { Log.d("internet", "co") } else { navController.navigate(R.id.noInternetFragment) }
+                if (isConnected) { Log.d("Internet status", "Connected") } else { navController.navigate(R.id.noInternetFragment) }
             }
 
         if (Build.VERSION.SDK_INT >= 33) {

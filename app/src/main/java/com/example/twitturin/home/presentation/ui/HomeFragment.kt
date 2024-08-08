@@ -1,8 +1,6 @@
 package com.example.twitturin.home.presentation.ui
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -17,6 +15,7 @@ import com.example.twitturin.R
 import com.example.twitturin.core.extensions.appLanguage
 import com.example.twitturin.core.extensions.appThemeDialog
 import com.example.twitturin.core.extensions.beGone
+import com.example.twitturin.core.extensions.isNetworkAvailable
 import com.example.twitturin.core.extensions.loadImagesWithGlideExt
 import com.example.twitturin.core.extensions.loadToolbarImage
 import com.example.twitturin.core.extensions.repeatOnStarted
@@ -54,14 +53,45 @@ class HomeFragment : Fragment() {
         binding.homeFragment = this
 
         binding.apply {
+            navigationView.getHeaderView(0).apply {
+                val headerViewAvatar: ImageView = findViewById(R.id.nav_avatar)
+                val headerUsername: TextView = findViewById(R.id.nav_username_tv)
+                val headerFullname: TextView = findViewById(R.id.nav_full_name_tv)
+                val headerFollowing: TextView = findViewById(R.id.nav_following_counter_tv)
+                val headingFollowers: TextView = findViewById(R.id.nav_followers_counter_tv)
+                val layout: ShimmerFrameLayout = findViewById(R.id.navigation_drawer_shimmer)
 
-            val headerView: View = navigationView.getHeaderView(0)
-            val headerViewAvatar: ImageView = headerView.findViewById(R.id.nav_avatar)
-            val headerUsername: TextView = headerView.findViewById(R.id.nav_username_tv)
-            val headerFullname: TextView = headerView.findViewById(R.id.nav_full_name_tv)
-            val headerFollowing: TextView = headerView.findViewById(R.id.nav_following_counter_tv)
-            val headingFollowers: TextView = headerView.findViewById(R.id.nav_followers_counter_tv)
-            val layout: ShimmerFrameLayout = headerView.findViewById(R.id.navigation_drawer_shimmer)
+                if (requireContext().isNetworkAvailable()) {
+                    profileViewModel.getUserCredentials(SessionManager(requireContext()).getUserId()!!)
+                } else {
+                    findNavController().navigate(R.id.noInternetFragment)
+                }
+
+                repeatOnStarted {
+                    profileViewModel.getUserCredentials.collectLatest { result ->
+                        layout.startShimmer()
+                        when (result) {
+
+                            is UserCredentials.Success -> {
+                                layout.stopShimmer()
+                                layout.beGone()
+
+                                result.user.apply {
+                                    headerFullname.text = fullName ?: R.string.default_user_fullname.toString()
+                                    headerUsername.text = "@$username"
+                                    headerFollowing.text = followingCount.toString()
+                                    headingFollowers.text = followersCount.toString()
+
+                                    headerViewAvatar.loadImagesWithGlideExt(profilePicture)
+                                    homePageToolbar.loadToolbarImage(profilePicture, homePageToolbar)
+                                }
+                            }
+                            is UserCredentials.Error -> { homeRootLayout.snackbarError(addPost, result.message, ""){} }
+                            is UserCredentials.Loading -> {}
+                        }
+                    }
+                }
+            }
 
             addPost.setOnClickListener { homeViewModel.onAddButtonPressed() }
 
@@ -72,32 +102,6 @@ class HomeFragment : Fragment() {
                     when(event){
                         is HomeUIEvent.OpenDrawer -> { drawerLayout.openDrawer(GravityCompat.START) }
                         is HomeUIEvent.NavigateToPublicPost -> { findNavController().navigate(R.id.action_homeFragment_to_publicPostFragment) }
-                    }
-                }
-            }
-
-            profileViewModel.getUserCredentials(SessionManager(requireContext()).getUserId()!!)
-            repeatOnStarted {
-                profileViewModel.getUserCredentials.collectLatest { result ->
-                    layout.startShimmer()
-                    when (result) {
-
-                        is UserCredentials.Success -> {
-                            layout.stopShimmer()
-                            layout.beGone()
-
-                            result.user.apply {
-                                headerFullname.text = fullName ?: R.string.default_user_fullname.toString()
-                                headerUsername.text = "@$username"
-                                headerFollowing.text = followingCount.toString()
-                                headingFollowers.text = followersCount.toString()
-
-                                headerViewAvatar.loadImagesWithGlideExt(profilePicture)
-                                homePageToolbar.loadToolbarImage(profilePicture, homePageToolbar)
-                            }
-                        }
-                        is UserCredentials.Error -> { homeRootLayout.snackbarError(addPost, result.message, ""){} }
-                        is UserCredentials.Loading -> {}
                     }
                 }
             }
@@ -121,14 +125,16 @@ class HomeFragment : Fragment() {
         }
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     private fun updateRecyclerView() {
-//        var isLastPage: Boolean
         binding.apply {
 
             rcView.vertical().adapter = homeAdapter
 
-            tweetViewModel.getTweet(shimmerLayout)
+            if (requireContext().isNetworkAvailable()) {
+                tweetViewModel.getTweet(shimmerLayout)
+            } else {
+                findNavController().navigate(R.id.noInternetFragment)
+            }
 
             rcView.vertical().adapter = homeAdapter
 
@@ -144,21 +150,16 @@ class HomeFragment : Fragment() {
                                 homeAdapter.differ.submitList(tweetList)
 
                                 swipeToRefreshLayout.setOnRefreshListener {
-                                    val freshList =
-                                        tweetList.sortedByDescending { time -> time.createdAt }
+                                    val freshList = tweetList.sortedByDescending { time -> time.createdAt }
                                     tweetList.clear()
                                     tweetList.addAll(freshList)
-                                    homeAdapter.notifyDataSetChanged()
+                                    homeAdapter.notifyItemChanged(freshList.size)
                                     swipeToRefreshLayout.isRefreshing = false
                                 }
                             }
 
                         } else {
-                            homeRootLayout.snackbarError(
-                                requireActivity().findViewById(R.id.bottom_nav_view),
-                                error = response.message().toString(),
-                                ""
-                            ) {}
+                            homeRootLayout.snackbarError(requireActivity().findViewById(R.id.bottom_nav_view), response.message().toString(), "") {}
                         }
                     }
                 }
@@ -225,14 +226,6 @@ class HomeFragment : Fragment() {
 //            if(newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) { isScrolling = true }
 //        }
 //    }
-
-
-
-    private fun isNetworkAvailable(): Boolean {
-        val connectivityManager = requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val networkInfo = connectivityManager.activeNetworkInfo
-        return networkInfo != null && networkInfo.isConnected
-    }
 
     private fun homeClickEvent(homeClickEvents: HomeAdapter.HomeClickEvents, tweet: Tweet) {
 

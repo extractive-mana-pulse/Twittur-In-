@@ -30,29 +30,30 @@
         android:layout_marginVertical="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        android:textAppearance="?attr/textAppearanceBodyLarge"
         app:layout_constraintTop_toBottomOf="@id/internet_status_page_an_view"/>
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/internet_status_description"
-        android:textSize="18sp"
-        android:textAlignment="center"
-        android:paddingHorizontal="16dp"
+        android:textAlignment="textStart"
+        android:layout_marginHorizontal="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        android:textAppearance="?attr/textAppearanceBodyMedium"
         app:layout_constraintTop_toBottomOf="@id/internet_status_page_title"/>
 
     <Button
         android:id="@+id/try_again_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="55dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:text="@string/try_again"
-        android:background="@drawable/try_again_btn_bg"
         android:layout_marginBottom="24dp"
         android:layout_marginHorizontal="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        android:background="@drawable/try_again_btn_bg"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -28,29 +28,6 @@ class TweetViewModel @Inject constructor(private val repository: TweetRepository
     private val responseTweets =  MutableStateFlow<Response<List<Tweet>>?>(null)
     val responseOfTweet: StateFlow<Response<List<Tweet>>?> = responseTweets.asStateFlow()
 
-//    init {
-//        getAllTweets()
-//    }
-//
-//    fun getAllTweets() = viewModelScope.launch { getTweet(shimmerLayout) }
-//
-//    private fun handleBreakingNews(response : Response<Tweet>) : Resource<Tweet> {
-//        if (response.isSuccessful) {
-//            response.body()?.let { result ->
-//                pageNumber++
-//                if (breakingNewsResponse == null) {
-//                    breakingNewsResponse = result
-//                } else {
-//                    val oldArticles = breakingNewsResponse?.tweets
-//                    val newArticles = result.tweets
-//                    oldArticles?.addAll(newArticles)
-//                }
-//                return Resource.Success(breakingNewsResponse ?: result)
-//            }
-//        }
-//        return Resource.Error(response.code().toString())
-//    }
-
     fun getTweet(shimmerLayout: ShimmerFrameLayout) {
         shimmerLayout.startShimmer()
         viewModelScope.launch {
@@ -59,21 +36,6 @@ class TweetViewModel @Inject constructor(private val repository: TweetRepository
             shimmerLayout.stopShimmer()
             shimmerLayout.beGone()
         }
-//        try {
-//            if (hasInternetConnection()) {
-//                val response = repository.getTweet()
-//                responseTweets.postValue(handleBreakingNews(response))
-//                shimmerLayout.stopShimmer()
-//                shimmerLayout.beGone()
-//            } else {
-//                responseTweets.postValue(Resource.Error("No internet connection"))
-//            }
-//        } catch (t : Throwable) {
-//            when(t) {
-//                is IOException -> responseTweets.postValue(Resource.Error("Network Failure"))
-//                else -> responseTweets.postValue(Resource.Error("Conversion Error"))
-//            }
-//        }
     }
 
     var userTweets: MutableLiveData<Response<List<Tweet>>> = MutableLiveData()

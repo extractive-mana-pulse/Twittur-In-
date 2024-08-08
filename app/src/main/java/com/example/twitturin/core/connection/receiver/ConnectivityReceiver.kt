@@ -3,18 +3,15 @@ package com.example.twitturin.core.connection.receiver
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.net.ConnectivityManager
-import android.widget.Toast
+import android.util.Log
+import com.example.twitturin.core.extensions.isNetworkAvailable
 
 class ConnectivityReceiver : BroadcastReceiver() {
-
     override fun onReceive(context: Context, intent: Intent) {
-        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val networkInfo = connectivityManager.activeNetworkInfo
-        if (networkInfo != null && networkInfo.isConnected) {
-            Toast.makeText(context, "Internet connection available", Toast.LENGTH_SHORT).show()
+        if (context.isNetworkAvailable()) {
+            Log.d("Internet status", "Internet connection available")
         } else {
-            Toast.makeText(context, "Internet connection not available", Toast.LENGTH_SHORT).show()
+            Log.d("Internet status", "Internet connection not available")
         }
     }
 }
