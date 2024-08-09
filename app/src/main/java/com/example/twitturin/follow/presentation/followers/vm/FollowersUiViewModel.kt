@@ -13,6 +13,5 @@ class FollowersUiViewModel : ViewModel() {
     val followersEvent = channel.receiveAsFlow()
 
     fun itemPressed() { viewModelScope.launch { channel.send(FollowersUiEvent.OnItemPressed) } }
-
     fun followPressed() { viewModelScope.launch { channel.send(FollowersUiEvent.OnFollowPressed) } }
 }

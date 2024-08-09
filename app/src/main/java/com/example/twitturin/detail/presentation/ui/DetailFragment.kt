@@ -99,14 +99,12 @@ class DetailFragment : Fragment() {
                         DetailPageUI.OnCommentPressed -> { replyEt.showKeyboard() }
                         DetailPageUI.OnFollowPressed -> {
 
-                            followingViewModel.followUsers(data?.author?.id.toString(), "Bearer ${SessionManager(requireContext()).getToken()}")
-                            repeatOnStarted {
-                                followingViewModel.follow.collectLatest { result ->
-                                    when (result) {
-                                        is Follow.Success -> { detailRootLayout.snackbar(replyLayout, message = "now you follow: ${data?.author?.username?.uppercase()}",) }
-                                        is Follow.Error -> { detailRootLayout.snackbarError(replyLayout, error = result.message, "") {} }
-                                        Follow.Loading -> {}
-                                    }
+                            followingViewModel.followUser(data?.author?.id.toString(), "Bearer ${SessionManager(requireContext()).getToken()}")
+                            followingViewModel.follow.observe(viewLifecycleOwner) { result ->
+                                when (result) {
+                                    is Follow.Success -> { detailRootLayout.snackbar(replyLayout, message = "now you follow: ${data?.author?.username?.uppercase()}",) }
+                                    is Follow.Error -> { detailRootLayout.snackbarError(replyLayout, error = result.message, "") {} }
+                                    Follow.Loading -> {}
                                 }
                             }
                         }

@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.example.twitturin.core.extensions.beGone
 import com.example.twitturin.databinding.FragmentNotificationsBinding
 import com.example.twitturin.notification.presentation.vm.NotificationViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -23,6 +24,9 @@ class NotificationsFragment : Fragment() {
         binding.notificationsFragment = this
 
         binding.apply {
+
+            downloadLayout.root.beGone()
+
 //            notificationDownloadBtn.setOnClickListener { notificationViewModel.onDownloadPressed() }
 //            newUpdateLayout.setOnClickListener { notificationViewModel.onItemPressed() }
         }

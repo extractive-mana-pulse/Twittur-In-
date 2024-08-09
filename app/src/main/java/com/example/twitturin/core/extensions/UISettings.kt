@@ -25,7 +25,7 @@ fun AppCompatActivity.checkStatus(bottomNavigationView: BottomNavigationView) {
 fun android.app.Activity.appBNVDialog(bottomNavigationView: BottomNavigationView) {
     val builder = MaterialAlertDialogBuilder(this, R.style.ThemeOverlay_App_MaterialAlertDialog)
     builder.setTitle(resources.getString(R.string.change_theme))
-    val styles = arrayOf("Label", "Un label", "Selected")
+    val styles = arrayOf("Labeled", "Unlabeled", "Selected")
     val checkedItem = MyPreferences(this).labelStatus
 
     builder.setSingleChoiceItems(styles, checkedItem) { dialog, which ->

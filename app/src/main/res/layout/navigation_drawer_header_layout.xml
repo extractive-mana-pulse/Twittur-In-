@@ -28,8 +28,8 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/nav_avatar"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
         android:layout_marginTop="24dp"
         android:layout_marginStart="16dp"
         android:contentDescription="@null"
@@ -42,13 +42,13 @@
         android:layout_height="wrap_content"
         android:text=""
         android:textStyle="bold"
-        android:textSize="18sp"
         android:maxLines="1"
         android:ellipsize="end"
         android:layout_marginTop="8dp"
         android:layout_marginStart="16dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/nav_avatar"/>
+        app:layout_constraintTop_toBottomOf="@id/nav_avatar"
+        android:textAppearance="?attr/textAppearanceTitleMedium"/>
 
     <TextView
         android:id="@+id/nav_username_tv"
@@ -59,6 +59,7 @@
         android:ellipsize="end"
         android:layout_marginStart="16dp"
         app:layout_constraintStart_toStartOf="parent"
+        android:textAppearance="?attr/textAppearanceTitleMedium"
         app:layout_constraintTop_toBottomOf="@id/nav_full_name_tv"/>
 
     <LinearLayout
@@ -73,12 +74,11 @@
 
         <TextView
             android:id="@+id/nav_following_counter_tv"
-            android:layout_width="25dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text=""
+            android:layout_marginEnd="4dp"
             android:textStyle="bold"
-            android:textColor="?attr/colorOnSurfaceVariant"
-            android:layout_marginTop="5dp"
             android:gravity="center"/>
 
         <TextView
@@ -86,29 +86,26 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/following"
-            android:layout_marginTop="5dp"
-            android:layout_marginStart="3dp"
-            app:layout_constraintStart_toEndOf="@id/following_counter_tv"/>
+            android:layout_gravity="center"
+            android:layout_marginStart="3dp"/>
 
         <TextView
             android:id="@+id/nav_followers_counter_tv"
-            android:layout_width="25dp"
-            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:text=""
             android:textStyle="bold"
-            android:textColor="?attr/colorOnSurfaceVariant"
-            android:layout_marginTop="5dp"
-            android:layout_marginStart="25sp"
-            app:layout_constraintStart_toEndOf="@id/following_tv"/>
+            android:layout_marginEnd="4dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="24dp"/>
 
         <TextView
             android:id="@+id/followers_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/followers"
-            android:layout_marginTop="5dp"
-            android:layout_marginStart="3dp"
-            app:layout_constraintStart_toEndOf="@id/followers_counter_tv" />
+            android:layout_gravity="center"
+            android:layout_marginStart="3dp"/>
 
     </LinearLayout>
 

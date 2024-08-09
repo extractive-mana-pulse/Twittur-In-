@@ -1,8 +1,12 @@
 package com.example.twitturin.core.extensions
 
+import android.annotation.SuppressLint
+import android.content.Context
+import android.view.LayoutInflater
 import android.view.View
 import androidx.core.content.ContextCompat
 import com.example.twitturin.R
+import com.example.twitturin.databinding.CustomSnackbarBinding
 import com.google.android.material.snackbar.Snackbar
 
 inline fun View.snackbarError(
@@ -39,5 +43,33 @@ fun View.snackbar(
         .setTextMaxLines(5)
         .setDuration(5000)
 
+    snackbar.show()
+}
+
+@SuppressLint("RestrictedApi")
+fun View.showCustomSnackbar(
+    anchorView: View,
+    iconResId: Int? = null,
+    context: Context,
+    message: String
+) {
+    val snackbarView = LayoutInflater.from(context).inflate(R.layout.custom_snackbar, null)
+    val bind = CustomSnackbarBinding.bind(snackbarView)
+
+    val duration = Snackbar.ANIMATION_MODE_SLIDE
+
+    bind.apply {
+        snackbarContext.text = message
+        iconResId?.let { snackbarIcon.setImageResource(it) }
+    }
+    val snackbar = Snackbar
+        .make(this, "", duration)
+        .setAnchorView(anchorView)
+        .setTextMaxLines(2)
+        .setDuration(2500)
+
+    val snackbarLayout = snackbar.view as Snackbar.SnackbarLayout
+    snackbarLayout.setPadding(0, 0, 0, 0)
+    snackbarLayout.addView(snackbarView, 0)
     snackbar.show()
 }

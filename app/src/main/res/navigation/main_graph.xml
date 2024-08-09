@@ -356,24 +356,26 @@
 
     </fragment>
 
+<!--  followersListFragment  -->
     <fragment
         android:id="@+id/followersListFragment"
         android:name="com.example.twitturin.follow.presentation.followers.ui.FollowersFragment"
         android:label="fragment_followers_list"
-        tools:layout="@layout/fragment_followers" >
+        tools:layout="@layout/fragment_followers">
         <action
             android:id="@+id/action_followersListFragment_to_profileFragment"
-            app:destination="@id/profileFragment" />
+            app:destination="@id/profileFragment"/>
     </fragment>
 
+<!--  followingListFragment  -->
     <fragment
         android:id="@+id/followingListFragment"
         android:name="com.example.twitturin.follow.presentation.following.ui.FollowingFragment"
         android:label="fragment_following_list"
-        tools:layout="@layout/fragment_following" >
+        tools:layout="@layout/fragment_following">
         <action
             android:id="@+id/action_followingListFragment_to_profileFragment"
-            app:destination="@id/profileFragment" />
+            app:destination="@id/profileFragment"/>
     </fragment>
 
     <fragment

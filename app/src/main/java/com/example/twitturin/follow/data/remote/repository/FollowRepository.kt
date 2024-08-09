@@ -7,10 +7,8 @@ import retrofit2.Response
 interface FollowRepository {
 
     suspend fun getListOfFollowers(userId : String) : Response<List<FollowUser>>
-
     suspend fun getListOfFollowing(userId : String) : Response<List<FollowUser>>
-
     fun followUser(id: String, token: String) : Call<FollowUser>
-
     fun unFollowUser(id: String, token: String) : Call<FollowUser>
+
 }

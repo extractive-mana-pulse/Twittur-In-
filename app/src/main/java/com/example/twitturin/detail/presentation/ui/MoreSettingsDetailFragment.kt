@@ -12,7 +12,6 @@ import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
 import com.example.twitturin.core.extensions.beGone
 import com.example.twitturin.core.extensions.beVisible
-import com.example.twitturin.core.extensions.repeatOnStarted
 import com.example.twitturin.core.extensions.snackbar
 import com.example.twitturin.core.extensions.snackbarError
 import com.example.twitturin.core.manager.SessionManager
@@ -27,7 +26,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
 
 @AndroidEntryPoint
 class MoreSettingsDetailFragment : BottomSheetDialogFragment() {
@@ -66,18 +64,16 @@ class MoreSettingsDetailFragment : BottomSheetDialogFragment() {
             bUsernameTv.text = "@${args.tweet.author?.username}"
 
             followLayout.setOnClickListener {
-                followViewModel.followUsers(args.tweet.author?.id!!, "Bearer $token")
-                repeatOnStarted {
-                    followViewModel.follow.collectLatest { result ->
-                        when (result) {
-                            is Follow.Success -> {
-                                dismiss()
-                                replyLayout.snackbar(replyLayout, "now you follow: ${args.tweet.author?.username?.uppercase()}")
-                            }
-                            is Follow.Error -> { replyLayout.snackbarError(replyLayout, result.message, ""){} }
-
-                            Follow.Loading -> {}
+                followViewModel.followUser(args.tweet.author?.id!!, "Bearer $token")
+                followViewModel.follow.observe(viewLifecycleOwner) { result ->
+                    when (result) {
+                        is Follow.Success -> {
+                            dismiss()
+                            replyLayout.snackbar(replyLayout, "now you follow: ${args.tweet.author?.username?.uppercase()}")
                         }
+                        is Follow.Error -> { replyLayout.snackbarError(replyLayout, result.message, ""){} }
+
+                        Follow.Loading -> {}
                     }
                 }
             }

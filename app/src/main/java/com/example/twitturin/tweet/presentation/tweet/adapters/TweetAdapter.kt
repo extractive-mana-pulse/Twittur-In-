@@ -70,6 +70,11 @@ class TweetAdapter(private val clickEvents: (TweetClickEvents, Tweet) -> Unit) :
         }
     }
     override fun getItemCount(): Int = differ.currentList.size
+
+    fun removeItem(position: Int) {
+        differ.currentList.removeAt(position)
+        notifyItemRemoved(position)
+    }
 }
 
 //        var likeCount: Int? = item.likes

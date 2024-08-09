@@ -22,14 +22,14 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
-import leakcanary.LeakCanary
+
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    private val connectivityObservable by lazy { ConnectivityObservable(this) }
     private var isConnected = false
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
+    private val connectivityObservable by lazy { ConnectivityObservable(this) }
     private val navController by lazy { (supportFragmentManager.findFragmentById(R.id.nav_host_fragment_container) as NavHostFragment).navController }
 
     @SuppressLint("PrivateResource", "CheckResult")
@@ -37,13 +37,13 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        connectivityObservable.observe()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { connected ->
-                isConnected = connected
-                if (isConnected) { Log.d("Internet status", "Connected") } else { navController.navigate(R.id.noInternetFragment) }
-            }
+//        connectivityObservable.observe()
+//            .subscribeOn(Schedulers.io())
+//            .observeOn(AndroidSchedulers.mainThread())
+//            .subscribe { connected ->
+//                isConnected = connected
+//                if (isConnected) { Log.d("Internet status", "Connected") } else { navController.navigate(R.id.noInternetFragment) }
+//            }
 
         if (Build.VERSION.SDK_INT >= 33) {
             notificationPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity() {
             this@MainActivity.checkStatus(bottomNavView)
             bottomNavView.setupWithNavController(navController)
         }
-        LeakCanary
+//        LeakCanary
         this.checkTheme()
         this.loadLocale()
     }
@@ -105,5 +105,5 @@ class MainActivity : AppCompatActivity() {
     }
     private var hasNotificationPermissionGranted = false
 
-    override fun onDestroy() { super.onDestroy();connectivityObservable.stopObserving() }
+//    override fun onDestroy() { super.onDestroy();connectivityObservable.stopObserving() }
 }

@@ -12,9 +12,9 @@ import com.example.twitturin.core.extensions.loadImagesWithGlideExt
 import com.example.twitturin.databinding.RcViewFollowersBinding
 import com.example.twitturin.follow.domain.model.FollowUser
 
-class FollowersAdapter(private val clickEvent: (ClickEvent, FollowUser) -> Unit) : RecyclerView.Adapter<FollowersAdapter.ViewHolder>() {
+class FollowersAdapter(private val clickEvent: (FollowersClickEvent, FollowUser) -> Unit) : RecyclerView.Adapter<FollowersAdapter.ViewHolder>() {
 
-    enum class ClickEvent {
+    enum class FollowersClickEvent {
         FOLLOW,
         ITEM_SELECTED,
     }
@@ -43,18 +43,18 @@ class FollowersAdapter(private val clickEvent: (ClickEvent, FollowUser) -> Unit)
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = differ.currentList[position]
+        val context = holder.itemView.context
 
         item.apply {
             holder.binding.apply {
 
                 usernameFollowerTv.text = "@$username"
                 userFollowerAvatar.loadImagesWithGlideExt(profilePicture)
-                fullNameFollowerTv.text = fullName ?: R.string.default_user_fullname.toString()
-                postDescription.text = bio ?: R.string.empty_bio.toString()
+                fullNameFollowerTv.text = fullName ?: context.resources.getString(R.string.default_user_fullname)
+                postDescription.text = bio ?: context.resources.getString(R.string.empty_bio)
 
-                followBtn.setOnClickListener { clickEvent(ClickEvent.FOLLOW, item) }
-
-                holder.itemView.setOnClickListener { clickEvent(ClickEvent.ITEM_SELECTED, item) }
+                followBtn.setOnClickListener { clickEvent(FollowersClickEvent.FOLLOW, item) }
+                holder.itemView.setOnClickListener { clickEvent(FollowersClickEvent.ITEM_SELECTED, item) }
             }
         }
     }

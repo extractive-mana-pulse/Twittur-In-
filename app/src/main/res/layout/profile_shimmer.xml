@@ -87,7 +87,7 @@
 
         <TextView
             android:id="@+id/following_counter_shimmer_tv"
-            android:layout_width="35dp"
+            android:layout_width="16dp"
             android:layout_height="match_parent"
             android:background="@drawable/shimmer_bg"/>
 
@@ -101,7 +101,7 @@
 
         <TextView
             android:id="@+id/followers_counter_shimmer_tv"
-            android:layout_width="35dp"
+            android:layout_width="16dp"
             android:layout_height="match_parent"
             android:layout_marginStart="16dp"
             android:background="@drawable/shimmer_bg"/>

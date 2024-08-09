@@ -142,7 +142,22 @@ class TweetsFragment : Fragment() {
                                         setMessage(requireContext().resources.getString(R.string.delete_tweet_message))
 
                                         setPositiveButton(requireContext().resources.getString(R.string.yes)) { _, _ ->
+                                            // TODO: Check the recyclerview updates
                                             tweetViewModel.deleteTweet(tweet.id!!,"Bearer ${SessionManager(requireContext()).getToken()}")
+                                            tweetViewModel.deleteTweetResult.observe(viewLifecycleOwner) { result ->
+
+                                                when(result){
+                                                    is TweetDelete.Success -> {
+                                                        create().dismiss()
+                                                        userPostAdapter.removeItem(tweet.id.toInt())
+                                                        Snackbar.make(binding.tweetsRootLayout, R.string.deleted, Snackbar.LENGTH_SHORT).show()
+                                                    }
+                                                    is  TweetDelete.Error -> {
+                                                        create().dismiss()
+                                                        Snackbar.make(binding.tweetsRootLayout, result.message, Snackbar.LENGTH_SHORT).show()
+                                                    }
+                                                }
+                                            }
                                         }
 
                                         setNegativeButton(requireContext().resources.getString(R.string.no)) { dialog, _ ->
@@ -150,20 +165,6 @@ class TweetsFragment : Fragment() {
                                         }
 
                                         create().show()
-
-                                        tweetViewModel.deleteTweetResult.observe(viewLifecycleOwner) { result ->
-
-                                            when(result){
-                                                is TweetDelete.Success -> {
-                                                    create().dismiss()
-                                                    Snackbar.make(binding.tweetsRootLayout, R.string.deleted, Snackbar.LENGTH_SHORT).show()
-                                                }
-                                                is  TweetDelete.Error -> {
-                                                    create().dismiss()
-                                                    Snackbar.make(binding.tweetsRootLayout, result.message, Snackbar.LENGTH_SHORT).show()
-                                                }
-                                            }
-                                        }
                                     }
                                     true
                                 }

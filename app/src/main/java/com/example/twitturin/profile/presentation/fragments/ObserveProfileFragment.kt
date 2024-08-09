@@ -9,7 +9,6 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
 import com.example.twitturin.core.extensions.loadImagesWithGlideExt
-import com.example.twitturin.core.extensions.repeatOnStarted
 import com.example.twitturin.core.extensions.snackbar
 import com.example.twitturin.core.extensions.snackbarError
 import com.example.twitturin.core.manager.SessionManager
@@ -18,7 +17,6 @@ import com.example.twitturin.follow.presentation.followers.sealed.Follow
 import com.example.twitturin.follow.presentation.vm.FollowViewModel
 import com.example.twitturin.search.domain.model.SearchUser
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
 
 /*
 * Process: com.example.twitturin, PID: 16085 java.lang.NullPointerException: Attempt to invoke virtual method 'int java.lang.String.hashCode()' on a null object reference
@@ -53,17 +51,15 @@ class ObserveProfileFragment : Fragment() {
 
             observeFollowBtn.setOnClickListener {
 
-                followViewModel.followUsers(data?.id!!, "Bearer ${SessionManager(requireContext()).getToken()}")
-                repeatOnStarted {
-                    followViewModel.follow.collectLatest {
-                        when(it) {
-                            is Follow.Error -> { snackbarView.snackbarError(snackbarView, it.message, ""){} }
-                            is Follow.Success -> {
-                                snackbarView.snackbar(snackbarView, "you follow: ${data.username}")
-                                observeFollowBtn.text = resources.getString(R.string.unfollow)
-                            }
-                            Follow.Loading -> {}
+                followViewModel.followUser(data?.id!!, "Bearer ${SessionManager(requireContext()).getToken()}")
+                followViewModel.follow.observe(viewLifecycleOwner) {
+                    when(it) {
+                        is Follow.Error -> { snackbarView.snackbarError(snackbarView, it.message, ""){} }
+                        is Follow.Success -> {
+                            snackbarView.snackbar(snackbarView, "you follow: ${data.username}")
+                            observeFollowBtn.text = resources.getString(R.string.unfollow)
                         }
+                        Follow.Loading -> {}
                     }
                 }
             }

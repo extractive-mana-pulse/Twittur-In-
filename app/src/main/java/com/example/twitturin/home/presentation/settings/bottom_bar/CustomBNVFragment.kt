@@ -4,15 +4,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
 import com.example.twitturin.core.extensions.appBNVDialog
+import com.example.twitturin.core.extensions.expandedSheet
 import com.example.twitturin.core.extensions.setupWithAdapter
 import com.example.twitturin.databinding.FragmentCustomBNVBinding
 import com.example.twitturin.home.presentation.settings.bottom_bar.adapter.BottomNavViewAdapter
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class CustomBNVFragment : BottomSheetDialogFragment() {
@@ -38,20 +37,6 @@ class CustomBNVFragment : BottomSheetDialogFragment() {
                 }
             )
         }
-
-        val bottomSheet : FrameLayout? = dialog?.findViewById(com.google.android.material.R.id.design_bottom_sheet)!!
-        bottomSheet?.layoutParams?.height = ViewGroup.LayoutParams.MATCH_PARENT
-        val behavior = BottomSheetBehavior.from(bottomSheet!!)
-
-        behavior.apply {
-            isDraggable = false
-            peekHeight = resources.displayMetrics.heightPixels
-            state = BottomSheetBehavior.STATE_EXPANDED
-
-            addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
-                override fun onStateChanged(bottomSheet: View, newState: Int) {}
-                override fun onSlide(bottomSheet: View, slideOffset: Float) {}
-            })
-        }
+        expandedSheet()
     }
 }

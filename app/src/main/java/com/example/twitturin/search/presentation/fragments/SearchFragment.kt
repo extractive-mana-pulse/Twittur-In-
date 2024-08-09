@@ -15,7 +15,6 @@ import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
 import com.example.twitturin.core.extensions.beGone
 import com.example.twitturin.core.extensions.beVisible
-import com.example.twitturin.core.extensions.repeatOnStarted
 import com.example.twitturin.core.extensions.snackbar
 import com.example.twitturin.core.extensions.snackbarError
 import com.example.twitturin.core.extensions.vertical
@@ -31,7 +30,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.util.Locale
 
@@ -130,14 +128,12 @@ class SearchFragment : Fragment() {
             }
 
             SearchAdapter.SearchCLickEvents.FOLLOW -> {
-                followViewModel.followUsers(searchUser.id!!, "Bearer${SessionManager(requireContext()).getToken()}")
-                repeatOnStarted {
-                    followViewModel.follow.collectLatest {
-                        when(it) {
-                            is Follow.Success -> { binding.searchRootLayout.snackbar(binding.searchRootLayout, searchUser.username.toString()) }
-                            is Follow.Error -> { binding.searchRootLayout.snackbarError(binding.searchRootLayout, it.message, ""){} }
-                            Follow.Loading -> {}
-                        }
+                followViewModel.followUser(searchUser.id!!, "Bearer${SessionManager(requireContext()).getToken()}")
+                followViewModel.follow.observe(viewLifecycleOwner) {
+                    when(it) {
+                        is Follow.Success -> { binding.searchRootLayout.snackbar(binding.searchRootLayout, searchUser.username.toString()) }
+                        is Follow.Error -> { binding.searchRootLayout.snackbarError(binding.searchRootLayout, it.message, ""){} }
+                        Follow.Loading -> {}
                     }
                 }
             }

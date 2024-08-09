@@ -50,8 +50,8 @@ class FollowingAdapter(private val clickEvent: (FollowingClickEvent, FollowUser)
 
                 usernameFollowingTv.text = "@$username"
                 userFollowingAvatar.loadImagesWithGlideExt(profilePicture)
-                fullNameFollowingTv.text = fullName ?: R.string.default_user_fullname.toString()
-                userFollowingPostDescription.text = bio ?: R.string.empty_bio.toString()
+                fullNameFollowingTv.text = fullName ?: context.resources.getString(R.string.default_user_fullname)
+                userFollowingPostDescription.text = bio ?: context.resources.getString(R.string.empty_bio)
 
                 unfollowBtn.setOnClickListener { clickEvent(FollowingClickEvent.UNFOLLOW, item) }
                 holder.itemView.setOnClickListener { clickEvent(FollowingClickEvent.ITEM, item) }
