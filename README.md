@@ -22,14 +22,35 @@ TwitturIn is a social media application designed specifically for the Turin Univ
 
 TwitturIn is built using the following technologies:
 
-- **Front-end**: React.js, TypeScript, and SCSS
-- **Back-end**: Node.js, Express.js, and MongoDB
+- **Interface**: Android XML 
+- **Network Integration**: Retrofit
 - **Notifications**: Firebase Cloud Messaging
-- **Deployment**: Docker and Kubernetes
+
+
+## App Photos
+
+<img src="" alt="Splash Screen" width="250"/>
+
+<img src="" alt="Home Screen" width="250"/>
+
+<img src="" alt="Detail Screen" width="250"/>
+
+<img src="" alt="Share Screen" width="250"/>
+
+<img src="" alt="Bookmarks Screen" width="250"/>
+
+<img src="" alt="Search Screen" width="250"/>
+
+<img src="" alt="Search progress Screen" width="250"/>
+
+<img src="" alt="Search result Screen" width="250"/>
+
+<img src="" alt="Search via mic Screen" width="250"/>
+
 
 ## Installation
 
-To install please visit our official web-site [clicke me](https://twitturin.onrender.com/) or go to releases page on [github](https://github.com/extractive-mana-pulse/Twittur-In-/releases)
+To install please visit our official web-site [clicke me](https://twitturin.onrender.com/) or go to releases page on Github [or me](https://github.com/extractive-mana-pulse/Twittur-In-/releases)
 
 ## Contributing
 
