@@ -1,4 +1,4 @@
-![logout_dialog](https://github.com/user-attachments/assets/05b9ead1-2ce6-43bc-9a34-f5b24c25fa3b)# TwitturIn
+# TwitturIn
 
 TwitturIn is a social media application designed specifically for the Turin University community in Tashkent. It aims to provide a robust and efficient platform for students, professors, and the dean's office to connect, share information, and stay informed.
 
@@ -33,7 +33,7 @@ TwitturIn is built using the following technologies:
 
 <img src="https://github.com/user-attachments/assets/68beaa74-a942-4f04-9a89-7ef2f16f4e36" alt="Kind" width="250"/>
 
-<img src="![professor_registration](https://github.com/user-attachments/assets/c5a88794-2285-47d2-976e-fd261c74eb3d)" alt="Professor registration" width="250"/>
+<img src="https://github.com/user-attachments/assets/c5a88794-2285-47d2-976e-fd261c74eb3d" alt="Professor registration" width="250"/>
 
 <img src="https://github.com/user-attachments/assets/565927d2-f723-4560-94d5-d44b3f8ab52e" alt="Student Registration" width="250"/>
 
@@ -67,7 +67,6 @@ TwitturIn is built using the following technologies:
 
 <img src="https://github.com/user-attachments/assets/3038d5cf-a4b4-41fd-9a04-5618daa0dbd4" alt="Feedback" width="250"/>
 
-<img src="https://github.com/user-attachments/assets/cdf65442-5f92-43b4-a17d-1578d38c85be" alt="Settings" width="250"/>
 
 ## Installation
 
