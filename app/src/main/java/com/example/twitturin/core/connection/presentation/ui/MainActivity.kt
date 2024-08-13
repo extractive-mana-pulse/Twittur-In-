@@ -7,6 +7,7 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
@@ -37,13 +38,13 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-//        connectivityObservable.observe()
-//            .subscribeOn(Schedulers.io())
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .subscribe { connected ->
-//                isConnected = connected
-//                if (isConnected) { Log.d("Internet status", "Connected") } else { navController.navigate(R.id.noInternetFragment) }
-//            }
+        connectivityObservable.observe()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { connected ->
+                isConnected = connected
+                if (isConnected) { Log.d("Internet status", "Connected") } else { navController.navigate(R.id.noInternetFragment) }
+            }
 
         if (Build.VERSION.SDK_INT >= 33) {
             notificationPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
@@ -105,5 +106,6 @@ class MainActivity : AppCompatActivity() {
     }
     private var hasNotificationPermissionGranted = false
 
-//    override fun onDestroy() { super.onDestroy();connectivityObservable.stopObserving() }
+    override fun onPause() { super.onPause();connectivityObservable.stopObserving() }
+    override fun onDestroy() { super.onDestroy();connectivityObservable.stopObserving() }
 }

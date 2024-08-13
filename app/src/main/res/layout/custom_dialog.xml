@@ -1,5 +1,4 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -20,57 +19,57 @@
         android:layout_height="wrap_content"
         android:text="@string/deleting_account_activity_context"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/deleting_account_password_input_context"/>
+<!--    <TextView-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="@string/deleting_account_password_input_context"/>-->
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+<!--    <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content">-->
 
-        <EditText
-            android:id="@+id/email_confirm_et"
-            android:layout_width="0dp"
-            android:layout_height="56dp"
-            android:hint="@string/email"
-            android:layout_marginVertical="8dp"
-            android:padding="8dp"
-            android:textColorHint="?attr/colorOnSurfaceVariant"
-            android:background="@drawable/pswd_et_bg"
-            android:inputType="text"
-            tools:ignore="Autofill,TextFields"
-            app:layout_constraintEnd_toStartOf="@id/email_confirm_btn"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+<!--        <EditText-->
+<!--            android:id="@+id/email_confirm_et"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="56dp"-->
+<!--            android:hint="@string/email"-->
+<!--            android:layout_marginVertical="8dp"-->
+<!--            android:padding="8dp"-->
+<!--            android:textColorHint="?attr/colorOnSurfaceVariant"-->
+<!--            android:background="@drawable/pswd_et_bg"-->
+<!--            android:inputType="text"-->
+<!--            tools:ignore="Autofill,TextFields"-->
+<!--            app:layout_constraintEnd_toStartOf="@id/email_confirm_btn"-->
+<!--            app:layout_constraintTop_toTopOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"/>-->
 
-        <ImageButton
-            android:id="@+id/email_confirm_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="56dp"
-            android:layout_gravity="center"
-            android:src="@drawable/check"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:backgroundTint="@android:color/transparent"
-            tools:ignore="ContentDescription" />
+<!--        <ImageButton-->
+<!--            android:id="@+id/email_confirm_btn"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="56dp"-->
+<!--            android:layout_gravity="center"-->
+<!--            android:src="@drawable/check"-->
+<!--            app:layout_constraintTop_toTopOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            android:backgroundTint="@android:color/transparent"-->
+<!--            tools:ignore="ContentDescription" />-->
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+<!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
 
-    <EditText
-        android:id="@+id/code_sent_from_email_et"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:hint="@string/code"
-        android:layout_marginVertical="8dp"
-        android:padding="8dp"
-        android:visibility="gone"
-        android:textColorHint="?attr/colorOnSurfaceVariant"
-        android:background="@drawable/pswd_et_bg"
-        android:inputType="text"
-        tools:ignore="Autofill,TextFields"/>
+<!--    <EditText-->
+<!--        android:id="@+id/code_sent_from_email_et"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="56dp"-->
+<!--        android:hint="@string/code"-->
+<!--        android:layout_marginVertical="8dp"-->
+<!--        android:padding="8dp"-->
+<!--        android:visibility="gone"-->
+<!--        android:textColorHint="?attr/colorOnSurfaceVariant"-->
+<!--        android:background="@drawable/pswd_et_bg"-->
+<!--        android:inputType="text"-->
+<!--        tools:ignore="Autofill,TextFields"/>-->
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

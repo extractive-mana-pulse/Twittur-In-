@@ -10,14 +10,14 @@
         android:layout_height="0dp"
         android:layout_margin="16dp"
         android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintStart_toStartOf="parent">
 
         <ImageView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:src="@drawable/logo"
+            android:id="@+id/download_image"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
             android:contentDescription="@null"/>
 
         <TextView
@@ -25,17 +25,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="New version 2.0.2"
             android:textStyle="bold|italic"
+            android:textSize="18sp"
             android:layout_marginHorizontal="16dp"
             android:textAppearance="?attr/textAppearanceBodyLarge"/>
 
         <Button
             android:id="@+id/notification_download_btn"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="56dp"
             android:layout_gravity="center"
-            android:text="download"/>
+            android:text="@string/download"
+            android:layout_marginStart="16dp"/>
 
     </LinearLayout>
 

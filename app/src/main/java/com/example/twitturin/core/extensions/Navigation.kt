@@ -26,7 +26,7 @@ fun AppCompatActivity.bottomNavigationUI(view: View) {
         R.id.noInternetFragment,
         R.id.feedbackFragment,
         R.id.publicPostPolicyFragment,
-        R.id.newUpdatePatchNoteFragment,
+        R.id.patchNoteFragment,
         R.id.listOfLikesFragment,
         R.id.observeProfileFragment,
         R.id.settingsFragment,

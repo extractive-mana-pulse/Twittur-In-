@@ -1,8 +1,12 @@
 package com.example.twitturin.core.extensions
 
+import android.app.Activity
+import android.os.Handler
+import android.os.Looper
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.LinearLayout
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import com.example.twitturin.R
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -19,7 +23,7 @@ inline fun Fragment.defaultDialog(
         setTitle(title)
         setMessage(message)
 
-        setPositiveButton(resources.getString(R.string.yes)) { _, _ -> actionYesClicked.invoke() }
+        setPositiveButton(resources.getString(R.string.yes)) { dialog, _ -> actionYesClicked.invoke().apply { dialog.dismiss() } }
 
         setNegativeButton(resources.getString(R.string.no)) { dialog, _ -> actionNoClicked.invoke().apply { dialog.dismiss() } }
 
@@ -42,31 +46,42 @@ inline fun Fragment.customDialog(
 
     val cancelBtn = dialogView.findViewById<LinearLayout>(R.id.cancel_btn)
     val deleteBtn = dialogView.findViewById<LinearLayout>(R.id.delete_btn)
-    val emailEt = dialogView.findViewById<EditText>(R.id.email_confirm_et)
-    val codeEt = dialogView.findViewById<EditText>(R.id.code_sent_from_email_et)
-    val emailConfirmBtn = dialogView.findViewById<ImageButton>(R.id.email_confirm_btn)
+//    val emailEt = dialogView.findViewById<EditText>(R.id.email_confirm_et)
+//    val codeEt = dialogView.findViewById<EditText>(R.id.code_sent_from_email_et)
+//    val emailConfirmBtn = dialogView.findViewById<ImageButton>(R.id.email_confirm_btn)
 
-    emailConfirmBtn.beGone()
+//    emailConfirmBtn.beGone()
 
-    codeEt.deleteDialogCodeWatcher(deleteBtn, codeEt)
+//    codeEt.deleteDialogCodeWatcher(deleteBtn, codeEt)
 
-    emailEt.deleteDialogEmailWatcher(emailConfirmBtn, emailEt)
+//    emailEt.deleteDialogEmailWatcher(emailConfirmBtn, emailEt)
 
-    emailConfirmBtn.setOnClickListener {
+//    emailConfirmBtn.setOnClickListener {
         // todo: logic of code when email is pressed
-        actionEmailPressed.invoke()
-    }
+//        actionEmailPressed.invoke()
+//    }
 
     cancelBtn.setOnClickListener {
         // todo: logic of code to cancel all actions of custom Dialog.
         actionCancelPressed.invoke().apply { alertDialog.dismiss() }
     }
 
-    deleteBtn.stateDisabled()
+    deleteBtn.stateEnabled()
     deleteBtn.setOnClickListener {
         // todo: write code. when delete clicked
-        actionDeletePressed.invoke()
-        alertDialog.dismiss()
+        actionDeletePressed.invoke().apply { alertDialog.dismiss() }
     }
     alertDialog.show()
+}
+
+fun Activity.dialogSuccess(){
+    val builder = AlertDialog.Builder(this,R.style.ThemeOverlay_App_MaterialAlertDialog).create()
+    val view = layoutInflater.inflate(R.layout.custom_success,null)
+    builder.setView(view)
+    builder.setCanceledOnTouchOutside(false)
+    builder.show()
+
+    Handler(Looper.getMainLooper()).postDelayed({
+        builder.dismiss()
+    }, 3000)
 }

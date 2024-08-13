@@ -13,10 +13,11 @@ import androidx.navigation.fragment.findNavController
 import com.example.twitturin.R
 import com.example.twitturin.auth.presentation.stayIn.vm.StayInViewModel
 import com.example.twitturin.core.extensions.beGone
-import com.example.twitturin.core.extensions.beVisible
+import com.example.twitturin.core.extensions.beVisibleIf
 import com.example.twitturin.core.extensions.converter
 import com.example.twitturin.core.extensions.customDialog
 import com.example.twitturin.core.extensions.defaultDialog
+import com.example.twitturin.core.extensions.dialogSuccess
 import com.example.twitturin.core.extensions.fullScreenImage
 import com.example.twitturin.core.extensions.loadImagesWithGlideExt
 import com.example.twitturin.core.extensions.repeatOnStarted
@@ -32,6 +33,7 @@ import com.example.twitturin.profile.presentation.sealed.UserCredentials
 import com.example.twitturin.profile.presentation.vm.ProfileUIViewModel
 import com.example.twitturin.profile.presentation.vm.ProfileViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -91,12 +93,19 @@ class ProfileFragment : Fragment() {
                                                         repeatOnStarted {
                                                             profileViewModel.deleteResult.collectLatest { result ->
                                                                 when (result) {
-                                                                    is AccountDelete.Success -> { findNavController().navigate(R.id.action_profileFragment_to_signInFragment) }
+                                                                    is AccountDelete.Success -> {
+                                                                        SessionManager(requireContext()).clearToken()
+                                                                        stayInViewModel.setUserLoggedIn(false)
+                                                                        requireActivity().dialogSuccess()
+                                                                        delay(3000)
+                                                                        findNavController().navigate(R.id.action_profileFragment_to_signInFragment)
+                                                                    }
                                                                     is AccountDelete.Error -> { binding.profileRootLayout.snackbarError(binding.profileRootLayout, result.message, ""){} }
                                                                     is AccountDelete.Loading -> {}
                                                                 }
                                                             }
-                                                        } },
+                                                        }
+                                                    },
                                                 )
                                             },
                                             actionNoClicked = {}
@@ -140,23 +149,16 @@ class ProfileFragment : Fragment() {
                             result.user.apply {
 
                                 profileKind.text = kind
-                                profileStudentIdTv.text = studentId
                                 profileDateTv.text = birthday
                                 profileUsername.text = username
+                                profileLocationTv.text = country
+                                profileStudentIdTv.text = studentId
                                 followingCounterTv.text = followingCount.toString()
                                 followersCounterTv.text = followersCount.toString()
                                 profileUserAvatar.loadImagesWithGlideExt(profilePicture)
                                 profileBiography.text = (bio ?: resources.getString(R.string.empty_bio))
                                 profileFullName.text = (fullName ?: resources.getString(R.string.default_user_fullname))
-
-                                // location
-                                if (country.isNullOrEmpty()) {
-                                    profileLocationIcon.beGone()
-                                    profileLocationTv.beGone()
-                                } else {
-                                    profileLocationIcon.beVisible()
-                                    profileLocationTv.beVisible()
-                                }
+                                country?.let { profileLocationIcon.beVisibleIf(it.isNotEmpty()); profileLocationTv.beVisibleIf(it.isNotEmpty()) }
                             }
                         }
                         is UserCredentials.Error -> { profileRootLayout.snackbarError(profileRootLayout, result.message, ""){} }

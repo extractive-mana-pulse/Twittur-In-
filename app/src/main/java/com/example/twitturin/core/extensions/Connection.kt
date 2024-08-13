@@ -2,6 +2,7 @@ package com.example.twitturin.core.extensions
 
 import android.content.Context
 import android.net.ConnectivityManager
+import android.widget.Toast
 import androidx.navigation.NavController
 import com.example.twitturin.R
 
@@ -12,6 +13,7 @@ fun Context.checkConnection(navController: NavController) {
     if (networkInfo != null && networkInfo.isConnected) {
         navController.navigate(R.id.signInFragment)
     } else {
+        Toast.makeText(this, "Check your internet connection", Toast.LENGTH_SHORT).show()
         navController.navigate(R.id.noInternetFragment)
     }
 }

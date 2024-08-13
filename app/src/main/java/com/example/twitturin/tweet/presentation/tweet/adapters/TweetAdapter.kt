@@ -35,7 +35,7 @@ class TweetAdapter(private val clickEvents: (TweetClickEvents, Tweet) -> Unit) :
         }
 
         override fun areContentsTheSame(oldItem: Tweet, newItem: Tweet): Boolean {
-            return oldItem.id == newItem.id
+            return oldItem.content == newItem.content
         }
     }
     val differ = AsyncListDiffer(this,differCallback)
@@ -71,10 +71,7 @@ class TweetAdapter(private val clickEvents: (TweetClickEvents, Tweet) -> Unit) :
     }
     override fun getItemCount(): Int = differ.currentList.size
 
-    fun removeItem(position: Int) {
-        differ.currentList.removeAt(position)
-        notifyItemRemoved(position)
-    }
+    fun updateList(items: MutableList<Tweet>){ differ.submitList(items) }
 }
 
 //        var likeCount: Int? = item.likes

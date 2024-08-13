@@ -12,7 +12,6 @@ import com.example.twitturin.R
 import com.example.twitturin.core.extensions.beGone
 import com.example.twitturin.core.extensions.beVisible
 import com.example.twitturin.core.extensions.showCustomSnackbar
-import com.example.twitturin.core.extensions.snackbar
 import com.example.twitturin.core.extensions.snackbarError
 import com.example.twitturin.core.extensions.vertical
 import com.example.twitturin.core.manager.SessionManager
@@ -87,11 +86,10 @@ class FollowersFragment : Fragment() {
             FollowersClickEvent.ITEM_SELECTED -> { findNavController().navigate(R.id.observeProfileFragment) }
 
             FollowersClickEvent.FOLLOW -> {
-
                 followViewModel.followUser(followUser.id!!,"Bearer ${SessionManager(requireContext()).getToken()}")
                 followViewModel.follow.observe(viewLifecycleOwner) { result ->
                     when (result) {
-                        is Follow.Success -> { binding.root.showCustomSnackbar(binding.snackbarView, R.drawable.feedback_icon, requireContext(), "you follow: ${result.user.username}") }
+                        is Follow.Success -> { binding.root.showCustomSnackbar(binding.snackbarView, requireContext(), "you follow: ${result.user.username}") }
                         is Follow.Error -> { binding.root.snackbarError(binding.snackbarView, result.message, ""){} }
                         Follow.Loading -> {}
                     }

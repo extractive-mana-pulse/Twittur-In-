@@ -19,7 +19,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:tabIndicatorHeight="2dp"
-            app:tabTextColor="?attr/colorOnSurface"
             app:tabBackground="@drawable/chat_tab_bg"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"

@@ -147,6 +147,8 @@
     <string name="notification_title">Notification Permission</string>
     <string name="notification_require_message">Notification permission is required, to show notification</string>
     <string name="alert">Alert</string>
+    <string name="download">Download</string>
+    <string name="empty_body">Empty patch notes...</string>
 
     <string-array name="major_array">
         <item>SE</item>

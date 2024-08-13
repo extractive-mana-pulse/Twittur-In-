@@ -15,6 +15,7 @@ import com.example.twitturin.R
 import com.example.twitturin.core.extensions.beGone
 import com.example.twitturin.core.extensions.beVisible
 import com.example.twitturin.core.extensions.converter
+import com.example.twitturin.core.extensions.defaultDialog
 import com.example.twitturin.core.extensions.shareUrl
 import com.example.twitturin.core.extensions.snackbarError
 import com.example.twitturin.core.extensions.vertical
@@ -26,11 +27,9 @@ import com.example.twitturin.tweet.presentation.tweet.adapters.TweetAdapter
 import com.example.twitturin.tweet.presentation.tweet.sealed.TweetUIEvents
 import com.example.twitturin.tweet.presentation.tweet.vm.TweetUIViewModel
 import com.example.twitturin.tweet.presentation.tweet.vm.TweetViewModel
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import java.util.Random
 
 @AndroidEntryPoint
 class TweetsFragment : Fragment() {
@@ -48,9 +47,7 @@ class TweetsFragment : Fragment() {
         updateRecyclerView()
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     private fun updateRecyclerView() {
-
         binding.apply {
 
             rcView.vertical().adapter =userPostAdapter
@@ -59,36 +56,26 @@ class TweetsFragment : Fragment() {
             tweetViewModel.userTweets.observe(requireActivity()) { response ->
                 if (response.isSuccessful) {
                     response.body()?.let { tweets ->
-
                         val tweetList: MutableList<Tweet> = tweets.toMutableList()
+
                         swipeToRefreshLayoutTweets.setOnRefreshListener {
-
                             tweetViewModel.getUserTweet(SessionManager(requireContext()).getUserId()!!)
-                            tweetList.shuffle(Random(System.currentTimeMillis()))
                             swipeToRefreshLayoutTweets.isRefreshing = false
-                            userPostAdapter.notifyDataSetChanged()
-
                         }
-
                         if (tweetList.isEmpty()) {
-
                             rcView.beGone()
                             tweetsPageAnView.beVisible()
                             lottieInfoTv.beVisible()
-
                         } else {
-
                             rcView.beVisible()
                             tweetsPageAnView.beGone()
                             lottieInfoTv.beGone()
-                            userPostAdapter.notifyDataSetChanged()
                             userPostAdapter.differ.submitList(tweetList)
-
                         }
                     }
 
                 } else {
-                    tweetsRootLayout.snackbarError(tweetsRootLayout, error = response.message(), ""){}
+                    tweetsRootLayout.snackbarError(tweetsRootLayout, response.message(), ""){}
                 }
             }
         }
@@ -109,7 +96,7 @@ class TweetsFragment : Fragment() {
             tweetUIViewModel.channel.collect {
                 when(it){
 
-                    TweetUIEvents.OnHeartPressed -> { Snackbar.make(binding.tweetsRootLayout, R.string.in_progress, Snackbar.LENGTH_SHORT).show() }
+                    TweetUIEvents.OnHeartPressed -> { Snackbar.make(binding.root, resources.getString(R.string.developing), Snackbar.LENGTH_SHORT).show() }
 
                     TweetUIEvents.OnItemPressed -> {
                         val bundle = Bundle().apply {
@@ -135,45 +122,37 @@ class TweetsFragment : Fragment() {
 
                                 R.id.delete_user_own_tweet -> {
 
-                                    val alertDialogBuilder = MaterialAlertDialogBuilder(requireContext(), R.style.ThemeOverlay_App_MaterialAlertDialog)
-
-                                    alertDialogBuilder.apply {
-                                        setTitle(requireContext().resources.getString(R.string.delete_tweet_title))
-                                        setMessage(requireContext().resources.getString(R.string.delete_tweet_message))
-
-                                        setPositiveButton(requireContext().resources.getString(R.string.yes)) { _, _ ->
-                                            // TODO: Check the recyclerview updates
+                                    defaultDialog(
+                                        resources.getString(R.string.delete_tweet_title),
+                                        resources.getString(R.string.delete_tweet_message),
+                                        actionYesClicked = {
                                             tweetViewModel.deleteTweet(tweet.id!!,"Bearer ${SessionManager(requireContext()).getToken()}")
                                             tweetViewModel.deleteTweetResult.observe(viewLifecycleOwner) { result ->
 
                                                 when(result){
                                                     is TweetDelete.Success -> {
-                                                        create().dismiss()
-                                                        userPostAdapter.removeItem(tweet.id.toInt())
-                                                        Snackbar.make(binding.tweetsRootLayout, R.string.deleted, Snackbar.LENGTH_SHORT).show()
+                                                        // TODO: Note. this code below works but edit UI incorrectly.
+                                                        // When you delete a tweet from profile page.
+                                                        // it deletes successfully but, remove wrong tweet from the list.
+                                                        // That's why i am currently getting tweets again after successfully deleting the tweets.
+//                                                        userPostAdapter.updateList(mutableListOf(tweet))
+                                                        tweetViewModel.getUserTweet(SessionManager(requireContext()).getUserId()!!)
+                                                        Snackbar.make(binding.root, R.string.deleted, Snackbar.LENGTH_SHORT).show()
                                                     }
                                                     is  TweetDelete.Error -> {
-                                                        create().dismiss()
-                                                        Snackbar.make(binding.tweetsRootLayout, result.message, Snackbar.LENGTH_SHORT).show()
+                                                        Snackbar.make(binding.root, result.message, Snackbar.LENGTH_SHORT).show()
                                                     }
                                                 }
                                             }
-                                        }
-
-                                        setNegativeButton(requireContext().resources.getString(R.string.no)) { dialog, _ ->
-                                            dialog.dismiss()
-                                        }
-
-                                        create().show()
-                                    }
+                                        },
+                                        actionNoClicked = {}
+                                    )
                                     true
                                 }
                                 else -> false
                             }
                         }
-
                         popupMenu.inflate(R.menu.popup_user_menu)
-
                         popupMenu.converter(popupMenu)
                     }
 

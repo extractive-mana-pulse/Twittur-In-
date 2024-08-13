@@ -16,10 +16,10 @@ import com.example.twitturin.auth.presentation.registration.vm.SignUpViewModel
 import com.example.twitturin.core.extensions.listOfEditTexts
 import com.example.twitturin.core.extensions.populateFromResource
 import com.example.twitturin.core.extensions.repeatOnStarted
-import com.example.twitturin.core.extensions.usernameRegistration
-import com.example.twitturin.databinding.FragmentStudentRegistrationBinding
 import com.example.twitturin.core.extensions.snackbar
 import com.example.twitturin.core.extensions.snackbarError
+import com.example.twitturin.core.extensions.usernameRegistration
+import com.example.twitturin.databinding.FragmentStudentRegistrationBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -39,11 +39,8 @@ class StudentRegistrationFragment : Fragment() {
         binding.apply {
 
             listOf(userNameEt, studentIdEt, studentPasswordEt).listOfEditTexts(studentSignUpBtn)
-
             studentToolbar.setOnClickListener { studentUiEventViewModel.onStudentBackPressed() }
-
             studentSignUpBtn.setOnClickListener { studentUiEventViewModel.onStudentRegistrationClicked() }
-
             userNameEt.usernameRegistration(studentUsernameInputLayout, studentSignUpBtn, requireContext())
 
             viewLifecycleOwner.lifecycleScope.launch {
@@ -63,29 +60,14 @@ class StudentRegistrationFragment : Fragment() {
                             repeatOnStarted {
                                 signUpViewModel.signUpStudentResult.collectLatest { result ->
                                     when (result) {
-                                        is SignUpStudentResult.Success -> {
-                                            findNavController().navigate(R.id.action_studentRegistrationFragment_to_signInFragment)
-                                        }
-
-                                        is SignUpStudentResult.Error -> {
-                                            studRegRootLayout.snackbarError(
-                                                studRegRootLayout,
-                                                error = result.message,
-                                                ""
-                                            ) { }
-                                        }
-
-                                        SignUpStudentResult.Loading -> studRegRootLayout.snackbar(
-                                            studRegRootLayout,
-                                            R.string.loading.toString()
-                                        )
+                                        is SignUpStudentResult.Success -> { findNavController().navigate(R.id.action_studentRegistrationFragment_to_signInFragment) }
+                                        is SignUpStudentResult.Error -> { root.snackbarError(studentSignUpBtn, error = result.message, "") {} }
+                                        is SignUpStudentResult.Loading -> { root.snackbar(studentSignUpBtn, R.string.loading.toString()) }
                                     }
                                 }
                             }
                         }
-                        StudentRegistrationUiEvent.OnBackPressed -> {
-                            findNavController().navigateUp()
-                        }
+                        StudentRegistrationUiEvent.OnBackPressed -> { findNavController().navigateUp() }
                     }
                 }
             }

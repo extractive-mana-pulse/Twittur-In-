@@ -49,7 +49,6 @@ fun View.snackbar(
 @SuppressLint("RestrictedApi")
 fun View.showCustomSnackbar(
     anchorView: View,
-    iconResId: Int? = null,
     context: Context,
     message: String
 ) {
@@ -58,10 +57,7 @@ fun View.showCustomSnackbar(
 
     val duration = Snackbar.ANIMATION_MODE_SLIDE
 
-    bind.apply {
-        snackbarContext.text = message
-        iconResId?.let { snackbarIcon.setImageResource(it) }
-    }
+    bind.apply { snackbarContext.text = message }
     val snackbar = Snackbar
         .make(this, "", duration)
         .setAnchorView(anchorView)

@@ -93,8 +93,8 @@
             android:id="@+id/action_notificationsFragment_to_homeFragment"
             app:destination="@id/homeFragment"/>
         <action
-            android:id="@+id/action_notificationsFragment_to_newUpdatePatchNoteFragment"
-            app:destination="@id/newUpdatePatchNoteFragment" />
+            android:id="@+id/action_notificationsFragment_to_patchNoteFragment"
+            app:destination="@id/patchNoteFragment" />
     </fragment>
 
 <!--  profileFragment  -->
@@ -459,15 +459,6 @@
 
     </fragment>
     <fragment
-        android:id="@+id/newUpdatePatchNoteFragment"
-        android:name="com.example.twitturin.notification.presentation.fragments.NewUpdatePatchNoteFragment"
-        android:label="fragment_new_update_patch_note"
-        tools:layout="@layout/fragment_new_update_patch_note" >
-        <action
-            android:id="@+id/action_newUpdatePatchNoteFragment_to_notificationsFragment"
-            app:destination="@id/notificationsFragment" />
-    </fragment>
-    <fragment
         android:id="@+id/listOfLikesFragment"
         android:name="com.example.twitturin.detail.presentation.ui.ListOfLikesFragment"
         android:label="fragment_list_of_likes"
@@ -530,5 +521,14 @@
         android:name="com.example.twitturin.home.presentation.settings.fab.CustomizeFABFragment"
         android:label="fragment_customize_f_a_b"
         tools:layout="@layout/fragment_customize_f_a_b" />
+    <fragment
+        android:id="@+id/patchNoteFragment"
+        android:name="com.example.twitturin.notification.presentation.fragments.PatchNoteFragment"
+        android:label="fragment_patch_note"
+        tools:layout="@layout/fragment_patch_note" >
+        <action
+            android:id="@+id/action_patchNoteFragment_to_notificationsFragment"
+            app:destination="@id/notificationsFragment" />
+    </fragment>
 
 </navigation>

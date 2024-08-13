@@ -8,10 +8,11 @@ import io.reactivex.rxjava3.core.Observable
 class ConnectivityObservable(context: Context) {
 
     private val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    private var networkCallback: ConnectivityManager.NetworkCallback? = null
 
     fun observe(): Observable<Boolean> {
         return Observable.create { emitter ->
-            val networkCallback = object : ConnectivityManager.NetworkCallback() {
+            networkCallback = object : ConnectivityManager.NetworkCallback() {
                 override fun onAvailable(network: Network) {
                     emitter.onNext(true)
                 }
@@ -19,9 +20,9 @@ class ConnectivityObservable(context: Context) {
                     emitter.onNext(false)
                 }
             }
-            connectivityManager.registerDefaultNetworkCallback(networkCallback)
-            emitter.setCancellable { connectivityManager.unregisterNetworkCallback(networkCallback) }
+            connectivityManager.registerDefaultNetworkCallback(networkCallback!!)
+            emitter.setCancellable { stopObserving() }
         }
     }
-    fun stopObserving() { connectivityManager.unregisterNetworkCallback(object : ConnectivityManager.NetworkCallback() {}) }
+    fun stopObserving() { networkCallback?.let { connectivityManager.unregisterNetworkCallback(it) }; networkCallback = null }
 }

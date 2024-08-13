@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="@drawable/custom_snackbar_bg"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:layout_width="182dp"
+        android:layout_height="182dp"
+        app:lottie_loop="false"
+        app:lottie_autoPlay="true"
+        app:lottie_rawRes="@raw/success"/>
+
+    <TextView
+        android:id="@+id/snackbar_context"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Success"
+        android:textSize="48sp"
+        android:textAppearance="?attr/textAppearanceBodyLarge"/>
+
+</LinearLayout>

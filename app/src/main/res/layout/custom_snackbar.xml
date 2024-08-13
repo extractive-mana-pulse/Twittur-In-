@@ -1,29 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="68dp"
-    android:orientation="horizontal"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/custom_snackbar_bg">
 
-    <ImageView
+    <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/snackbar_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:contentDescription="@null"
-        android:src="@drawable/ic_launcher_foreground"/>
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        app:lottie_loop="false"
+        app:lottie_autoPlay="true"
+        app:lottie_rawRes="@raw/success"
+        android:layout_marginStart="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
     <TextView
         android:id="@+id/snackbar_context"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/hello_blank_fragment"/>
+        android:layout_marginStart="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:textAppearance="?attr/textAppearanceBodySmall"
+        app:layout_constraintStart_toEndOf="@id/snackbar_icon" />
 
     <TextView
         android:id="@+id/snackbar_action_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="end|center"
-        android:layout_marginEnd="16dp"/>
+        android:layout_marginEnd="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:textAppearance="?attr/textAppearanceBodyMedium"/>
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
