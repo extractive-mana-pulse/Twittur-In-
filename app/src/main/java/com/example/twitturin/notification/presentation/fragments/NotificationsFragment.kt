@@ -3,6 +3,7 @@ package com.example.twitturin.notification.presentation.fragments
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.example.twitturin.BuildConfig
 import com.example.twitturin.R
 import com.example.twitturin.core.extensions.repeatOnStarted
 import com.example.twitturin.core.helper.checkForUpdates
@@ -30,7 +32,6 @@ class NotificationsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.notificationsFragment = this
         binding.apply {
             notificationViewModel.getLatestRelease()
             repeatOnStarted {
@@ -43,14 +44,14 @@ class NotificationsFragment : Fragment() {
                                     tagName.toString(),
                                     notificationPageAnView,
                                     emptyNotificationPageLayout,
-                                    downloadLayout.root
+                                    downloadLayout
                                 )
 
-                                downloadLayout.notificationUpdateTitle.text = name
-                                downloadLayout.downloadImage.setImageResource(R.drawable.logo)
+                                notificationUpdateTitle.text = name
+                                downloadImage.setImageResource(R.drawable.logo)
 
-                                downloadLayout.root.setOnClickListener { notificationViewModel.onItemPressed() }
-                                downloadLayout.notificationDownloadBtn.setOnClickListener { notificationViewModel.onDownloadPressed() }
+                                downloadLayout.setOnClickListener { notificationViewModel.onItemPressed() }
+                                notificationDownloadBtn.setOnClickListener { notificationViewModel.onDownloadPressed() }
 
                                 viewLifecycleOwner.lifecycleScope.launch {
                                     notificationViewModel.notificationEvent.collect { event ->

@@ -1,91 +1,118 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".notification.presentation.fragments.NotificationsFragment">
 
-    <data>
-        <variable
-            name="notificationsFragment"
-            type="com.example.twitturin.notification.presentation.fragments.NotificationsFragment" />
-    </data>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/notification_page_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="?attr/actionBarSize"
+        app:title="@string/notifications"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:titleTextAppearance="?attr/textAppearanceTitleLarge"/>
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/notification_page_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:title="@string/notifications"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:titleTextAppearance="?attr/textAppearanceTitleLarge"/>
+    <View
+        android:id="@+id/notification_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:background="?attr/colorOutlineVariant"
+        app:layout_constraintTop_toBottomOf="@id/notification_page_toolbar"/>
 
-        <View
-            android:id="@+id/notification_divider"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:background="?attr/colorOutlineVariant"
-            app:layout_constraintTop_toBottomOf="@id/notification_page_toolbar"/>
+    <LinearLayout
+        android:id="@+id/download_layout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="16dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/notification_page_toolbar">
 
-        <include
-            android:id="@+id/download_layout"
-            layout="@layout/download_view"
+        <ImageView
+            android:id="@+id/download_image"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:contentDescription="@null"/>
+
+        <TextView
+            android:id="@+id/notification_update_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="8dp"
+            android:layout_gravity="center"
+            android:textStyle="bold|italic"
+            android:textSize="18sp"
             android:layout_marginHorizontal="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/notification_page_toolbar"/>
+            android:textAppearance="?attr/textAppearanceBodyLarge"/>
 
-        <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/notification_page_an_view"
-            android:layout_width="282dp"
-            android:layout_height="282dp"
-            app:lottie_loop="true"
-            app:lottie_autoPlay="true"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:lottie_rawRes="@raw/empty_notifications_list"/>
+        <Button
+            android:id="@+id/notification_download_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="56dp"
+            android:layout_gravity="center"
+            android:text="@string/download"
+            android:visibility="invisible"
+            android:layout_marginStart="16dp"/>
 
-        <LinearLayout
-            android:id="@+id/empty_notification_page_layout"
+    </LinearLayout>
+
+    <!--        <include-->
+    <!--            android:id="@+id/download_layout"-->
+    <!--            layout="@layout/download_view"-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_marginVertical="8dp"-->
+    <!--            android:layout_marginHorizontal="16dp"-->
+    <!--            app:layout_constraintEnd_toEndOf="parent"-->
+    <!--            app:layout_constraintStart_toStartOf="parent"-->
+    <!--            app:layout_constraintTop_toBottomOf="@id/notification_page_toolbar"/>-->
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/notification_page_an_view"
+        android:layout_width="282dp"
+        android:layout_height="282dp"
+        app:lottie_loop="true"
+        app:lottie_autoPlay="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:lottie_rawRes="@raw/empty_notifications_list"/>
+
+    <LinearLayout
+        android:id="@+id/empty_notification_page_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="start"
+        android:orientation="vertical"
+        android:layout_marginHorizontal="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/notification_page_an_view">
+
+        <TextView
+            android:id="@+id/notification_empty_page_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/notifications"
+            android:textStyle="bold"
+            android:textColor="?attr/colorOnSecondaryContainer"
+            android:textAppearance="?attr/textAppearanceBodyLarge"/>
+
+        <TextView
+            android:id="@+id/notification_empty_page_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="start"
-            android:orientation="vertical"
-            android:layout_marginHorizontal="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/notification_page_an_view">
+            android:text="@string/temporary_info"
+            android:textAlignment="viewStart"
+            android:textAppearance="?attr/textAppearanceBodyMedium"/>
 
-            <TextView
-                android:id="@+id/notification_empty_page_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/notifications"
-                android:textStyle="bold"
-                android:textColor="?attr/colorOnSecondaryContainer"
-                android:textAppearance="?attr/textAppearanceBodyLarge"/>
+    </LinearLayout>
 
-            <TextView
-                android:id="@+id/notification_empty_page_description"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/temporary_info"
-                android:textAlignment="viewStart"
-                android:textAppearance="?attr/textAppearanceBodyMedium"/>
-
-        </LinearLayout>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-</layout>
+</androidx.constraintlayout.widget.ConstraintLayout>

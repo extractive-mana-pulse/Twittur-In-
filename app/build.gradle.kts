@@ -19,22 +19,21 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0.5"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         debug {
-            buildConfigField ("String", "BASE_URL", "\"https://twitturin-dev.onrender.com/api/\"")
-//           buildConfigField("String", "BASE_URL", "\"https://twitturin-api.onrender.com/api/\"")
+//            buildConfigField ("String", "BASE_URL", "\"https://twitturin-dev.onrender.com/api/\"")
+           buildConfigField("String", "BASE_URL", "\"https://twitturin-api.onrender.com/api/\"")
         }
         release {
             // this 2 block of code, prepare application for release. Basically optimize code and remove unused elements.
             isShrinkResources = true
             isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-            buildConfigField("String", "BASE_URL", "\"https://twitturin-dev.onrender.com/api/\"")
-//            buildConfigField("String", "BASE_URL", "\"https://twitturin-api.onrender.com/api/\"")
+//            buildConfigField("String", "BASE_URL", "\"https://twitturin-dev.onrender.com/api/\"")
+            buildConfigField("String", "BASE_URL", "\"https://twitturin-api.onrender.com/api/\"")
         }
     }
     buildFeatures{
