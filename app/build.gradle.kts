@@ -15,15 +15,15 @@ android {
 
     defaultConfig {
         applicationId = "com.example.twitturin"
-        minSdk = 25
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
-        versionName = "1.0.5"
+        versionName = "1.0.5.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
-        debug {
+        debug  {
 //            buildConfigField ("String", "BASE_URL", "\"https://twitturin-dev.onrender.com/api/\"")
            buildConfigField("String", "BASE_URL", "\"https://twitturin-api.onrender.com/api/\"")
         }
@@ -56,6 +56,10 @@ android {
 }
 
 dependencies {
+
+    // in app/build.gradle
+    implementation ("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.9.21")
+    implementation ("org.jetbrains.kotlin:kotlin-stdlib:1.9.21")
 
 //    implementation ("androidx.activity:activity-compose:$version")
 //    implementation ("androidx.compose.runtime:runtime-livedata:$version")

@@ -19,6 +19,7 @@ import com.example.twitturin.core.extensions.checkStatus
 import com.example.twitturin.core.extensions.checkTheme
 import com.example.twitturin.core.extensions.loadLocale
 import com.example.twitturin.databinding.ActivityMainBinding
+import com.example.twitturin.notification.presentation.fragments.NotificationsFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -37,6 +38,10 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
+        intent?.data?.let { uri ->
+            handleDeepLink(uri)
+        }
 
         connectivityObservable.observe()
             .subscribeOn(Schedulers.io())
@@ -60,6 +65,18 @@ class MainActivity : AppCompatActivity() {
 //        LeakCanary
         this.checkTheme()
         this.loadLocale()
+    }
+
+    private fun handleDeepLink(uri: Uri) {
+        when (uri.host) {
+            "notification" -> {
+//                navController.navigate(R.id.notificationsFragment)
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.nav_host_fragment_container, NotificationsFragment())
+                    .addToBackStack(null)
+                    .commit()
+            }
+        }
     }
 
     private fun showSettingDialog() {

@@ -11,7 +11,7 @@ fun Fragment.fullScreenImage(view : ImageView) {
 
     view.buildDrawingCache()
     val originalBitmap = view.drawingCache
-    val image = originalBitmap.copy(originalBitmap.config, true)
+    val image = originalBitmap.config?.let { originalBitmap.copy(it, true) }
 
     val extras = Bundle()
     extras.putParcelable("image", image)

@@ -34,28 +34,30 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         remoteViews.setTextViewText(R.id.notification_description, description)
         remoteViews.setImageViewResource(R.id.notification_image, R.drawable.logo)
 
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(""))
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("yourapp://notification"))
         val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
         remoteViews.setOnClickPendingIntent(R.id.notification_image, pendingIntent)
 
         return remoteViews
     }
 
-    private fun generateNotification(title : String, description : String) {
-        val intent = Intent(this, MainActivity::class.java)
-        intent.putExtra("fragment", "notifications")
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+    private fun generateNotification(title: String, description: String) {
+        val uri = Uri.parse("twittur_in://notification")
+        val intent = Intent(this, MainActivity::class.java).apply {
+            putExtra("fragment", "notifications")
+            data = uri
+            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        }
 
         val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE)
 
-        var builder : NotificationCompat.Builder = NotificationCompat.Builder(applicationContext, Constants.CHANNEL_ID)
+        val builder = NotificationCompat.Builder(applicationContext, Constants.CHANNEL_ID)
             .setSmallIcon(R.drawable.logo)
             .setAutoCancel(true)
-            .setVibrate(longArrayOf(1000,1000,1000,1000))
+            .setVibrate(longArrayOf(1000, 1000, 1000, 1000))
             .setOnlyAlertOnce(true)
             .setContentIntent(pendingIntent)
-
-        builder = builder.setContent(getRemoteView(title, description))
+            .setContent(getRemoteView(title, description))
 
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
@@ -63,5 +65,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             val notificationChannel = NotificationChannel(Constants.CHANNEL_ID, Constants.CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH)
             notificationManager.createNotificationChannel(notificationChannel)
         }
+
+        notificationManager.notify(0, builder.build())
     }
 }

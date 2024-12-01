@@ -1,6 +1,8 @@
 buildscript {
     dependencies {
         classpath("com.google.gms:google-services:4.4.1")
+        // in build.gradle
+        classpath ("org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.21")
     }
 }
 // Top-level build file where you can add configuration options common to all sub-projects/modules.

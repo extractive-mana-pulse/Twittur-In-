@@ -11,6 +11,7 @@ import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.example.twitturin.BuildConfig
 import com.example.twitturin.R
 import com.example.twitturin.core.extensions.appLanguage
 import com.example.twitturin.core.extensions.appThemeDialog
@@ -60,6 +61,7 @@ class HomeFragment : Fragment() {
                 val headerFollowing: TextView = findViewById(R.id.nav_following_counter_tv)
                 val headingFollowers: TextView = findViewById(R.id.nav_followers_counter_tv)
                 val layout: ShimmerFrameLayout = findViewById(R.id.navigation_drawer_shimmer)
+//                val appVersion: TextView = findViewById(R.id.app_version_tv)
 
                 if (requireContext().isNetworkAvailable()) {
                     profileViewModel.getUserCredentials(SessionManager(requireContext()).getUserId()!!)
@@ -77,10 +79,11 @@ class HomeFragment : Fragment() {
                                 layout.beGone()
 
                                 result.user.apply {
-                                    headerFullname.text = fullName ?: R.string.default_user_fullname.toString()
+                                    headerFullname.text = fullName ?: resources.getString(R.string.default_user_fullname)
                                     headerUsername.text = "@$username"
                                     headerFollowing.text = followingCount.toString()
                                     headingFollowers.text = followersCount.toString()
+//                                    appVersion.text = "app version is ${BuildConfig.VERSION_NAME}"
 
                                     headerViewAvatar.loadImagesWithGlideExt(profilePicture)
                                     homePageToolbar.loadToolbarImage(profilePicture, homePageToolbar)

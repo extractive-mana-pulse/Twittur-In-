@@ -2,7 +2,6 @@ package com.example.twitturin.core.helper
 
 import android.content.Context
 import android.content.pm.PackageManager
-import android.os.Build
 import android.view.View
 import com.example.twitturin.core.extensions.beGone
 import com.example.twitturin.core.extensions.beVisible
@@ -10,10 +9,10 @@ import com.example.twitturin.core.extensions.beVisible
 fun Context.getAppVersion(): String {
     return try {
         val packageInfo = packageManager.getPackageInfo(packageName, 0)
-        packageInfo.versionName // Get version name as a string
+        packageInfo.versionName
     } catch (e: PackageManager.NameNotFoundException) {
-        "Unknown"
-    }
+        e.message.toString()
+    }.toString()
 }
 
 fun compareVersions(version1: String, version2: String): Int {
@@ -26,11 +25,11 @@ fun compareVersions(version1: String, version2: String): Int {
         val v2 = if (i < version2Parts.size) version2Parts[i] else 0
         if (v1 != v2) return v1 - v2
     }
-    return 0 // Versions are equal
+    return 0
 }
 
 fun Context.checkForUpdates(
-    latestReleaseTag: String, // Keep as String for version comparison
+    latestReleaseTag: String,
     anView: View,
     emptyTvLayout: View,
     downloadLayout: View
@@ -50,7 +49,6 @@ fun Context.checkForUpdates(
                 downloadLayout.beGone()
             }
             else -> {
-                // Current version is greater than latestReleaseTag
                 anView.beVisible()
                 emptyTvLayout.beVisible()
                 downloadLayout.beGone()

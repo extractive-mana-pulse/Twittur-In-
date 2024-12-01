@@ -8,11 +8,13 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.example.twitturin.BuildConfig
 import com.example.twitturin.R
 import com.example.twitturin.core.extensions.snackbar
 import com.example.twitturin.databinding.FragmentSettingsBinding
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.shape.CornerFamily
+import com.google.android.material.snackbar.Snackbar
 
 class SettingsFragment : Fragment() {
 
@@ -26,11 +28,15 @@ class SettingsFragment : Fragment() {
         binding.apply {
 
             settingsToolbar.setNavigationOnClickListener { findNavController().navigateUp() }
-            inactiveLayout.setOnClickListener { snackbarView.snackbar(snackbarView, resources.getString(R.string.developing)) }
-            themeCustomizationLayout.setOnClickListener { snackbarView.snackbar(snackbarView, resources.getString(R.string.developing)) }
+
+            inactiveLayout.setOnClickListener { Snackbar.make(root, resources.getString(R.string.developing), Snackbar.LENGTH_SHORT).show() }
+
+            themeCustomizationLayout.setOnClickListener { Snackbar.make(root, resources.getString(R.string.developing), Snackbar.LENGTH_SHORT).show() }
+
             fabCustomizationLayout.setOnClickListener { findNavController().navigate(R.id.action_settingsFragment_to_customizeFABFragment) }
             bottomNavigationViewCustomizationLayout.setOnClickListener { findNavController().navigate(R.id.action_settingsFragment_to_customBNVFragment) }
 
+            appVersionTv.text = BuildConfig.VERSION_NAME
         }
 
         /**

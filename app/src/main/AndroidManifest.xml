@@ -19,7 +19,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:targetApi="34">
-
 <!--    this provider implemented for rich text editor    -->
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -43,9 +42,16 @@
             android:name=".core.connection.presentation.ui.MainActivity"
             android:exported="true"
             android:screenOrientation="portrait">
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="twittur_in" android:host="notification" />
+            </intent-filter>
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
