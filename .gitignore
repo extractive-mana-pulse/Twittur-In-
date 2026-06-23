@@ -13,3 +13,12 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# --- Kotlin Multiplatform / Compose Multiplatform ---
+build/
+.kotlin/
+kotlin-js-store/
+
+# Xcode
+**/xcuserdata/
+*.xcuserstate
