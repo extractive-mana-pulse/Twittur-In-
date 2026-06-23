@@ -50,5 +50,6 @@ include(":desktopApp")
 
 // Core + feature modules (added incrementally as each is built)
 include(":core:domain")
-// include(":core:data"); include(":core:presentation"); include(":core:design-system")
+include(":core:data")
+// include(":core:presentation"); include(":core:design-system")
 // include(":feature:search:domain"); ... etc.
