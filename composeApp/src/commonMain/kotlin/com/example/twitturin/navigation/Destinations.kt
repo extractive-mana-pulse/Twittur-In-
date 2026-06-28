@@ -41,3 +41,9 @@ data object FeedRoute
 
 @Serializable
 data object ComposeTweetRoute
+
+@Serializable
+data class DetailRoute(val tweetId: String)
+
+@Serializable
+data class LikesListRoute(val tweetId: String)

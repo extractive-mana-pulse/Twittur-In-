@@ -28,3 +28,12 @@ data class TweetAuthorDto(
 data class PostTweetRequestDto(
     @SerialName("content") val content: String,
 )
+
+@Serializable
+data class TweetLikerDto(
+    @SerialName("id") val id: String? = null,
+    @SerialName("username") val username: String? = null,
+    @SerialName("fullName") val fullName: String? = null,
+    @SerialName("profilePicture") val profilePicture: String? = null,
+    @SerialName("bio") val bio: String? = null,
+)

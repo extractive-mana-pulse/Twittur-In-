@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="design-system">
+    <output-path>$PROJECT_DIR$/core/design-system/build/libs</output-path>
+    <root id="archive" name="design-system.jar">
+      <element id="module-output" name="Twittur.core.design-system.androidMain" />
+    </root>
+  </artifact>
+</component>

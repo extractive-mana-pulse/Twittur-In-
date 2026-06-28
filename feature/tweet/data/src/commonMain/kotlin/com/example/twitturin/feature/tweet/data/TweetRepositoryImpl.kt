@@ -8,6 +8,7 @@ import com.example.twitturin.core.domain.util.EmptyResult
 import com.example.twitturin.core.domain.util.Result
 import com.example.twitturin.core.domain.util.map
 import com.example.twitturin.feature.tweet.domain.Tweet
+import com.example.twitturin.feature.tweet.domain.TweetLiker
 import com.example.twitturin.feature.tweet.domain.TweetRepository
 import io.ktor.client.HttpClient
 
@@ -35,5 +36,26 @@ class TweetRepositoryImpl(
 
     override suspend fun deleteTweet(tweetId: String): EmptyResult<DataError.Network> {
         return httpClient.delete<Unit>(route = "tweets/$tweetId")
+    }
+
+    override suspend fun getTweet(tweetId: String): Result<Tweet, DataError.Network> {
+        return httpClient.get<TweetDto>(route = "tweets/$tweetId").map { it.toTweet() }
+    }
+
+    override suspend fun getReplies(tweetId: String): Result<List<Tweet>, DataError.Network> {
+        return httpClient.get<List<TweetDto>>(route = "tweets/$tweetId/replies")
+            .map { list -> list.map { it.toTweet() } }
+    }
+
+    override suspend fun postReply(tweetId: String, content: String): EmptyResult<DataError.Network> {
+        return httpClient.post<PostTweetRequestDto, Unit>(
+            route = "tweets/$tweetId/replies",
+            body = PostTweetRequestDto(content = content),
+        )
+    }
+
+    override suspend fun getLikers(tweetId: String): Result<List<TweetLiker>, DataError.Network> {
+        return httpClient.get<List<TweetLikerDto>>(route = "tweets/$tweetId/likes")
+            .map { list -> list.map { it.toTweetLiker() } }
     }
 }

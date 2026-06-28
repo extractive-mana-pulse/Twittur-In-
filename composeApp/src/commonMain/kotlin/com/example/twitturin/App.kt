@@ -5,6 +5,7 @@ import androidx.compose.runtime.remember
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import coil3.ImageLoader
 import coil3.compose.setSingletonImageLoaderFactory
 import coil3.network.ktor3.KtorNetworkFetcherFactory
@@ -21,12 +22,16 @@ import com.example.twitturin.feature.profile.presentation.ProfileRoot
 import com.example.twitturin.feature.notification.presentation.NotificationRoot
 import com.example.twitturin.feature.notification.presentation.PatchNoteRoot
 import com.example.twitturin.feature.search.presentation.SearchRoot
+import com.example.twitturin.feature.tweet.presentation.detail.DetailRoot
 import com.example.twitturin.feature.tweet.presentation.feed.FeedRoot
+import com.example.twitturin.feature.tweet.presentation.likes.LikesListRoot
 import com.example.twitturin.feature.tweet.presentation.post.PostTweetRoot
 import com.example.twitturin.navigation.ComposeTweetRoute
+import com.example.twitturin.navigation.DetailRoute
 import com.example.twitturin.navigation.EditProfileRoute
 import com.example.twitturin.navigation.FeedRoute
 import com.example.twitturin.navigation.HomeRoute
+import com.example.twitturin.navigation.LikesListRoute
 import com.example.twitturin.navigation.KindRoute
 import com.example.twitturin.navigation.NotificationRoute
 import com.example.twitturin.navigation.PatchNoteRoute
@@ -131,19 +136,35 @@ fun App() {
                 )
             }
 
-            // --- tweet: feed + compose ---
+            // --- tweet: feed + compose + detail (replies) + likes ---
             composable<FeedRoute> {
                 FeedRoot(
                     onBack = { navController.popBackStack() },
                     onOpenCompose = { navController.navigate(ComposeTweetRoute) },
-                    // Tweet detail not yet ported — wired when :feature:detail lands.
-                    onOpenTweet = {},
+                    onOpenTweet = { tweetId -> navController.navigate(DetailRoute(tweetId)) },
                 )
             }
             composable<ComposeTweetRoute> {
                 PostTweetRoot(
                     onBack = { navController.popBackStack() },
                     onPosted = { navController.popBackStack() },
+                )
+            }
+            composable<DetailRoute> { entry ->
+                val route = entry.toRoute<DetailRoute>()
+                DetailRoot(
+                    tweetId = route.tweetId,
+                    onBack = { navController.popBackStack() },
+                    // A reply is itself a tweet — open its own detail.
+                    onOpenTweet = { tweetId -> navController.navigate(DetailRoute(tweetId)) },
+                    onOpenLikes = { tweetId -> navController.navigate(LikesListRoute(tweetId)) },
+                )
+            }
+            composable<LikesListRoute> { entry ->
+                val route = entry.toRoute<LikesListRoute>()
+                LikesListRoot(
+                    tweetId = route.tweetId,
+                    onBack = { navController.popBackStack() },
                 )
             }
 

@@ -21,4 +21,18 @@ interface TweetRepository {
 
     /** Delete a tweet the current user owns (`DELETE tweets/{id}`). */
     suspend fun deleteTweet(tweetId: String): EmptyResult<DataError.Network>
+
+    // --- detail view (a tweet + its replies + who liked it) ---
+
+    /** A single tweet by id (`GET tweets/{id}`). */
+    suspend fun getTweet(tweetId: String): Result<Tweet, DataError.Network>
+
+    /** Replies to a tweet (`GET tweets/{id}/replies`); replies are themselves tweet-shaped. */
+    suspend fun getReplies(tweetId: String): Result<List<Tweet>, DataError.Network>
+
+    /** Reply to a tweet (`POST tweets/{id}/replies`, auth). */
+    suspend fun postReply(tweetId: String, content: String): EmptyResult<DataError.Network>
+
+    /** Users who liked a tweet (`GET tweets/{id}/likes`). */
+    suspend fun getLikers(tweetId: String): Result<List<TweetLiker>, DataError.Network>
 }

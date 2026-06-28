@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="domain-jvm">
+    <output-path>$PROJECT_DIR$/feature/search/domain/build/libs</output-path>
+    <root id="archive" name="domain-jvm.jar">
+      <element id="module-output" name="Twittur.feature.search.domain.jvmMain" />
+    </root>
+  </artifact>
+</component>
