@@ -51,5 +51,27 @@ include(":desktopApp")
 // Core + feature modules (added incrementally as each is built)
 include(":core:domain")
 include(":core:data")
-// include(":core:presentation"); include(":core:design-system")
-// include(":feature:search:domain"); ... etc.
+include(":core:presentation")
+include(":core:design-system")
+// :feature:search — pilot vertical slice (Track A). Layers added as each is built.
+include(":feature:search:domain")
+include(":feature:search:data")
+include(":feature:search:presentation")
+// :feature:notification — 2nd feature (GitHub latest-release / patch notes).
+include(":feature:notification:domain")
+include(":feature:notification:data")
+include(":feature:notification:presentation")
+// :feature:auth — 3rd feature (sign-in / kind / registration / stayIn; writes the session).
+include(":feature:auth:domain")
+include(":feature:auth:data")
+include(":feature:auth:presentation")
+// :feature:home — post-login hub (presentation-only for now).
+include(":feature:home:presentation")
+// :feature:profile — profile view / edit / delete (image picker deferred).
+include(":feature:profile:domain")
+include(":feature:profile:data")
+include(":feature:profile:presentation")
+// :feature:tweet — feed / compose / delete (like/edit/replies/report deferred).
+include(":feature:tweet:domain")
+include(":feature:tweet:data")
+include(":feature:tweet:presentation")

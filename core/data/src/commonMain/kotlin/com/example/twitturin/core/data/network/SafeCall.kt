@@ -8,6 +8,7 @@ import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
+import io.ktor.client.request.put
 import io.ktor.client.request.setBody
 import io.ktor.client.request.url
 import io.ktor.client.statement.HttpResponse
@@ -33,6 +34,16 @@ suspend inline fun <reified Request, reified Response : Any> HttpClient.post(
     body: Request,
 ): Result<Response, DataError.Network> = safeCall {
     post {
+        url(constructRoute(route))
+        setBody(body)
+    }
+}
+
+suspend inline fun <reified Request, reified Response : Any> HttpClient.put(
+    route: String,
+    body: Request,
+): Result<Response, DataError.Network> = safeCall {
+    put {
         url(constructRoute(route))
         setBody(body)
     }
@@ -79,6 +90,8 @@ suspend inline fun <reified T> responseToResult(response: HttpResponse): Result<
 }
 
 fun constructRoute(route: String): String = when {
+    // Absolute URLs (e.g. the GitHub releases API) bypass the base URL entirely.
+    route.startsWith("http://") || route.startsWith("https://") -> route
     route.contains(BASE_URL) -> route
     route.startsWith("/") -> BASE_URL + route.drop(1)
     else -> BASE_URL + route

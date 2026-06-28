@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.androidMultiplatformLibrary)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.kotlinSerialization)
 }
 
 kotlin {
@@ -16,6 +17,7 @@ kotlin {
         iosTarget.binaries.framework {
             baseName = "ComposeApp"
             isStatic = true
+            binaryOption("bundleId", "com.example.twitturin.composeApp")
         }
     }
 
@@ -43,8 +45,29 @@ kotlin {
             implementation(libs.compose.uiToolingPreview)
         }
         commonMain.dependencies {
+            // Core + feature modules (added as each feature is ported into Track A)
+            implementation(projects.core.data)
+            implementation(projects.core.presentation)
+            implementation(projects.core.designSystem)
+            implementation(projects.feature.search.data)
+            implementation(projects.feature.search.presentation)
+            implementation(projects.feature.notification.data)
+            implementation(projects.feature.notification.presentation)
+            implementation(projects.feature.auth.data)
+            implementation(projects.feature.auth.presentation)
+            implementation(projects.feature.home.presentation)
+            implementation(projects.feature.profile.data)
+            implementation(projects.feature.profile.presentation)
+            implementation(projects.feature.tweet.data)
+            implementation(projects.feature.tweet.presentation)
+            implementation(projects.core.domain)
+
             implementation(libs.bundles.compose)
             implementation(libs.bundles.lifecycleCompose)
+            implementation(libs.koin.core)
+            implementation(libs.bundles.koinCompose)
+            implementation(libs.bundles.coil)
+            implementation(libs.navigation.compose)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

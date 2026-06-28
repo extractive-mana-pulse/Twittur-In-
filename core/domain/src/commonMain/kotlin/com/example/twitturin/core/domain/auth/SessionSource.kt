@@ -10,5 +10,10 @@ interface SessionSource {
     fun setToken(token: String?)
     fun getUserId(): String?
     fun setUserId(userId: String?)
+
+    /** "Remember me" / stay-logged-in flag, set on the post-login StayIn screen. */
+    fun isRemembered(): Boolean
+    fun setRemembered(remembered: Boolean)
+
     fun clear()
 }

@@ -32,6 +32,10 @@ object HttpClientFactory {
                     loadTokens {
                         sessionSource.getToken()?.let { token -> BearerTokens(token, refreshToken = "") }
                     }
+                    // Send the token preemptively to our own API (only) so authenticated
+                    // PUT/DELETE/POST don't depend on a 401-challenge round-trip. Never leaks
+                    // the token to 3rd-party hosts (e.g. the GitHub releases endpoint).
+                    sendWithoutRequest { request -> request.url.host == "twitturin-api.onrender.com" }
                 }
             }
             install(Logging) {
