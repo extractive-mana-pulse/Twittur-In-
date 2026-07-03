@@ -53,6 +53,8 @@ include(":core:domain")
 include(":core:data")
 include(":core:presentation")
 include(":core:design-system")
+// :core:chat-thread — vendored CollapsibleChatThread lib (threaded replies UI); see its README.
+include(":core:chat-thread")
 // :feature:search — pilot vertical slice (Track A). Layers added as each is built.
 include(":feature:search:domain")
 include(":feature:search:data")

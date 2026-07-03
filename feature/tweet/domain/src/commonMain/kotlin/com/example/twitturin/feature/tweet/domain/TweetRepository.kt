@@ -33,11 +33,14 @@ interface TweetRepository {
     /** A single tweet by id (`GET tweets/{id}`). */
     suspend fun getTweet(tweetId: String): Result<Tweet, DataError.Network>
 
-    /** Replies to a tweet (`GET tweets/{id}/replies`); replies are themselves tweet-shaped. */
-    suspend fun getReplies(tweetId: String): Result<List<Tweet>, DataError.Network>
+    /** The reply tree of a tweet (`GET tweets/{id}/replies`); each [Reply] nests its children. */
+    suspend fun getReplies(tweetId: String): Result<List<Reply>, DataError.Network>
 
     /** Reply to a tweet (`POST tweets/{id}/replies`, auth). */
     suspend fun postReply(tweetId: String, content: String): EmptyResult<DataError.Network>
+
+    /** Reply to another reply (`POST replies/{id}`, auth) — nests under it in the reply tree. */
+    suspend fun postReplyToReply(replyId: String, content: String): EmptyResult<DataError.Network>
 
     /** Users who liked a tweet (`GET tweets/{id}/likes`). */
     suspend fun getLikers(tweetId: String): Result<List<TweetLiker>, DataError.Network>
