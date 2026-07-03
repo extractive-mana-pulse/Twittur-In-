@@ -12,6 +12,9 @@ import com.example.twitturin.feature.search.data.di.searchDataModule
 import com.example.twitturin.feature.search.presentation.di.searchPresentationModule
 import com.example.twitturin.feature.tweet.data.di.tweetDataModule
 import com.example.twitturin.feature.tweet.presentation.di.tweetPresentationModule
+import com.example.twitturin.feature.follow.data.di.followDataModule
+import com.example.twitturin.feature.follow.presentation.di.followPresentationModule
+import com.example.twitturin.feature.settings.presentation.di.settingsPresentationModule
 import org.koin.core.context.startKoin
 import org.koin.dsl.KoinAppDeclaration
 
@@ -42,6 +45,9 @@ fun initKoin(config: KoinAppDeclaration? = null) {
             profilePresentationModule,
             tweetDataModule,
             tweetPresentationModule,
+            followDataModule,
+            followPresentationModule,
+            settingsPresentationModule,
         )
     }
 }

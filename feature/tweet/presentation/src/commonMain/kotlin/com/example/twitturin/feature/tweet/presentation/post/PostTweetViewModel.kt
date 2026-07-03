@@ -23,12 +23,18 @@ class PostTweetViewModel(
     private val _events = Channel<PostTweetEvent>()
     val events = _events.receiveAsFlow()
 
-    fun post(content: String) {
+    /** Publish a new tweet, or edit an existing one when [tweetId] is non-null. */
+    fun post(content: String, tweetId: String? = null) {
         val text = content.trim()
         if (text.isBlank() || _state.value.isPosting) return
         viewModelScope.launch {
             _state.update { it.copy(isPosting = true) }
-            tweetRepository.postTweet(text)
+            val result = if (tweetId != null) {
+                tweetRepository.editTweet(tweetId, text)
+            } else {
+                tweetRepository.postTweet(text)
+            }
+            result
                 .onSuccess {
                     _state.update { it.copy(isPosting = false) }
                     _events.send(PostTweetEvent.Posted)

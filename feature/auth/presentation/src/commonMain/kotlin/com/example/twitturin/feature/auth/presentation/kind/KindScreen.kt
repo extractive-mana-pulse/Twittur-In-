@@ -3,25 +3,22 @@ package com.example.twitturin.feature.auth.presentation.kind
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.example.twitturin.core.designsystem.component.BrandTopBar
+import com.example.twitturin.core.designsystem.component.SecondaryButton
+import com.example.twitturin.core.designsystem.icon.TwitturIcons
+import com.example.twitturin.core.designsystem.theme.SecondaryText
 
 /** Account-kind picker. Pure stateless screen — navigation is delegated to callbacks. */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun KindScreen(
     onBack: () -> Unit,
@@ -31,47 +28,32 @@ fun KindScreen(
 ) {
     Scaffold(
         modifier = modifier,
-        topBar = {
-            TopAppBar(
-                title = { Text(text = "Sign up") },
-                navigationIcon = { TextButton(onClick = onBack) { Text(text = "Back") } },
-            )
-        },
+        topBar = { BrandTopBar(title = "Sign up", onBack = onBack) },
     ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(horizontal = 16.dp),
+                .padding(horizontal = 24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
+            Spacer(modifier = Modifier.height(72.dp))
             Text(
-                text = "I am a...",
-                style = MaterialTheme.typography.displaySmall,
-                color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(top = 96.dp),
+                text = "What kind are you?",
+                style = MaterialTheme.typography.headlineMedium,
+                textAlign = TextAlign.Center,
+            )
+            Text(
+                text = "Pick how you'll use TwitturIn",
+                style = MaterialTheme.typography.bodyMedium,
+                color = SecondaryText,
+                modifier = Modifier.padding(top = 8.dp),
             )
 
-            Spacer(modifier = Modifier.height(48.dp))
-
-            KindButton(text = "Professor", onClick = onProfessor)
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            KindButton(text = "Student", onClick = onStudent)
+            Spacer(modifier = Modifier.height(44.dp))
+            SecondaryButton(text = "Student", onClick = onStudent, leadingIcon = TwitturIcons.Account)
+            Spacer(modifier = Modifier.height(16.dp))
+            SecondaryButton(text = "Professor", onClick = onProfessor, leadingIcon = TwitturIcons.Feedback)
         }
-    }
-}
-
-@Composable
-private fun KindButton(text: String, onClick: () -> Unit) {
-    Button(onClick = onClick, modifier = Modifier.fillMaxWidth()) {
-        Text(
-            text = text,
-            modifier = Modifier.fillMaxWidth(),
-            textAlign = TextAlign.Start,
-            fontSize = 18.sp,
-        )
     }
 }

@@ -39,11 +39,24 @@ data object EditProfileRoute
 @Serializable
 data object FeedRoute
 
+/** Compose a new tweet, or edit an existing one when [tweetId] is set ([initialText] prefills it). */
 @Serializable
-data object ComposeTweetRoute
+data class ComposeTweetRoute(val tweetId: String? = null, val initialText: String? = null)
 
 @Serializable
-data class DetailRoute(val tweetId: String)
+data class DetailRoute(val tweetId: String, val focusReply: Boolean = false)
 
 @Serializable
 data class LikesListRoute(val tweetId: String)
+
+@Serializable
+data class FollowersRoute(val userId: String)
+
+@Serializable
+data class FollowingRoute(val userId: String)
+
+@Serializable
+data object SettingsRoute
+
+@Serializable
+data object FeedbackRoute

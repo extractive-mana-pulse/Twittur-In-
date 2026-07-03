@@ -9,5 +9,5 @@ class SearchRepositoryImpl(
     private val searchApi: SearchApi
 ) : SearchRepository {
 
-    override suspend fun searchNews(keyword : String): Response<SearchResponse> = searchApi.searchNews(keyword)
+    override suspend fun searchUser(keyword : String): Response<SearchResponse> = searchApi.searchNews(keyword)
 }

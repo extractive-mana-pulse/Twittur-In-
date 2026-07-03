@@ -28,6 +28,7 @@ kotlin {
             api(projects.feature.tweet.domain)
             implementation(projects.core.domain)
             implementation(projects.core.presentation)
+            implementation(projects.core.designSystem)
             implementation(libs.bundles.compose)
             implementation(libs.bundles.lifecycleCompose)
             implementation(libs.bundles.koinCompose)

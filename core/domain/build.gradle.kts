@@ -23,6 +23,10 @@ kotlin {
     }
 
     sourceSets {
+        commonMain.dependencies {
+            // Flow is used in preference/repository contracts (e.g. AppPreferences).
+            implementation(libs.kotlinx.coroutines.core)
+        }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
         }

@@ -1,23 +1,24 @@
 package com.example.twitturin.feature.profile.presentation
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -28,9 +29,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
+import com.example.twitturin.core.designsystem.component.BrandTextField
+import com.example.twitturin.core.designsystem.component.BrandTopBar
+import com.example.twitturin.core.designsystem.component.GradientAvatar
+import com.example.twitturin.core.designsystem.icon.TwitturIcons
+import com.example.twitturin.core.designsystem.theme.Brand
+import com.example.twitturin.core.designsystem.theme.OnBrand
 import com.example.twitturin.core.presentation.ObserveAsEvents
 import com.example.twitturin.core.presentation.UiText
 import org.koin.compose.viewmodel.koinViewModel
@@ -103,18 +112,22 @@ fun EditProfileScreen(
     Scaffold(
         modifier = modifier,
         topBar = {
-            TopAppBar(
-                title = { Text(text = "Edit profile") },
-                navigationIcon = { TextButton(onClick = onBack) { Text(text = "Back") } },
+            BrandTopBar(
+                title = "Edit profile",
+                onBack = onBack,
                 actions = {
-                    TextButton(
-                        enabled = !state.isLoading,
+                    Button(
                         onClick = { onSave(fullName, username, email, bio, country, birthday) },
+                        enabled = !state.isLoading,
+                        shape = androidx.compose.foundation.shape.RoundedCornerShape(20.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = Brand, contentColor = OnBrand),
+                        contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 20.dp, vertical = 6.dp),
+                        modifier = Modifier.padding(end = 12.dp),
                     ) {
                         if (state.isLoading) {
-                            CircularProgressIndicator(modifier = Modifier.size(20.dp), strokeWidth = 2.dp)
+                            CircularProgressIndicator(modifier = Modifier.size(18.dp), color = OnBrand, strokeWidth = 2.dp)
                         } else {
-                            Text(text = "Save")
+                            Text("Save", fontWeight = FontWeight.Bold)
                         }
                     }
                 },
@@ -126,49 +139,41 @@ fun EditProfileScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(16.dp)
+                .padding(horizontal = 20.dp)
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(12.dp),
+            verticalArrangement = Arrangement.spacedBy(14.dp),
         ) {
-            // Image picking is a separate platform (expect/actual) task — avatar is read-only for now.
-            AsyncImage(
-                model = user?.profilePicture,
-                contentDescription = null,
-                modifier = Modifier
-                    .size(96.dp)
-                    .clip(CircleShape),
-            )
-            OutlinedTextField(
-                modifier = Modifier.fillMaxWidth(),
-                value = fullName, onValueChange = { fullName = it }, singleLine = true,
-                label = { Text(text = "Full name") },
-            )
-            OutlinedTextField(
-                modifier = Modifier.fillMaxWidth(),
-                value = username, onValueChange = { username = it }, singleLine = true,
-                label = { Text(text = "Username") },
-            )
-            OutlinedTextField(
-                modifier = Modifier.fillMaxWidth(),
-                value = email, onValueChange = { email = it }, singleLine = true,
-                label = { Text(text = "Email") },
-            )
-            OutlinedTextField(
-                modifier = Modifier.fillMaxWidth(),
-                value = country, onValueChange = { country = it }, singleLine = true,
-                label = { Text(text = "Country") },
-            )
-            OutlinedTextField(
-                modifier = Modifier.fillMaxWidth(),
-                value = birthday, onValueChange = { birthday = it }, singleLine = true,
-                label = { Text(text = "Birthday") },
-            )
-            OutlinedTextField(
-                modifier = Modifier.fillMaxWidth(),
-                value = bio, onValueChange = { bio = it }, minLines = 3,
-                label = { Text(text = "Bio") },
-            )
+            // Avatar with an add-photo badge — the picker itself is a deferred expect/actual task.
+            Box(modifier = Modifier.padding(top = 8.dp)) {
+                Box(modifier = Modifier.size(96.dp)) {
+                    GradientAvatar(name = fullName.ifBlank { "?" }, size = 96.dp)
+                    if (!user?.profilePicture.isNullOrBlank()) {
+                        AsyncImage(
+                            model = user?.profilePicture,
+                            contentDescription = null,
+                            modifier = Modifier.size(96.dp).clip(CircleShape),
+                        )
+                    }
+                }
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .size(32.dp)
+                        .clip(CircleShape)
+                        .background(Brand),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Icon(TwitturIcons.AddPhoto, contentDescription = "Change photo", tint = OnBrand, modifier = Modifier.size(18.dp))
+                }
+            }
+
+            BrandTextField(fullName, { fullName = it }, placeholder = "Full name", leadingIcon = TwitturIcons.Account)
+            BrandTextField(username, { username = it }, placeholder = "Username", leadingIcon = TwitturIcons.PersonAdd)
+            BrandTextField(email, { email = it }, placeholder = "Email", leadingIcon = TwitturIcons.Mail)
+            BrandTextField(country, { country = it }, placeholder = "Country", leadingIcon = TwitturIcons.Info)
+            BrandTextField(birthday, { birthday = it }, placeholder = "Birthday", leadingIcon = TwitturIcons.Edit)
+            BrandTextField(bio, { bio = it }, placeholder = "Biography", leadingIcon = null, singleLine = false)
         }
     }
 }

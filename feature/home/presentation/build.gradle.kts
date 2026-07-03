@@ -27,6 +27,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(projects.core.domain)
+            implementation(projects.core.designSystem)
             implementation(libs.bundles.compose)
             implementation(libs.bundles.lifecycleCompose)
             implementation(libs.bundles.koinCompose)

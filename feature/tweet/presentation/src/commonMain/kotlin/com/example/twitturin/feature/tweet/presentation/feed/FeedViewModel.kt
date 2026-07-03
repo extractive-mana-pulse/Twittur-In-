@@ -7,6 +7,7 @@ import com.example.twitturin.core.domain.util.onFailure
 import com.example.twitturin.core.domain.util.onSuccess
 import com.example.twitturin.core.presentation.toUiText
 import com.example.twitturin.feature.tweet.domain.TweetRepository
+import com.example.twitturin.feature.tweet.presentation.TweetUi
 import com.example.twitturin.feature.tweet.presentation.toTweetUi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -42,7 +43,10 @@ class FeedViewModel(
             is FeedAction.OnTweetClick -> viewModelScope.launch {
                 _events.send(FeedEvent.NavigateToTweet(action.tweetId))
             }
-            is FeedAction.OnDeleteTweet -> deleteTweet(action.tweetId)
+            is FeedAction.OnReplyClick -> viewModelScope.launch {
+                _events.send(FeedEvent.NavigateToTweet(action.tweetId, focusReply = true))
+            }
+            is FeedAction.OnLikeClick -> toggleLike(action.tweetId)
         }
     }
 
@@ -65,14 +69,22 @@ class FeedViewModel(
         }
     }
 
-    private fun deleteTweet(tweetId: String) {
+    /** Optimistically toggle the heart, then sync with the backend; revert on failure. */
+    private fun toggleLike(tweetId: String) {
+        val current: TweetUi = _state.value.tweets.firstOrNull { it.id == tweetId } ?: return
+        val nowLiked = !current.isLiked
+        val newCount = (current.likes + if (nowLiked) 1 else -1).coerceAtLeast(0)
+        _state.update { st -> st.copy(tweets = st.tweets.map { if (it.id == tweetId) it.copy(isLiked = nowLiked, likes = newCount) else it }) }
         viewModelScope.launch {
-            tweetRepository.deleteTweet(tweetId)
-                .onSuccess {
-                    // Drop it locally so the list updates without a full refetch.
-                    _state.update { state -> state.copy(tweets = state.tweets.filterNot { it.id == tweetId }) }
-                }
-                .onFailure { error -> _events.send(FeedEvent.ShowError(error.toUiText())) }
+            val result = if (nowLiked) {
+                tweetRepository.likeTweet(tweetId, newCount)
+            } else {
+                tweetRepository.unlikeTweet(tweetId, newCount)
+            }
+            result.onFailure { error ->
+                _state.update { st -> st.copy(tweets = st.tweets.map { if (it.id == tweetId) it.copy(isLiked = current.isLiked, likes = current.likes) else it }) }
+                _events.send(FeedEvent.ShowError(error.toUiText()))
+            }
         }
     }
 }

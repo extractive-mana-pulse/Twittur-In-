@@ -1,41 +1,73 @@
 package com.example.twitturin.feature.tweet.presentation.post
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil3.compose.AsyncImage
+import com.example.twitturin.core.designsystem.icon.TwitturIcons
+import com.example.twitturin.core.designsystem.theme.Brand
+import com.example.twitturin.core.designsystem.theme.BrandSoft
+import com.example.twitturin.core.designsystem.theme.Danger
+import com.example.twitturin.core.designsystem.theme.DividerLine
+import com.example.twitturin.core.designsystem.theme.Hint
+import com.example.twitturin.core.designsystem.theme.OnBrand
+import com.example.twitturin.core.designsystem.theme.SecondaryText
 import com.example.twitturin.core.presentation.ObserveAsEvents
 import com.example.twitturin.core.presentation.UiText
+import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 
 private const val MAX_TWEET_LENGTH = 280
+private const val IMAGES_UNAVAILABLE = "Publishing pictures isn't available yet."
 
 @Composable
 fun PostTweetRoot(
     onBack: () -> Unit,
     onPosted: () -> Unit,
+    tweetId: String? = null,
+    initialText: String? = null,
+    recentImages: List<String> = emptyList(),
     viewModel: PostTweetViewModel = koinViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -59,8 +91,11 @@ fun PostTweetRoot(
 
     PostTweetScreen(
         state = state,
+        isEditing = tweetId != null,
+        initialText = initialText.orEmpty(),
+        recentImages = recentImages,
         onBack = onBack,
-        onPost = viewModel::post,
+        onPost = { content -> viewModel.post(content, tweetId) },
         snackbarHostState = snackbarHostState,
     )
 }
@@ -73,16 +108,47 @@ fun PostTweetScreen(
     onPost: (String) -> Unit,
     snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
+    isEditing: Boolean = false,
+    initialText: String = "",
+    recentImages: List<String> = emptyList(),
 ) {
-    var content by rememberSaveable { mutableStateOf("") }
+    var content by rememberSaveable { mutableStateOf(initialText) }
     val canPost = content.isNotBlank() && content.length <= MAX_TWEET_LENGTH && !state.isPosting
+    val scope = rememberCoroutineScope()
+
+    fun picturesUnavailable() {
+        scope.launch { snackbarHostState.showSnackbar(IMAGES_UNAVAILABLE) }
+    }
 
     Scaffold(
         modifier = modifier,
         topBar = {
             TopAppBar(
-                title = { Text(text = "New tweet") },
-                navigationIcon = { TextButton(onClick = onBack) { Text(text = "Back") } },
+                title = {
+                    Text(
+                        text = if (isEditing) "Edit tweet" else "New tweet",
+                        style = MaterialTheme.typography.titleLarge,
+                    )
+                },
+                navigationIcon = {
+                    IconButton(onClick = onBack) { Icon(TwitturIcons.Close, contentDescription = "Close") }
+                },
+                actions = {
+                    Button(
+                        onClick = { onPost(content) },
+                        enabled = canPost,
+                        shape = RoundedCornerShape(20.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = Brand, contentColor = OnBrand),
+                        contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 20.dp, vertical = 6.dp),
+                        modifier = Modifier.padding(end = 12.dp),
+                    ) {
+                        if (state.isPosting) {
+                            CircularProgressIndicator(modifier = Modifier.size(18.dp), color = OnBrand, strokeWidth = 2.dp)
+                        } else {
+                            Text(if (isEditing) "Save" else "Post", fontWeight = FontWeight.Bold)
+                        }
+                    }
+                },
             )
         },
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -94,26 +160,60 @@ fun PostTweetScreen(
                 .padding(16.dp),
         ) {
             OutlinedTextField(
-                modifier = Modifier.fillMaxWidth().height(160.dp),
+                modifier = Modifier.fillMaxWidth().height(180.dp),
                 value = content,
                 onValueChange = { if (it.length <= MAX_TWEET_LENGTH) content = it },
-                label = { Text(text = "What's happening?") },
-                supportingText = { Text(text = "${content.length} / $MAX_TWEET_LENGTH") },
+                placeholder = { Text(text = "What's happening?", color = Hint) },
+                shape = RoundedCornerShape(14.dp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = Brand,
+                    unfocusedBorderColor = DividerLine,
+                    cursorColor = Brand,
+                ),
             )
 
-            Button(
+            // Image picker row: a "add image" button + recent device thumbnails (Android only;
+            // publishing isn't wired yet, so any tap shows a not-available notice).
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(56.dp)
-                    .padding(top = 16.dp),
-                enabled = canPost,
-                onClick = { onPost(content) },
+                    .padding(top = 12.dp)
+                    .horizontalScroll(rememberScrollState()),
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                if (state.isPosting) {
-                    CircularProgressIndicator(modifier = Modifier.size(24.dp), strokeWidth = 2.dp)
-                } else {
-                    Text(text = "Post")
+                Box(
+                    modifier = Modifier
+                        .size(64.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(BrandSoft)
+                        .clickable { picturesUnavailable() },
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Icon(TwitturIcons.AddPhoto, contentDescription = "Add image", tint = Brand, modifier = Modifier.size(26.dp))
                 }
+                recentImages.take(5).forEach { uri ->
+                    AsyncImage(
+                        model = uri,
+                        contentDescription = "Recent image",
+                        modifier = Modifier
+                            .size(64.dp)
+                            .clip(RoundedCornerShape(12.dp))
+                            .clickable { picturesUnavailable() },
+                    )
+                }
+            }
+
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+                horizontalArrangement = Arrangement.End,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = "${content.length} / $MAX_TWEET_LENGTH",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = if (content.length > MAX_TWEET_LENGTH) Danger else SecondaryText,
+                )
             }
         }
     }

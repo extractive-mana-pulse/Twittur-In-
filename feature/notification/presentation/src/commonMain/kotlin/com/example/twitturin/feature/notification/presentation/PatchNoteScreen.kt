@@ -7,16 +7,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -28,6 +23,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.twitturin.core.designsystem.component.BrandTopBar
+import com.example.twitturin.core.designsystem.component.LoadingBox
+import com.example.twitturin.core.designsystem.component.MarkdownText
+import com.example.twitturin.core.designsystem.component.PrimaryButton
 import com.example.twitturin.core.presentation.ObserveAsEvents
 import com.example.twitturin.core.presentation.UiText
 import org.koin.compose.viewmodel.koinViewModel
@@ -65,7 +64,6 @@ fun PatchNoteRoot(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PatchNoteScreen(
     state: NotificationState,
@@ -77,14 +75,7 @@ fun PatchNoteScreen(
     val release = state.release
     Scaffold(
         modifier = modifier,
-        topBar = {
-            TopAppBar(
-                title = { Text(text = release?.title ?: "Patch notes") },
-                navigationIcon = {
-                    TextButton(onClick = onBack) { Text(text = "Back") }
-                },
-            )
-        },
+        topBar = { BrandTopBar(title = release?.title ?: "Patch notes", onBack = onBack) },
         snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { innerPadding ->
         Box(
@@ -93,11 +84,7 @@ fun PatchNoteScreen(
                 .padding(innerPadding),
         ) {
             when {
-                state.isLoading && release == null -> {
-                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        CircularProgressIndicator()
-                    }
-                }
+                state.isLoading && release == null -> LoadingBox()
 
                 release == null -> {
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -107,24 +94,21 @@ fun PatchNoteScreen(
 
                 else -> {
                     Column(modifier = Modifier.fillMaxSize()) {
-                        Text(
-                            text = release.body.ifEmpty { "No release notes provided." },
-                            style = MaterialTheme.typography.bodyMedium,
+                        Column(
                             modifier = Modifier
                                 .weight(1f)
                                 .fillMaxWidth()
                                 .verticalScroll(rememberScrollState())
                                 .padding(16.dp),
-                        )
+                        ) {
+                            MarkdownText(markdown = release.body.ifEmpty { "No release notes provided." })
+                        }
                         release.downloadUrl?.let { url ->
-                            Button(
+                            PrimaryButton(
+                                text = "Update",
                                 onClick = { onUpdate(url) },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(16.dp),
-                            ) {
-                                Text(text = "Update")
-                            }
+                                modifier = Modifier.padding(16.dp),
+                            )
                         }
                     }
                 }

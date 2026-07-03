@@ -29,3 +29,11 @@ kotlin {
         }
     }
 }
+
+// Bundled DM Sans fonts + brand icons live in commonMain/composeResources.
+// Pin the generated accessor package so callers import a stable path.
+compose.resources {
+    publicResClass = true
+    generateResClass = always
+    packageOfResClass = "com.example.twitturin.core.designsystem.resources"
+}

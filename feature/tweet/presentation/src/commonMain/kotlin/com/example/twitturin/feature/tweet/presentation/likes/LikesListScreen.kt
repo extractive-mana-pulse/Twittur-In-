@@ -6,20 +6,14 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -28,14 +22,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil3.compose.AsyncImage
+import com.example.twitturin.core.designsystem.component.BrandTopBar
+import com.example.twitturin.core.designsystem.component.EmptyState
+import com.example.twitturin.core.designsystem.component.LoadingBox
+import com.example.twitturin.core.designsystem.icon.TwitturIcons
+import com.example.twitturin.core.designsystem.theme.SecondaryText
 import com.example.twitturin.core.presentation.ObserveAsEvents
 import com.example.twitturin.core.presentation.UiText
+import com.example.twitturin.feature.tweet.presentation.components.TweetAvatar
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -67,7 +64,6 @@ fun LikesListRoot(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LikesListScreen(
     state: LikesListState,
@@ -77,23 +73,17 @@ fun LikesListScreen(
 ) {
     Scaffold(
         modifier = modifier,
-        topBar = {
-            TopAppBar(
-                title = { Text(text = "Likes") },
-                navigationIcon = { TextButton(onClick = onBack) { Text(text = "Back") } },
-            )
-        },
+        topBar = { BrandTopBar(title = "Likes", onBack = onBack) },
         snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { innerPadding ->
         Box(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
             when {
-                state.isLoading -> CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                state.isLoading -> LoadingBox()
 
-                state.likers.isEmpty() -> Text(
-                    text = "No likes yet",
-                    style = MaterialTheme.typography.bodyLarge,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.align(Alignment.Center).padding(16.dp),
+                state.likers.isEmpty() -> EmptyState(
+                    icon = TwitturIcons.Like,
+                    title = "No likes yet",
+                    subtitle = "Be the first to like this post.",
                 )
 
                 else -> LazyColumn(modifier = Modifier.fillMaxSize()) {
@@ -113,21 +103,17 @@ private fun LikerRow(liker: LikerUi) {
         modifier = Modifier.fillMaxWidth().padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        AsyncImage(
-            model = liker.avatar,
-            contentDescription = null,
-            modifier = Modifier.size(48.dp).clip(CircleShape),
-        )
+        TweetAvatar(name = liker.fullName, avatarUrl = liker.avatar, size = 48.dp)
         Column(modifier = Modifier.padding(start = 12.dp)) {
             Text(
                 text = liker.fullName,
                 style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.SemiBold,
+                fontWeight = FontWeight.Bold,
             )
             Text(
                 text = "@${liker.username}",
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                color = SecondaryText,
             )
         }
     }

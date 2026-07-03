@@ -16,6 +16,12 @@ interface TweetRepository {
     /** Tweets authored by a given user (`GET users/{id}/tweets`). */
     suspend fun getUserTweets(userId: String): Result<List<Tweet>, DataError.Network>
 
+    /** Replies authored by a given user (`GET users/{id}/replies`). */
+    suspend fun getUserReplies(userId: String): Result<List<Tweet>, DataError.Network>
+
+    /** Tweets a given user has liked (`GET users/{id}/likes`). */
+    suspend fun getUserLikes(userId: String): Result<List<Tweet>, DataError.Network>
+
     /** Publish a new tweet (`POST tweets`). */
     suspend fun postTweet(content: String): EmptyResult<DataError.Network>
 
@@ -35,4 +41,15 @@ interface TweetRepository {
 
     /** Users who liked a tweet (`GET tweets/{id}/likes`). */
     suspend fun getLikers(tweetId: String): Result<List<TweetLiker>, DataError.Network>
+
+    // --- interactions ---
+
+    /** Like a tweet (`POST tweets/{id}/likes`, auth); [newCount] is the resulting like total. */
+    suspend fun likeTweet(tweetId: String, newCount: Int): EmptyResult<DataError.Network>
+
+    /** Remove a like (`DELETE tweets/{id}/likes`, auth); [newCount] is the resulting like total. */
+    suspend fun unlikeTweet(tweetId: String, newCount: Int): EmptyResult<DataError.Network>
+
+    /** Edit a tweet the current user owns (`PUT tweets/{id}`, auth). */
+    suspend fun editTweet(tweetId: String, content: String): EmptyResult<DataError.Network>
 }

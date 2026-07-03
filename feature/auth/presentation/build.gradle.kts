@@ -28,6 +28,7 @@ kotlin {
         commonMain.dependencies {
             api(projects.feature.auth.domain)
             implementation(projects.core.presentation)
+            implementation(projects.core.designSystem)
             implementation(libs.bundles.compose)
             implementation(libs.bundles.lifecycleCompose)
             implementation(libs.bundles.koinCompose)

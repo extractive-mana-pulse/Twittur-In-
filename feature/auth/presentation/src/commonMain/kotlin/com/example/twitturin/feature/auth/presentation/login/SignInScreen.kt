@@ -2,16 +2,15 @@ package com.example.twitturin.feature.auth.presentation.login
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -27,11 +26,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.twitturin.core.designsystem.component.BrandTextField
+import com.example.twitturin.core.designsystem.component.PasswordField
+import com.example.twitturin.core.designsystem.component.PrimaryButton
+import com.example.twitturin.core.designsystem.component.TwitturLogo
+import com.example.twitturin.core.designsystem.icon.TwitturIcons
+import com.example.twitturin.core.designsystem.theme.Brand
+import com.example.twitturin.core.designsystem.theme.SecondaryText
 import com.example.twitturin.core.presentation.ObserveAsEvents
 import com.example.twitturin.core.presentation.UiText
 import org.koin.compose.viewmodel.koinViewModel
@@ -82,6 +86,7 @@ fun SignInScreen(
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
 
     val canSubmit = username.isNotBlank() && password.isNotBlank() && !state.isLoading
+    fun submit() { if (canSubmit) onLogin(username.trim(), password) }
 
     Scaffold(
         modifier = modifier,
@@ -91,57 +96,56 @@ fun SignInScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(24.dp),
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
         ) {
-            Text(text = "Sign in", style = MaterialTheme.typography.headlineMedium)
+            Spacer(Modifier.height(40.dp))
+            TwitturLogo(fontSize = 44.sp)
+            Text(
+                text = "Sign in to continue",
+                style = MaterialTheme.typography.bodyMedium,
+                color = SecondaryText,
+                modifier = Modifier.padding(top = 6.dp, bottom = 32.dp),
+            )
 
-            OutlinedTextField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 24.dp),
+            BrandTextField(
                 value = username,
                 onValueChange = { username = it },
-                singleLine = true,
-                label = { Text(text = "Username") },
+                placeholder = "Username",
+                leadingIcon = TwitturIcons.Account,
+                keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(imeAction = ImeAction.Next),
             )
-
-            OutlinedTextField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 12.dp),
+            Spacer(Modifier.height(14.dp))
+            PasswordField(
                 value = password,
                 onValueChange = { password = it },
-                singleLine = true,
-                label = { Text(text = "Password") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done),
-                visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                trailingIcon = {
-                    TextButton(onClick = { passwordVisible = !passwordVisible }) {
-                        Text(text = if (passwordVisible) "Hide" else "Show")
-                    }
-                },
+                placeholder = "Password",
+                visible = passwordVisible,
+                onToggleVisible = { passwordVisible = !passwordVisible },
+                imeAction = ImeAction.Done,
+                keyboardActions = KeyboardActions(onDone = { submit() }),
             )
 
-            Button(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp)
-                    .padding(top = 24.dp),
+            Spacer(Modifier.height(28.dp))
+            PrimaryButton(
+                text = "Sign in",
+                onClick = { submit() },
                 enabled = canSubmit,
-                onClick = { onLogin(username, password) },
+                loading = state.isLoading,
+            )
+
+            Row(
+                modifier = Modifier.padding(top = 16.dp),
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                if (state.isLoading) {
-                    CircularProgressIndicator(modifier = Modifier.size(24.dp), strokeWidth = 2.dp)
-                } else {
-                    Text(text = "Sign in")
+                Text("Don't have an account?", style = MaterialTheme.typography.bodyMedium, color = SecondaryText)
+                TextButton(onClick = onSignUp) {
+                    Text("Sign up", color = Brand, style = MaterialTheme.typography.labelLarge)
                 }
             }
-
-            TextButton(onClick = onSignUp) {
-                Text(text = "Sign up")
-            }
+            Spacer(Modifier.height(40.dp))
         }
     }
 }

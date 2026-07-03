@@ -75,3 +75,9 @@ include(":feature:profile:presentation")
 include(":feature:tweet:domain")
 include(":feature:tweet:data")
 include(":feature:tweet:presentation")
+// :feature:follow — followers / following lists + follow/unfollow actions.
+include(":feature:follow:domain")
+include(":feature:follow:data")
+include(":feature:follow:presentation")
+// :feature:settings — settings hub / feedback / theme + language pickers (presentation-only).
+include(":feature:settings:presentation")

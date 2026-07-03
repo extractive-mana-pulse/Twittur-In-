@@ -12,8 +12,12 @@ data class TweetUi(
     val date: String,
     val likes: Int,
     val replyCount: Int,
-    /** Whether the signed-in user authored this tweet (controls the delete affordance). */
+    /** Whether the signed-in user authored this tweet (controls the delete/edit affordance). */
     val isMine: Boolean,
+    /** Whether the signed-in user has liked this tweet (controls the heart state). */
+    val isLiked: Boolean,
+    /** The author's id — used to open their profile. */
+    val authorId: String,
 )
 
 fun Tweet.toTweetUi(currentUserId: String?): TweetUi = TweetUi(
@@ -27,4 +31,6 @@ fun Tweet.toTweetUi(currentUserId: String?): TweetUi = TweetUi(
     likes = likes,
     replyCount = replyCount,
     isMine = currentUserId != null && author?.id == currentUserId,
+    isLiked = currentUserId != null && likedBy.contains(currentUserId),
+    authorId = author?.id.orEmpty(),
 )

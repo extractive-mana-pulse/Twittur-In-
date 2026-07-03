@@ -3,6 +3,7 @@ package com.example.twitturin.feature.tweet.data
 import com.example.twitturin.core.data.network.delete
 import com.example.twitturin.core.data.network.get
 import com.example.twitturin.core.data.network.post
+import com.example.twitturin.core.data.network.put
 import com.example.twitturin.core.domain.util.DataError
 import com.example.twitturin.core.domain.util.EmptyResult
 import com.example.twitturin.core.domain.util.Result
@@ -23,6 +24,16 @@ class TweetRepositoryImpl(
 
     override suspend fun getUserTweets(userId: String): Result<List<Tweet>, DataError.Network> {
         return httpClient.get<List<TweetDto>>(route = "users/$userId/tweets")
+            .map { list -> list.map { it.toTweet() } }
+    }
+
+    override suspend fun getUserReplies(userId: String): Result<List<Tweet>, DataError.Network> {
+        return httpClient.get<List<TweetDto>>(route = "users/$userId/replies")
+            .map { list -> list.map { it.toTweet() } }
+    }
+
+    override suspend fun getUserLikes(userId: String): Result<List<Tweet>, DataError.Network> {
+        return httpClient.get<List<TweetDto>>(route = "users/$userId/likes")
             .map { list -> list.map { it.toTweet() } }
     }
 
@@ -57,5 +68,26 @@ class TweetRepositoryImpl(
     override suspend fun getLikers(tweetId: String): Result<List<TweetLiker>, DataError.Network> {
         return httpClient.get<List<TweetLikerDto>>(route = "tweets/$tweetId/likes")
             .map { list -> list.map { it.toTweetLiker() } }
+    }
+
+    override suspend fun likeTweet(tweetId: String, newCount: Int): EmptyResult<DataError.Network> {
+        return httpClient.post<LikeRequestDto, Unit>(
+            route = "tweets/$tweetId/likes",
+            body = LikeRequestDto(count = newCount.toString()),
+        )
+    }
+
+    override suspend fun unlikeTweet(tweetId: String, newCount: Int): EmptyResult<DataError.Network> {
+        return httpClient.delete<LikeRequestDto, Unit>(
+            route = "tweets/$tweetId/likes",
+            body = LikeRequestDto(count = newCount.toString()),
+        )
+    }
+
+    override suspend fun editTweet(tweetId: String, content: String): EmptyResult<DataError.Network> {
+        return httpClient.put<PostTweetRequestDto, Unit>(
+            route = "tweets/$tweetId",
+            body = PostTweetRequestDto(content = content),
+        )
     }
 }

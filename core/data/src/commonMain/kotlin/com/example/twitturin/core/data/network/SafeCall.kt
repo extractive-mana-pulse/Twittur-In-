@@ -39,6 +39,18 @@ suspend inline fun <reified Request, reified Response : Any> HttpClient.post(
     }
 }
 
+/**
+ * Body-less POST (e.g. `POST following/{id}` — the action is keyed by the URL + bearer token,
+ * the server ignores any body). Type the [Response] as `Unit` for fire-and-forget writes.
+ */
+suspend inline fun <reified Response : Any> HttpClient.post(
+    route: String,
+): Result<Response, DataError.Network> = safeCall {
+    post {
+        url(constructRoute(route))
+    }
+}
+
 suspend inline fun <reified Request, reified Response : Any> HttpClient.put(
     route: String,
     body: Request,
@@ -56,6 +68,17 @@ suspend inline fun <reified Response : Any> HttpClient.delete(
     delete {
         url(constructRoute(route))
         queryParameters.forEach { (key, value) -> parameter(key, value) }
+    }
+}
+
+/** DELETE with a request body (e.g. `DELETE tweets/{id}/likes` whose body is the new count). */
+suspend inline fun <reified Request, reified Response : Any> HttpClient.delete(
+    route: String,
+    body: Request,
+): Result<Response, DataError.Network> = safeCall {
+    delete {
+        url(constructRoute(route))
+        setBody(body)
     }
 }
 

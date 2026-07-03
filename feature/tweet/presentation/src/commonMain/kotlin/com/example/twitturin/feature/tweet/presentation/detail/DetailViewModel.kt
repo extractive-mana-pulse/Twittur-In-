@@ -2,6 +2,7 @@ package com.example.twitturin.feature.tweet.presentation.detail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.twitturin.core.domain.auth.SessionSource
 import com.example.twitturin.core.domain.util.onFailure
 import com.example.twitturin.core.domain.util.onSuccess
 import com.example.twitturin.core.presentation.toUiText
@@ -16,8 +17,10 @@ import kotlinx.coroutines.launch
 
 class DetailViewModel(
     private val tweetRepository: TweetRepository,
+    sessionSource: SessionSource,
 ) : ViewModel() {
 
+    private val currentUserId: String? = sessionSource.getUserId()
     private var tweetId: String? = null
 
     private val _state = MutableStateFlow(DetailState())
@@ -44,6 +47,8 @@ class DetailViewModel(
             DetailAction.OnOpenLikes -> tweetId?.let { id ->
                 viewModelScope.launch { _events.send(DetailEvent.NavigateToLikes(id)) }
             }
+            DetailAction.OnLike -> toggleLike()
+            DetailAction.OnDelete -> deleteTweet()
         }
     }
 
@@ -52,10 +57,39 @@ class DetailViewModel(
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
             tweetRepository.getTweet(id)
-                .onSuccess { tweet -> _state.update { it.copy(tweet = tweet.toTweetUi(null)) } }
+                .onSuccess { tweet -> _state.update { it.copy(tweet = tweet.toTweetUi(currentUserId)) } }
                 .onFailure { error -> _events.send(DetailEvent.ShowError(error.toUiText())) }
             loadReplies(id)
             _state.update { it.copy(isLoading = false) }
+        }
+    }
+
+    /** Optimistically toggle the heart on the main tweet, then sync; revert on failure. */
+    private fun toggleLike() {
+        val id = tweetId ?: return
+        val current = _state.value.tweet ?: return
+        val nowLiked = !current.isLiked
+        val newCount = (current.likes + if (nowLiked) 1 else -1).coerceAtLeast(0)
+        _state.update { it.copy(tweet = current.copy(isLiked = nowLiked, likes = newCount)) }
+        viewModelScope.launch {
+            val result = if (nowLiked) {
+                tweetRepository.likeTweet(id, newCount)
+            } else {
+                tweetRepository.unlikeTweet(id, newCount)
+            }
+            result.onFailure { error ->
+                _state.update { it.copy(tweet = current) }
+                _events.send(DetailEvent.ShowError(error.toUiText()))
+            }
+        }
+    }
+
+    private fun deleteTweet() {
+        val id = tweetId ?: return
+        viewModelScope.launch {
+            tweetRepository.deleteTweet(id)
+                .onSuccess { _events.send(DetailEvent.Deleted) }
+                .onFailure { error -> _events.send(DetailEvent.ShowError(error.toUiText())) }
         }
     }
 
@@ -79,7 +113,7 @@ class DetailViewModel(
 
     private suspend fun loadReplies(id: String) {
         tweetRepository.getReplies(id)
-            .onSuccess { replies -> _state.update { it.copy(replies = replies.map { r -> r.toTweetUi(null) }) } }
+            .onSuccess { replies -> _state.update { it.copy(replies = replies.map { r -> r.toTweetUi(currentUserId) }) } }
             .onFailure { error -> _events.send(DetailEvent.ShowError(error.toUiText())) }
     }
 }

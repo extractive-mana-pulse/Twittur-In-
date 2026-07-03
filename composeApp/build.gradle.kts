@@ -60,6 +60,9 @@ kotlin {
             implementation(projects.feature.profile.presentation)
             implementation(projects.feature.tweet.data)
             implementation(projects.feature.tweet.presentation)
+            implementation(projects.feature.follow.data)
+            implementation(projects.feature.follow.presentation)
+            implementation(projects.feature.settings.presentation)
             implementation(projects.core.domain)
 
             implementation(libs.bundles.compose)
@@ -68,6 +71,7 @@ kotlin {
             implementation(libs.bundles.koinCompose)
             implementation(libs.bundles.coil)
             implementation(libs.navigation.compose)
+            implementation(libs.kotlinx.coroutines.core)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
