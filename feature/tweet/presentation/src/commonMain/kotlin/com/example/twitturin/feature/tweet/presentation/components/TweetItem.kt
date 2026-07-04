@@ -1,5 +1,6 @@
 package com.example.twitturin.feature.tweet.presentation.components
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -16,6 +18,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -28,9 +35,13 @@ import coil3.compose.AsyncImage
 import com.example.richtexteditor.rememberRichText
 import com.example.twitturin.core.designsystem.component.GradientAvatar
 import com.example.twitturin.core.designsystem.icon.TwitturIcons
+import com.example.twitturin.core.designsystem.theme.Brand
 import com.example.twitturin.core.designsystem.theme.Like
 import com.example.twitturin.core.designsystem.theme.SecondaryText
 import com.example.twitturin.feature.tweet.presentation.TweetUi
+
+/** Posts taller than this are collapsed behind an expandable "Show more". */
+private val CollapsedContentMaxHeight = 200.dp
 
 /**
  * A single tweet card — shared by the home feed, profile tabs, likes and replies.
@@ -79,7 +90,29 @@ fun TweetItem(
         Spacer(modifier = Modifier.height(8.dp))
 
         // Content is wire-format rich text; unformatted tweets pass through unchanged.
-        Text(text = rememberRichText(tweet.content), style = MaterialTheme.typography.bodyLarge)
+        // Tall posts collapse to [CollapsedContentMaxHeight] behind a Show more / Show less toggle.
+        var expanded by rememberSaveable(tweet.id) { mutableStateOf(false) }
+        var overflows by remember(tweet.id) { mutableStateOf(false) }
+        Text(
+            text = rememberRichText(tweet.content),
+            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier
+                .fillMaxWidth()
+                .animateContentSize()
+                .then(if (expanded) Modifier else Modifier.heightIn(max = CollapsedContentMaxHeight)),
+            onTextLayout = { if (!expanded) overflows = it.hasVisualOverflow },
+        )
+        if (overflows || expanded) {
+            Text(
+                text = if (expanded) "Show less" else "Show more",
+                style = MaterialTheme.typography.bodyMedium,
+                color = Brand,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier
+                    .padding(top = 6.dp)
+                    .clickable { expanded = !expanded },
+            )
+        }
 
         Spacer(modifier = Modifier.height(12.dp))
 

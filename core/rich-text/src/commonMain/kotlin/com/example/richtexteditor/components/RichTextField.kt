@@ -13,12 +13,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.takeOrElse
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.OffsetMapping
+import androidx.compose.ui.text.input.TransformedText
+import androidx.compose.ui.text.input.VisualTransformation
+import com.example.richtexteditor.FormattingSpan
 import com.example.richtexteditor.RichTextEditorAction
 import com.example.richtexteditor.RichTextEditorController
+import com.example.richtexteditor.RichTextFonts
 import com.example.richtexteditor.buildRichAnnotatedString
 import com.example.richtexteditor.helper.applyFormattingToSelection
 import com.example.richtexteditor.helper.getCurrentFormatting
@@ -26,12 +31,14 @@ import com.example.richtexteditor.helper.handleTextChange
 import com.example.richtexteditor.rememberRichTextFonts
 
 /**
- * Upstream's editor field: a [BasicTextField] whose own glyphs are transparent, with the styled
- * [androidx.compose.ui.text.AnnotatedString] drawn as an overlay in the decoration box.
+ * The editor field. Upstream drew the styled document as an overlay on a transparent
+ * [BasicTextField]; whenever a span's font/size differed from the field's base style the two
+ * layouts disagreed and the cursor drifted off the visible glyphs. Here the styling is applied
+ * as a [VisualTransformation] instead, so the field lays out (and positions the cursor within)
+ * exactly the text the user sees. Character offsets are untouched — [OffsetMapping.Identity].
  *
- * Adapted for hosting inside app screens: document state lives in [controller] (not locally),
- * base look comes from [textStyle]/[MaterialTheme] instead of hardcoded fonts and colours, and
- * the host can cap [maxLength] (visible characters) and [maxLines].
+ * Document state lives in [controller]; base look comes from [textStyle]/[MaterialTheme]; the
+ * host can cap [maxLength] (visible characters) and [maxLines].
  */
 @Composable
 fun RichTextField(
@@ -46,17 +53,12 @@ fun RichTextField(
     var isFocused by remember { mutableStateOf(false) }
     val state = controller.state
 
-    val annotatedText = remember(controller.fieldValue.text, controller.spans, fonts) {
-        buildRichAnnotatedString(controller.fieldValue.text, controller.spans, fonts)
+    val visualTransformation = remember(controller.spans, fonts) {
+        RichTextVisualTransformation(controller.spans, fonts)
     }
 
     val contentColor = textStyle.color.takeOrElse { MaterialTheme.colorScheme.onSurface }
-    // The invisible input text must match the toolbar's current formatting so the cursor
-    // tracks the glyphs the overlay draws (upstream technique, themed defaults).
-    val baseStyle = textStyle.copy(
-        fontSize = state.currentFontSize.size ?: textStyle.fontSize,
-        fontFamily = fonts.familyFor(state.currentFontFamily) ?: textStyle.fontFamily,
-    )
+    val baseStyle = textStyle.copy(color = contentColor)
 
     BasicTextField(
         value = controller.fieldValue,
@@ -74,8 +76,9 @@ fun RichTextField(
             )
         },
         modifier = modifier.onFocusChanged { isFocused = it.isFocused },
-        textStyle = baseStyle.copy(color = Color.Transparent),
+        textStyle = baseStyle,
         cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
+        visualTransformation = visualTransformation,
         maxLines = maxLines,
     ) { innerTextField ->
         Box {
@@ -83,12 +86,6 @@ fun RichTextField(
                 Text(
                     text = placeholder,
                     style = baseStyle.copy(color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)),
-                )
-            }
-            if (controller.fieldValue.text.isNotEmpty()) {
-                Text(
-                    text = annotatedText,
-                    style = baseStyle.copy(color = contentColor),
                 )
             }
             innerTextField()
@@ -130,4 +127,15 @@ fun RichTextField(
             )
         }
     }
+}
+
+/** Applies the document's spans as text-field styling; offsets are 1:1 with the raw text. */
+private class RichTextVisualTransformation(
+    private val spans: List<FormattingSpan>,
+    private val fonts: RichTextFonts,
+) : VisualTransformation {
+    override fun filter(text: AnnotatedString): TransformedText = TransformedText(
+        text = buildRichAnnotatedString(text.text, spans, fonts),
+        offsetMapping = OffsetMapping.Identity,
+    )
 }

@@ -11,7 +11,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -59,7 +60,7 @@ import com.example.twitturin.core.presentation.UiText
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 
-private const val MAX_TWEET_LENGTH = 280
+private const val MAX_TWEET_LENGTH = 560
 private const val IMAGES_UNAVAILABLE = "Publishing pictures isn't available yet."
 
 @Composable
@@ -156,78 +157,88 @@ fun PostTweetScreen(
         },
         snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .padding(16.dp),
-        ) {
-            // Rich-text editor (vendored RichTextEditor lib) inside the old outlined-field frame.
-            Box(
+        Box(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(180.dp)
-                    .border(width = 1.dp, color = DividerLine, shape = RoundedCornerShape(14.dp))
-                    .padding(horizontal = 16.dp, vertical = 12.dp),
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(16.dp)
+                    // Clearance so the floating toolbar never covers the counter/image row.
+                    .padding(bottom = 88.dp),
             ) {
-                RichTextField(
-                    controller = editor,
-                    modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
-                    textStyle = MaterialTheme.typography.bodyLarge,
-                    placeholder = "What's happening?",
-                    maxLength = MAX_TWEET_LENGTH,
-                )
-            }
-
-            // The library's floating formatting toolbar (bold/italic/underline/colour/font/size).
-            RichTextToolbar(
-                controller = editor,
-                modifier = Modifier.align(Alignment.CenterHorizontally).padding(top = 10.dp),
-            )
-
-            // Image picker row: a "add image" button + recent device thumbnails (Android only;
-            // publishing isn't wired yet, so any tap shows a not-available notice).
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 12.dp)
-                    .horizontalScroll(rememberScrollState()),
-                horizontalArrangement = Arrangement.spacedBy(10.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
+                // Rich-text editor (vendored RichTextEditor lib) inside the old outlined-field frame.
+                // Adaptive height: starts compact and grows with the document (the page scrolls).
                 Box(
                     modifier = Modifier
-                        .size(64.dp)
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(BrandSoft)
-                        .clickable { picturesUnavailable() },
-                    contentAlignment = Alignment.Center,
+                        .fillMaxWidth()
+                        .heightIn(min = 160.dp)
+                        .border(width = 1.dp, color = DividerLine, shape = RoundedCornerShape(14.dp))
+                        .padding(horizontal = 16.dp, vertical = 12.dp),
                 ) {
-                    Icon(TwitturIcons.AddPhoto, contentDescription = "Add image", tint = Brand, modifier = Modifier.size(26.dp))
+                    RichTextField(
+                        controller = editor,
+                        modifier = Modifier.fillMaxWidth(),
+                        textStyle = MaterialTheme.typography.bodyLarge,
+                        placeholder = "What's happening?",
+                        maxLength = MAX_TWEET_LENGTH,
+                    )
                 }
-                recentImages.take(5).forEach { uri ->
-                    AsyncImage(
-                        model = uri,
-                        contentDescription = "Recent image",
+
+                // Image picker row: a "add image" button + recent device thumbnails (Android only;
+                // publishing isn't wired yet, so any tap shows a not-available notice).
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 12.dp)
+                        .horizontalScroll(rememberScrollState()),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Box(
                         modifier = Modifier
                             .size(64.dp)
                             .clip(RoundedCornerShape(12.dp))
+                            .background(BrandSoft)
                             .clickable { picturesUnavailable() },
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Icon(TwitturIcons.AddPhoto, contentDescription = "Add image", tint = Brand, modifier = Modifier.size(26.dp))
+                    }
+                    recentImages.take(5).forEach { uri ->
+                        AsyncImage(
+                            model = uri,
+                            contentDescription = "Recent image",
+                            modifier = Modifier
+                                .size(64.dp)
+                                .clip(RoundedCornerShape(12.dp))
+                                .clickable { picturesUnavailable() },
+                        )
+                    }
+                }
+
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+                    horizontalArrangement = Arrangement.End,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = "$visibleLength / $MAX_TWEET_LENGTH",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = if (visibleLength > MAX_TWEET_LENGTH) Danger else SecondaryText,
                     )
                 }
             }
 
-            Row(
-                modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
-                horizontalArrangement = Arrangement.End,
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Text(
-                    text = "$visibleLength / $MAX_TWEET_LENGTH",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = if (visibleLength > MAX_TWEET_LENGTH) Danger else SecondaryText,
-                )
-            }
+            // The library's floating formatting toolbar — pinned to the bottom centre of the
+            // screen, collapsed to its FAB until the user expands it.
+            RichTextToolbar(
+                controller = editor,
+                initiallyExpanded = false,
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .imePadding()
+                    .padding(bottom = 16.dp),
+            )
         }
     }
 }
