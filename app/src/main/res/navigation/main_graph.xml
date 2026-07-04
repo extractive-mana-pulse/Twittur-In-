@@ -537,5 +537,4 @@
             android:id="@+id/action_patchNoteFragment_to_notificationsFragment"
             app:destination="@id/notificationsFragment" />
     </fragment>
-
 </navigation>

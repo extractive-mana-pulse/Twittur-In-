@@ -28,6 +28,5 @@ fun MaterialToolbar.loadToolbarImage(url: String?, view: MaterialToolbar) {
         .circleCrop()
         .into(object : CustomTarget<Drawable>() {
             override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) { view.navigationIcon = resource }
-
             override fun onLoadCleared(placeholder: Drawable?) {} })
 }

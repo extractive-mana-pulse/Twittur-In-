@@ -7,9 +7,13 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
+import android.view.ViewGroup.MarginLayoutParams
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updateLayoutParams
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.twitturin.R
@@ -36,6 +40,7 @@ class MainActivity : AppCompatActivity() {
 
     @SuppressLint("PrivateResource", "CheckResult")
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
@@ -62,7 +67,6 @@ class MainActivity : AppCompatActivity() {
             this@MainActivity.checkStatus(bottomNavView)
             bottomNavView.setupWithNavController(navController)
         }
-//        LeakCanary
         this.checkTheme()
         this.loadLocale()
     }
