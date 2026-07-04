@@ -84,6 +84,7 @@ import com.example.twitturin.feature.tweet.presentation.post.PostTweetRoot
 import com.example.twitturin.feature.tweet.presentation.profile.UserContentTabs
 import com.example.twitturin.navigation.AppNavigation
 import com.example.twitturin.navigation.ComposeTweetRoute
+import com.example.twitturin.navigation.RailAction
 import com.example.twitturin.navigation.DetailRoute
 import com.example.twitturin.navigation.EditProfileRoute
 import com.example.twitturin.navigation.FeedbackRoute
@@ -317,6 +318,15 @@ private fun MainShell(navController: NavHostController, share: (String) -> Unit)
         onSelect = { tab = it },
         showLabels = showLabels,
         gesturesEnabled = tab == 0, // drawer only reachable from home
+        // Desktop rail (no drawer there): the drawer's secondary destinations, pinned bottom.
+        railActions = listOf(
+            RailAction(TwitturIcons.Account, "Profile") { navController.navigate(ProfileRoute) },
+            RailAction(TwitturIcons.Bookmark, "Timetable") { uriHandler.openUri(TIMETABLE_URL) },
+            RailAction(TwitturIcons.Visibility, "Mode") { showThemeDialog = true },
+            RailAction(TwitturIcons.Translate, "Language") { showLanguageDialog = true },
+            RailAction(TwitturIcons.Feedback, "Feedback") { navController.navigate(FeedbackRoute) },
+            RailAction(TwitturIcons.Settings, "Settings") { navController.navigate(SettingsRoute) },
+        ),
         drawerContent = { closeDrawer ->
             DrawerBody(
                 user = me,

@@ -7,14 +7,17 @@ plugins {
     alias(libs.plugins.composeCompiler)
 }
 
-// Tweet feature — presentation layer: shared TweetItem, feed + post-tweet MVI, Koin module.
+// RichTextEditor — github.com/extractive-mana-pulse/RichTextEditor vendored (see README.md in
+// this module). Upstream is an Android-only demo app, so its rich_text_editor package is
+// compiled here as commonMain to serve Android + iOS + Desktop alike, with the Android
+// resource references replaced (drawables → ImageVectors, res/font → composeResources).
 kotlin {
     iosArm64()
     iosSimulatorArm64()
     jvm()
 
     androidLibrary {
-        namespace = "com.example.twitturin.feature.tweet.presentation"
+        namespace = "com.example.richtexteditor"
         compileSdk = libs.versions.android.compileSdk.get().toInt()
         minSdk = libs.versions.android.minSdk.get().toInt()
 
@@ -25,20 +28,18 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            api(projects.feature.tweet.domain)
-            implementation(projects.core.domain)
-            implementation(projects.core.presentation)
-            implementation(projects.core.designSystem)
-            implementation(projects.core.chatThread)
-            implementation(projects.core.richText)
             implementation(libs.bundles.compose)
-            implementation(libs.bundles.lifecycleCompose)
-            implementation(libs.bundles.koinCompose)
-            implementation(libs.bundles.coil)
-            implementation(libs.kotlinx.coroutines.core)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
         }
     }
+}
+
+// Montserrat + PT Serif (the editor's two selectable fonts) live in commonMain/composeResources.
+// Pin the generated accessor package so callers import a stable path.
+compose.resources {
+    publicResClass = true
+    generateResClass = always
+    packageOfResClass = "com.example.richtexteditor.resources"
 }

@@ -40,7 +40,6 @@ class DetailViewModel(
     fun onAction(action: DetailAction) {
         when (action) {
             DetailAction.OnRefresh -> refresh()
-            is DetailAction.OnReplyChange -> _state.update { it.copy(replyDraft = action.text) }
             is DetailAction.OnSendReply -> sendReply(action.content)
             is DetailAction.OnReplyToReply -> _state.update { it.copy(replyTarget = action.reply) }
             DetailAction.OnCancelReplyTarget -> _state.update { it.copy(replyTarget = null) }
@@ -108,7 +107,8 @@ class DetailViewModel(
             }
             result
                 .onSuccess {
-                    _state.update { it.copy(isSendingReply = false, replyDraft = "", replyTarget = null) }
+                    _state.update { it.copy(isSendingReply = false, replyTarget = null) }
+                    _events.send(DetailEvent.ReplySent)
                     loadReplies(id)
                 }
                 .onFailure { error ->

@@ -1,6 +1,8 @@
 package com.example.twitturin.feature.tweet.presentation.detail
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,8 +23,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -46,6 +46,13 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.chatthread.CollapsibleChatThread
 import com.example.chatthread.rememberThreadState
+import com.example.richtexteditor.RichTextEditorController
+import com.example.richtexteditor.components.RichTextField
+import com.example.richtexteditor.components.RichTextToolbar
+import com.example.richtexteditor.icons.RichTextIcons
+import com.example.richtexteditor.rememberRichText
+import com.example.richtexteditor.rememberRichTextEditorController
+import com.example.richtexteditor.rememberRichTextFonts
 import com.example.twitturin.core.designsystem.component.LoadingBox
 import com.example.twitturin.core.designsystem.component.TwitturTopBarMore
 import com.example.twitturin.core.designsystem.icon.TwitturIcons
@@ -77,6 +84,7 @@ fun DetailRoot(
     val state by viewModel.state.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
     var pendingError by remember { mutableStateOf<UiText?>(null) }
+    val replyEditor = rememberRichTextEditorController()
 
     LaunchedEffect(tweetId) { viewModel.load(tweetId) }
 
@@ -84,6 +92,7 @@ fun DetailRoot(
         when (event) {
             is DetailEvent.NavigateToLikes -> onOpenLikes(event.tweetId)
             DetailEvent.Deleted -> onBack()
+            DetailEvent.ReplySent -> replyEditor.clear()
             is DetailEvent.ShowError -> pendingError = event.message
         }
     }
@@ -104,6 +113,7 @@ fun DetailRoot(
         onShare = { state.tweet?.let { onShare(it.id) } },
         onEdit = { state.tweet?.let { onEdit(it.id, it.content) } },
         snackbarHostState = snackbarHostState,
+        replyEditor = replyEditor,
     )
 }
 
@@ -118,8 +128,10 @@ fun DetailScreen(
     focusReply: Boolean = false,
     onShare: () -> Unit = {},
     onEdit: () -> Unit = {},
+    replyEditor: RichTextEditorController = rememberRichTextEditorController(),
 ) {
     var menuOpen by remember { mutableStateOf(false) }
+    var showFormatting by remember { mutableStateOf(false) }
     val focusRequester = remember { FocusRequester() }
     val keyboard = LocalSoftwareKeyboardController.current
     val scope = rememberCoroutineScope()
@@ -198,29 +210,48 @@ fun DetailScreen(
                         )
                     }
                 }
+                // The library's formatting toolbar, summoned by the Aa toggle in the reply row.
+                AnimatedVisibility(visible = showFormatting) {
+                    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                        RichTextToolbar(
+                            controller = replyEditor,
+                            modifier = Modifier.padding(top = 6.dp),
+                        )
+                    }
+                }
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 12.dp, vertical = 8.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    OutlinedTextField(
-                        modifier = Modifier.weight(1f).focusRequester(focusRequester),
-                        value = state.replyDraft,
-                        onValueChange = { onAction(DetailAction.OnReplyChange(it)) },
-                        placeholder = { Text(text = "Reply", color = Hint) },
-                        shape = RoundedCornerShape(24.dp),
-                        maxLines = 3,
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = Brand,
-                            unfocusedBorderColor = DividerLine,
-                            cursorColor = Brand,
-                        ),
+                    Icon(
+                        imageVector = RichTextIcons.TextFormat,
+                        contentDescription = "Formatting",
+                        tint = if (showFormatting) Brand else SecondaryText,
+                        modifier = Modifier
+                            .padding(end = 8.dp)
+                            .height(22.dp)
+                            .clickable { showFormatting = !showFormatting },
                     )
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .border(width = 1.dp, color = DividerLine, shape = RoundedCornerShape(24.dp))
+                            .padding(horizontal = 16.dp, vertical = 12.dp),
+                    ) {
+                        RichTextField(
+                            controller = replyEditor,
+                            modifier = Modifier.fillMaxWidth().focusRequester(focusRequester),
+                            textStyle = MaterialTheme.typography.bodyLarge,
+                            placeholder = "Reply",
+                            maxLines = 3,
+                        )
+                    }
                     Spacer(modifier = Modifier.width(8.dp))
                     Button(
-                        onClick = { onAction(DetailAction.OnSendReply(state.replyDraft)) },
-                        enabled = state.replyDraft.isNotBlank() && !state.isSendingReply,
+                        onClick = { onAction(DetailAction.OnSendReply(replyEditor.encode())) },
+                        enabled = replyEditor.plainText.isNotBlank() && !state.isSendingReply,
                         shape = RoundedCornerShape(22.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = Brand, contentColor = OnBrand),
                     ) { Text("Send", fontWeight = FontWeight.Bold) }
@@ -234,7 +265,10 @@ fun DetailScreen(
             }
 
             else -> {
-                val threadComments = remember(state.replies) { state.replies.map { it.toThreadComment() } }
+                val richFonts = rememberRichTextFonts()
+                val threadComments = remember(state.replies, richFonts) {
+                    state.replies.map { it.toThreadComment(richFonts) }
+                }
                 val repliesById = remember(state.replies) { indexRepliesById(state.replies) }
                 val threadState = rememberThreadState()
 
@@ -314,7 +348,7 @@ private fun DetailHeader(
         }
 
         Spacer(modifier = Modifier.height(12.dp))
-        Text(text = tweet.content, style = MaterialTheme.typography.titleSmall)
+        Text(text = rememberRichText(tweet.content), style = MaterialTheme.typography.titleSmall)
         Spacer(modifier = Modifier.height(10.dp))
         Text(text = tweet.date, style = MaterialTheme.typography.bodySmall, color = Hint)
         Spacer(modifier = Modifier.height(10.dp))

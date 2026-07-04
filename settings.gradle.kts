@@ -55,6 +55,8 @@ include(":core:presentation")
 include(":core:design-system")
 // :core:chat-thread — vendored CollapsibleChatThread lib (threaded replies UI); see its README.
 include(":core:chat-thread")
+// :core:rich-text — vendored RichTextEditor lib (formatted tweets/replies); see its README.
+include(":core:rich-text")
 // :feature:search — pilot vertical slice (Track A). Layers added as each is built.
 include(":feature:search:domain")
 include(":feature:search:data")

@@ -20,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -100,7 +101,7 @@ internal fun CommentRow(
                 }
                 Spacer(Modifier.height(style.contentVerticalGap))
                 Text(
-                    text = comment.body,
+                    text = comment.richBody ?: AnnotatedString(comment.body),
                     style = style.bodyStyle.copy(color = style.secondaryTextColor),
                 )
                 Spacer(Modifier.height(style.contentVerticalGap))

@@ -2,6 +2,7 @@ package com.example.chatthread
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.AnnotatedString
 
 /**
  * A single comment in a collapsible chat thread.
@@ -21,6 +22,9 @@ import androidx.compose.ui.graphics.Color
  * @property avatarBackground Background color of the circular avatar.
  * @property timestamp Free-form time string — the library does not format it.
  * @property body Main comment text.
+ * @property richBody Optional pre-styled body; when set it is rendered instead of [body]
+ *   (local integration patch — lets hosts pass rich/formatted text without the library
+ *   knowing about any markup format).
  * @property avatarInitial Character(s) rendered inside the avatar circle.
  * @property channel Optional secondary line under the author (e.g. a category tag).
  * @property title Optional bold title above the body (used for the root post in the demo).
@@ -34,6 +38,7 @@ data class ThreadComment(
     val avatarBackground: Color,
     val timestamp: String,
     val body: String,
+    val richBody: AnnotatedString? = null,
     val avatarInitial: String = author.firstOrNull()?.toString().orEmpty(),
     val channel: String? = null,
     val title: String? = null,

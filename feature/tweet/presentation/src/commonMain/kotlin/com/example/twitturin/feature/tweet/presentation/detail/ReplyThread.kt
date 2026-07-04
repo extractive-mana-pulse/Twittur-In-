@@ -7,6 +7,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.chatthread.ThreadComment
 import com.example.chatthread.ThreadStyle
+import com.example.richtexteditor.RichTextFonts
+import com.example.richtexteditor.renderRichText
 import com.example.twitturin.core.designsystem.theme.AvatarGradients
 import com.example.twitturin.core.designsystem.theme.Hint
 import com.example.twitturin.core.designsystem.theme.OnBrand
@@ -16,17 +18,19 @@ import com.example.twitturin.feature.tweet.presentation.ReplyUi
 /**
  * Bridges the reply tree to the vendored CollapsibleChatThread library (:core:chat-thread).
  * [ThreadComment.id] is the backend reply id, so thread expansion state and reply targeting
- * both key off the real resource.
+ * both key off the real resource. Reply content is wire-format rich text — decoded here
+ * ([renderRichText]) so styled runs survive into the thread rows.
  */
-internal fun ReplyUi.toThreadComment(): ThreadComment = ThreadComment(
+internal fun ReplyUi.toThreadComment(fonts: RichTextFonts): ThreadComment = ThreadComment(
     id = id,
     author = authorName,
     avatarBackground = avatarColorFor(authorName),
     timestamp = date,
     body = content,
+    richBody = renderRichText(content, fonts),
     avatarInitial = authorName.trim().firstOrNull()?.uppercaseChar()?.toString() ?: "?",
     channel = if (authorUsername.isBlank()) null else "@$authorUsername",
-    replies = replies.map { it.toThreadComment() },
+    replies = replies.map { it.toThreadComment(fonts) },
 )
 
 /** Every reply id that has children — used to open the whole tree once replies load. */
