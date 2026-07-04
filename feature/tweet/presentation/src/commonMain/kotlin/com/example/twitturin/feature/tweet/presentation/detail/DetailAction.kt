@@ -4,7 +4,8 @@ import com.example.twitturin.feature.tweet.presentation.ReplyUi
 
 sealed interface DetailAction {
     data object OnRefresh : DetailAction
-    data class OnReplyChange(val text: String) : DetailAction
+
+    /** [content] is wire-format rich text (the reply composer's encoded document). */
     data class OnSendReply(val content: String) : DetailAction
 
     /** "Reply" tapped on a thread row — aim the composer at that reply. */

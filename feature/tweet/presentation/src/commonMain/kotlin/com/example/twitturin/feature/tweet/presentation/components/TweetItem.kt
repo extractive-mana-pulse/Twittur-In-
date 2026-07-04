@@ -25,6 +25,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import com.example.richtexteditor.rememberRichText
 import com.example.twitturin.core.designsystem.component.GradientAvatar
 import com.example.twitturin.core.designsystem.icon.TwitturIcons
 import com.example.twitturin.core.designsystem.theme.Like
@@ -77,7 +78,8 @@ fun TweetItem(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        Text(text = tweet.content, style = MaterialTheme.typography.bodyLarge)
+        // Content is wire-format rich text; unformatted tweets pass through unchanged.
+        Text(text = rememberRichText(tweet.content), style = MaterialTheme.typography.bodyLarge)
 
         Spacer(modifier = Modifier.height(12.dp))
 
