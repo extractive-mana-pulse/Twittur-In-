@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,8 +13,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -42,8 +41,11 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.chatthread.CollapsibleChatThread
+import com.example.chatthread.rememberThreadState
 import com.example.twitturin.core.designsystem.component.LoadingBox
 import com.example.twitturin.core.designsystem.component.TwitturTopBarMore
 import com.example.twitturin.core.designsystem.icon.TwitturIcons
@@ -58,7 +60,6 @@ import com.example.twitturin.core.presentation.ObserveAsEvents
 import com.example.twitturin.core.presentation.UiText
 import com.example.twitturin.feature.tweet.presentation.TweetUi
 import com.example.twitturin.feature.tweet.presentation.components.TweetAvatar
-import com.example.twitturin.feature.tweet.presentation.components.TweetItem
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -81,7 +82,6 @@ fun DetailRoot(
 
     ObserveAsEvents(viewModel.events) { event ->
         when (event) {
-            is DetailEvent.NavigateToTweet -> onOpenTweet(event.tweetId)
             is DetailEvent.NavigateToLikes -> onOpenLikes(event.tweetId)
             DetailEvent.Deleted -> onBack()
             is DetailEvent.ShowError -> pendingError = event.message
@@ -136,6 +136,11 @@ fun DetailScreen(
         }
     }
 
+    // Aiming at a thread reply (its "Reply" chip) also raises the composer.
+    LaunchedEffect(state.replyTarget) {
+        if (state.replyTarget != null) focusTick++
+    }
+
     fun report() {
         scope.launch { snackbarHostState.showSnackbar("Thanks — we'll take a look.") }
     }
@@ -163,33 +168,63 @@ fun DetailScreen(
         },
         snackbarHost = { SnackbarHost(snackbarHostState) },
         bottomBar = {
-            Row(
+            Column(
                 modifier = Modifier
                     .background(MaterialTheme.colorScheme.background)
-                    .fillMaxWidth()
-                    .padding(horizontal = 12.dp, vertical = 8.dp),
-                verticalAlignment = Alignment.CenterVertically,
+                    .fillMaxWidth(),
             ) {
-                OutlinedTextField(
-                    modifier = Modifier.weight(1f).focusRequester(focusRequester),
-                    value = state.replyDraft,
-                    onValueChange = { onAction(DetailAction.OnReplyChange(it)) },
-                    placeholder = { Text(text = "Reply", color = Hint) },
-                    shape = RoundedCornerShape(24.dp),
-                    maxLines = 3,
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = Brand,
-                        unfocusedBorderColor = DividerLine,
-                        cursorColor = Brand,
-                    ),
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Button(
-                    onClick = { onAction(DetailAction.OnSendReply(state.replyDraft)) },
-                    enabled = state.replyDraft.isNotBlank() && !state.isSendingReply,
-                    shape = RoundedCornerShape(22.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Brand, contentColor = OnBrand),
-                ) { Text("Send", fontWeight = FontWeight.Bold) }
+                // Nested-reply target chip: Send goes under this reply until dismissed.
+                state.replyTarget?.let { target ->
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 12.dp, top = 6.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Text(
+                            text = "Replying to " +
+                                if (target.authorUsername.isNotBlank()) "@${target.authorUsername}" else target.authorName,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = Brand,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.weight(1f),
+                        )
+                        Icon(
+                            imageVector = TwitturIcons.Close,
+                            contentDescription = "Cancel reply",
+                            tint = SecondaryText,
+                            modifier = Modifier
+                                .height(16.dp)
+                                .clickable { onAction(DetailAction.OnCancelReplyTarget) },
+                        )
+                    }
+                }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 12.dp, vertical = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    OutlinedTextField(
+                        modifier = Modifier.weight(1f).focusRequester(focusRequester),
+                        value = state.replyDraft,
+                        onValueChange = { onAction(DetailAction.OnReplyChange(it)) },
+                        placeholder = { Text(text = "Reply", color = Hint) },
+                        shape = RoundedCornerShape(24.dp),
+                        maxLines = 3,
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = Brand,
+                            unfocusedBorderColor = DividerLine,
+                            cursorColor = Brand,
+                        ),
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Button(
+                        onClick = { onAction(DetailAction.OnSendReply(state.replyDraft)) },
+                        enabled = state.replyDraft.isNotBlank() && !state.isSendingReply,
+                        shape = RoundedCornerShape(22.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = Brand, contentColor = OnBrand),
+                    ) { Text("Send", fontWeight = FontWeight.Bold) }
+                }
             }
         },
     ) { innerPadding ->
@@ -199,25 +234,53 @@ fun DetailScreen(
             }
 
             else -> {
-                LazyColumn(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
+                val threadComments = remember(state.replies) { state.replies.map { it.toThreadComment() } }
+                val repliesById = remember(state.replies) { indexRepliesById(state.replies) }
+                val threadState = rememberThreadState()
+
+                // Open the whole tree whenever a fresh reply tree lands (first load + after posting).
+                LaunchedEffect(state.replies) {
+                    collectExpandableIds(state.replies).forEach(threadState::expand)
+                }
+
+                Column(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
                     state.tweet?.let { tweet ->
-                        item {
-                            DetailHeader(
-                                tweet = tweet,
-                                onReply = { focusTick++ },
-                                onLike = { onAction(DetailAction.OnLike) },
-                                onShare = onShare,
-                                onOpenLikes = { onAction(DetailAction.OnOpenLikes) },
-                            )
-                            HorizontalDivider()
-                        }
-                    }
-                    items(state.replies, key = { it.id }) { reply ->
-                        TweetItem(
-                            tweet = reply,
-                            onClick = { onAction(DetailAction.OnReplyClick(reply.id)) },
+                        DetailHeader(
+                            tweet = tweet,
+                            // Replying from the header targets the tweet itself, not a thread row.
+                            onReply = {
+                                onAction(DetailAction.OnCancelReplyTarget)
+                                focusTick++
+                            },
+                            onLike = { onAction(DetailAction.OnLike) },
+                            onShare = onShare,
+                            onOpenLikes = { onAction(DetailAction.OnOpenLikes) },
                         )
                         HorizontalDivider()
+                    }
+                    if (threadComments.isEmpty()) {
+                        Box(
+                            modifier = Modifier.weight(1f).fillMaxWidth(),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Text(
+                                text = "No replies yet — be the first.",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = Hint,
+                            )
+                        }
+                    } else {
+                        // The reply thread — rendered by the vendored CollapsibleChatThread lib.
+                        CollapsibleChatThread(
+                            comments = threadComments,
+                            state = threadState,
+                            style = twitturThreadStyle(),
+                            modifier = Modifier.weight(1f).fillMaxWidth(),
+                            contentPadding = PaddingValues(start = 16.dp, top = 16.dp, end = 4.dp, bottom = 8.dp),
+                            onReplyClick = { comment ->
+                                repliesById[comment.id]?.let { onAction(DetailAction.OnReplyToReply(it)) }
+                            },
+                        )
                     }
                 }
             }

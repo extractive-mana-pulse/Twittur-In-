@@ -7,6 +7,7 @@ import com.example.twitturin.core.domain.util.onFailure
 import com.example.twitturin.core.domain.util.onSuccess
 import com.example.twitturin.core.presentation.toUiText
 import com.example.twitturin.feature.tweet.domain.TweetRepository
+import com.example.twitturin.feature.tweet.presentation.toReplyUi
 import com.example.twitturin.feature.tweet.presentation.toTweetUi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -41,9 +42,8 @@ class DetailViewModel(
             DetailAction.OnRefresh -> refresh()
             is DetailAction.OnReplyChange -> _state.update { it.copy(replyDraft = action.text) }
             is DetailAction.OnSendReply -> sendReply(action.content)
-            is DetailAction.OnReplyClick -> viewModelScope.launch {
-                _events.send(DetailEvent.NavigateToTweet(action.tweetId))
-            }
+            is DetailAction.OnReplyToReply -> _state.update { it.copy(replyTarget = action.reply) }
+            DetailAction.OnCancelReplyTarget -> _state.update { it.copy(replyTarget = null) }
             DetailAction.OnOpenLikes -> tweetId?.let { id ->
                 viewModelScope.launch { _events.send(DetailEvent.NavigateToLikes(id)) }
             }
@@ -93,15 +93,22 @@ class DetailViewModel(
         }
     }
 
+    /** Posts to the tweet, or under [DetailState.replyTarget] when one is aimed (`POST replies/{id}`). */
     private fun sendReply(content: String) {
         val id = tweetId ?: return
         val text = content.trim()
         if (text.isBlank() || _state.value.isSendingReply) return
+        val target = _state.value.replyTarget
         viewModelScope.launch {
             _state.update { it.copy(isSendingReply = true) }
-            tweetRepository.postReply(id, text)
+            val result = if (target != null) {
+                tweetRepository.postReplyToReply(target.id, text)
+            } else {
+                tweetRepository.postReply(id, text)
+            }
+            result
                 .onSuccess {
-                    _state.update { it.copy(isSendingReply = false, replyDraft = "") }
+                    _state.update { it.copy(isSendingReply = false, replyDraft = "", replyTarget = null) }
                     loadReplies(id)
                 }
                 .onFailure { error ->
@@ -113,7 +120,7 @@ class DetailViewModel(
 
     private suspend fun loadReplies(id: String) {
         tweetRepository.getReplies(id)
-            .onSuccess { replies -> _state.update { it.copy(replies = replies.map { r -> r.toTweetUi(currentUserId) }) } }
+            .onSuccess { replies -> _state.update { it.copy(replies = replies.map { r -> r.toReplyUi() }) } }
             .onFailure { error -> _events.send(DetailEvent.ShowError(error.toUiText())) }
     }
 }

@@ -7,14 +7,16 @@ plugins {
     alias(libs.plugins.composeCompiler)
 }
 
-// Tweet feature — presentation layer: shared TweetItem, feed + post-tweet MVI, Koin module.
+// CollapsibleChatThread — github.com/extractive-mana-pulse/chat_thread_lib vendored verbatim
+// (see README.md in this module). The upstream JitPack artifact is an Android-only AAR, so the
+// pure-Compose source is compiled here as commonMain to serve Android + iOS + Desktop alike.
 kotlin {
     iosArm64()
     iosSimulatorArm64()
     jvm()
 
     androidLibrary {
-        namespace = "com.example.twitturin.feature.tweet.presentation"
+        namespace = "com.example.chatthread"
         compileSdk = libs.versions.android.compileSdk.get().toInt()
         minSdk = libs.versions.android.minSdk.get().toInt()
 
@@ -25,16 +27,7 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            api(projects.feature.tweet.domain)
-            implementation(projects.core.domain)
-            implementation(projects.core.presentation)
-            implementation(projects.core.designSystem)
-            implementation(projects.core.chatThread)
             implementation(libs.bundles.compose)
-            implementation(libs.bundles.lifecycleCompose)
-            implementation(libs.bundles.koinCompose)
-            implementation(libs.bundles.coil)
-            implementation(libs.kotlinx.coroutines.core)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
