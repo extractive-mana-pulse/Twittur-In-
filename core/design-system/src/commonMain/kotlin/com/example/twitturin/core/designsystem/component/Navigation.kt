@@ -4,10 +4,16 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.material3.DropdownMenu
@@ -22,7 +28,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.twitturin.core.designsystem.icon.TwitturIcons
 import com.example.twitturin.core.designsystem.theme.Brand
 import com.example.twitturin.core.designsystem.theme.BrandSoft
@@ -99,12 +107,16 @@ fun TwitturTopBarMore(
     )
 }
 
-data class BottomNavItem(val icon: ImageVector, val label: String)
+data class BottomNavItem(val icon: ImageVector, val label: String, val badge: String? = null)
 
 /**
  * Bottom navigation bar — nav-surface background; the active tab gets an accent-tinted pill.
  * The accent follows the theme [primary][androidx.compose.material3.ColorScheme.primary] so it
  * reflects the user's chosen colour. When [showLabels] is true a small caption sits under each icon.
+ *
+ * Heights follow the M3 navigation-bar guidelines: an 80dp container when labels are shown,
+ * 64dp for the icon-only variant. The bar consumes the system navigation-bar inset itself
+ * (edge-to-edge), extending its surface colour under the gesture area.
  */
 @Composable
 fun TwitturBottomBar(
@@ -120,7 +132,8 @@ fun TwitturBottomBar(
         modifier = modifier
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.surfaceVariant)
-            .height(if (showLabels) 72.dp else 64.dp),
+            .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Bottom))
+            .height(if (showLabels) 80.dp else 64.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         items.forEachIndexed { index, item ->
@@ -133,12 +146,17 @@ fun TwitturBottomBar(
                         .clickableNoRipple { onSelect(index) },
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    Icon(
-                        imageVector = item.icon,
-                        contentDescription = item.label,
-                        tint = if (selected) accent else SecondaryText,
-                        modifier = Modifier.size(26.dp),
-                    )
+                    Box {
+                        Icon(
+                            imageVector = item.icon,
+                            contentDescription = item.label,
+                            tint = if (selected) accent else SecondaryText,
+                            modifier = Modifier.size(26.dp),
+                        )
+                        item.badge?.let { badge ->
+                            NavBadge(text = badge, modifier = Modifier.align(Alignment.TopEnd).offset(x = 9.dp, y = (-4).dp))
+                        }
+                    }
                     if (showLabels) {
                         Text(
                             text = item.label,
@@ -151,6 +169,22 @@ fun TwitturBottomBar(
             }
         }
     }
+}
+
+/** Tiny pill overlaid on a nav icon (e.g. "Beta") — sized for a 26dp icon, not [Badges.kt]'s
+ *  larger `Pill` (tuned for standalone chips like a role/language tag). Public: also used by
+ *  `:composeApp`'s desktop navigation rail, a different Gradle module. */
+@Composable
+fun NavBadge(text: String, modifier: Modifier = Modifier) {
+    Text(
+        text = text,
+        style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp),
+        fontWeight = FontWeight.Bold,
+        color = OnBrand,
+        modifier = modifier
+            .background(Brand, RoundedCornerShape(6.dp))
+            .padding(horizontal = 4.dp, vertical = 1.dp),
+    )
 }
 
 /** Square-ish FAB (54dp, 18dp corners) for "compose"; fill follows the theme accent. */
@@ -168,5 +202,31 @@ fun TwitturFab(
         contentAlignment = Alignment.Center,
     ) {
         Icon(icon, contentDescription = "Create", tint = OnBrand, modifier = Modifier.size(28.dp))
+    }
+}
+
+/** Expanded (extended) variant of [TwitturFab] — icon + label pill, same accent fill and corners. */
+@Composable
+fun TwitturExtendedFab(
+    text: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    icon: ImageVector = TwitturIcons.Add,
+) {
+    Row(
+        modifier = modifier
+            .height(54.dp)
+            .background(MaterialTheme.colorScheme.primary, RoundedCornerShape(18.dp))
+            .clickableNoRipple(onClick)
+            .padding(horizontal = 18.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Icon(icon, contentDescription = null, tint = OnBrand, modifier = Modifier.size(24.dp))
+        Text(
+            text = text,
+            style = MaterialTheme.typography.labelLarge,
+            color = OnBrand,
+            modifier = Modifier.padding(start = 10.dp),
+        )
     }
 }

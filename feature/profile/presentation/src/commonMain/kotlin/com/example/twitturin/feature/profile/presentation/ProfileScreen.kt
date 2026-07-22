@@ -31,6 +31,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -38,20 +39,31 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.example.twitturin.core.designsystem.component.ConfirmDialog
+import com.example.twitturin.core.designsystem.component.FollowButton
 import com.example.twitturin.core.designsystem.component.GradientAvatar
 import com.example.twitturin.core.designsystem.component.KindBadge
 import com.example.twitturin.core.designsystem.component.LoadingBox
 import com.example.twitturin.core.designsystem.component.SecondaryButton
 import com.example.twitturin.core.designsystem.component.TwitturTopBarMore
+import com.example.twitturin.core.designsystem.component.TypedConfirmDialog
 import com.example.twitturin.core.designsystem.icon.TwitturIcons
 import com.example.twitturin.core.designsystem.theme.Brand
 import com.example.twitturin.core.designsystem.theme.Danger
 import com.example.twitturin.core.designsystem.theme.Ink
 import com.example.twitturin.core.designsystem.theme.SecondaryText
+import com.example.twitturin.core.presentation.LocalStrings
 import com.example.twitturin.core.presentation.ObserveAsEvents
 import com.example.twitturin.core.presentation.UiText
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 
+/** Where "Report" complaints go — opens the platform email app with this recipient. */
+private const val REPORT_EMAIL = "mukhammadaminsalokhiddinov@gmail.com"
+
+/**
+ * Profile screen. [userId] = null shows the signed-in user's own profile (edit/delete/logout);
+ * any other id shows that user's profile with a follow/unfollow button and a report action.
+ */
 @Composable
 fun ProfileRoot(
     onBack: () -> Unit,
@@ -59,9 +71,10 @@ fun ProfileRoot(
     onOpenFollowers: (String) -> Unit,
     onOpenFollowing: (String) -> Unit,
     onSignedOut: () -> Unit,
+    userId: String? = null,
     onShareProfile: (userId: String) -> Unit = {},
     tabsContent: @Composable (userId: String) -> Unit = {},
-    viewModel: ProfileViewModel = koinViewModel(),
+    viewModel: ProfileViewModel = koinViewModel { parametersOf(userId) },
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -91,6 +104,7 @@ fun ProfileRoot(
         onOpenFollowing = onOpenFollowing,
         onLogout = viewModel::logout,
         onDeleteAccount = viewModel::deleteAccount,
+        onToggleFollow = viewModel::toggleFollow,
         onShareProfile = onShareProfile,
         tabsContent = tabsContent,
         snackbarHostState = snackbarHostState,
@@ -109,20 +123,31 @@ fun ProfileScreen(
     onDeleteAccount: () -> Unit,
     snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
+    onToggleFollow: () -> Unit = {},
     onShareProfile: (userId: String) -> Unit = {},
     tabsContent: @Composable (userId: String) -> Unit = {},
 ) {
+    val strings = LocalStrings.current
+    val uriHandler = LocalUriHandler.current
     var menuOpen by remember { mutableStateOf(false) }
     var showLogoutConfirm by remember { mutableStateOf(false) }
     var showDeleteConfirm by remember { mutableStateOf(false) }
+    var showDeleteTypedConfirm by remember { mutableStateOf(false) }
     var showFullImage by remember { mutableStateOf(false) }
+
+    fun reportUser() {
+        val username = state.user?.username.orEmpty()
+        runCatching {
+            uriHandler.openUri("mailto:$REPORT_EMAIL?subject=" + "Report user @$username".replace(" ", "%20"))
+        }
+    }
 
     Scaffold(
         modifier = modifier,
         topBar = {
             // Title is always "Profile"; no nav drawer here (only the home screen has it).
             TwitturTopBarMore(
-                title = "Profile",
+                title = strings.profile,
                 menuExpanded = menuOpen,
                 onMenuClick = { menuOpen = true },
                 onMenuDismiss = { menuOpen = false },
@@ -130,14 +155,26 @@ fun ProfileScreen(
                 extraActions = {
                     state.user?.let { user ->
                         IconButton(onClick = { onShareProfile(user.id) }) {
-                            Icon(TwitturIcons.Share, contentDescription = "Share profile", tint = MaterialTheme.colorScheme.onSurface)
+                            Icon(TwitturIcons.Share, contentDescription = strings.shareProfile, tint = MaterialTheme.colorScheme.onSurface)
                         }
                     }
                 },
                 menu = {
-                    DropdownMenuItem(text = { Text("Edit profile") }, onClick = { menuOpen = false; onEditProfile() })
-                    DropdownMenuItem(text = { Text("Delete account", color = Danger) }, onClick = { menuOpen = false; showDeleteConfirm = true })
-                    DropdownMenuItem(text = { Text("Log out") }, onClick = { menuOpen = false; showLogoutConfirm = true })
+                    if (state.isMe) {
+                        DropdownMenuItem(
+                            text = { Text(strings.deleteAccount, color = Danger) },
+                            onClick = { menuOpen = false; showDeleteConfirm = true },
+                        )
+                        DropdownMenuItem(
+                            text = { Text(strings.logOut) },
+                            onClick = { menuOpen = false; showLogoutConfirm = true },
+                        )
+                    } else {
+                        DropdownMenuItem(
+                            text = { Text(strings.report) },
+                            onClick = { menuOpen = false; reportUser() },
+                        )
+                    }
                 },
             )
         },
@@ -148,14 +185,17 @@ fun ProfileScreen(
             state.isLoading && user == null -> Box(Modifier.fillMaxSize().padding(innerPadding)) { LoadingBox() }
 
             user == null -> Box(Modifier.fillMaxSize().padding(innerPadding), contentAlignment = Alignment.Center) {
-                Text(text = "Could not load your profile", style = MaterialTheme.typography.bodyLarge)
+                Text(text = strings.couldNotLoadProfile, style = MaterialTheme.typography.bodyLarge)
             }
 
             else -> Column(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
                 ProfileHeader(
                     user = user,
+                    isMe = state.isMe,
+                    isFollowing = state.isFollowing,
                     onAvatarClick = { if (user.profilePicture != null) showFullImage = true },
                     onEditProfile = onEditProfile,
+                    onToggleFollow = onToggleFollow,
                     onOpenFollowers = { onOpenFollowers(user.id) },
                     onOpenFollowing = { onOpenFollowing(user.id) },
                 )
@@ -169,21 +209,42 @@ fun ProfileScreen(
 
     if (showLogoutConfirm) {
         ConfirmDialog(
-            title = "Log out",
-            message = "Are you sure you want to log out?",
-            confirmLabel = "Log out",
+            title = strings.logOut,
+            message = strings.logOutMessage,
+            confirmLabel = strings.logOut,
+            dismissLabel = strings.no,
             onConfirm = { showLogoutConfirm = false; onLogout() },
             onDismiss = { showLogoutConfirm = false },
         )
     }
+    // Account deletion is a two-step confirmation: a plain warning, then a typed username gate.
     if (showDeleteConfirm) {
         ConfirmDialog(
-            title = "Delete account",
-            message = "This permanently deletes your account. Continue?",
-            confirmLabel = "Delete",
+            title = strings.deleteAccountTitle,
+            message = strings.deleteAccountMessage,
+            confirmLabel = strings.continueLabel,
+            dismissLabel = strings.cancel,
             destructive = true,
-            onConfirm = { showDeleteConfirm = false; onDeleteAccount() },
+            onConfirm = {
+                showDeleteConfirm = false
+                showDeleteTypedConfirm = true
+            },
             onDismiss = { showDeleteConfirm = false },
+        )
+    }
+    if (showDeleteTypedConfirm) {
+        TypedConfirmDialog(
+            title = strings.confirmUsernameTitle,
+            message = strings.confirmUsernameMessage,
+            expectedText = state.user?.username.orEmpty(),
+            confirmLabel = strings.confirm,
+            dismissLabel = strings.cancel,
+            placeholder = strings.usernamePlaceholder,
+            onConfirm = {
+                showDeleteTypedConfirm = false
+                onDeleteAccount()
+            },
+            onDismiss = { showDeleteTypedConfirm = false },
         )
     }
     if (showFullImage && state.user?.profilePicture != null) {
@@ -194,12 +255,16 @@ fun ProfileScreen(
 @Composable
 private fun ProfileHeader(
     user: ProfileUi,
+    isMe: Boolean,
+    isFollowing: Boolean?,
     onAvatarClick: () -> Unit,
     onEditProfile: () -> Unit,
+    onToggleFollow: () -> Unit,
     onOpenFollowers: () -> Unit,
     onOpenFollowing: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val strings = LocalStrings.current
     Column(modifier = modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 16.dp)) {
         Box(modifier = Modifier.size(88.dp).clickable(onClick = onAvatarClick)) {
             GradientAvatar(name = user.fullName, size = 88.dp)
@@ -230,11 +295,20 @@ private fun ProfileHeader(
         }
         Spacer(modifier = Modifier.height(14.dp))
         Row(horizontalArrangement = Arrangement.spacedBy(24.dp)) {
-            StatLabel(count = user.followersCount, label = "followers", onClick = onOpenFollowers)
-            StatLabel(count = user.followingCount, label = "following", onClick = onOpenFollowing)
+            StatLabel(count = user.followersCount, label = strings.followers.lowercase(), onClick = onOpenFollowers)
+            StatLabel(count = user.followingCount, label = strings.following.lowercase(), onClick = onOpenFollowing)
         }
         Spacer(modifier = Modifier.height(16.dp))
-        SecondaryButton(text = "Edit profile", onClick = onEditProfile)
+        if (isMe) {
+            SecondaryButton(text = strings.editProfile, onClick = onEditProfile)
+        } else if (isFollowing != null) {
+            FollowButton(
+                following = isFollowing,
+                onClick = onToggleFollow,
+                followText = strings.follow,
+                followingText = strings.unfollow,
+            )
+        }
     }
 }
 

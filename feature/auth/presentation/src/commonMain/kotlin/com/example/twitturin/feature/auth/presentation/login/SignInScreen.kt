@@ -36,6 +36,7 @@ import com.example.twitturin.core.designsystem.component.TwitturLogo
 import com.example.twitturin.core.designsystem.icon.TwitturIcons
 import com.example.twitturin.core.designsystem.theme.Brand
 import com.example.twitturin.core.designsystem.theme.SecondaryText
+import com.example.twitturin.core.presentation.LocalStrings
 import com.example.twitturin.core.presentation.ObserveAsEvents
 import com.example.twitturin.core.presentation.UiText
 import org.koin.compose.viewmodel.koinViewModel
@@ -113,7 +114,7 @@ fun SignInScreen(
             BrandTextField(
                 value = username,
                 onValueChange = { username = it },
-                placeholder = "Username",
+                placeholder = LocalStrings.current.username,
                 leadingIcon = TwitturIcons.Account,
                 keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(imeAction = ImeAction.Next),
             )
@@ -121,7 +122,7 @@ fun SignInScreen(
             PasswordField(
                 value = password,
                 onValueChange = { password = it },
-                placeholder = "Password",
+                placeholder = LocalStrings.current.password,
                 visible = passwordVisible,
                 onToggleVisible = { passwordVisible = !passwordVisible },
                 imeAction = ImeAction.Done,
@@ -130,7 +131,7 @@ fun SignInScreen(
 
             Spacer(Modifier.height(28.dp))
             PrimaryButton(
-                text = "Sign in",
+                text = LocalStrings.current.signIn,
                 onClick = { submit() },
                 enabled = canSubmit,
                 loading = state.isLoading,
@@ -142,7 +143,7 @@ fun SignInScreen(
             ) {
                 Text("Don't have an account?", style = MaterialTheme.typography.bodyMedium, color = SecondaryText)
                 TextButton(onClick = onSignUp) {
-                    Text("Sign up", color = Brand, style = MaterialTheme.typography.labelLarge)
+                    Text(LocalStrings.current.signUp, color = Brand, style = MaterialTheme.typography.labelLarge)
                 }
             }
             Spacer(Modifier.height(40.dp))

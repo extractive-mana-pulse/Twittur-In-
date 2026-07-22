@@ -130,7 +130,10 @@ fun UnderlineField(
     }
 }
 
-/** Pill search bar — muted nav surface, search glyph, optional mic, inline text entry. */
+/**
+ * Pill search bar — muted nav surface, search glyph, optional mic, inline text entry.
+ * The mic renders only when [onMicClick] is provided (e.g. platforms with speech input).
+ */
 @Composable
 fun SearchField(
     value: String,
@@ -138,7 +141,7 @@ fun SearchField(
     modifier: Modifier = Modifier,
     placeholder: String = "Search...",
     onSearch: () -> Unit = {},
-    showMic: Boolean = true,
+    onMicClick: (() -> Unit)? = null,
 ) {
     Box(
         modifier = modifier
@@ -165,8 +168,13 @@ fun SearchField(
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
-            if (showMic) {
-                Icon(TwitturIcons.Mic, contentDescription = null, tint = SecondaryText, modifier = Modifier.size(20.dp))
+            if (onMicClick != null) {
+                Icon(
+                    imageVector = TwitturIcons.Mic,
+                    contentDescription = "Voice search",
+                    tint = SecondaryText,
+                    modifier = Modifier.size(20.dp).clickableNoRipple(onMicClick),
+                )
             }
         }
     }

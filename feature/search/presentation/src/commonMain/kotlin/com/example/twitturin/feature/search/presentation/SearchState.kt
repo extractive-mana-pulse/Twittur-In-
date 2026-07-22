@@ -5,6 +5,8 @@ import com.example.twitturin.feature.search.domain.SearchUser
 data class SearchState(
     val query: String = "",
     val results: List<SearchUserUi> = emptyList(),
+    /** Everyone on the platform (`GET users`) — shown before any query is typed. */
+    val suggestions: List<SearchUserUi> = emptyList(),
     val isLoading: Boolean = false,
     val hasSearched: Boolean = false,
 )

@@ -26,6 +26,8 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             api(projects.feature.profile.domain)
+            // Follow/unfollow when viewing someone else's profile.
+            implementation(projects.feature.follow.domain)
             implementation(projects.core.domain)
             implementation(projects.core.presentation)
             implementation(projects.core.designSystem)
@@ -34,6 +36,10 @@ kotlin {
             implementation(libs.bundles.koinCompose)
             implementation(libs.bundles.coil)
             implementation(libs.kotlinx.coroutines.core)
+        }
+        androidMain.dependencies {
+            // System photo picker for the profile-picture upload.
+            implementation(libs.androidx.activity.compose)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

@@ -26,6 +26,8 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(libs.bundles.compose)
+            // Multiplatform Lottie renderer for the vendored animation assets in composeResources/files.
+            api(libs.compottie)
         }
     }
 }

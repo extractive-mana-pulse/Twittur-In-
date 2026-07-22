@@ -44,6 +44,7 @@ import com.example.chatthread.ThreadTag
  * @param style Shared visual configuration.
  * @param onToggle Invoked when the user taps the expand/collapse chip.
  * @param onReplyClick Invoked when the user taps the reply chip; receives the row's comment.
+ * @param rowActions Optional host-supplied trailing action content for this row's comment.
  */
 @Composable
 internal fun CommentRow(
@@ -51,6 +52,7 @@ internal fun CommentRow(
     style: ThreadStyle,
     onToggle: () -> Unit,
     onReplyClick: (ThreadComment) -> Unit,
+    rowActions: (@Composable (ThreadComment) -> Unit)? = null,
 ) {
     val comment = row.comment
 
@@ -110,6 +112,7 @@ internal fun CommentRow(
                     style = style,
                     onToggle = onToggle,
                     onReplyClick = { onReplyClick(comment) },
+                    rowActions = rowActions,
                 )
             }
         }
@@ -207,7 +210,7 @@ private fun TagRow(tags: List<ThreadTag>, style: ThreadStyle) {
 
 /**
  * Bottom-of-row action cluster: [ToggleChip] (only when the row has replies) followed by
- * [ReplyChip].
+ * [ReplyChip], then any host-supplied [rowActions].
  */
 @Composable
 private fun ActionRow(
@@ -215,6 +218,7 @@ private fun ActionRow(
     style: ThreadStyle,
     onToggle: () -> Unit,
     onReplyClick: () -> Unit,
+    rowActions: (@Composable (ThreadComment) -> Unit)? = null,
 ) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         if (row.hasReplies) {
@@ -222,6 +226,10 @@ private fun ActionRow(
             Spacer(Modifier.width(style.avatarToContentSpacing))
         }
         ReplyChip(style = style, onClick = onReplyClick)
+        if (rowActions != null) {
+            Spacer(Modifier.width(style.avatarToContentSpacing))
+            rowActions(row.comment)
+        }
     }
 }
 

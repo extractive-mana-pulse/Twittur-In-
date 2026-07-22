@@ -85,3 +85,7 @@ include(":feature:follow:data")
 include(":feature:follow:presentation")
 // :feature:settings — settings hub / feedback / theme + language pickers (presentation-only).
 include(":feature:settings:presentation")
+// :feature:timetable — Timetable (beta): aSc XML import, subject-follow filtering, Day/3-Day/Week/Month.
+include(":feature:timetable:domain")
+include(":feature:timetable:data")
+include(":feature:timetable:presentation")

@@ -108,6 +108,8 @@ fun rememberThreadState(
  * @param contentPadding Forwarded to [LazyColumn] — use this to pad around system bars, FABs, etc.
  * @param onReplyClick Invoked when a row's "Reply" action is tapped. The tapped [ThreadComment] is
  *   passed in so the caller can open a composer scoped to that comment.
+ * @param rowActions Optional trailing content appended to each row's action cluster (after the
+ *   Reply chip) — hosts can add like buttons, edit/delete menus, etc. The library stays agnostic.
  */
 @Composable
 fun CollapsibleChatThread(
@@ -117,6 +119,7 @@ fun CollapsibleChatThread(
     state: ThreadState = rememberThreadState(),
     contentPadding: PaddingValues = PaddingValues(0.dp),
     onReplyClick: (ThreadComment) -> Unit = {},
+    rowActions: (@Composable (ThreadComment) -> Unit)? = null,
 ) {
     val visibleRows = remember(comments, state.expandedIds) {
         flattenThread(comments, state.expandedIds)
@@ -131,6 +134,7 @@ fun CollapsibleChatThread(
                 style = style,
                 onToggle = { state.toggle(row.comment.id) },
                 onReplyClick = onReplyClick,
+                rowActions = rowActions,
             )
         }
     }

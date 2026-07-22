@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.twitturin.core.designsystem.theme.Brand
 import com.example.twitturin.core.domain.preferences.AppLanguage
+import com.example.twitturin.core.presentation.LocalStrings
 
 /** Language picker. The choice is persisted; full UI re-translation is a later resources task. */
 @Composable
@@ -30,7 +31,7 @@ fun LanguageDialog(
         onDismissRequest = onDismiss,
         shape = RoundedCornerShape(22.dp),
         containerColor = MaterialTheme.colorScheme.background,
-        title = { Text("Language", style = MaterialTheme.typography.titleMedium) },
+        title = { Text(LocalStrings.current.chooseLanguage, style = MaterialTheme.typography.titleMedium) },
         text = {
             Column {
                 AppLanguage.entries.forEach { lang ->

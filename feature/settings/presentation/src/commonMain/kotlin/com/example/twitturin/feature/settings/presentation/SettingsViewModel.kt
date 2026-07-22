@@ -15,13 +15,13 @@ class SettingsViewModel(
     val language = appPreferences.language
     val accent = appPreferences.accent
     val showBarLabels = appPreferences.showBarLabels
-    val showFab = appPreferences.showFab
-    val awayMode = appPreferences.awayMode
+    val expandedFab = appPreferences.expandedFab
+    val awayMonths = appPreferences.awayMonths
 
     fun setThemeMode(mode: ThemeMode) = appPreferences.setThemeMode(mode)
     fun setLanguage(language: AppLanguage) = appPreferences.setLanguage(language)
     fun setAccent(accent: AppAccent) = appPreferences.setAccent(accent)
     fun setShowBarLabels(show: Boolean) = appPreferences.setShowBarLabels(show)
-    fun setShowFab(show: Boolean) = appPreferences.setShowFab(show)
-    fun setAwayMode(away: Boolean) = appPreferences.setAwayMode(away)
+    fun setExpandedFab(expanded: Boolean) = appPreferences.setExpandedFab(expanded)
+    fun setAwayMonths(months: Int) = appPreferences.setAwayMonths(months)
 }

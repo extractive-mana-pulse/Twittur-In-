@@ -30,8 +30,9 @@ data object StayInRoute
 @Serializable
 data object HomeRoute
 
+/** A user profile. [userId] = null (default) shows the signed-in user's own profile. */
 @Serializable
-data object ProfileRoute
+data class ProfileRoute(val userId: String? = null)
 
 @Serializable
 data object EditProfileRoute
@@ -60,3 +61,6 @@ data object SettingsRoute
 
 @Serializable
 data object FeedbackRoute
+
+@Serializable
+data object TimetableSubjectPickerRoute

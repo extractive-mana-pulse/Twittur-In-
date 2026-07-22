@@ -5,6 +5,12 @@ import com.example.twitturin.feature.profile.domain.User
 data class ProfileState(
     val isLoading: Boolean = false,
     val user: ProfileUi? = null,
+    /** Whether this profile belongs to the signed-in user (own profile UI vs visitor UI). */
+    val isMe: Boolean = true,
+    /** Visitor view: whether the signed-in user follows this profile; null while unknown. */
+    val isFollowing: Boolean? = null,
+    /** Own profile: a picture upload/removal is in flight. */
+    val isUpdatingPhoto: Boolean = false,
 )
 
 /** Display-ready profile model (also holds the raw fields the edit form prefills from). */

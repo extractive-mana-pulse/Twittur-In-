@@ -26,10 +26,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.twitturin.core.designsystem.component.BrandTopBar
-import com.example.twitturin.core.designsystem.component.EmptyState
 import com.example.twitturin.core.designsystem.component.LoadingBox
-import com.example.twitturin.core.designsystem.icon.TwitturIcons
+import com.example.twitturin.core.designsystem.component.LottieAsset
+import com.example.twitturin.core.designsystem.component.LottieEmptyState
 import com.example.twitturin.core.designsystem.theme.SecondaryText
+import com.example.twitturin.core.presentation.LocalStrings
 import com.example.twitturin.core.presentation.ObserveAsEvents
 import com.example.twitturin.core.presentation.UiText
 import com.example.twitturin.feature.tweet.presentation.components.TweetAvatar
@@ -73,15 +74,15 @@ fun LikesListScreen(
 ) {
     Scaffold(
         modifier = modifier,
-        topBar = { BrandTopBar(title = "Likes", onBack = onBack) },
+        topBar = { BrandTopBar(title = LocalStrings.current.likes, onBack = onBack) },
         snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { innerPadding ->
         Box(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
             when {
                 state.isLoading -> LoadingBox()
 
-                state.likers.isEmpty() -> EmptyState(
-                    icon = TwitturIcons.Like,
+                state.likers.isEmpty() -> LottieEmptyState(
+                    asset = LottieAsset.EmptyLikes,
                     title = "No likes yet",
                     subtitle = "Be the first to like this post.",
                 )

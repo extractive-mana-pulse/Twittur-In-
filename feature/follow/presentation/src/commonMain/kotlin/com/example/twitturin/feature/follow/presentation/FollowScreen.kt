@@ -33,12 +33,13 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.example.twitturin.core.designsystem.component.BrandTopBar
-import com.example.twitturin.core.designsystem.component.EmptyState
 import com.example.twitturin.core.designsystem.component.FollowButton
+import com.example.twitturin.core.designsystem.component.LottieAsset
+import com.example.twitturin.core.designsystem.component.LottieEmptyState
 import com.example.twitturin.core.designsystem.component.GradientAvatar
 import com.example.twitturin.core.designsystem.component.LoadingBox
-import com.example.twitturin.core.designsystem.icon.TwitturIcons
 import com.example.twitturin.core.designsystem.theme.SecondaryText
+import com.example.twitturin.core.presentation.LocalStrings
 import com.example.twitturin.core.presentation.ObserveAsEvents
 import com.example.twitturin.core.presentation.UiText
 import org.koin.compose.viewmodel.koinViewModel
@@ -111,9 +112,10 @@ fun FollowListScreen(
     snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
 ) {
+    val strings = LocalStrings.current
     val title = when (state.mode) {
-        FollowListMode.FOLLOWERS -> "Followers"
-        FollowListMode.FOLLOWING -> "Following"
+        FollowListMode.FOLLOWERS -> strings.followers
+        FollowListMode.FOLLOWING -> strings.following
     }
     val emptyTitle = when (state.mode) {
         FollowListMode.FOLLOWERS -> "No followers yet"
@@ -129,10 +131,11 @@ fun FollowListScreen(
             when {
                 state.isLoading && state.users.isEmpty() -> LoadingBox()
 
-                state.hasLoaded && state.users.isEmpty() -> EmptyState(
-                    icon = TwitturIcons.Account,
+                state.hasLoaded && state.users.isEmpty() -> LottieEmptyState(
+                    asset = LottieAsset.Person,
                     title = emptyTitle,
-                    subtitle = "People show up here once there are any.",
+                    subtitle = strings.noUsersYet,
+                    animationSize = 150.dp,
                 )
 
                 else -> LazyColumn(modifier = Modifier.fillMaxSize()) {
@@ -142,6 +145,8 @@ fun FollowListScreen(
                             following = state.mode == FollowListMode.FOLLOWING,
                             onClick = { onAction(FollowAction.OnUserClick(user.id)) },
                             onAction = { onAction(FollowAction.OnActionClick(user.id)) },
+                            followText = strings.follow,
+                            followingText = strings.unfollow,
                         )
                         HorizontalDivider()
                     }
@@ -157,6 +162,8 @@ private fun FollowUserRow(
     following: Boolean,
     onClick: () -> Unit,
     onAction: () -> Unit,
+    followText: String = "Follow",
+    followingText: String = "Unfollow",
 ) {
     Row(
         modifier = Modifier
@@ -204,6 +211,6 @@ private fun FollowUserRow(
                 )
             }
         }
-        FollowButton(following = following, onClick = onAction)
+        FollowButton(following = following, onClick = onAction, followText = followText, followingText = followingText)
     }
 }

@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="rich-text-jvm">
+    <output-path>$PROJECT_DIR$/core/rich-text/build/libs</output-path>
+    <root id="archive" name="rich-text-jvm.jar">
+      <element id="module-output" name="Twittur.core.rich-text.jvmMain" />
+    </root>
+  </artifact>
+</component>

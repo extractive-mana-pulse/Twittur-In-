@@ -33,12 +33,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
-import com.example.twitturin.core.designsystem.component.EmptyState
 import com.example.twitturin.core.designsystem.component.GradientAvatar
 import com.example.twitturin.core.designsystem.component.LoadingBox
+import com.example.twitturin.core.designsystem.component.LottieAsset
+import com.example.twitturin.core.designsystem.component.LottieEmptyState
 import com.example.twitturin.core.designsystem.component.SearchField
 import com.example.twitturin.core.designsystem.icon.TwitturIcons
+import com.example.twitturin.core.designsystem.theme.Hint
 import com.example.twitturin.core.designsystem.theme.SecondaryText
+import com.example.twitturin.core.presentation.LocalStrings
 import com.example.twitturin.core.presentation.ObserveAsEvents
 import com.example.twitturin.core.presentation.UiText
 import org.koin.compose.viewmodel.koinViewModel
@@ -85,6 +88,12 @@ fun SearchScreen(
     modifier: Modifier = Modifier,
     onMenu: (() -> Unit)? = null,
 ) {
+    val strings = LocalStrings.current
+    // The mic dictates a query and runs it immediately.
+    val speechLauncher = rememberSpeechInput { phrase ->
+        onAction(SearchAction.OnQueryChange(phrase))
+        onAction(SearchAction.OnSearch(phrase))
+    }
     Scaffold(
         modifier = modifier,
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -104,7 +113,8 @@ fun SearchScreen(
                     value = state.query,
                     onValueChange = { onAction(SearchAction.OnQueryChange(it)) },
                     onSearch = { onAction(SearchAction.OnSearch(state.query)) },
-                    placeholder = "Search people",
+                    placeholder = strings.searchPeople,
+                    onMicClick = speechLauncher,
                     modifier = Modifier.weight(1f).padding(start = if (onMenu != null) 4.dp else 12.dp),
                 )
             }
@@ -112,16 +122,34 @@ fun SearchScreen(
             when {
                 state.isLoading -> LoadingBox()
 
-                !state.hasSearched -> EmptyState(
-                    icon = TwitturIcons.Search,
-                    title = "Find people on TwitturIn",
-                    subtitle = "Search by name or @username.",
-                )
+                // Pre-query: everyone on the platform, or the search-cat while that loads.
+                !state.hasSearched -> if (state.suggestions.isEmpty()) {
+                    LottieEmptyState(
+                        asset = LottieAsset.SearchCat,
+                        title = strings.findPeopleTitle,
+                        subtitle = strings.findPeopleSubtitle,
+                    )
+                } else {
+                    LazyColumn(modifier = Modifier.fillMaxSize()) {
+                        item {
+                            Text(
+                                text = strings.peopleOnTwitturin.uppercase(),
+                                style = MaterialTheme.typography.labelSmall,
+                                color = Hint,
+                                modifier = Modifier.padding(start = 20.dp, top = 10.dp, bottom = 4.dp),
+                            )
+                        }
+                        items(state.suggestions) { user ->
+                            SearchUserRow(user = user, onClick = { onAction(SearchAction.OnUserClick(user.id)) })
+                            HorizontalDivider()
+                        }
+                    }
+                }
 
-                state.results.isEmpty() -> EmptyState(
-                    icon = TwitturIcons.Search,
-                    title = "No results found",
-                    subtitle = "Try a different name or username.",
+                state.results.isEmpty() -> LottieEmptyState(
+                    asset = LottieAsset.GearSearch,
+                    title = strings.noResultsTitle,
+                    subtitle = strings.noResultsSubtitle,
                 )
 
                 else -> LazyColumn(modifier = Modifier.fillMaxSize()) {

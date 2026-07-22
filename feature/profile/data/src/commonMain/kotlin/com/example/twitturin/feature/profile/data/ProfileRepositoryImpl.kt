@@ -1,8 +1,10 @@
 package com.example.twitturin.feature.profile.data
 
+import com.example.twitturin.core.data.network.constructRoute
 import com.example.twitturin.core.data.network.delete
 import com.example.twitturin.core.data.network.get
 import com.example.twitturin.core.data.network.put
+import com.example.twitturin.core.data.network.safeCall
 import com.example.twitturin.core.domain.util.DataError
 import com.example.twitturin.core.domain.util.EmptyResult
 import com.example.twitturin.core.domain.util.Result
@@ -11,6 +13,10 @@ import com.example.twitturin.feature.profile.domain.EditProfile
 import com.example.twitturin.feature.profile.domain.ProfileRepository
 import com.example.twitturin.feature.profile.domain.User
 import io.ktor.client.HttpClient
+import io.ktor.client.request.forms.formData
+import io.ktor.client.request.forms.submitFormWithBinaryData
+import io.ktor.http.Headers
+import io.ktor.http.HttpHeaders
 
 class ProfileRepositoryImpl(
     private val httpClient: HttpClient,
@@ -32,5 +38,41 @@ class ProfileRepositoryImpl(
 
     override suspend fun deleteAccount(userId: String): EmptyResult<DataError.Network> {
         return httpClient.delete<Unit>(route = "users/$userId")
+    }
+
+    override suspend fun uploadProfilePicture(
+        userId: String,
+        imageBytes: ByteArray,
+        fileName: String,
+    ): EmptyResult<DataError.Network> {
+        // Multipart per the API spec (`UpdateProfilePicture`: binary field `picture`); the
+        // multipart body's own content type overrides the client-default JSON one.
+        return safeCall<Unit> {
+            httpClient.submitFormWithBinaryData(
+                url = constructRoute("users/$userId/profilePicture"),
+                formData = formData {
+                    append(
+                        key = "picture",
+                        value = imageBytes,
+                        headers = Headers.build {
+                            append(HttpHeaders.ContentType, imageContentTypeFor(fileName))
+                            append(HttpHeaders.ContentDisposition, "filename=\"$fileName\"")
+                        },
+                    )
+                },
+            )
+        }
+    }
+
+    override suspend fun deleteProfilePicture(userId: String): EmptyResult<DataError.Network> {
+        return httpClient.delete<Unit>(route = "users/$userId/profilePicture")
+    }
+
+    private fun imageContentTypeFor(fileName: String): String = when (fileName.substringAfterLast('.', "").lowercase()) {
+        "png" -> "image/png"
+        "webp" -> "image/webp"
+        "gif" -> "image/gif"
+        "heic" -> "image/heic"
+        else -> "image/jpeg"
     }
 }

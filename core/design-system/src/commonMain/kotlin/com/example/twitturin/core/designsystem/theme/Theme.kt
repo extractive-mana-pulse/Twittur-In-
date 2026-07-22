@@ -57,7 +57,6 @@ private val DarkColors = darkColorScheme(
     onError = OnBrand,
 )
 
-/** Rounded, friendly shapes matching the redesign (cards 14, sheets/dialogs 22). */
 private val TwitturShapes = Shapes(
     extraSmall = RoundedCornerShape(8.dp),
     small = RoundedCornerShape(12.dp),
@@ -66,13 +65,6 @@ private val TwitturShapes = Shapes(
     extraLarge = RoundedCornerShape(28.dp),
 )
 
-/**
- * App-wide Compose theme. Wrap every platform entry's content in this.
- *
- * [accent] is the user-customizable brand colour (Settings → Customization). It drives
- * `colorScheme.primary`/`secondary` (and a soft container derived from it), so accent-aware
- * chrome — the bottom bar highlight and the compose FAB — recolours instantly.
- */
 @Composable
 fun TwitturTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),

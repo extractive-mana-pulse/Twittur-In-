@@ -18,4 +18,9 @@ class SearchRepositoryImpl(
             queryParameters = mapOf("keyword" to query),
         ).map { dto -> dto.users.map { it.toSearchUser() } }
     }
+
+    override suspend fun getAllUsers(): Result<List<SearchUser>, DataError.Network> {
+        return httpClient.get<List<SearchUserDto>>(route = "users")
+            .map { list -> list.map { it.toSearchUser() } }
+    }
 }

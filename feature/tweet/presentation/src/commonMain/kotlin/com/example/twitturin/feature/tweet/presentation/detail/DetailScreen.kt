@@ -13,7 +13,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -40,6 +43,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -53,6 +57,8 @@ import com.example.richtexteditor.icons.RichTextIcons
 import com.example.richtexteditor.rememberRichText
 import com.example.richtexteditor.rememberRichTextEditorController
 import com.example.richtexteditor.rememberRichTextFonts
+import com.example.twitturin.core.designsystem.component.ConfirmDialog
+import com.example.twitturin.core.designsystem.component.FollowButton
 import com.example.twitturin.core.designsystem.component.LoadingBox
 import com.example.twitturin.core.designsystem.component.TwitturTopBarMore
 import com.example.twitturin.core.designsystem.icon.TwitturIcons
@@ -63,12 +69,21 @@ import com.example.twitturin.core.designsystem.theme.Hint
 import com.example.twitturin.core.designsystem.theme.Like
 import com.example.twitturin.core.designsystem.theme.OnBrand
 import com.example.twitturin.core.designsystem.theme.SecondaryText
+import com.example.twitturin.core.presentation.LocalStrings
 import com.example.twitturin.core.presentation.ObserveAsEvents
 import com.example.twitturin.core.presentation.UiText
+import com.example.twitturin.feature.tweet.presentation.ReplyUi
 import com.example.twitturin.feature.tweet.presentation.TweetUi
 import com.example.twitturin.feature.tweet.presentation.components.TweetAvatar
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
+
+/** Where "Report" complaints go — opens the platform email app with this recipient. */
+private const val REPORT_EMAIL = "mukhammadaminsalokhiddinov@gmail.com"
+
+/** Builds a `mailto:` URI (spaces percent-encoded — enough for our fixed subjects). */
+internal fun reportMailUri(subject: String): String =
+    "mailto:$REPORT_EMAIL?subject=" + subject.replace(" ", "%20")
 
 @Composable
 fun DetailRoot(
@@ -79,6 +94,7 @@ fun DetailRoot(
     focusReply: Boolean = false,
     onShare: (String) -> Unit = {},
     onEdit: (tweetId: String, content: String) -> Unit = { _, _ -> },
+    onOpenProfile: (userId: String) -> Unit = {},
     viewModel: DetailViewModel = koinViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -112,6 +128,7 @@ fun DetailRoot(
         focusReply = focusReply,
         onShare = { state.tweet?.let { onShare(it.id) } },
         onEdit = { state.tweet?.let { onEdit(it.id, it.content) } },
+        onOpenProfile = onOpenProfile,
         snackbarHostState = snackbarHostState,
         replyEditor = replyEditor,
     )
@@ -128,10 +145,14 @@ fun DetailScreen(
     focusReply: Boolean = false,
     onShare: () -> Unit = {},
     onEdit: () -> Unit = {},
+    onOpenProfile: (userId: String) -> Unit = {},
     replyEditor: RichTextEditorController = rememberRichTextEditorController(),
 ) {
+    val strings = LocalStrings.current
+    val uriHandler = LocalUriHandler.current
     var menuOpen by remember { mutableStateOf(false) }
     var showFormatting by remember { mutableStateOf(false) }
+    var replyToDelete by remember { mutableStateOf<ReplyUi?>(null) }
     val focusRequester = remember { FocusRequester() }
     val keyboard = LocalSoftwareKeyboardController.current
     val scope = rememberCoroutineScope()
@@ -153,28 +174,45 @@ fun DetailScreen(
         if (state.replyTarget != null) focusTick++
     }
 
+    // Entering edit mode prefills the composer with the reply's rich-text document;
+    // cancelling clears it again (a successful save clears via the ReplySent event).
+    var editingId by remember { mutableStateOf<String?>(null) }
+    LaunchedEffect(state.editTarget?.id) {
+        val target = state.editTarget
+        if (target != null) {
+            replyEditor.setEncoded(target.content)
+            editingId = target.id
+            focusTick++
+        } else if (editingId != null) {
+            replyEditor.clear()
+            editingId = null
+        }
+    }
+
     fun report() {
-        scope.launch { snackbarHostState.showSnackbar("Thanks — we'll take a look.") }
+        val id = state.tweet?.id.orEmpty()
+        runCatching { uriHandler.openUri(reportMailUri("Report post $id")) }
+            .onFailure { scope.launch { snackbarHostState.showSnackbar(REPORT_EMAIL) } }
     }
 
     Scaffold(
         modifier = modifier,
         topBar = {
             TwitturTopBarMore(
-                title = "Post",
+                title = strings.post,
                 menuExpanded = menuOpen,
                 onMenuClick = { menuOpen = true },
                 onMenuDismiss = { menuOpen = false },
                 onBack = onBack,
                 menu = {
                     if (state.tweet?.isMine == true) {
-                        DropdownMenuItem(text = { Text("Edit") }, onClick = { menuOpen = false; onEdit() })
+                        DropdownMenuItem(text = { Text(strings.edit) }, onClick = { menuOpen = false; onEdit() })
                         DropdownMenuItem(
-                            text = { Text("Delete", color = Danger) },
+                            text = { Text(strings.delete, color = Danger) },
                             onClick = { menuOpen = false; onAction(DetailAction.OnDelete) },
                         )
                     }
-                    DropdownMenuItem(text = { Text("Report") }, onClick = { menuOpen = false; report() })
+                    DropdownMenuItem(text = { Text(strings.report) }, onClick = { menuOpen = false; report() })
                 },
             )
         },
@@ -183,46 +221,43 @@ fun DetailScreen(
             Column(
                 modifier = Modifier
                     .background(MaterialTheme.colorScheme.background)
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    // Keep the composer clear of the system gesture area and the keyboard.
+                    .navigationBarsPadding()
+                    .imePadding(),
             ) {
                 // Nested-reply target chip: Send goes under this reply until dismissed.
                 state.replyTarget?.let { target ->
-                    Row(
-                        modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 12.dp, top = 6.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        Text(
-                            text = "Replying to " +
-                                if (target.authorUsername.isNotBlank()) "@${target.authorUsername}" else target.authorName,
-                            style = MaterialTheme.typography.bodySmall,
-                            color = Brand,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                            modifier = Modifier.weight(1f),
-                        )
-                        Icon(
-                            imageVector = TwitturIcons.Close,
-                            contentDescription = "Cancel reply",
-                            tint = SecondaryText,
-                            modifier = Modifier
-                                .height(16.dp)
-                                .clickable { onAction(DetailAction.OnCancelReplyTarget) },
-                        )
-                    }
+                    ComposerContextChip(
+                        text = "${strings.replyingTo} " +
+                            if (target.authorUsername.isNotBlank()) "@${target.authorUsername}" else target.authorName,
+                        onDismiss = { onAction(DetailAction.OnCancelReplyTarget) },
+                    )
+                }
+                // Edit-mode chip: Send saves the edited reply until dismissed.
+                state.editTarget?.let { target ->
+                    ComposerContextChip(
+                        text = "${strings.editingReply} · " +
+                            if (target.authorUsername.isNotBlank()) "@${target.authorUsername}" else target.authorName,
+                        onDismiss = { onAction(DetailAction.OnCancelEditReply) },
+                    )
                 }
                 // The library's formatting toolbar, summoned by the Aa toggle in the reply row.
                 AnimatedVisibility(visible = showFormatting) {
-                    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                    Box(
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp),
+                        contentAlignment = Alignment.Center,
+                    ) {
                         RichTextToolbar(
                             controller = replyEditor,
-                            modifier = Modifier.padding(top = 6.dp),
+                            modifier = Modifier.padding(top = 8.dp, bottom = 2.dp),
                         )
                     }
                 }
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 12.dp, vertical = 8.dp),
+                        .padding(horizontal = 14.dp, vertical = 10.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Icon(
@@ -230,7 +265,7 @@ fun DetailScreen(
                         contentDescription = "Formatting",
                         tint = if (showFormatting) Brand else SecondaryText,
                         modifier = Modifier
-                            .padding(end = 8.dp)
+                            .padding(end = 10.dp)
                             .height(22.dp)
                             .clickable { showFormatting = !showFormatting },
                     )
@@ -244,17 +279,17 @@ fun DetailScreen(
                             controller = replyEditor,
                             modifier = Modifier.fillMaxWidth().focusRequester(focusRequester),
                             textStyle = MaterialTheme.typography.bodyLarge,
-                            placeholder = "Reply",
+                            placeholder = strings.replyPlaceholder,
                             maxLines = 3,
                         )
                     }
-                    Spacer(modifier = Modifier.width(8.dp))
+                    Spacer(modifier = Modifier.width(10.dp))
                     Button(
                         onClick = { onAction(DetailAction.OnSendReply(replyEditor.encode())) },
                         enabled = replyEditor.plainText.isNotBlank() && !state.isSendingReply,
                         shape = RoundedCornerShape(22.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = Brand, contentColor = OnBrand),
-                    ) { Text("Send", fontWeight = FontWeight.Bold) }
+                    ) { Text(strings.send, fontWeight = FontWeight.Bold) }
                 }
             }
         },
@@ -281,14 +316,18 @@ fun DetailScreen(
                     state.tweet?.let { tweet ->
                         DetailHeader(
                             tweet = tweet,
+                            isFollowingAuthor = state.isFollowingAuthor,
                             // Replying from the header targets the tweet itself, not a thread row.
                             onReply = {
                                 onAction(DetailAction.OnCancelReplyTarget)
+                                onAction(DetailAction.OnCancelEditReply)
                                 focusTick++
                             },
                             onLike = { onAction(DetailAction.OnLike) },
                             onShare = onShare,
                             onOpenLikes = { onAction(DetailAction.OnOpenLikes) },
+                            onOpenProfile = { if (tweet.authorId.isNotBlank()) onOpenProfile(tweet.authorId) },
+                            onToggleFollow = { onAction(DetailAction.OnToggleFollow) },
                         )
                         HorizontalDivider()
                     }
@@ -298,7 +337,7 @@ fun DetailScreen(
                             contentAlignment = Alignment.Center,
                         ) {
                             Text(
-                                text = "No replies yet — be the first.",
+                                text = strings.noRepliesYet,
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = Hint,
                             )
@@ -314,10 +353,106 @@ fun DetailScreen(
                             onReplyClick = { comment ->
                                 repliesById[comment.id]?.let { onAction(DetailAction.OnReplyToReply(it)) }
                             },
+                            rowActions = { comment ->
+                                repliesById[comment.id]?.let { reply ->
+                                    ReplyRowActions(
+                                        reply = reply,
+                                        onLike = { onAction(DetailAction.OnLikeReply(reply)) },
+                                        onEdit = { onAction(DetailAction.OnStartEditReply(reply)) },
+                                        onDelete = { replyToDelete = reply },
+                                    )
+                                }
+                            },
                         )
                     }
                 }
             }
+        }
+    }
+
+    replyToDelete?.let { reply ->
+        ConfirmDialog(
+            title = strings.deleteReplyTitle,
+            message = strings.deleteReplyMessage,
+            confirmLabel = strings.delete,
+            dismissLabel = strings.cancel,
+            destructive = true,
+            onConfirm = {
+                replyToDelete = null
+                onAction(DetailAction.OnDeleteReply(reply))
+            },
+            onDismiss = { replyToDelete = null },
+        )
+    }
+}
+
+/** "Replying to @user" / "Editing reply" strip above the composer, with a dismiss cross. */
+@Composable
+private fun ComposerContextChip(text: String, onDismiss: () -> Unit) {
+    Row(
+        modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 12.dp, top = 6.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(
+            text = text,
+            style = MaterialTheme.typography.bodySmall,
+            color = Brand,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.weight(1f),
+        )
+        Icon(
+            imageVector = TwitturIcons.Close,
+            contentDescription = "Cancel",
+            tint = SecondaryText,
+            modifier = Modifier
+                .height(16.dp)
+                .clickable(onClick = onDismiss),
+        )
+    }
+}
+
+/** Heart (+count) on every reply row; pencil/bin appended on the signed-in user's own replies. */
+@Composable
+private fun ReplyRowActions(
+    reply: ReplyUi,
+    onLike: () -> Unit,
+    onEdit: () -> Unit,
+    onDelete: () -> Unit,
+) {
+    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(14.dp)) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
+            modifier = Modifier.clickable(onClick = onLike),
+        ) {
+            Icon(
+                imageVector = if (reply.isLiked) TwitturIcons.LikeFilled else TwitturIcons.Like,
+                contentDescription = "Like",
+                tint = if (reply.isLiked) Like else SecondaryText,
+                modifier = Modifier.size(15.dp),
+            )
+            if (reply.likes > 0) {
+                Text(
+                    text = reply.likes.toString(),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = if (reply.isLiked) Like else SecondaryText,
+                )
+            }
+        }
+        if (reply.isMine) {
+            Icon(
+                imageVector = TwitturIcons.Edit,
+                contentDescription = "Edit",
+                tint = SecondaryText,
+                modifier = Modifier.size(14.dp).clickable(onClick = onEdit),
+            )
+            Icon(
+                imageVector = TwitturIcons.Close,
+                contentDescription = "Delete",
+                tint = Danger,
+                modifier = Modifier.size(14.dp).clickable(onClick = onDelete),
+            )
         }
     }
 }
@@ -325,24 +460,43 @@ fun DetailScreen(
 @Composable
 private fun DetailHeader(
     tweet: TweetUi,
+    isFollowingAuthor: Boolean?,
     onReply: () -> Unit,
     onLike: () -> Unit,
     onShare: () -> Unit,
     onOpenLikes: () -> Unit,
+    onOpenProfile: () -> Unit,
+    onToggleFollow: () -> Unit,
 ) {
+    val strings = LocalStrings.current
     Column(modifier = Modifier.padding(16.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            TweetAvatar(name = tweet.authorName, avatarUrl = tweet.authorAvatar, size = 48.dp)
-            Column(modifier = Modifier.padding(start = 12.dp)) {
-                Text(
-                    text = tweet.authorName,
-                    style = MaterialTheme.typography.bodyLarge,
-                    fontWeight = FontWeight.Bold,
-                )
-                Text(
-                    text = "@${tweet.authorUsername}",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = SecondaryText,
+            // Avatar + name + @username all open the author's profile.
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.weight(1f).clickable(onClick = onOpenProfile),
+            ) {
+                TweetAvatar(name = tweet.authorName, avatarUrl = tweet.authorAvatar, size = 48.dp)
+                Column(modifier = Modifier.padding(start = 12.dp)) {
+                    Text(
+                        text = tweet.authorName,
+                        style = MaterialTheme.typography.bodyLarge,
+                        fontWeight = FontWeight.Bold,
+                    )
+                    Text(
+                        text = "@${tweet.authorUsername}",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = SecondaryText,
+                    )
+                }
+            }
+            // Follow/unfollow the author — hidden on own posts and while the state is unknown.
+            if (!tweet.isMine && isFollowingAuthor != null) {
+                FollowButton(
+                    following = isFollowingAuthor,
+                    onClick = onToggleFollow,
+                    followText = strings.follow,
+                    followingText = strings.unfollow,
                 )
             }
         }
@@ -353,7 +507,7 @@ private fun DetailHeader(
         Text(text = tweet.date, style = MaterialTheme.typography.bodySmall, color = Hint)
         Spacer(modifier = Modifier.height(10.dp))
         Text(
-            text = "${tweet.likes} likes",
+            text = "${tweet.likes} ${strings.likesSuffix}",
             style = MaterialTheme.typography.bodyMedium,
             color = Brand,
             fontWeight = FontWeight.Bold,
@@ -372,21 +526,21 @@ private fun DetailHeader(
         ) {
             DetailActionButton(
                 icon = TwitturIcons.Reply,
-                label = "Reply",
+                label = strings.replyAction,
                 tint = SecondaryText,
                 onClick = onReply,
                 modifier = Modifier.weight(1f),
             )
             DetailActionButton(
                 icon = if (tweet.isLiked) TwitturIcons.LikeFilled else TwitturIcons.Like,
-                label = "Like",
+                label = strings.likeAction,
                 tint = if (tweet.isLiked) Like else SecondaryText,
                 onClick = onLike,
                 modifier = Modifier.weight(1f),
             )
             DetailActionButton(
                 icon = TwitturIcons.Share,
-                label = "Share",
+                label = strings.share,
                 tint = SecondaryText,
                 onClick = onShare,
                 modifier = Modifier.weight(1f),

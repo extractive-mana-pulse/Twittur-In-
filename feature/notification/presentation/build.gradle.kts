@@ -34,6 +34,10 @@ kotlin {
             implementation(libs.bundles.koinCompose)
             implementation(libs.kotlinx.coroutines.core)
         }
+        androidMain.dependencies {
+            // Runtime POST_NOTIFICATIONS permission launcher.
+            implementation(libs.androidx.activity.compose)
+        }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
         }

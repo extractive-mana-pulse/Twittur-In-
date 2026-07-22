@@ -26,6 +26,8 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             api(projects.feature.tweet.domain)
+            // Follow/unfollow from the tweet detail header.
+            implementation(projects.feature.follow.domain)
             implementation(projects.core.domain)
             implementation(projects.core.presentation)
             implementation(projects.core.designSystem)

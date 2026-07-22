@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import com.example.twitturin.core.designsystem.component.BrandTopBar
 import com.example.twitturin.core.designsystem.component.SecondaryButton
 import com.example.twitturin.core.designsystem.icon.TwitturIcons
+import com.example.twitturin.core.presentation.LocalStrings
 import com.example.twitturin.core.designsystem.theme.SecondaryText
 
 /** Account-kind picker. Pure stateless screen — navigation is delegated to callbacks. */
@@ -28,7 +29,7 @@ fun KindScreen(
 ) {
     Scaffold(
         modifier = modifier,
-        topBar = { BrandTopBar(title = "Sign up", onBack = onBack) },
+        topBar = { BrandTopBar(title = LocalStrings.current.signUp, onBack = onBack) },
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -39,7 +40,7 @@ fun KindScreen(
         ) {
             Spacer(modifier = Modifier.height(72.dp))
             Text(
-                text = "What kind are you?",
+                text = LocalStrings.current.whoAreYou,
                 style = MaterialTheme.typography.headlineMedium,
                 textAlign = TextAlign.Center,
             )
@@ -51,9 +52,9 @@ fun KindScreen(
             )
 
             Spacer(modifier = Modifier.height(44.dp))
-            SecondaryButton(text = "Student", onClick = onStudent, leadingIcon = TwitturIcons.Account)
+            SecondaryButton(text = LocalStrings.current.student, onClick = onStudent, leadingIcon = TwitturIcons.Account)
             Spacer(modifier = Modifier.height(16.dp))
-            SecondaryButton(text = "Professor", onClick = onProfessor, leadingIcon = TwitturIcons.Feedback)
+            SecondaryButton(text = LocalStrings.current.professor, onClick = onProfessor, leadingIcon = TwitturIcons.Feedback)
         }
     }
 }

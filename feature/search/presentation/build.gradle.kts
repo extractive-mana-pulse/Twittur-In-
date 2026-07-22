@@ -35,6 +35,10 @@ kotlin {
             implementation(libs.bundles.coil)
             implementation(libs.kotlinx.coroutines.core)
         }
+        androidMain.dependencies {
+            // Speech-recognizer launcher behind the search field's mic.
+            implementation(libs.androidx.activity.compose)
+        }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
         }

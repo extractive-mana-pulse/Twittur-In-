@@ -63,6 +63,8 @@ kotlin {
             implementation(projects.feature.follow.data)
             implementation(projects.feature.follow.presentation)
             implementation(projects.feature.settings.presentation)
+            implementation(projects.feature.timetable.data)
+            implementation(projects.feature.timetable.presentation)
             implementation(projects.core.domain)
 
             implementation(libs.bundles.compose)

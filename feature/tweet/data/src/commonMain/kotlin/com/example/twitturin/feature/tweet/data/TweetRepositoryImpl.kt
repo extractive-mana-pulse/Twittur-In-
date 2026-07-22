@@ -98,4 +98,29 @@ class TweetRepositoryImpl(
             body = PostTweetRequestDto(content = content),
         )
     }
+
+    override suspend fun editReply(replyId: String, content: String): EmptyResult<DataError.Network> {
+        return httpClient.put<PostTweetRequestDto, Unit>(
+            route = "replies/$replyId",
+            body = PostTweetRequestDto(content = content),
+        )
+    }
+
+    override suspend fun deleteReply(replyId: String): EmptyResult<DataError.Network> {
+        return httpClient.delete<Unit>(route = "replies/$replyId")
+    }
+
+    // Reply like/unlike are keyed by the URL + bearer token; no body needed.
+    override suspend fun likeReply(replyId: String): EmptyResult<DataError.Network> {
+        return httpClient.post<Unit>(route = "replies/$replyId/likes")
+    }
+
+    override suspend fun unlikeReply(replyId: String): EmptyResult<DataError.Network> {
+        return httpClient.delete<Unit>(route = "replies/$replyId/likes")
+    }
+
+    override suspend fun getReplyLikers(replyId: String): Result<List<TweetLiker>, DataError.Network> {
+        return httpClient.get<List<TweetLikerDto>>(route = "replies/$replyId/likes")
+            .map { list -> list.map { it.toTweetLiker() } }
+    }
 }

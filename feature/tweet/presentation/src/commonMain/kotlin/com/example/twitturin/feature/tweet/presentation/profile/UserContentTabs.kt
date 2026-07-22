@@ -14,11 +14,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.twitturin.core.designsystem.component.EmptyState
 import com.example.twitturin.core.designsystem.component.LoadingBox
-import com.example.twitturin.core.designsystem.icon.TwitturIcons
+import com.example.twitturin.core.designsystem.component.LottieAsset
+import com.example.twitturin.core.designsystem.component.LottieEmptyState
 import com.example.twitturin.core.designsystem.theme.SecondaryText
+import com.example.twitturin.core.presentation.LocalStrings
 import com.example.twitturin.feature.tweet.presentation.components.TweetItem
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -36,6 +38,7 @@ fun UserContentTabs(
     viewModel: ProfileTweetsViewModel = koinViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val strings = LocalStrings.current
 
     androidx.compose.runtime.LaunchedEffect(userId) { viewModel.load(userId) }
 
@@ -52,7 +55,11 @@ fun UserContentTabs(
                     onClick = { viewModel.selectTab(tab) },
                     text = {
                         Text(
-                            text = tab.title,
+                            text = when (tab) {
+                                ProfileTab.POSTS -> strings.posts
+                                ProfileTab.REPLIES -> strings.replies
+                                ProfileTab.LIKES -> strings.likes
+                            },
                             color = if (selected) MaterialTheme.colorScheme.primary else SecondaryText,
                             fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
                         )
@@ -66,14 +73,18 @@ fun UserContentTabs(
             when {
                 state.currentLoading && list.isEmpty() -> LoadingBox()
 
-                list.isEmpty() -> EmptyState(
-                    icon = TwitturIcons.Home,
+                list.isEmpty() -> LottieEmptyState(
+                    asset = when (state.selectedTab) {
+                        ProfileTab.LIKES -> LottieAsset.EmptyLikes
+                        else -> LottieAsset.EmptyTweets
+                    },
                     title = "Nothing here yet",
                     subtitle = when (state.selectedTab) {
                         ProfileTab.POSTS -> "Posts will show up here."
                         ProfileTab.REPLIES -> "Replies will show up here."
                         ProfileTab.LIKES -> "Liked posts will show up here."
                     },
+                    animationSize = 160.dp,
                 )
 
                 else -> LazyColumn(modifier = Modifier.fillMaxSize()) {

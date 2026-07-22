@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.twitturin.core.designsystem.theme.Brand
 import com.example.twitturin.core.domain.preferences.ThemeMode
+import com.example.twitturin.core.presentation.LocalStrings
 
 /** Light / Dark / System theme picker. Selecting applies immediately. */
 @Composable
@@ -26,11 +27,12 @@ fun ThemeDialog(
     onSelect: (ThemeMode) -> Unit,
     onDismiss: () -> Unit,
 ) {
+    val strings = LocalStrings.current
     AlertDialog(
         onDismissRequest = onDismiss,
         shape = RoundedCornerShape(22.dp),
         containerColor = MaterialTheme.colorScheme.background,
-        title = { Text("Theme", style = MaterialTheme.typography.titleMedium) },
+        title = { Text(strings.theme, style = MaterialTheme.typography.titleMedium) },
         text = {
             Column {
                 ThemeMode.entries.forEach { mode ->
@@ -47,7 +49,11 @@ fun ThemeDialog(
                             colors = RadioButtonDefaults.colors(selectedColor = Brand),
                         )
                         Text(
-                            text = mode.label(),
+                            text = when (mode) {
+                                ThemeMode.SYSTEM -> strings.themeSystem
+                                ThemeMode.LIGHT -> strings.themeLight
+                                ThemeMode.DARK -> strings.themeDark
+                            },
                             style = MaterialTheme.typography.bodyLarge,
                             modifier = Modifier.padding(start = 8.dp),
                         )
@@ -63,8 +69,3 @@ fun ThemeDialog(
     )
 }
 
-private fun ThemeMode.label(): String = when (this) {
-    ThemeMode.SYSTEM -> "System default"
-    ThemeMode.LIGHT -> "Light"
-    ThemeMode.DARK -> "Dark"
-}

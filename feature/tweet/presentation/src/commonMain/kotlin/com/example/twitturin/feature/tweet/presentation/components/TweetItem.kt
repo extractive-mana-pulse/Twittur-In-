@@ -47,6 +47,7 @@ private val CollapsedContentMaxHeight = 200.dp
  * A single tweet card — shared by the home feed, profile tabs, likes and replies.
  * Avatar falls back to an initial-on-gradient when there's no photo. Reply / like / share are
  * tappable: the heart fills + turns [Like] pink when the signed-in user has liked it.
+ * [onAvatarClick] (when set) opens the author's profile instead of the tweet itself.
  * [headerAction] hosts a trailing control (unused by the feed now that delete moved to detail).
  */
 @Composable
@@ -57,6 +58,7 @@ fun TweetItem(
     onReply: () -> Unit = {},
     onLike: () -> Unit = {},
     onShare: () -> Unit = {},
+    onAvatarClick: (() -> Unit)? = null,
     headerAction: @Composable () -> Unit = {},
 ) {
     Column(
@@ -66,7 +68,12 @@ fun TweetItem(
             .padding(16.dp),
     ) {
         Row(verticalAlignment = Alignment.Top) {
-            TweetAvatar(name = tweet.authorName, avatarUrl = tweet.authorAvatar, size = 44.dp)
+            TweetAvatar(
+                name = tweet.authorName,
+                avatarUrl = tweet.authorAvatar,
+                size = 44.dp,
+                modifier = if (onAvatarClick != null) Modifier.clickable(onClick = onAvatarClick) else Modifier,
+            )
             Spacer(modifier = Modifier.width(12.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(

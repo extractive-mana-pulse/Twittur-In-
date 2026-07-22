@@ -28,6 +28,7 @@ import com.example.twitturin.core.designsystem.component.PasswordField
 import com.example.twitturin.core.designsystem.component.PrimaryButton
 import com.example.twitturin.core.designsystem.icon.TwitturIcons
 import com.example.twitturin.core.designsystem.theme.Danger
+import com.example.twitturin.core.presentation.LocalStrings
 import com.example.twitturin.core.presentation.ObserveAsEvents
 import com.example.twitturin.core.presentation.UiText
 import org.koin.compose.viewmodel.koinViewModel
@@ -85,7 +86,7 @@ fun ProfessorRegistrationScreen(
 
     Scaffold(
         modifier = modifier,
-        topBar = { BrandTopBar(title = "Create account", onBack = onBack) },
+        topBar = { BrandTopBar(title = LocalStrings.current.createAccount, onBack = onBack) },
         snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { innerPadding ->
         Column(
@@ -97,7 +98,7 @@ fun ProfessorRegistrationScreen(
             verticalArrangement = Arrangement.spacedBy(14.dp),
         ) {
             Text(
-                text = "Professor account",
+                text = LocalStrings.current.professorAccount,
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(top = 4.dp),
             )
@@ -105,35 +106,35 @@ fun ProfessorRegistrationScreen(
             BrandTextField(
                 value = fullName,
                 onValueChange = { fullName = it },
-                placeholder = "Full name",
+                placeholder = LocalStrings.current.fullName,
                 leadingIcon = TwitturIcons.Account,
             )
             BrandTextField(
                 value = username,
                 onValueChange = { if (it.length <= 30) username = it },
-                placeholder = "Username",
+                placeholder = LocalStrings.current.username,
                 leadingIcon = TwitturIcons.PersonAdd,
             )
             if (usernameHasSpace) {
-                Text("No spaces allowed", color = Danger, style = MaterialTheme.typography.bodySmall)
+                Text(LocalStrings.current.noSpacesAllowed, color = Danger, style = MaterialTheme.typography.bodySmall)
             }
             BrandTextField(
                 value = subject,
                 onValueChange = { subject = it },
-                placeholder = "Subject",
+                placeholder = LocalStrings.current.subject,
                 leadingIcon = TwitturIcons.Edit,
             )
             PasswordField(
                 value = password,
                 onValueChange = { password = it },
-                placeholder = "Password",
+                placeholder = LocalStrings.current.password,
                 visible = passwordVisible,
                 onToggleVisible = { passwordVisible = !passwordVisible },
                 imeAction = ImeAction.Done,
             )
 
             PrimaryButton(
-                text = "Sign up",
+                text = LocalStrings.current.signUp,
                 onClick = { onRegister(fullName, username, subject, password) },
                 enabled = canSubmit,
                 loading = state.isLoading,

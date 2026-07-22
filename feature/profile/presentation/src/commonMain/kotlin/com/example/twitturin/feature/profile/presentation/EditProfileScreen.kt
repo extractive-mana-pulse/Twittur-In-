@@ -1,6 +1,7 @@
 package com.example.twitturin.feature.profile.presentation
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,6 +16,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -39,6 +41,7 @@ import com.example.twitturin.core.designsystem.component.BrandTopBar
 import com.example.twitturin.core.designsystem.component.GradientAvatar
 import com.example.twitturin.core.designsystem.icon.TwitturIcons
 import com.example.twitturin.core.designsystem.theme.Brand
+import com.example.twitturin.core.designsystem.theme.Danger
 import com.example.twitturin.core.designsystem.theme.OnBrand
 import com.example.twitturin.core.presentation.ObserveAsEvents
 import com.example.twitturin.core.presentation.UiText
@@ -74,6 +77,8 @@ fun EditProfileRoot(
         state = state,
         onBack = onBack,
         onSave = viewModel::editProfile,
+        onPhotoPicked = viewModel::uploadPhoto,
+        onRemovePhoto = viewModel::removePhoto,
         snackbarHostState = snackbarHostState,
     )
 }
@@ -86,6 +91,8 @@ fun EditProfileScreen(
     onSave: (fullName: String, username: String, email: String, bio: String, country: String, birthday: String) -> Unit,
     snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
+    onPhotoPicked: (bytes: ByteArray, fileName: String) -> Unit = { _, _ -> },
+    onRemovePhoto: () -> Unit = {},
 ) {
     val user = state.user
 
@@ -144,7 +151,9 @@ fun EditProfileScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(14.dp),
         ) {
-            // Avatar with an add-photo badge — the picker itself is a deferred expect/actual task.
+            // Avatar with an add-photo badge — taps open the platform picker and upload
+            // the choice as the new profile picture (`POST users/{id}/profilePicture`).
+            val pickImage = rememberImagePicker(onPicked = onPhotoPicked)
             Box(modifier = Modifier.padding(top = 8.dp)) {
                 Box(modifier = Modifier.size(96.dp)) {
                     GradientAvatar(name = fullName.ifBlank { "?" }, size = 96.dp)
@@ -155,17 +164,34 @@ fun EditProfileScreen(
                             modifier = Modifier.size(96.dp).clip(CircleShape),
                         )
                     }
+                    if (state.isUpdatingPhoto) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(36.dp).align(Alignment.Center),
+                            color = Brand,
+                        )
+                    }
                 }
-                Box(
-                    modifier = Modifier
-                        .align(Alignment.BottomEnd)
-                        .size(32.dp)
-                        .clip(CircleShape)
-                        .background(Brand),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Icon(TwitturIcons.AddPhoto, contentDescription = "Change photo", tint = OnBrand, modifier = Modifier.size(18.dp))
+                if (pickImage != null) {
+                    Box(
+                        modifier = Modifier
+                            .align(Alignment.BottomEnd)
+                            .size(32.dp)
+                            .clip(CircleShape)
+                            .background(Brand)
+                            .clickable(enabled = !state.isUpdatingPhoto) { pickImage() },
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Icon(TwitturIcons.AddPhoto, contentDescription = "Change photo", tint = OnBrand, modifier = Modifier.size(18.dp))
+                    }
                 }
+            }
+            if (!user?.profilePicture.isNullOrBlank()) {
+                Text(
+                    text = "Remove photo",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Danger,
+                    modifier = Modifier.clickable(enabled = !state.isUpdatingPhoto, onClick = onRemovePhoto),
+                )
             }
 
             BrandTextField(fullName, { fullName = it }, placeholder = "Full name", leadingIcon = TwitturIcons.Account)

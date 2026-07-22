@@ -35,6 +35,7 @@ import com.example.twitturin.core.designsystem.component.PasswordField
 import com.example.twitturin.core.designsystem.component.PrimaryButton
 import com.example.twitturin.core.designsystem.icon.TwitturIcons
 import com.example.twitturin.core.designsystem.theme.Danger
+import com.example.twitturin.core.presentation.LocalStrings
 import com.example.twitturin.core.presentation.ObserveAsEvents
 import com.example.twitturin.core.presentation.UiText
 import org.koin.compose.viewmodel.koinViewModel
@@ -94,9 +95,10 @@ fun StudentRegistrationScreen(
     val canSubmit = fullName.isNotBlank() && username.isNotBlank() && studentId.isNotBlank() &&
         password.isNotBlank() && !usernameHasSpace && !state.isLoading
 
+    val strings = LocalStrings.current
     Scaffold(
         modifier = modifier,
-        topBar = { BrandTopBar(title = "Create account", onBack = onBack) },
+        topBar = { BrandTopBar(title = strings.createAccount, onBack = onBack) },
         snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { innerPadding ->
         Column(
@@ -108,7 +110,7 @@ fun StudentRegistrationScreen(
             verticalArrangement = Arrangement.spacedBy(14.dp),
         ) {
             Text(
-                text = "Student account",
+                text = strings.studentAccount,
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(top = 4.dp),
             )
@@ -116,22 +118,23 @@ fun StudentRegistrationScreen(
             BrandTextField(
                 value = fullName,
                 onValueChange = { fullName = it },
-                placeholder = "Full name",
+                placeholder = strings.fullName,
                 leadingIcon = TwitturIcons.Account,
             )
             BrandTextField(
                 value = username,
                 onValueChange = { if (it.length <= 30) username = it },
-                placeholder = "Username",
+                placeholder = strings.username,
                 leadingIcon = TwitturIcons.PersonAdd,
             )
             if (usernameHasSpace) {
-                Text("No spaces allowed", color = Danger, style = MaterialTheme.typography.bodySmall)
+                Text(strings.noSpacesAllowed, color = Danger, style = MaterialTheme.typography.bodySmall)
             }
+            // The backend only accepts TTPU ids shaped like u12345 — hint the format up front.
             BrandTextField(
                 value = studentId,
                 onValueChange = { if (it.length <= 7) studentId = it },
-                placeholder = "Student ID",
+                placeholder = "${strings.studentId} (u12345)",
                 leadingIcon = TwitturIcons.Info,
             )
             MajorPicker(
@@ -143,14 +146,14 @@ fun StudentRegistrationScreen(
             PasswordField(
                 value = password,
                 onValueChange = { password = it },
-                placeholder = "Password",
+                placeholder = strings.password,
                 visible = passwordVisible,
                 onToggleVisible = { passwordVisible = !passwordVisible },
                 imeAction = ImeAction.Done,
             )
 
             PrimaryButton(
-                text = "Sign up",
+                text = strings.signUp,
                 onClick = { onRegister(fullName, username, studentId, major, password) },
                 enabled = canSubmit,
                 loading = state.isLoading,

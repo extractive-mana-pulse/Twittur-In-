@@ -15,6 +15,9 @@ import com.example.twitturin.feature.tweet.presentation.di.tweetPresentationModu
 import com.example.twitturin.feature.follow.data.di.followDataModule
 import com.example.twitturin.feature.follow.presentation.di.followPresentationModule
 import com.example.twitturin.feature.settings.presentation.di.settingsPresentationModule
+import com.example.twitturin.feature.timetable.data.di.timetableDataModule
+import com.example.twitturin.feature.timetable.data.di.timetableStorageModule
+import com.example.twitturin.feature.timetable.presentation.di.timetablePresentationModule
 import org.koin.core.context.startKoin
 import org.koin.dsl.KoinAppDeclaration
 
@@ -48,6 +51,9 @@ fun initKoin(config: KoinAppDeclaration? = null) {
             followDataModule,
             followPresentationModule,
             settingsPresentationModule,
+            timetableStorageModule,
+            timetableDataModule,
+            timetablePresentationModule,
         )
     }
 }

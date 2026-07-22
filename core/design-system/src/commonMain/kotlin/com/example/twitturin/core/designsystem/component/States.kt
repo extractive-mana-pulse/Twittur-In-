@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -31,13 +32,21 @@ import com.example.twitturin.core.designsystem.theme.DividerLine
 import com.example.twitturin.core.designsystem.theme.Ink
 import com.example.twitturin.core.designsystem.theme.SecondaryText
 
-/** Centered empty state — brand-soft circle + icon, title in brand, supporting subtitle. */
+/**
+ * Centered empty state — brand-soft circle + icon, title in brand, supporting subtitle, and an
+ * optional [action] (a CTA button) below the text.
+ *
+ * This composable fills its parent, so a caller must NOT stack a button after it in a Column —
+ * the empty state eats the full height and the button gets measured with none left, rendering it
+ * invisible. Pass the CTA through [action] instead.
+ */
 @Composable
 fun EmptyState(
     icon: ImageVector,
     title: String,
     subtitle: String,
     modifier: Modifier = Modifier,
+    action: @Composable (() -> Unit)? = null,
 ) {
     Column(
         modifier = modifier.fillMaxSize().padding(24.dp),
@@ -64,6 +73,10 @@ fun EmptyState(
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(top = 6.dp),
         )
+        if (action != null) {
+            Spacer(Modifier.height(20.dp))
+            action()
+        }
     }
 }
 

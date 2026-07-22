@@ -15,7 +15,6 @@ import com.example.twitturin.core.designsystem.resources.dmsans_regular
 import com.example.twitturin.core.designsystem.resources.dmsans_semibold
 import org.jetbrains.compose.resources.Font
 
-/** DM Sans — the TwitturIn brand typeface. Loaded from bundled composeResources. */
 @Composable
 fun dmSansFamily(): FontFamily = FontFamily(
     Font(Res.font.dmsans_regular, FontWeight.Normal),
@@ -25,14 +24,6 @@ fun dmSansFamily(): FontFamily = FontFamily(
     Font(Res.font.dmsans_extrabolditalic, FontWeight.ExtraBold, FontStyle.Italic),
 )
 
-/**
- * Maps the design's type scale onto Material 3 slots so existing screens that read
- * `MaterialTheme.typography.*` pick up DM Sans + the right weight/size automatically.
- *
- * Display 700·34 → headlineMedium · Title 700·22 → titleLarge · Subtitle 600·20 → titleMedium
- * Body 400·15 → bodyLarge · Secondary 500·14 → bodyMedium · Caption 400·13 → bodySmall
- * Button 700·15 → labelLarge · Overline 700·12 → labelSmall
- */
 @Composable
 fun twitturTypography(): Typography {
     val dm = dmSansFamily()

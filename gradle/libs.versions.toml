@@ -24,6 +24,7 @@ settings = "1.3.0"
 kermit = "2.1.0"
 coil = "3.5.0"
 navigationCompose = "2.9.2"
+compottie = "2.2.4"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -81,6 +82,9 @@ coil-networkKtor = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref
 
 # --- Navigation (type-safe Compose) ---
 navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
+
+# --- Compottie (multiplatform Lottie renderer) ---
+compottie = { module = "io.github.alexzhirkevich:compottie", version.ref = "compottie" }
 
 [bundles]
 # Compose UI deps shared by :composeApp and every feature :presentation module.

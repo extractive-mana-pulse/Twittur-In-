@@ -25,12 +25,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.twitturin.core.designsystem.component.EmptyState
 import com.example.twitturin.core.designsystem.component.LoadingBox
+import com.example.twitturin.core.designsystem.component.LottieAsset
+import com.example.twitturin.core.designsystem.component.LottieEmptyState
 import com.example.twitturin.core.designsystem.component.PrimaryButton
 import com.example.twitturin.core.designsystem.icon.TwitturIcons
 import com.example.twitturin.core.designsystem.theme.DividerLine
 import com.example.twitturin.core.designsystem.theme.SecondaryText
+import com.example.twitturin.core.presentation.LocalStrings
 import com.example.twitturin.core.presentation.ObserveAsEvents
 import com.example.twitturin.core.presentation.UiText
 import org.koin.compose.viewmodel.koinViewModel
@@ -77,11 +79,14 @@ fun NotificationScreen(
     modifier: Modifier = Modifier,
     onMenu: (() -> Unit)? = null,
 ) {
+    val strings = LocalStrings.current
+    // If notifications aren't allowed yet, surface the system permission dialog on entry.
+    RequestNotificationPermissionEffect()
     Scaffold(
         modifier = modifier,
         topBar = {
             TopAppBar(
-                title = { Text(text = "Notifications", style = MaterialTheme.typography.titleLarge) },
+                title = { Text(text = strings.notifications, style = MaterialTheme.typography.titleLarge) },
                 navigationIcon = {
                     if (onMenu != null) {
                         IconButton(onClick = onMenu) {
@@ -101,10 +106,10 @@ fun NotificationScreen(
             when {
                 state.isLoading -> LoadingBox()
 
-                state.release == null -> EmptyState(
-                    icon = TwitturIcons.Notifications,
-                    title = "You're all caught up",
-                    subtitle = "New notifications will show up here.",
+                state.release == null -> LottieEmptyState(
+                    asset = LottieAsset.EmptyNotifications,
+                    title = strings.caughtUpTitle,
+                    subtitle = strings.caughtUpSubtitle,
                 )
 
                 else -> ReleaseContent(release = state.release, onAction = onAction)
@@ -118,6 +123,7 @@ private fun ReleaseContent(
     release: ReleaseUi,
     onAction: (NotificationAction) -> Unit,
 ) {
+    val strings = LocalStrings.current
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -131,7 +137,7 @@ private fun ReleaseContent(
             Text(text = release.title, style = MaterialTheme.typography.titleLarge)
             if (release.tagName.isNotEmpty()) {
                 Text(
-                    text = "Version ${release.tagName}",
+                    text = "${strings.versionLabel} ${release.tagName}",
                     style = MaterialTheme.typography.bodyMedium,
                     color = SecondaryText,
                     modifier = Modifier.padding(top = 6.dp),
@@ -139,14 +145,14 @@ private fun ReleaseContent(
             }
             if (release.publishedAt.isNotEmpty()) {
                 Text(
-                    text = "Published ${release.publishedAt}",
+                    text = "${strings.publishedLabel} ${release.publishedAt}",
                     style = MaterialTheme.typography.bodySmall,
                     color = SecondaryText,
                     modifier = Modifier.padding(top = 2.dp),
                 )
             }
             Spacer(modifier = Modifier.height(18.dp))
-            PrimaryButton(text = "View patch notes", onClick = { onAction(NotificationAction.OnPatchNoteClick) })
+            PrimaryButton(text = strings.viewPatchNotes, onClick = { onAction(NotificationAction.OnPatchNoteClick) })
         }
     }
 }

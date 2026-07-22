@@ -55,4 +55,21 @@ interface TweetRepository {
 
     /** Edit a tweet the current user owns (`PUT tweets/{id}`, auth). */
     suspend fun editTweet(tweetId: String, content: String): EmptyResult<DataError.Network>
+
+    // --- reply interactions (`replies/{id}` routes) ---
+
+    /** Edit a reply the current user owns (`PUT replies/{id}`, auth). */
+    suspend fun editReply(replyId: String, content: String): EmptyResult<DataError.Network>
+
+    /** Delete a reply the current user owns (`DELETE replies/{id}`, auth). */
+    suspend fun deleteReply(replyId: String): EmptyResult<DataError.Network>
+
+    /** Like a reply (`POST replies/{id}/likes`, auth). */
+    suspend fun likeReply(replyId: String): EmptyResult<DataError.Network>
+
+    /** Remove a like from a reply (`DELETE replies/{id}/likes`, auth). */
+    suspend fun unlikeReply(replyId: String): EmptyResult<DataError.Network>
+
+    /** Users who liked a reply (`GET replies/{id}/likes`). */
+    suspend fun getReplyLikers(replyId: String): Result<List<TweetLiker>, DataError.Network>
 }

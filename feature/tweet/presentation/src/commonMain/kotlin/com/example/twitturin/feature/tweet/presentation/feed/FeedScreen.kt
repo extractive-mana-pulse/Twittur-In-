@@ -25,11 +25,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.twitturin.core.designsystem.component.EmptyState
 import com.example.twitturin.core.designsystem.component.LoadingBox
+import com.example.twitturin.core.designsystem.component.LottieAsset
+import com.example.twitturin.core.designsystem.component.LottieEmptyState
+import com.example.twitturin.core.designsystem.component.TwitturExtendedFab
 import com.example.twitturin.core.designsystem.component.TwitturFab
 import com.example.twitturin.core.designsystem.component.TwitturLogo
 import com.example.twitturin.core.designsystem.icon.TwitturIcons
+import com.example.twitturin.core.presentation.LocalStrings
 import com.example.twitturin.core.presentation.ObserveAsEvents
 import com.example.twitturin.core.presentation.UiText
 import com.example.twitturin.feature.tweet.presentation.components.TweetAvatar
@@ -41,7 +44,8 @@ fun FeedRoot(
     onOpenCompose: () -> Unit,
     onOpenTweet: (tweetId: String, focusReply: Boolean) -> Unit,
     onShare: (tweetId: String) -> Unit = {},
-    showFab: Boolean = true,
+    onOpenProfile: (userId: String) -> Unit = {},
+    expandedFab: Boolean = false,
     onBack: (() -> Unit)? = null,
     onMenu: (() -> Unit)? = null,
     menuAvatarUrl: String? = null,
@@ -71,11 +75,12 @@ fun FeedRoot(
         state = state,
         onAction = viewModel::onAction,
         onShare = onShare,
+        onOpenProfile = onOpenProfile,
         onBack = onBack,
         onMenu = onMenu,
         menuAvatarUrl = menuAvatarUrl,
         menuAvatarName = menuAvatarName,
-        showFab = showFab,
+        expandedFab = expandedFab,
         onOpenCompose = onOpenCompose,
         snackbarHostState = snackbarHostState,
     )
@@ -90,12 +95,14 @@ fun FeedScreen(
     snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
     onShare: (tweetId: String) -> Unit = {},
+    onOpenProfile: (userId: String) -> Unit = {},
     onBack: (() -> Unit)? = null,
     onMenu: (() -> Unit)? = null,
     menuAvatarUrl: String? = null,
     menuAvatarName: String = "",
-    showFab: Boolean = true,
+    expandedFab: Boolean = false,
 ) {
+    val strings = LocalStrings.current
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -117,17 +124,24 @@ fun FeedScreen(
                 colors = TopAppBarDefaults.topAppBarColors(),
             )
         },
-        floatingActionButton = { if (showFab) TwitturFab(onClick = onOpenCompose) },
+        floatingActionButton = {
+            // The Settings toggle switches between the default square FAB and the expanded one.
+            if (expandedFab) {
+                TwitturExtendedFab(text = strings.newPost, onClick = onOpenCompose)
+            } else {
+                TwitturFab(onClick = onOpenCompose)
+            }
+        },
         snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { innerPadding ->
         Box(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
             when {
                 state.isLoading && state.tweets.isEmpty() -> LoadingBox()
 
-                state.tweets.isEmpty() -> EmptyState(
-                    icon = TwitturIcons.Home,
-                    title = "No tweets yet",
-                    subtitle = "Posts from people you follow show up here.",
+                state.tweets.isEmpty() -> LottieEmptyState(
+                    asset = LottieAsset.EmptyTweets,
+                    title = strings.noTweetsTitle,
+                    subtitle = strings.noTweetsSubtitle,
                 )
 
                 else -> {
@@ -139,6 +153,8 @@ fun FeedScreen(
                                 onReply = { onAction(FeedAction.OnReplyClick(tweet.id)) },
                                 onLike = { onAction(FeedAction.OnLikeClick(tweet.id)) },
                                 onShare = { onShare(tweet.id) },
+                                // Avatar goes to the author's profile, not the tweet detail.
+                                onAvatarClick = { onOpenProfile(tweet.authorId) },
                             )
                             HorizontalDivider()
                         }

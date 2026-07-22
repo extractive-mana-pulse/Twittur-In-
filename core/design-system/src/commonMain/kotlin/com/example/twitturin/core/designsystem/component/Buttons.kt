@@ -42,7 +42,7 @@ fun PrimaryButton(
         elevation = ButtonDefaults.buttonElevation(defaultElevation = 6.dp, pressedElevation = 2.dp),
     ) {
         if (loading) {
-            CircularProgressIndicator(modifier = Modifier.height(22.dp), color = OnBrand, strokeWidth = 2.dp)
+            CircularProgressIndicator(color = OnBrand, strokeWidth = 1.5.dp)
         } else {
             if (leadingIcon != null) {
                 Icon(leadingIcon, contentDescription = null, modifier = Modifier.padding(end = 8.dp).height(20.dp))

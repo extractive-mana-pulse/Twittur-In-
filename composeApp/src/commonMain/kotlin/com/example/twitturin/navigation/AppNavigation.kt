@@ -5,8 +5,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.only
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -17,12 +23,23 @@ import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.material3.rememberDrawerState
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import com.example.twitturin.core.designsystem.component.BottomBarVisibilityController
 import com.example.twitturin.core.designsystem.component.BottomNavItem
+import com.example.twitturin.core.designsystem.component.LocalBottomBarVisibility
+import com.example.twitturin.core.designsystem.component.NavBadge
 import com.example.twitturin.core.designsystem.component.TwitturBottomBar
 import com.example.twitturin.core.designsystem.theme.DividerLine
 import com.example.twitturin.getPlatform
@@ -60,43 +77,63 @@ fun AppNavigation(
     drawerContent: @Composable ColumnScope.(closeDrawer: () -> Unit) -> Unit,
     content: @Composable (openDrawer: (() -> Unit)?) -> Unit,
 ) {
-    if (getPlatform().isDesktop) {
-        DesktopRailShell(
-            tabs = tabs,
-            selectedIndex = selectedIndex,
-            onSelect = onSelect,
-            showLabels = showLabels,
-            railActions = railActions,
-            content = content,
-        )
-        return
-    }
+    // One controller for the whole shell so a full-screen tab (e.g. the timetable in landscape)
+    // can hide/reveal the shared bottom bar on scroll; provided to every screen below.
+    val bottomBarController = remember { BottomBarVisibilityController() }
 
-    val drawerState = rememberDrawerState(DrawerValue.Closed)
-    val scope = rememberCoroutineScope()
-
-    ModalNavigationDrawer(
-        drawerState = drawerState,
-        gesturesEnabled = gesturesEnabled,
-        drawerContent = {
-            ModalDrawerSheet(drawerContainerColor = MaterialTheme.colorScheme.background) {
-                drawerContent { scope.launch { drawerState.close() } }
-            }
-        },
-    ) {
-        // Plain Column (not a Scaffold) so the tab screens' own Scaffolds own the top/system insets
-        // — avoids the double-inset that nesting Scaffolds would cause. The bottom bar gets the
-        // navigation-bar inset for edge-to-edge.
-        Column(modifier = Modifier.fillMaxSize()) {
-            Box(modifier = Modifier.weight(1f).fillMaxSize()) {
-                content { scope.launch { drawerState.open() } }
-            }
-            TwitturBottomBar(
-                items = tabs,
+    CompositionLocalProvider(LocalBottomBarVisibility provides bottomBarController) {
+        if (getPlatform().isDesktop) {
+            DesktopRailShell(
+                tabs = tabs,
                 selectedIndex = selectedIndex,
                 onSelect = onSelect,
                 showLabels = showLabels,
+                railActions = railActions,
+                content = content,
             )
+            return@CompositionLocalProvider
+        }
+
+        val drawerState = rememberDrawerState(DrawerValue.Closed)
+        val scope = rememberCoroutineScope()
+
+        ModalNavigationDrawer(
+            drawerState = drawerState,
+            gesturesEnabled = gesturesEnabled,
+            drawerContent = {
+                ModalDrawerSheet(drawerContainerColor = MaterialTheme.colorScheme.background) {
+                    drawerContent { scope.launch { drawerState.close() } }
+                }
+            },
+        ) {
+            // Plain Column (not a Scaffold) so the tab screens' own Scaffolds own the top/system
+            // insets — avoids the double-inset that nesting Scaffolds would cause. The bottom bar
+            // consumes the navigation-bar inset itself, so the tab content must NOT apply it again:
+            // consuming it here stops the inner Scaffolds from adding an extra strip of padding.
+            Column(modifier = Modifier.fillMaxSize()) {
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxSize()
+                        .consumeWindowInsets(WindowInsets.navigationBars.only(WindowInsetsSides.Bottom)),
+                ) {
+                    content { scope.launch { drawerState.open() } }
+                }
+                // The bar collapses its height (not just a slide) so the content above smoothly
+                // reclaims the space rather than snapping when the animation ends.
+                AnimatedVisibility(
+                    visible = bottomBarController.isVisible,
+                    enter = expandVertically(expandFrom = Alignment.Bottom) + fadeIn(),
+                    exit = shrinkVertically(shrinkTowards = Alignment.Bottom) + fadeOut(),
+                ) {
+                    TwitturBottomBar(
+                        items = tabs,
+                        selectedIndex = selectedIndex,
+                        onSelect = onSelect,
+                        showLabels = showLabels,
+                    )
+                }
+            }
         }
     }
 }
@@ -117,7 +154,14 @@ private fun DesktopRailShell(
                 NavigationRailItem(
                     selected = index == selectedIndex,
                     onClick = { onSelect(index) },
-                    icon = { Icon(item.icon, contentDescription = item.label) },
+                    icon = {
+                        Box {
+                            Icon(item.icon, contentDescription = item.label)
+                            item.badge?.let { badge ->
+                                NavBadge(text = badge, modifier = Modifier.align(Alignment.TopEnd).offset(x = 9.dp, y = (-4).dp))
+                            }
+                        }
+                    },
                     label = if (showLabels) {
                         { Text(item.label) }
                     } else null,

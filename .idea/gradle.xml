@@ -13,10 +13,12 @@
             <option value="$PROJECT_DIR$/androidApp" />
             <option value="$PROJECT_DIR$/composeApp" />
             <option value="$PROJECT_DIR$/core" />
+            <option value="$PROJECT_DIR$/core/chat-thread" />
             <option value="$PROJECT_DIR$/core/data" />
             <option value="$PROJECT_DIR$/core/design-system" />
             <option value="$PROJECT_DIR$/core/domain" />
             <option value="$PROJECT_DIR$/core/presentation" />
+            <option value="$PROJECT_DIR$/core/rich-text" />
             <option value="$PROJECT_DIR$/desktopApp" />
             <option value="$PROJECT_DIR$/feature" />
             <option value="$PROJECT_DIR$/feature/auth" />
@@ -43,6 +45,10 @@
             <option value="$PROJECT_DIR$/feature/search/presentation" />
             <option value="$PROJECT_DIR$/feature/settings" />
             <option value="$PROJECT_DIR$/feature/settings/presentation" />
+            <option value="$PROJECT_DIR$/feature/timetable" />
+            <option value="$PROJECT_DIR$/feature/timetable/data" />
+            <option value="$PROJECT_DIR$/feature/timetable/domain" />
+            <option value="$PROJECT_DIR$/feature/timetable/presentation" />
             <option value="$PROJECT_DIR$/feature/tweet" />
             <option value="$PROJECT_DIR$/feature/tweet/data" />
             <option value="$PROJECT_DIR$/feature/tweet/domain" />

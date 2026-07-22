@@ -53,11 +53,14 @@ interface AppPreferences {
     val showBarLabels: StateFlow<Boolean>
     fun setShowBarLabels(show: Boolean)
 
-    /** Whether the floating compose (FAB) button is shown on the feed. */
-    val showFab: StateFlow<Boolean>
-    fun setShowFab(show: Boolean)
+    /** Whether the feed compose button renders as an expanded (extended) FAB instead of the default one. */
+    val expandedFab: StateFlow<Boolean>
+    fun setExpandedFab(expanded: Boolean)
 
-    /** "Away" presence toggle. */
-    val awayMode: StateFlow<Boolean>
-    fun setAwayMode(away: Boolean)
+    /**
+     * "Away" auto-delete window in months (3 / 6 / 12), or 0 when the feature is off.
+     * When set, an account left away for the chosen amount of time is permanently deleted.
+     */
+    val awayMonths: StateFlow<Int>
+    fun setAwayMonths(months: Int)
 }
